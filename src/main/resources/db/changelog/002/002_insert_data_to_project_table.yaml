@@ -1,0 +1,18 @@
+databaseChangeLog:
+  - changeSet:
+      id: 002_insert_data_to_project_table
+      author: pawel
+      changes:
+        - loadData:
+            file: 002_data_to_project_table.csv
+            relativeToChangelogFile: true
+            tableName: project
+            encoding: UTF-8
+            separator: ','
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+              - column:
+                  name: name
+                  type: varchar(255)

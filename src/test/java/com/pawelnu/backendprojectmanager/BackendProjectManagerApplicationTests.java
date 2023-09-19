@@ -1,4 +1,4 @@
-package com.pawelNu.backendprojectmanager;
+package com.pawelnu.backendprojectmanager;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
