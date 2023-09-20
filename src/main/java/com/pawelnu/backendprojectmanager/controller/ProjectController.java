@@ -3,6 +3,7 @@ package com.pawelnu.backendprojectmanager.controller;
 import com.pawelnu.backendprojectmanager.dto.ProjectDto;
 import com.pawelnu.backendprojectmanager.entity.ProjectEntity;
 import com.pawelnu.backendprojectmanager.service.ProjectService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,6 +13,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/projects")
+@Tag(name = "ProjectController", description = "APIs")
 public class ProjectController {
     @Autowired
     private ProjectService projectService;

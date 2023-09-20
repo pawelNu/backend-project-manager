@@ -41,6 +41,7 @@ TODO add information about application features
 
 ## Configure Swagger
 
-TODO
-
-[//]: # (TODO configure swagger)
+1. https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-starter-webmvc-ui
+2. Add to `pom.xml`
+3. In controller class add `@Tag`
+4. After running application, go to: http://localhost:8080/swagger-ui/index.html

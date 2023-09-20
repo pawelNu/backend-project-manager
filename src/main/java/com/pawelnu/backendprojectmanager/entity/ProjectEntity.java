@@ -3,7 +3,7 @@ package com.pawelnu.backendprojectmanager.entity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.util.UUID;
@@ -18,5 +18,6 @@ public class ProjectEntity {
 
     @Id
     private UUID id = UUID.randomUUID();
+    @NotNull
     private String name;
 }

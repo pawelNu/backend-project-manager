@@ -19,10 +19,11 @@ spring:
     show-sql: true
   main:
     web-application-type: servlet
-  data:
-    rest:
-#     go to http://localhost:8080/api
-      base-path: /api
+#    I won't be using api from: spring-boot-starter-data-rest
+#  data:
+#    rest:
+##     go to http://localhost:8080/api
+#      base-path: /api
   liquibase:
     enabled: true
     change-log: classpath:db/changelog/db.changelog-master.yaml
