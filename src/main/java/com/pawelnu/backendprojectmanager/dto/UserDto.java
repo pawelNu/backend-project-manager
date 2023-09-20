@@ -5,8 +5,10 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class ProjectDto {
+public class UserDto {
 
-    private String name;
+    private String firstName;
+    private String lastName;
+    private String email;
 
 }

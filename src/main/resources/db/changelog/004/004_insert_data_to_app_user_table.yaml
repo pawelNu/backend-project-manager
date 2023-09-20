@@ -1,0 +1,24 @@
+databaseChangeLog:
+  - changeSet:
+      id: 004_insert_data_to_user_table
+      author: pawel
+      changes:
+        - loadData:
+            file: 004_data_to_app_user_table.csv
+            relativeToChangelogFile: true
+            tableName: app_user
+            encoding: UTF-8
+            separator: ','
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+              - column:
+                  name: first_name
+                  type: varchar(255)
+              - column:
+                  name: last_name
+                  type: varchar(255)
+              - column:
+                  name: email
+                  type: varchar(255)

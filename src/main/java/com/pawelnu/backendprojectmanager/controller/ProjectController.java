@@ -13,7 +13,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/projects")
-@Tag(name = "ProjectController", description = "APIs")
+@Tag(name = "ProjectController")
 public class ProjectController {
     @Autowired
     private ProjectService projectService;

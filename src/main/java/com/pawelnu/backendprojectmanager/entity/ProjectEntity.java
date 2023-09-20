@@ -18,6 +18,7 @@ public class ProjectEntity {
 
     @Id
     private UUID id = UUID.randomUUID();
+
     @NotNull
     private String name;
 }

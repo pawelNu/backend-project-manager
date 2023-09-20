@@ -45,3 +45,8 @@ TODO add information about application features
 2. Add to `pom.xml`
 3. In controller class add `@Tag`
 4. After running application, go to: http://localhost:8080/swagger-ui/index.html
+
+## Random data generator Mockaroo
+
+https://www.mockaroo.com/
+
