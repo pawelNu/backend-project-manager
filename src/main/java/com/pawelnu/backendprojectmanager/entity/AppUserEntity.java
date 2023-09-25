@@ -18,7 +18,7 @@ import java.util.UUID;
 @Setter
 @ToString
 @NoArgsConstructor
-public class UserEntity {
+public class AppUserEntity {
     @Id
     private UUID id = UUID.randomUUID();
 
