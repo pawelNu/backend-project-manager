@@ -43,4 +43,9 @@ public class ProjectController {
                                 @RequestBody ProjectDto projectDto) {
         return projectService.updateProject(id, projectDto);
     }
+
+    @GetMapping("find-name-containing")
+    public List<ProjectEntity> searchProjectByName(@RequestParam String searchTerm) {
+        return projectService.searchProjectByName(searchTerm);
+    }
 }

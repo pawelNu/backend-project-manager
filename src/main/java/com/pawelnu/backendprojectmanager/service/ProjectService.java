@@ -42,4 +42,8 @@ public class ProjectService {
         return "Project " + projectDto.getName() + " was updated.";
     }
 
+    public List<ProjectEntity> searchProjectByName(String searchTerm) {
+        return projectRepository.findByNameContaining(searchTerm);
+    }
+
 }
