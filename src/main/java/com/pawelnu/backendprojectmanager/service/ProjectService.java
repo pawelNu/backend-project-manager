@@ -43,7 +43,7 @@ public class ProjectService {
     }
 
     public List<ProjectEntity> searchProjectByName(String searchTerm) {
-        return projectRepository.findByNameContaining(searchTerm);
+        return projectRepository.findByNameContainingIgnoreCase(searchTerm);
     }
 
 }
