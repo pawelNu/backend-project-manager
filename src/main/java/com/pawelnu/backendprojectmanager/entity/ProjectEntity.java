@@ -6,11 +6,12 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import org.hibernate.validator.constraints.UniqueElements;
 
 import java.util.UUID;
 
 @Entity
-@Table(name = "project")
+@Table(name = "projects")
 @Getter
 @Setter
 @ToString
@@ -22,6 +23,6 @@ public class ProjectEntity {
     private UUID id = UUID.randomUUID();
 
     @NotNull
-    @Column(name = "name")
+    @Column(name = "name", unique = true)
     private String name;
 }

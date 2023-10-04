@@ -1,12 +1,12 @@
 databaseChangeLog:
   - changeSet:
-      id: 004_insert_data_to_user_table
+      id: 004_insert_data_to_users_table
       author: pawel
       changes:
         - loadData:
-            file: 004_data_to_app_user_table.csv
+            file: 004_data_to_app_users_table.csv
             relativeToChangelogFile: true
-            tableName: app_user
+            tableName: app_users
             encoding: UTF-8
             separator: ','
             columns:

@@ -1,10 +1,10 @@
 databaseChangeLog:
   - changeSet:
-      id: 001_create_table_project
+      id: 003_create_table_app_users
       author: pawel
       changes:
         - createTable:
-            tableName: project
+            tableName: app_users
             columns:
               - column:
                   name: id
@@ -13,7 +13,17 @@ databaseChangeLog:
                     primaryKey: true
                     nullable: false
               - column:
-                  name: name
+                  name: first_name
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: last_name
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: email
                   type: varchar(255)
                   constraints:
                     unique: true

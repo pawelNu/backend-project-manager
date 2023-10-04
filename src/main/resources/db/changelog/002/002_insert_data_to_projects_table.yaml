@@ -1,12 +1,12 @@
 databaseChangeLog:
   - changeSet:
-      id: 002_insert_data_to_project_table
+      id: 002_insert_data_to_projects_table
       author: pawel
       changes:
         - loadData:
-            file: 002_data_to_project_table.csv
+            file: 002_data_to_projects_table.csv
             relativeToChangelogFile: true
-            tableName: project
+            tableName: projects
             encoding: UTF-8
             separator: ','
             columns:

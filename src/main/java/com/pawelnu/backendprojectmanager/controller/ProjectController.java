@@ -4,12 +4,18 @@ import com.pawelnu.backendprojectmanager.dto.ProjectDto;
 import com.pawelnu.backendprojectmanager.entity.ProjectEntity;
 import com.pawelnu.backendprojectmanager.service.ProjectService;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/projects")
@@ -29,22 +35,50 @@ public class ProjectController {
     }
 
     @PostMapping("")
-    public String addProject(@RequestBody ProjectDto projectDto) {
-        return projectService.addProject(projectDto);
+    public ResponseEntity<String> addProject(@Valid @RequestBody ProjectDto projectDto,
+                                             BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            List<String> errors = bindingResult
+                    .getFieldErrors()
+                    .stream()
+                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                    .collect(Collectors.toList());
+
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(String.join(", ", errors));
+        }
+
+        String result = projectService.addProject(projectDto);
+        return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
+
     @DeleteMapping("/{id}")
-    public String deleteProject(@PathVariable("id") UUID id) {
-        return projectService.deleteProject(id);
+    public ResponseEntity<String> deleteProject(@PathVariable("id") UUID id) {
+        String result = projectService.deleteProject(id);
+        return ResponseEntity.ok(result);
     }
 
     @PutMapping("/{id}")
-    public String updateProject(@PathVariable("id") UUID id,
-                                @RequestBody ProjectDto projectDto) {
-        return projectService.updateProject(id, projectDto);
+    public ResponseEntity<String> updateProject(@PathVariable("id") UUID id,
+                                                @Valid @RequestBody ProjectDto projectDto,
+                                                BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            List<String> errors = bindingResult
+                    .getFieldErrors()
+                    .stream()
+                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                    .collect(Collectors.toList());
+
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(String.join(", ", errors));
+        }
+
+        String result = projectService.updateProject(id, projectDto);
+        return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
-    @GetMapping("find-name-containing")
+    @GetMapping("/search-by-name")
     public List<ProjectEntity> searchProjectByName(@RequestParam String searchTerm) {
         return projectService.searchProjectByName(searchTerm);
     }

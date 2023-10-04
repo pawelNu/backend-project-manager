@@ -1,13 +1,13 @@
 databaseChangeLog:
   - include:
       relativeToChangelogFile: true
-      file: 001/001_create_project_table.yaml
+      file: 001/001_create_projects_table.yaml
   - include:
       relativeToChangelogFile: true
-      file: 002/002_insert_data_to_project_table.yaml
+      file: 002/002_insert_data_to_projects_table.yaml
   - include:
       relativeToChangelogFile: true
-      file: 003/003_create_table_app_user.yaml
+      file: 003/003_create_table_app_users.yaml
   - include:
       relativeToChangelogFile: true
-      file: 004/004_insert_data_to_app_user_table.yaml
+      file: 004/004_insert_data_to_app_users_table.yaml
