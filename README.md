@@ -1,15 +1,15 @@
 # Project manager spring boot react
 
 - [Project manager spring boot react](#project-manager-spring-boot-react)
-  - [Github repositories](#github-repositories)
-  - [Features](#features)
-  - [Application diagram sequence](#application-diagram-sequence)
-  - [Application entity diagram](#application-entity-diagram)
-  - [Create Spring Boot project](#create-spring-boot-project)
-    - [Configure Swagger](#configure-swagger)
-    - [Random data generator Mockaroo](#random-data-generator-mockaroo)
-  - [Install TypeScript](#install-typescript)
-  - [Create React application](#create-react-application)
+    - [Github repositories](#github-repositories)
+    - [Features](#features)
+    - [Application diagram sequence](#application-diagram-sequence)
+    - [Application entity diagram](#application-entity-diagram)
+    - [Create Spring Boot project](#create-spring-boot-project)
+        - [Configure Swagger](#configure-swagger)
+        - [Random data generator Mockaroo](#random-data-generator-mockaroo)
+    - [Install TypeScript](#install-typescript)
+    - [Create React application](#create-react-application)
 
 ## Github repositories
 
@@ -39,11 +39,11 @@ TODO add information about application features
 6. Group: com.pawelnu
 7. Artifact: backend-project-manager
 8. Name: backend-project-manager
-9.  Description: Project Manager - backend
+9. Description: Project Manager - backend
 10. Package name: com.pawelnu.backend-project-manager
 11. Packaging: Jar
 12. Java: 17
-13. Dependencies: 
+13. Dependencies:
     - Spring Web WEB
     - Spring Data JPA SQL
     - H2 Database SQL
@@ -68,7 +68,7 @@ https://www.mockaroo.com/
 
 ## Create React application
 
-1. In terminal 
+1. In terminal
     ```shell
     npx create-react-app frontend-project-manager --template typescript
     ```
@@ -79,7 +79,7 @@ https://www.mockaroo.com/
         <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
     ```
-    Add JavaScript
+   Add JavaScript
     ```html
      <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>

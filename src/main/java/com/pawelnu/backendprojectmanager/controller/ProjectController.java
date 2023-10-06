@@ -48,6 +48,11 @@ public class ProjectController {
                     .body(String.join(", ", errors));
         }
 
+        if (projectService.isProjectNameAlreadyExist(projectDto.getName())) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Project name already exists!");
+        }
+
         String result = projectService.addProject(projectDto);
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }

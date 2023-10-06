@@ -10,4 +10,5 @@ import java.util.UUID;
 @Repository
 public interface ProjectRepository extends JpaRepository<ProjectEntity, UUID> {
     List<ProjectEntity> findByNameContainingIgnoreCase(String searchTerm);
+    Boolean existsByName(String name);
 }

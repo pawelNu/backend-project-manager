@@ -46,4 +46,8 @@ public class ProjectService {
         return projectRepository.findByNameContainingIgnoreCase(searchTerm);
     }
 
+    public  Boolean isProjectNameAlreadyExist(String name) {
+        return projectRepository.existsByName(name);
+    }
+
 }
