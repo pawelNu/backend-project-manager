@@ -1,10 +1,7 @@
 package com.pawelnu.backendprojectmanager.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
+import com.pawelnu.backendprojectmanager.enumeration.DefinitionState;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -24,7 +21,11 @@ public class ProjectEntity {
     @Column(name = "id")
     private UUID id = UUID.randomUUID();
 
-    @NotNull
-    @Column(name = "name", unique = true)
-    private String name;
+    @Column(name = "name", unique = true, nullable = false)
+    private java.lang.String name;
+
+    @Column(name = "finished", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private DefinitionState finished;
+
 }

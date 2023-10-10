@@ -9,6 +9,5 @@ import lombok.Setter;
 @AllArgsConstructor
 public class APIResponse<T> {
 
-    Integer recordCount;
     T response;
 }

@@ -16,3 +16,6 @@ databaseChangeLog:
               - column:
                   name: name
                   type: varchar(255)
+              - column:
+                  name: finished
+                  type: varchar(3)

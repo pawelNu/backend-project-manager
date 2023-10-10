@@ -3,6 +3,7 @@ package com.pawelnu.backendprojectmanager.controller;
 import com.pawelnu.backendprojectmanager.dto.APIResponse;
 import com.pawelnu.backendprojectmanager.dto.ProjectDto;
 import com.pawelnu.backendprojectmanager.entity.ProjectEntity;
+import com.pawelnu.backendprojectmanager.enumeration.DefinitionState;
 import com.pawelnu.backendprojectmanager.service.ProjectService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -15,6 +16,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -26,40 +28,15 @@ public class ProjectController {
     @Autowired
     private ProjectService projectService;
 
-//    @GetMapping("")
-//    public List<ProjectEntity> getAllProjects() {
-//        return projectService.getAllProjects();
-//    }
-
     @GetMapping("")
-    public APIResponse<List<ProjectEntity>> getAllProjects() {
-        List<ProjectEntity> allProjects = projectService.getAllProjects();
-        return new APIResponse<>(allProjects.size(), allProjects);
-    }
-
-    @GetMapping("/sorting-by")
-    public APIResponse<List<ProjectEntity>> getAllProjectsWithSorting(@RequestParam String field,
-                                                                      @RequestParam String direction) {
-        List<ProjectEntity> allProjects = projectService.getAllProjectsWithSorting(field, direction);
-        return new APIResponse<>(allProjects.size(), allProjects);
-    }
-
-    @GetMapping("/pagination")
-    public APIResponse<Page<ProjectEntity>> getAllProjectsWithPagination(@RequestParam Integer pageNumber,
-                                                                         @RequestParam Integer pageSize) {
-        Page<ProjectEntity> allProjects = projectService.getAllProjectsWithPagination(pageNumber, pageSize);
-        return new APIResponse<>(allProjects.getSize(), allProjects);
-    }
-
-    @GetMapping("/sorting-and-pagination")
-    public APIResponse<Page<ProjectEntity>> getAllProjectsWithSortingAndPagination(
+    public APIResponse<Page<ProjectEntity>> getAllProjects(
             @RequestParam(required = false) String field,
             @RequestParam(required = false) String direction,
             @RequestParam(required = false) Integer pageNumber,
             @RequestParam(required = false) Integer pageSize) {
         Page<ProjectEntity> allProjects = projectService.getAllProjectsWithSortingAndPagination(field,
                 direction, pageNumber, pageSize);
-        return new APIResponse<>(allProjects.getSize(), allProjects);
+        return new APIResponse<>(allProjects);
     }
 
     @GetMapping("/{id}")
@@ -81,7 +58,7 @@ public class ProjectController {
                     .body(String.join(", ", errors));
         }
 
-        if (projectService.isProjectNameAlreadyExist(projectDto.getName())) {
+        if (projectService.isProjectNameAlreadyExists(projectDto.getName())) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("Project name already exists!");
         }

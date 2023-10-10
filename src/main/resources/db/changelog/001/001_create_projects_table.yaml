@@ -18,3 +18,8 @@ databaseChangeLog:
                   constraints:
                     unique: true
                     nullable: false
+              - column:
+                  name: finished
+                  type: varchar(3)
+                  constraints:
+                    nullable: false
