@@ -3,7 +3,6 @@ package com.pawelnu.backendprojectmanager.controller;
 import com.pawelnu.backendprojectmanager.dto.APIResponse;
 import com.pawelnu.backendprojectmanager.dto.ProjectDto;
 import com.pawelnu.backendprojectmanager.entity.ProjectEntity;
-import com.pawelnu.backendprojectmanager.enumeration.DefinitionState;
 import com.pawelnu.backendprojectmanager.service.ProjectService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;

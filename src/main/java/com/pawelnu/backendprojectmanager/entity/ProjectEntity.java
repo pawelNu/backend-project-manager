@@ -22,7 +22,7 @@ public class ProjectEntity {
     private UUID id = UUID.randomUUID();
 
     @Column(name = "name", unique = true, nullable = false)
-    private java.lang.String name;
+    private String name;
 
     @Column(name = "finished", nullable = false)
     @Enumerated(EnumType.STRING)

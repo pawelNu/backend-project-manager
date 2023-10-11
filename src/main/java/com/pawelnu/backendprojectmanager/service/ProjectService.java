@@ -19,7 +19,7 @@ public class ProjectService {
     @Autowired
     private ProjectRepository projectRepository;
 
-    public Page<ProjectEntity> getAllProjectsWithSortingAndPagination(java.lang.String field, java.lang.String direction,
+    public Page<ProjectEntity> getAllProjectsWithSortingAndPagination(String field, String direction,
                                                                       Integer pageNumber, Integer pageSize) {
         Sort sort = Sort.unsorted();
         if (direction == null || direction.isEmpty()) {
@@ -45,7 +45,7 @@ public class ProjectService {
         return projectRepository.findById(id);
     }
 
-    public java.lang.String addProject(ProjectDto projectDto) {
+    public String addProject(ProjectDto projectDto) {
         ProjectEntity newProject = new ProjectEntity();
 
         newProject.setName(projectDto.getName());
@@ -55,12 +55,12 @@ public class ProjectService {
         return "Project " + projectDto.getName() + " was added.";
     }
 
-    public java.lang.String deleteProject(UUID id) {
+    public String deleteProject(UUID id) {
         projectRepository.deleteById(id);
         return "Project was deleted.";
     }
 
-    public java.lang.String updateProject(UUID id, ProjectDto projectDto) {
+    public String updateProject(UUID id, ProjectDto projectDto) {
         ProjectEntity projectToEdit = projectRepository.getReferenceById(id);
 
         projectToEdit.setName(projectDto.getName());
@@ -70,11 +70,11 @@ public class ProjectService {
         return "Project " + projectDto.getName() + " was updated.";
     }
 
-    public List<ProjectEntity> searchProjectByName(java.lang.String searchTerm) {
-        return projectRepository.findByNameContainingIgnoreCase(searchTerm);
+    public List<ProjectEntity> searchProjectByName(String name) {
+        return projectRepository.findByNameContainingIgnoreCase(name);
     }
 
-    public Boolean isProjectNameAlreadyExists(java.lang.String name) {
+    public Boolean isProjectNameAlreadyExists(String name) {
         return projectRepository.existsByName(name);
     }
 
