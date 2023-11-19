@@ -6,6 +6,7 @@
       * [Main](#main)
       * [DB](#db)
       * [Tools/libs](#toolslibs)
+  * [Github repositories](#github-repositories)
   * [Commit prefixes:](#commit-prefixes)
 <!-- TOC -->
 
@@ -22,6 +23,12 @@
 #### Tools/libs
 - Liquibase
 - Lombok
+
+## Github repositories
+
+Backend: https://github.com/pawelNu/backend-project-manager
+
+Frontend: https://github.com/pawelNu/frontend-project-manager
 
 ## Commit prefixes:
 
