@@ -7,15 +7,17 @@ spring:
     username: test
     password: test
     driverClassName: org.h2.Driver
-  jpa:
-    spring.jpa.database-platform: org.hibernate.dialect.H2Dialect
   h2:
-    console:
-      enabled: true
-  hibernate:
-    ddl-auto: update
-    format_sql: false
+    console.enabled: true
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+        format_sql: false
     show-sql: true
+
   liquibase:
     change-log: classpath:/db/changelog/db.changelog-master.yaml
     enabled: true
