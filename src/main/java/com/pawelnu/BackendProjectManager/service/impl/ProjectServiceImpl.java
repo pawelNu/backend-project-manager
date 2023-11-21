@@ -1,5 +1,6 @@
 package com.pawelnu.BackendProjectManager.service.impl;
 
+import com.pawelnu.BackendProjectManager.dto.ProjectCreateRequestDTO;
 import com.pawelnu.BackendProjectManager.dto.ProjectDTO;
 import com.pawelnu.BackendProjectManager.entity.ProjectEntity;
 import com.pawelnu.BackendProjectManager.exception.NotFoundException;
@@ -34,5 +35,12 @@ public class ProjectServiceImpl implements IProjectService {
         } else {
             throw new NotFoundException("Project not found with id: " + projectId);
         }
+    }
+
+    @Override
+    public ProjectDTO createProject(ProjectCreateRequestDTO projectCreateRequest) {
+        ProjectEntity projectEntity = projectMapper.toEntity(projectCreateRequest);
+        ProjectEntity savedProject = projectRepository.save(projectEntity);
+        return projectMapper.toDTO(savedProject);
     }
 }

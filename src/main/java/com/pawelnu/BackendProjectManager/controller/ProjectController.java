@@ -1,25 +1,25 @@
 package com.pawelnu.BackendProjectManager.controller;
 
+import com.pawelnu.BackendProjectManager.dto.ProjectCreateRequestDTO;
 import com.pawelnu.BackendProjectManager.dto.ProjectDTO;
 import com.pawelnu.BackendProjectManager.service.IProjectService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/projects")
 @AllArgsConstructor
+@Tag(name = "ProjectController")
 public class ProjectController {
 
     private final IProjectService projectService;
 
-    @GetMapping("")
+    @GetMapping
     public ResponseEntity<List<ProjectDTO>> getAllProjects() {
         return ResponseEntity.status(HttpStatus.OK).body(projectService.getAllProjects());
     }
@@ -27,5 +27,12 @@ public class ProjectController {
     @GetMapping("/{projectId}")
     public ResponseEntity<ProjectDTO> getProjectById(@PathVariable UUID projectId) {
         return ResponseEntity.status(HttpStatus.OK).body(projectService.getProjectById(projectId));
+    }
+
+    @PostMapping
+    public ResponseEntity<ProjectDTO> createProject(
+            @RequestBody ProjectCreateRequestDTO projectCreateRequest) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(projectService.createProject(projectCreateRequest));
     }
 }
