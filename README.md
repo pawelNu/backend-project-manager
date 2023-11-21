@@ -2,12 +2,13 @@
 
 <!-- TOC -->
 * [Project Manager - Backend](#project-manager---backend)
-  * [Technology stack:](#technology-stack)
-      * [Main](#main)
-      * [DB](#db)
-      * [Tools/libs](#toolslibs)
-  * [Github repositories](#github-repositories)
-  * [Commit prefixes:](#commit-prefixes)
+* [Technology stack:](#technology-stack)
+	* [Main](#main)
+	* [DB](#db)
+	* [Tools/libs](#toolslibs)
+* [Github repositories](#github-repositories)
+* [Code standards](#code-standards)
+* [Commit prefixes:](#commit-prefixes)
 <!-- TOC -->
 
 ## Technology stack:
@@ -23,12 +24,18 @@
 #### Tools/libs
 - Liquibase
 - Lombok
+- Spotless
 
 ## Github repositories
 
 Backend: https://github.com/pawelNu/backend-project-manager
 
 Frontend: https://github.com/pawelNu/frontend-project-manager
+
+## Code standards
+
+- Always use UUID Generator (https://www.uuidgenerator.net/version4) for UUID generation
+- Before merging to `main`: `mvn spotless:apply` in order to maintain code formatting and minimizing merge conflicts
 
 ## Commit prefixes:
 
