@@ -1,6 +1,5 @@
 package com.pawelnu.BackendProjectManager.dto;
 
-import com.pawelnu.BackendProjectManager.entity.enums.IsFinished;
 import lombok.Data;
 
 import java.util.UUID;
@@ -12,6 +11,6 @@ public class ProjectDTO {
 
     private String name;
 
-    private IsFinished isFinished;
+    private String isFinished;
 
 }
