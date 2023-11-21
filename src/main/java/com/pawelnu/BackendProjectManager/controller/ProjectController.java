@@ -2,14 +2,15 @@ package com.pawelnu.BackendProjectManager.controller;
 
 import com.pawelnu.BackendProjectManager.dto.ProjectDTO;
 import com.pawelnu.BackendProjectManager.service.IProjectService;
+import java.util.List;
+import java.util.UUID;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/projects")
@@ -20,9 +21,11 @@ public class ProjectController {
 
     @GetMapping("")
     public ResponseEntity<List<ProjectDTO>> getAllProjects() {
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(projectService.getAllProjects());
+        return ResponseEntity.status(HttpStatus.OK).body(projectService.getAllProjects());
     }
 
+    @GetMapping("/{projectId}")
+    public ResponseEntity<ProjectDTO> getProjectById(@PathVariable UUID projectId) {
+        return ResponseEntity.status(HttpStatus.OK).body(projectService.getProjectById(projectId));
+    }
 }
