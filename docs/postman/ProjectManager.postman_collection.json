@@ -1,0 +1,55 @@
+{
+	"info": {
+		"_postman_id": "e82b4c15-7ab1-4ac0-b4b6-dbef9e667110",
+		"name": "ProjectManager",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "25206804"
+	},
+	"item": [
+		{
+			"name": "projects",
+			"item": [
+				{
+					"name": "getById 200",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/projects/a2dd7574-f49e-43dd-9a36-a24a350ea20f",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"projects",
+								"a2dd7574-f49e-43dd-9a36-a24a350ea20f"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getById 404",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/projects/a2dd7574-f49e-43dd-9a36-a24a100ea20f",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"projects",
+								"a2dd7574-f49e-43dd-9a36-a24a100ea20f"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
