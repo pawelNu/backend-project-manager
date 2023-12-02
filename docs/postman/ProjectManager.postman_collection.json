@@ -30,6 +30,25 @@
 					"response": []
 				},
 				{
+					"name": "get all 200",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/projects",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"projects"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "getById 404",
 					"request": {
 						"method": "GET",
