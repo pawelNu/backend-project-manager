@@ -4,9 +4,9 @@ import com.pawelnu.BackendProjectManager.dto.ProjectCreateRequestDTO;
 import com.pawelnu.BackendProjectManager.dto.ProjectDTO;
 import com.pawelnu.BackendProjectManager.service.IProjectService;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import java.util.List;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,8 +20,13 @@ public class ProjectController {
     private final IProjectService projectService;
 
     @GetMapping
-    public ResponseEntity<List<ProjectDTO>> getAllProjects() {
-        return ResponseEntity.status(HttpStatus.OK).body(projectService.getAllProjects());
+    public ResponseEntity<Page<ProjectDTO>> getAllProjects(
+            @RequestParam(required = false) Integer pageNumber,
+            @RequestParam(required = false) Integer pageSize,
+            @RequestParam(required = false) String filed,
+            @RequestParam(required = false) String direction) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(projectService.getAllProjects(pageNumber, pageSize, filed, direction));
     }
 
     @GetMapping("/{projectId}")
