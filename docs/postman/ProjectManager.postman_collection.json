@@ -106,6 +106,46 @@
 					"response": []
 				},
 				{
+					"name": "deleteById 200",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/projects/2eb9510e-bf7d-40e6-bc1c-21b939c22e74",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"projects",
+								"2eb9510e-bf7d-40e6-bc1c-21b939c22e74"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteById 404",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/projects/2eb9510e-bf7d-60e6-bc1c-21b939c22e78",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"projects",
+								"2eb9510e-bf7d-60e6-bc1c-21b939c22e78"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "create 201",
 					"request": {
 						"method": "POST",
