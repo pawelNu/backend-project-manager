@@ -10,7 +10,9 @@ public interface IProjectService {
     Page<ProjectDTO> getAllProjects(
             Integer pageNumber, Integer pageSize, String field, String direction);
 
-    ProjectDTO getProjectById(UUID projectId);
+    ProjectDTO getProjectById(UUID id);
 
     ProjectDTO createProject(ProjectCreateRequestDTO projectCreateRequest);
+
+    String deleteProjectById(UUID id);
 }
