@@ -19,6 +19,8 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class ProjectServiceImpl implements IProjectService {
 
+    private static final String PROJECT_NOT_FOUND_MSG = "Project not found with id: ";
+
     private final ProjectMapper projectMapper;
     private final ProjectRepository projectRepository;
 
@@ -50,12 +52,12 @@ public class ProjectServiceImpl implements IProjectService {
     }
 
     @Override
-    public ProjectDTO getProjectById(UUID projectId) {
-        Optional<ProjectEntity> projectById = projectRepository.findById(projectId);
+    public ProjectDTO getProjectById(UUID id) {
+        Optional<ProjectEntity> projectById = projectRepository.findById(id);
         if (projectById.isPresent()) {
             return projectMapper.toDTO(projectById.get());
         } else {
-            throw new NotFoundException("Project not found with id: " + projectId);
+            throw new NotFoundException(PROJECT_NOT_FOUND_MSG + id);
         }
     }
 
@@ -64,5 +66,16 @@ public class ProjectServiceImpl implements IProjectService {
         ProjectEntity projectEntity = projectMapper.toEntity(projectCreateRequest);
         ProjectEntity savedProject = projectRepository.save(projectEntity);
         return projectMapper.toDTO(savedProject);
+    }
+
+    @Override
+    public String deleteProjectById(UUID id) {
+        Optional<ProjectEntity> projectById = projectRepository.findById(id);
+        if (projectById.isPresent()) {
+            projectRepository.delete(projectById.get());
+            return "Project: " + projectById.get().getName() + " was deleted.";
+        } else {
+            throw new NotFoundException(PROJECT_NOT_FOUND_MSG + id);
+        }
     }
 }

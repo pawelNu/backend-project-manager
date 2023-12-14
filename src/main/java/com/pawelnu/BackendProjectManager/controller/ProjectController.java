@@ -29,9 +29,9 @@ public class ProjectController {
                 .body(projectService.getAllProjects(pageNumber, pageSize, filed, direction));
     }
 
-    @GetMapping("/{projectId}")
-    public ResponseEntity<ProjectDTO> getProjectById(@PathVariable UUID projectId) {
-        return ResponseEntity.status(HttpStatus.OK).body(projectService.getProjectById(projectId));
+    @GetMapping("/{id}")
+    public ResponseEntity<ProjectDTO> getProjectById(@PathVariable UUID id) {
+        return ResponseEntity.status(HttpStatus.OK).body(projectService.getProjectById(id));
     }
 
     @PostMapping
@@ -39,5 +39,11 @@ public class ProjectController {
             @RequestBody ProjectCreateRequestDTO projectCreateRequest) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(projectService.createProject(projectCreateRequest));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteProjectById(@PathVariable UUID id) {
+        String deletedProject = projectService.deleteProjectById(id);
+        return ResponseEntity.status(HttpStatus.OK).body(deletedProject);
     }
 }
