@@ -1,6 +1,6 @@
 package com.pawelnu.BackendProjectManager.entity;
 
-import com.pawelnu.BackendProjectManager.entity.enums.IsFinished;
+import com.pawelnu.BackendProjectManager.entity.enums.Status;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -21,6 +21,6 @@ public class ProjectEntity {
     private String name;
 
     @Enumerated(value = EnumType.STRING)
-    private IsFinished isFinished;
+    private Status status;
 
 }
