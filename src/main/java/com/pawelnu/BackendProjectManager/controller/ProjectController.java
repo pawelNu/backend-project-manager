@@ -1,7 +1,7 @@
 package com.pawelnu.BackendProjectManager.controller;
 
-import com.pawelnu.BackendProjectManager.dto.ProjectCreateRequestDTO;
-import com.pawelnu.BackendProjectManager.dto.ProjectDTO;
+import com.pawelnu.BackendProjectManager.dto.project.ProjectCreateRequestDTO;
+import com.pawelnu.BackendProjectManager.dto.project.ProjectDTO;
 import com.pawelnu.BackendProjectManager.service.IProjectService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.UUID;

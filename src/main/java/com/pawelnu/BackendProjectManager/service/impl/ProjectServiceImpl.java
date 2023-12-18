@@ -1,11 +1,12 @@
 package com.pawelnu.BackendProjectManager.service.impl;
 
-import com.pawelnu.BackendProjectManager.dto.ProjectCreateRequestDTO;
-import com.pawelnu.BackendProjectManager.dto.ProjectDTO;
+import com.pawelnu.BackendProjectManager.dto.project.ProjectCreateRequestDTO;
+import com.pawelnu.BackendProjectManager.dto.project.ProjectDTO;
+import com.pawelnu.BackendProjectManager.dto.project.ProjectFilteringRequestDTO;
 import com.pawelnu.BackendProjectManager.entity.ProjectEntity;
 import com.pawelnu.BackendProjectManager.exception.NotFoundException;
 import com.pawelnu.BackendProjectManager.mapper.ProjectMapper;
-import com.pawelnu.BackendProjectManager.repository.ProjectRepository;
+import com.pawelnu.BackendProjectManager.repository.project.ProjectRepository;
 import com.pawelnu.BackendProjectManager.service.IProjectService;
 import java.util.Optional;
 import java.util.UUID;
@@ -77,5 +78,10 @@ public class ProjectServiceImpl implements IProjectService {
         } else {
             throw new NotFoundException(PROJECT_NOT_FOUND_MSG + id);
         }
+    }
+
+    @Override
+    public Page<ProjectDTO> searchProject(ProjectFilteringRequestDTO projectFilteringRequestDTO) {
+        return null;
     }
 }
