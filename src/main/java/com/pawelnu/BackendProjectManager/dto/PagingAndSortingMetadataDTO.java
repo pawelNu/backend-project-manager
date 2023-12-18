@@ -11,7 +11,14 @@ public class PagingAndSortingMetadataDTO {
 
     private Integer pageSize;
 
-    private Integer pagesCount;
+    private Integer pagesCount; // TODO rename to totalPages
 
-    private Long elementsCount;
+    private Long elementsCount; // TODO rename to totalElements
+
+//    TODO add page elements:
+//     last
+//     first
+//     sort field
+//     sort direction
+
 }

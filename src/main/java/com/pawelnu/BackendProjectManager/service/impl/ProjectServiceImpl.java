@@ -82,6 +82,7 @@ public class ProjectServiceImpl implements IProjectService {
 
     @Override
     public Page<ProjectDTO> searchProject(ProjectFilteringRequestDTO projectFilteringRequestDTO) {
+//        TODO implements logic
         return null;
     }
 }

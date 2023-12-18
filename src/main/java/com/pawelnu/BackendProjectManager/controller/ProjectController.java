@@ -46,4 +46,7 @@ public class ProjectController {
         String deletedProject = projectService.deleteProjectById(id);
         return ResponseEntity.status(HttpStatus.OK).body(deletedProject);
     }
+
+//    TODO add searchProject endpoint
+
 }

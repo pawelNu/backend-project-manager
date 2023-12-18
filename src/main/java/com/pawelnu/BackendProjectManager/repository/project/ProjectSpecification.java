@@ -22,6 +22,8 @@ public class ProjectSpecification {
                 findByProjectStatus(projectFilteringRequestDTO.getProjectStatus()));
     }
 
+//    TODO filter project name by keywords
+
     private static Specification<ProjectEntity> findByProjectStatus(List<String> projectStatuses) {
         if (projectStatuses == null || projectStatuses.isEmpty()) {
             return null;
