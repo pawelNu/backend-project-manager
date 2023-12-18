@@ -1,4 +1,4 @@
-package com.pawelnu.BackendProjectManager.dto;
+package com.pawelnu.BackendProjectManager.dto.project;
 
 import lombok.Data;
 
@@ -7,5 +7,5 @@ public class ProjectCreateRequestDTO {
 
     private String name;
 
-    private String isFinished = "No";
+    private String status = "No";
 }
