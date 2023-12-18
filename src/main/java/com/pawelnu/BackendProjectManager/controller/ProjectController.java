@@ -23,10 +23,10 @@ public class ProjectController {
     public ResponseEntity<Page<ProjectDTO>> getAllProjects(
             @RequestParam(required = false) Integer pageNumber,
             @RequestParam(required = false) Integer pageSize,
-            @RequestParam(required = false) String filed,
+            @RequestParam(required = false) String field,
             @RequestParam(required = false) String direction) {
         return ResponseEntity.status(HttpStatus.OK)
-                .body(projectService.getAllProjects(pageNumber, pageSize, filed, direction));
+                .body(projectService.getAllProjects(pageNumber, pageSize, field, direction));
     }
 
     @GetMapping("/{id}")
