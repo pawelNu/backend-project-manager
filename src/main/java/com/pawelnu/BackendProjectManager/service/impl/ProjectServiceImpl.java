@@ -3,10 +3,13 @@ package com.pawelnu.BackendProjectManager.service.impl;
 import com.pawelnu.BackendProjectManager.dto.project.ProjectCreateRequestDTO;
 import com.pawelnu.BackendProjectManager.dto.project.ProjectDTO;
 import com.pawelnu.BackendProjectManager.dto.project.ProjectFilteringRequestDTO;
+import com.pawelnu.BackendProjectManager.dto.project.ProjectFilteringResponseDTO;
 import com.pawelnu.BackendProjectManager.entity.ProjectEntity;
 import com.pawelnu.BackendProjectManager.exception.NotFoundException;
+import com.pawelnu.BackendProjectManager.mapper.PagingAndSortingMapper;
 import com.pawelnu.BackendProjectManager.mapper.ProjectMapper;
 import com.pawelnu.BackendProjectManager.repository.project.ProjectRepository;
+import com.pawelnu.BackendProjectManager.repository.project.ProjectSpecification;
 import com.pawelnu.BackendProjectManager.service.IProjectService;
 import java.util.Optional;
 import java.util.UUID;
@@ -24,6 +27,7 @@ public class ProjectServiceImpl implements IProjectService {
 
     private final ProjectMapper projectMapper;
     private final ProjectRepository projectRepository;
+    private final PagingAndSortingMapper pagingAndSortingMapper;
 
     @Override
     public Page<ProjectDTO> getAllProjects(
@@ -81,8 +85,23 @@ public class ProjectServiceImpl implements IProjectService {
     }
 
     @Override
-    public Page<ProjectDTO> searchProject(ProjectFilteringRequestDTO projectFilteringRequestDTO) {
-//        TODO implements logic
-        return null;
+    public ProjectFilteringResponseDTO searchProject(
+            ProjectFilteringRequestDTO projectFilteringRequestDTO) {
+
+        if (projectFilteringRequestDTO == null) {
+            projectFilteringRequestDTO = new ProjectFilteringRequestDTO();
+        }
+
+        Page<ProjectEntity> projectsFound =
+                projectRepository.findAll(
+                        ProjectSpecification.filterProject(projectFilteringRequestDTO),
+                        pagingAndSortingMapper.toPageable(
+                                projectFilteringRequestDTO.getPagingAndSortingRequestDTO()));
+
+        return ProjectFilteringResponseDTO.builder()
+                .projects(projectMapper.toProjectDTOList(projectsFound.getContent()))
+                .pagingAndSortingMetadataDTO(
+                        pagingAndSortingMapper.toPagingAndSortingMetadataDTO(projectsFound))
+                .build();
     }
 }

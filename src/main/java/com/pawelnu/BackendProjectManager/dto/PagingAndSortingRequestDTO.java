@@ -6,10 +6,7 @@ import lombok.Data;
 public class PagingAndSortingRequestDTO {
 
     private Integer pageNumber = 0;
-
     private Integer pageSize = 10;
-
-    private String field;
-
-    private Boolean ascendingFlag = true;
+    private String sortingField = "name";
+    private Boolean isAscendingSorting = true;
 }

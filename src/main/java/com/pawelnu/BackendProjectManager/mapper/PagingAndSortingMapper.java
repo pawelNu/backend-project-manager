@@ -8,13 +8,13 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
-
 @Mapper(componentModel = "spring")
 public interface PagingAndSortingMapper {
 
     default Pageable toPageable(PagingAndSortingRequestDTO pagingAndSortingRequestDTO) {
+
         Sort.Direction direction =
-                Boolean.TRUE.equals(pagingAndSortingRequestDTO.getAscendingFlag())
+                Boolean.TRUE.equals(pagingAndSortingRequestDTO.getIsAscendingSorting())
                         ? Sort.Direction.ASC
                         : Sort.Direction.DESC;
 
@@ -22,17 +22,22 @@ public interface PagingAndSortingMapper {
                 pagingAndSortingRequestDTO.getPageNumber(),
                 pagingAndSortingRequestDTO.getPageSize(),
                 direction,
-                pagingAndSortingRequestDTO.getField()
-        );
+                pagingAndSortingRequestDTO.getSortingField());
     }
+
+    // TODO how to transfer field and direction sorting from PagingAndSortingRequestDTO
+    //  to PagingAndSortingMetadataDTO
+    //  private String sortingField;
+    //  private String isAscendingSorting;
 
     default PagingAndSortingMetadataDTO toPagingAndSortingMetadataDTO(Page<?> page) {
         return PagingAndSortingMetadataDTO.builder()
                 .pageNumber(page.getNumber())
                 .pageSize(page.getSize())
-                .pagesCount(page.getTotalPages())
-                .elementsCount(page.getTotalElements())
+                .totalPages(page.getTotalPages())
+                .totalElements(page.getTotalElements())
+                .first(page.isFirst())
+                .last(page.isLast())
                 .build();
     }
-
 }

@@ -6,6 +6,5 @@ import lombok.Data;
 public class ProjectCreateRequestDTO {
 
     private String name;
-
     private String status = "No";
 }

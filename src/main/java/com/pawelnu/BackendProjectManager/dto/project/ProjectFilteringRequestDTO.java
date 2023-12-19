@@ -1,16 +1,15 @@
 package com.pawelnu.BackendProjectManager.dto.project;
 
 import com.pawelnu.BackendProjectManager.dto.PagingAndSortingRequestDTO;
-import lombok.Data;
-
+import java.util.ArrayList;
 import java.util.List;
+import lombok.Data;
 
 @Data
 public class ProjectFilteringRequestDTO {
 
-    private List<String> projectNameWords;
-
-    private List<String> projectStatus;
-
-    private PagingAndSortingRequestDTO pagingAndSortingRequestDTO = new PagingAndSortingRequestDTO();
+    private List<String> projectNameKeywords = new ArrayList<>(); // TODO not tested
+    private List<String> projectStatuses = new ArrayList<>(); // TODO not tested
+    private PagingAndSortingRequestDTO pagingAndSortingRequestDTO =
+            new PagingAndSortingRequestDTO();
 }

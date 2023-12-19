@@ -8,17 +8,11 @@ import lombok.Data;
 public class PagingAndSortingMetadataDTO {
 
     private Integer pageNumber;
-
     private Integer pageSize;
-
-    private Integer pagesCount; // TODO rename to totalPages
-
-    private Long elementsCount; // TODO rename to totalElements
-
-//    TODO add page elements:
-//     last
-//     first
-//     sort field
-//     sort direction
-
+    private Integer totalPages;
+    private Long totalElements;
+    private Boolean first;
+    private Boolean last;
+    private String sortingField;
+    private String isAscendingSorting;
 }

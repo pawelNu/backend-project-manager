@@ -4,25 +4,50 @@ import com.pawelnu.BackendProjectManager.dto.project.ProjectFilteringRequestDTO;
 import com.pawelnu.BackendProjectManager.entity.ProjectEntity;
 import com.pawelnu.BackendProjectManager.entity.ProjectEntity_;
 import com.pawelnu.BackendProjectManager.entity.enums.Status;
-import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Predicate;
-import liquibase.hub.model.Project;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
 
-import java.util.List;
-
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ProjectSpecification {
 
-    public static Specification<ProjectEntity> filterProject(ProjectFilteringRequestDTO projectFilteringRequestDTO) {
+    public static Specification<ProjectEntity> filterProject(
+            ProjectFilteringRequestDTO projectFilteringRequestDTO) {
 
-        return Specification.where(
-                findByProjectStatus(projectFilteringRequestDTO.getProjectStatus()));
+        Specification<ProjectEntity> specification = Specification.where(null);
+
+        if (projectFilteringRequestDTO != null) {
+            specification =
+                    specification
+                            .and(
+                                    findByProjectName(
+                                            projectFilteringRequestDTO.getProjectNameKeywords()))
+                            .and(
+                                    findByProjectStatus(
+                                            projectFilteringRequestDTO.getProjectStatuses()));
+        }
+
+        return specification;
     }
 
-//    TODO filter project name by keywords
+    private static Specification<ProjectEntity> findByProjectName(List<String> keywords) {
+        if (keywords == null || keywords.isEmpty()) {
+            return null;
+        }
+        return (root, query, criteriaBuilder) -> {
+            Predicate[] predicates =
+                    keywords.stream()
+                            .map(
+                                    keyword ->
+                                            criteriaBuilder.like(
+                                                    root.get(ProjectEntity_.NAME), keyword))
+                            .toArray(Predicate[]::new);
+
+            return criteriaBuilder.or(predicates);
+        };
+    }
 
     private static Specification<ProjectEntity> findByProjectStatus(List<String> projectStatuses) {
         if (projectStatuses == null || projectStatuses.isEmpty()) {
@@ -31,11 +56,11 @@ public class ProjectSpecification {
         return (root, query, criteriaBuilder) -> {
             Predicate[] predicates =
                     projectStatuses.stream()
-                            .map(status ->
-                                    criteriaBuilder.equal(
-                                            root.get(ProjectEntity_.STATUS),
-                                            Status.fromValue(status)
-                                    ))
+                            .map(
+                                    status ->
+                                            criteriaBuilder.equal(
+                                                    root.get(ProjectEntity_.STATUS),
+                                                    Status.fromValue(status)))
                             .toArray(Predicate[]::new);
 
             return criteriaBuilder.or(predicates);

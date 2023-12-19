@@ -20,6 +20,7 @@ databaseChangeLog:
                     unique: true
               - column:
                   name: status
+#                  TODO fix: Hibernate: alter table if exists projects alter column status set data type varchar(255)
                   type: varchar(3)
                   constraints:
                     nullable: false
