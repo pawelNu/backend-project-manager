@@ -2,6 +2,7 @@ package com.pawelnu.BackendProjectManager.mapper;
 
 import com.pawelnu.BackendProjectManager.dto.PagingAndSortingMetadataDTO;
 import com.pawelnu.BackendProjectManager.dto.PagingAndSortingRequestDTO;
+import com.pawelnu.BackendProjectManager.enums.PageValues;
 import org.mapstruct.Mapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -13,24 +14,28 @@ public interface PagingAndSortingMapper {
 
     default Pageable toPageable(PagingAndSortingRequestDTO pagingAndSortingRequestDTO) {
 
+        if (pagingAndSortingRequestDTO.getPageNumber() < 0) {
+            pagingAndSortingRequestDTO.setPageNumber(PageValues.PAGE_NUMBER.getValue());
+        }
+
+        if (pagingAndSortingRequestDTO.getPageSize() < 1) {
+            pagingAndSortingRequestDTO.setPageSize(PageValues.PAGE_SIZE.getValue());
+        }
+
         Sort.Direction direction =
                 Boolean.TRUE.equals(pagingAndSortingRequestDTO.getIsAscendingSorting())
                         ? Sort.Direction.ASC
                         : Sort.Direction.DESC;
 
         return PageRequest.of(
-                pagingAndSortingRequestDTO.getPageNumber(),
+                (pagingAndSortingRequestDTO.getPageNumber()),
                 pagingAndSortingRequestDTO.getPageSize(),
                 direction,
                 pagingAndSortingRequestDTO.getSortingField());
     }
 
-    // TODO how to transfer field and direction sorting from PagingAndSortingRequestDTO
-    //  to PagingAndSortingMetadataDTO
-    //  private String sortingField;
-    //  private String isAscendingSorting;
-
-    default PagingAndSortingMetadataDTO toPagingAndSortingMetadataDTO(Page<?> page) {
+    default PagingAndSortingMetadataDTO toPagingAndSortingMetadataDTO(Page<?> page,
+                                                                      PagingAndSortingRequestDTO pagingAndSortingRequestDTO) {
         return PagingAndSortingMetadataDTO.builder()
                 .pageNumber(page.getNumber())
                 .pageSize(page.getSize())
@@ -38,6 +43,8 @@ public interface PagingAndSortingMapper {
                 .totalElements(page.getTotalElements())
                 .first(page.isFirst())
                 .last(page.isLast())
+                .sortingField(pagingAndSortingRequestDTO.getSortingField())
+                .isAscendingSorting(pagingAndSortingRequestDTO.getIsAscendingSorting())
                 .build();
     }
 }

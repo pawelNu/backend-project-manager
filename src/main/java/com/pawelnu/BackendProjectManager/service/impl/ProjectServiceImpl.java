@@ -5,19 +5,21 @@ import com.pawelnu.BackendProjectManager.dto.project.ProjectDTO;
 import com.pawelnu.BackendProjectManager.dto.project.ProjectFilteringRequestDTO;
 import com.pawelnu.BackendProjectManager.dto.project.ProjectFilteringResponseDTO;
 import com.pawelnu.BackendProjectManager.entity.ProjectEntity;
+import com.pawelnu.BackendProjectManager.enums.PageValues;
 import com.pawelnu.BackendProjectManager.exception.NotFoundException;
 import com.pawelnu.BackendProjectManager.mapper.PagingAndSortingMapper;
 import com.pawelnu.BackendProjectManager.mapper.ProjectMapper;
 import com.pawelnu.BackendProjectManager.repository.project.ProjectRepository;
 import com.pawelnu.BackendProjectManager.repository.project.ProjectSpecification;
 import com.pawelnu.BackendProjectManager.service.IProjectService;
-import java.util.Optional;
-import java.util.UUID;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @AllArgsConstructor
@@ -32,6 +34,10 @@ public class ProjectServiceImpl implements IProjectService {
     @Override
     public Page<ProjectDTO> getAllProjects(
             Integer pageNumber, Integer pageSize, String field, String direction) {
+        // TODO change String direction to Boolean direction
+        //  on the pattern com.pawelnu.BackendProjectManager.mapper.PagingAndSortingMapper.toPageable
+
+        // TODO add checking if field is null
 
         Sort sort = Sort.unsorted();
 
@@ -44,11 +50,11 @@ public class ProjectServiceImpl implements IProjectService {
         }
 
         if (pageNumber == null || pageNumber < 0) {
-            pageNumber = 0;
+            pageNumber = PageValues.PAGE_NUMBER.getValue();
         }
 
         if (pageSize == null || pageSize < 1) {
-            pageSize = 25;
+            pageSize = PageValues.PAGE_SIZE.getValue();
         }
 
         PageRequest pageRequest = PageRequest.of(pageNumber, pageSize, sort);
@@ -96,12 +102,13 @@ public class ProjectServiceImpl implements IProjectService {
                 projectRepository.findAll(
                         ProjectSpecification.filterProject(projectFilteringRequestDTO),
                         pagingAndSortingMapper.toPageable(
-                                projectFilteringRequestDTO.getPagingAndSortingRequestDTO()));
+                                projectFilteringRequestDTO.getPaging()));
 
         return ProjectFilteringResponseDTO.builder()
                 .projects(projectMapper.toProjectDTOList(projectsFound.getContent()))
-                .pagingAndSortingMetadataDTO(
-                        pagingAndSortingMapper.toPagingAndSortingMetadataDTO(projectsFound))
+                .paging(
+                        pagingAndSortingMapper.toPagingAndSortingMetadataDTO(projectsFound,
+                                projectFilteringRequestDTO.getPaging()))
                 .build();
     }
 }

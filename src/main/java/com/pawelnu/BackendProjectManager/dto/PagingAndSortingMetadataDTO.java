@@ -14,5 +14,5 @@ public class PagingAndSortingMetadataDTO {
     private Boolean first;
     private Boolean last;
     private String sortingField;
-    private String isAscendingSorting;
+    private Boolean isAscendingSorting;
 }
