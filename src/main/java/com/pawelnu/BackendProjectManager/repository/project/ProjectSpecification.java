@@ -42,7 +42,8 @@ public class ProjectSpecification {
                             .map(
                                     keyword ->
                                             criteriaBuilder.like(
-                                                    root.get(ProjectEntity_.NAME), keyword))
+                                                    criteriaBuilder.lower(root.get(ProjectEntity_.NAME)),
+                                                    "%" + keyword.toLowerCase() + "%"))
                             .toArray(Predicate[]::new);
 
             return criteriaBuilder.or(predicates);
