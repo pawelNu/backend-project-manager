@@ -1,4 +1,4 @@
-package com.pawelnu.BackendProjectManager.entity.enums;
+package com.pawelnu.BackendProjectManager.enums;
 
 import com.pawelnu.BackendProjectManager.exception.BadRequestException;
 import lombok.AllArgsConstructor;

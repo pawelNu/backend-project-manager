@@ -1,7 +1,8 @@
 package com.pawelnu.BackendProjectManager.dto.project;
 
-import java.util.UUID;
 import lombok.Data;
+
+import java.util.UUID;
 
 @Data
 public class ProjectDTO {

@@ -4,8 +4,9 @@ import com.pawelnu.BackendProjectManager.dto.project.ProjectCreateRequestDTO;
 import com.pawelnu.BackendProjectManager.dto.project.ProjectDTO;
 import com.pawelnu.BackendProjectManager.dto.project.ProjectFilteringRequestDTO;
 import com.pawelnu.BackendProjectManager.dto.project.ProjectFilteringResponseDTO;
-import java.util.UUID;
 import org.springframework.data.domain.Page;
+
+import java.util.UUID;
 
 public interface IProjectService {
 

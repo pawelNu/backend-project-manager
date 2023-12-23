@@ -3,12 +3,13 @@ package com.pawelnu.BackendProjectManager.repository.project;
 import com.pawelnu.BackendProjectManager.dto.project.ProjectFilteringRequestDTO;
 import com.pawelnu.BackendProjectManager.entity.ProjectEntity;
 import com.pawelnu.BackendProjectManager.entity.ProjectEntity_;
-import com.pawelnu.BackendProjectManager.entity.enums.Status;
+import com.pawelnu.BackendProjectManager.enums.Status;
 import jakarta.persistence.criteria.Predicate;
-import java.util.List;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
+
+import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ProjectSpecification {
