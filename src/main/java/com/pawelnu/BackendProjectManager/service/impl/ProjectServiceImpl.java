@@ -1,54 +1,56 @@
 package com.pawelnu.BackendProjectManager.service.impl;
 
-import com.pawelnu.BackendProjectManager.dto.ProjectCreateRequestDTO;
-import com.pawelnu.BackendProjectManager.dto.ProjectDTO;
+import com.pawelnu.BackendProjectManager.dto.PagingAndSortingRequestDTO;
+import com.pawelnu.BackendProjectManager.dto.project.ProjectCreateRequestDTO;
+import com.pawelnu.BackendProjectManager.dto.project.ProjectDTO;
+import com.pawelnu.BackendProjectManager.dto.project.ProjectFilteringRequestDTO;
+import com.pawelnu.BackendProjectManager.dto.project.ProjectFilteringResponseDTO;
 import com.pawelnu.BackendProjectManager.entity.ProjectEntity;
+import com.pawelnu.BackendProjectManager.enums.Messages;
 import com.pawelnu.BackendProjectManager.exception.NotFoundException;
+import com.pawelnu.BackendProjectManager.mapper.PagingAndSortingMapper;
 import com.pawelnu.BackendProjectManager.mapper.ProjectMapper;
-import com.pawelnu.BackendProjectManager.repository.ProjectRepository;
+import com.pawelnu.BackendProjectManager.repository.project.ProjectRepository;
+import com.pawelnu.BackendProjectManager.repository.project.ProjectSpecification;
 import com.pawelnu.BackendProjectManager.service.IProjectService;
 import java.util.Optional;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 @Service
 @AllArgsConstructor
 public class ProjectServiceImpl implements IProjectService {
 
-    private static final String PROJECT_NOT_FOUND_MSG = "Project not found with id: ";
-
     private final ProjectMapper projectMapper;
     private final ProjectRepository projectRepository;
+    private final PagingAndSortingMapper pagingAndSortingMapper;
 
     @Override
-    public Page<ProjectDTO> getAllProjects(
-            Integer pageNumber, Integer pageSize, String field, String direction) {
+    public ProjectFilteringResponseDTO getAllProjects(
+            Integer pageNumber, Integer pageSize, String sortingField, Boolean isAscendingSorting) {
 
-        Sort sort = Sort.unsorted();
+        PagingAndSortingRequestDTO requestDTO = new PagingAndSortingRequestDTO();
+        requestDTO.setPageSize(pageSize);
+        requestDTO.setPageNumber(pageNumber);
+        requestDTO.setSortingField(sortingField);
+        requestDTO.setIsAscendingSorting(isAscendingSorting);
 
-        if (direction == null || direction.isEmpty()) {
-            sort = Sort.unsorted();
-        } else if (direction.equalsIgnoreCase("asc")) {
-            sort = Sort.by(Sort.Direction.ASC, field);
-        } else if (direction.equalsIgnoreCase("desc")) {
-            sort = Sort.by(Sort.Direction.DESC, field);
-        }
+        ProjectFilteringRequestDTO filterRequestDTO = new ProjectFilteringRequestDTO();
+        filterRequestDTO.setPaging(requestDTO);
 
-        if (pageNumber == null || pageNumber < 0) {
-            pageNumber = 0;
-        }
+        Page<ProjectEntity> projectsFound =
+                projectRepository.findAll(
+                        ProjectSpecification.filterProject(filterRequestDTO),
+                        pagingAndSortingMapper.toPageable(filterRequestDTO.getPaging()));
 
-        if (pageSize == null || pageSize < 1) {
-            pageSize = 25;
-        }
-
-        PageRequest pageRequest = PageRequest.of(pageNumber, pageSize, sort);
-
-        return projectRepository.findAll(pageRequest).map(projectMapper::toDTO);
+        return ProjectFilteringResponseDTO.builder()
+                .projects(projectMapper.toProjectDTOList(projectsFound.getContent()))
+                .paging(
+                        pagingAndSortingMapper.toPagingAndSortingMetadataDTO(
+                                projectsFound, filterRequestDTO.getPaging()))
+                .build();
     }
 
     @Override
@@ -57,7 +59,7 @@ public class ProjectServiceImpl implements IProjectService {
         if (projectById.isPresent()) {
             return projectMapper.toDTO(projectById.get());
         } else {
-            throw new NotFoundException(PROJECT_NOT_FOUND_MSG + id);
+            throw new NotFoundException(Messages.PROJECT_NOT_FOUND.getMsg() + id);
         }
     }
 
@@ -75,7 +77,28 @@ public class ProjectServiceImpl implements IProjectService {
             projectRepository.delete(projectById.get());
             return "Project: " + projectById.get().getName() + " was deleted.";
         } else {
-            throw new NotFoundException(PROJECT_NOT_FOUND_MSG + id);
+            throw new NotFoundException(Messages.PROJECT_NOT_FOUND.getMsg() + id);
         }
+    }
+
+    @Override
+    public ProjectFilteringResponseDTO searchProject(
+            ProjectFilteringRequestDTO projectFilteringRequestDTO) {
+
+        if (projectFilteringRequestDTO == null) {
+            projectFilteringRequestDTO = new ProjectFilteringRequestDTO();
+        }
+
+        Page<ProjectEntity> projectsFound =
+                projectRepository.findAll(
+                        ProjectSpecification.filterProject(projectFilteringRequestDTO),
+                        pagingAndSortingMapper.toPageable(projectFilteringRequestDTO.getPaging()));
+
+        return ProjectFilteringResponseDTO.builder()
+                .projects(projectMapper.toProjectDTOList(projectsFound.getContent()))
+                .paging(
+                        pagingAndSortingMapper.toPagingAndSortingMetadataDTO(
+                                projectsFound, projectFilteringRequestDTO.getPaging()))
+                .build();
     }
 }

@@ -1,4 +1,4 @@
-package com.pawelnu.BackendProjectManager.entity.enums;
+package com.pawelnu.BackendProjectManager.enums;
 
 import com.pawelnu.BackendProjectManager.exception.BadRequestException;
 import lombok.AllArgsConstructor;
@@ -6,16 +6,16 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum IsFinished {
+public enum Status {
     NO("No"),
     YES("Yes");
 
     private final String value;
 
-    public static IsFinished fromValue(String value) {
-        for (IsFinished isFinished : values()) {
-            if (isFinished.value.equalsIgnoreCase(value)) {
-                return isFinished;
+    public static Status fromValue(String value) {
+        for (Status status : values()) {
+            if (status.value.equalsIgnoreCase(value)) {
+                return status;
             }
         }
         throw new BadRequestException("Unsupported project status: " + value);
