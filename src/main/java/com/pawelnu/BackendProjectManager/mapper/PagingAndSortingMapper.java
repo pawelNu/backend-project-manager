@@ -26,7 +26,8 @@ public interface PagingAndSortingMapper {
         }
 
         if (!ListValues.projectSortingFields().contains(sortingField)) {
-            throw new NotFoundSortingFieldException(Messages.NOT_FOUND_SORTING_FIELD.getMsg() + sortingField);
+            throw new NotFoundSortingFieldException(
+                    Messages.NOT_FOUND_SORTING_FIELD.getMsg() + sortingField);
         }
 
         if (pagingAndSortingRequestDTO.getPageNumber() == null

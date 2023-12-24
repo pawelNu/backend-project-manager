@@ -4,10 +4,9 @@ import com.pawelnu.BackendProjectManager.dto.project.ProjectCreateRequestDTO;
 import com.pawelnu.BackendProjectManager.dto.project.ProjectDTO;
 import com.pawelnu.BackendProjectManager.entity.ProjectEntity;
 import com.pawelnu.BackendProjectManager.enums.Status;
+import java.util.List;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-
-import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface ProjectMapper {

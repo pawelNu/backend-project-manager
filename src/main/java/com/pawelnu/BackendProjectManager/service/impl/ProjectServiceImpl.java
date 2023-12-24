@@ -8,8 +8,6 @@ import com.pawelnu.BackendProjectManager.dto.project.ProjectFilteringResponseDTO
 import com.pawelnu.BackendProjectManager.entity.ProjectEntity;
 import com.pawelnu.BackendProjectManager.enums.Messages;
 import com.pawelnu.BackendProjectManager.exception.NotFoundException;
-import com.pawelnu.BackendProjectManager.exception.NotFoundSortingFieldException;
-import com.pawelnu.BackendProjectManager.listvalues.ListValues;
 import com.pawelnu.BackendProjectManager.mapper.PagingAndSortingMapper;
 import com.pawelnu.BackendProjectManager.mapper.ProjectMapper;
 import com.pawelnu.BackendProjectManager.repository.project.ProjectRepository;

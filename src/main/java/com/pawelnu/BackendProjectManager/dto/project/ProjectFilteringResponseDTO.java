@@ -1,10 +1,9 @@
 package com.pawelnu.BackendProjectManager.dto.project;
 
 import com.pawelnu.BackendProjectManager.dto.PagingAndSortingMetadataDTO;
+import java.util.List;
 import lombok.Builder;
 import lombok.Data;
-
-import java.util.List;
 
 @Data
 @Builder
