@@ -33,23 +33,16 @@ public class ProjectServiceImpl implements IProjectService {
 
     @Override
     public Page<ProjectDTO> getAllProjects(
-            Integer pageNumber, Integer pageSize, String field, String direction) {
-        // TODO change String direction to Boolean direction
-        //  on the pattern com.pawelnu.BackendProjectManager.mapper.PagingAndSortingMapper.toPageable
+            Integer pageNumber, Integer pageSize, String sortingField, Boolean isAscendingSorting) {
 
-        if (field == null || field.isEmpty()) {
+        if (sortingField == null || sortingField.isEmpty()) {
             throw new NotNullOrEmptyException(Messages.PROJECT_SORTING_FIELD_CANNOT_BE_NULL_OR_EMPTY.getMsg());
         }
 
-        Sort sort = Sort.unsorted();
-
-        if (direction == null || direction.isEmpty()) {
-            sort = Sort.unsorted();
-        } else if (direction.equalsIgnoreCase("asc")) {
-            sort = Sort.by(Sort.Direction.ASC, field);
-        } else if (direction.equalsIgnoreCase("desc")) {
-            sort = Sort.by(Sort.Direction.DESC, field);
-        }
+        Sort.Direction direction =
+                Boolean.TRUE.equals(isAscendingSorting)
+                        ? Sort.Direction.ASC
+                        : Sort.Direction.DESC;
 
         if (pageNumber == null || pageNumber < 0) {
             pageNumber = PageValues.PAGE_NUMBER.getValue();
@@ -59,7 +52,7 @@ public class ProjectServiceImpl implements IProjectService {
             pageSize = PageValues.PAGE_SIZE.getValue();
         }
 
-        PageRequest pageRequest = PageRequest.of(pageNumber, pageSize, sort);
+        PageRequest pageRequest = PageRequest.of(pageNumber, pageSize, direction, sortingField);
 
         // TODO customize Response like
         //  com.pawelnu.BackendProjectManager.service.impl.ProjectServiceImpl.searchProject

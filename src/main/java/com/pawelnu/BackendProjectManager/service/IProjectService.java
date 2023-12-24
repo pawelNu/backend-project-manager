@@ -11,7 +11,7 @@ import java.util.UUID;
 public interface IProjectService {
 
     Page<ProjectDTO> getAllProjects(
-            Integer pageNumber, Integer pageSize, String field, String direction);
+            Integer pageNumber, Integer pageSize, String field, Boolean direction);
 
     ProjectDTO getProjectById(UUID id);
 
