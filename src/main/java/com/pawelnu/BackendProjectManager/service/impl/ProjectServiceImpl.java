@@ -5,8 +5,10 @@ import com.pawelnu.BackendProjectManager.dto.project.ProjectDTO;
 import com.pawelnu.BackendProjectManager.dto.project.ProjectFilteringRequestDTO;
 import com.pawelnu.BackendProjectManager.dto.project.ProjectFilteringResponseDTO;
 import com.pawelnu.BackendProjectManager.entity.ProjectEntity;
+import com.pawelnu.BackendProjectManager.enums.Messages;
 import com.pawelnu.BackendProjectManager.enums.PageValues;
 import com.pawelnu.BackendProjectManager.exception.NotFoundException;
+import com.pawelnu.BackendProjectManager.exception.NotNullOrEmptyException;
 import com.pawelnu.BackendProjectManager.mapper.PagingAndSortingMapper;
 import com.pawelnu.BackendProjectManager.mapper.ProjectMapper;
 import com.pawelnu.BackendProjectManager.repository.project.ProjectRepository;
@@ -25,8 +27,6 @@ import java.util.UUID;
 @AllArgsConstructor
 public class ProjectServiceImpl implements IProjectService {
 
-    private static final String PROJECT_NOT_FOUND_MSG = "Project not found with id: ";
-
     private final ProjectMapper projectMapper;
     private final ProjectRepository projectRepository;
     private final PagingAndSortingMapper pagingAndSortingMapper;
@@ -37,7 +37,9 @@ public class ProjectServiceImpl implements IProjectService {
         // TODO change String direction to Boolean direction
         //  on the pattern com.pawelnu.BackendProjectManager.mapper.PagingAndSortingMapper.toPageable
 
-        // TODO add checking if field is null
+        if (field == null || field.isEmpty()) {
+            throw new NotNullOrEmptyException(Messages.PROJECT_SORTING_FIELD_CANNOT_BE_NULL_OR_EMPTY.getMsg());
+        }
 
         Sort sort = Sort.unsorted();
 
@@ -59,6 +61,9 @@ public class ProjectServiceImpl implements IProjectService {
 
         PageRequest pageRequest = PageRequest.of(pageNumber, pageSize, sort);
 
+        // TODO customize Response like
+        //  com.pawelnu.BackendProjectManager.service.impl.ProjectServiceImpl.searchProject
+
         return projectRepository.findAll(pageRequest).map(projectMapper::toDTO);
     }
 
@@ -68,7 +73,7 @@ public class ProjectServiceImpl implements IProjectService {
         if (projectById.isPresent()) {
             return projectMapper.toDTO(projectById.get());
         } else {
-            throw new NotFoundException(PROJECT_NOT_FOUND_MSG + id);
+            throw new NotFoundException(Messages.PROJECT_NOT_FOUND.getMsg() + id);
         }
     }
 
@@ -86,7 +91,7 @@ public class ProjectServiceImpl implements IProjectService {
             projectRepository.delete(projectById.get());
             return "Project: " + projectById.get().getName() + " was deleted.";
         } else {
-            throw new NotFoundException(PROJECT_NOT_FOUND_MSG + id);
+            throw new NotFoundException(Messages.PROJECT_NOT_FOUND.getMsg() + id);
         }
     }
 

@@ -2,7 +2,9 @@ package com.pawelnu.BackendProjectManager.mapper;
 
 import com.pawelnu.BackendProjectManager.dto.PagingAndSortingMetadataDTO;
 import com.pawelnu.BackendProjectManager.dto.PagingAndSortingRequestDTO;
+import com.pawelnu.BackendProjectManager.enums.Messages;
 import com.pawelnu.BackendProjectManager.enums.PageValues;
+import com.pawelnu.BackendProjectManager.exception.NotNullOrEmptyException;
 import org.mapstruct.Mapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -13,6 +15,11 @@ import org.springframework.data.domain.Sort;
 public interface PagingAndSortingMapper {
 
     default Pageable toPageable(PagingAndSortingRequestDTO pagingAndSortingRequestDTO) {
+
+        if (pagingAndSortingRequestDTO.getSortingField() == null
+        || pagingAndSortingRequestDTO.getSortingField().isEmpty()) {
+            throw new NotNullOrEmptyException(Messages.PROJECT_SORTING_FIELD_CANNOT_BE_NULL_OR_EMPTY.getMsg());
+        }
 
         if (pagingAndSortingRequestDTO.getPageNumber() < 0) {
             pagingAndSortingRequestDTO.setPageNumber(PageValues.PAGE_NUMBER.getValue());
