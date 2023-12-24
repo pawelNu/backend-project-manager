@@ -8,6 +8,8 @@ import com.pawelnu.BackendProjectManager.dto.project.ProjectFilteringResponseDTO
 import com.pawelnu.BackendProjectManager.entity.ProjectEntity;
 import com.pawelnu.BackendProjectManager.enums.Messages;
 import com.pawelnu.BackendProjectManager.exception.NotFoundException;
+import com.pawelnu.BackendProjectManager.exception.NotFoundSortingFieldException;
+import com.pawelnu.BackendProjectManager.listvalues.ListValues;
 import com.pawelnu.BackendProjectManager.mapper.PagingAndSortingMapper;
 import com.pawelnu.BackendProjectManager.mapper.ProjectMapper;
 import com.pawelnu.BackendProjectManager.repository.project.ProjectRepository;
@@ -40,9 +42,6 @@ public class ProjectServiceImpl implements IProjectService {
         ProjectFilteringRequestDTO filterRequestDTO = new ProjectFilteringRequestDTO();
         filterRequestDTO.setPaging(requestDTO);
 
-        // TODO org.springframework.data.mapping.PropertyReferenceException: No property ' sfsdf '
-        // TODO found for type 'ProjectEntity'
-        // TODO handle this error
         Page<ProjectEntity> projectsFound =
                 projectRepository.findAll(
                         ProjectSpecification.filterProject(filterRequestDTO),

@@ -19,7 +19,12 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(NotNullOrEmptyException.class)
-    public  ResponseEntity<String> handleNotNullOrEmptyException(NotNullOrEmptyException e) {
+    public ResponseEntity<String> handleNotNullOrEmptyException(NotNullOrEmptyException e) {
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(NotFoundSortingFieldException.class)
+    public ResponseEntity<String> handleNotFoundPropertyException(NotFoundSortingFieldException e) {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

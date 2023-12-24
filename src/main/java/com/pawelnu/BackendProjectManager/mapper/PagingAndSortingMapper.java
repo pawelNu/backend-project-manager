@@ -4,7 +4,9 @@ import com.pawelnu.BackendProjectManager.dto.PagingAndSortingMetadataDTO;
 import com.pawelnu.BackendProjectManager.dto.PagingAndSortingRequestDTO;
 import com.pawelnu.BackendProjectManager.enums.Messages;
 import com.pawelnu.BackendProjectManager.enums.PageValues;
+import com.pawelnu.BackendProjectManager.exception.NotFoundSortingFieldException;
 import com.pawelnu.BackendProjectManager.exception.NotNullOrEmptyException;
+import com.pawelnu.BackendProjectManager.listvalues.ListValues;
 import org.mapstruct.Mapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -16,10 +18,15 @@ public interface PagingAndSortingMapper {
 
     default Pageable toPageable(PagingAndSortingRequestDTO pagingAndSortingRequestDTO) {
 
-        if (pagingAndSortingRequestDTO.getSortingField() == null
-                || pagingAndSortingRequestDTO.getSortingField().trim().isEmpty()) {
+        String sortingField = pagingAndSortingRequestDTO.getSortingField();
+
+        if (sortingField == null || sortingField.isEmpty()) {
             throw new NotNullOrEmptyException(
-                    Messages.PROJECT_SORTING_FIELD_CANNOT_BE_NULL_OR_EMPTY.getMsg());
+                    Messages.SORTING_FIELD_CANNOT_BE_NULL_OR_EMPTY.getMsg());
+        }
+
+        if (!ListValues.projectSortingFields().contains(sortingField)) {
+            throw new NotFoundSortingFieldException(Messages.NOT_FOUND_SORTING_FIELD.getMsg() + sortingField);
         }
 
         if (pagingAndSortingRequestDTO.getPageNumber() == null
