@@ -1,27 +1,23 @@
 package com.pawelnu.BackendProjectManager.service.impl;
 
+import com.pawelnu.BackendProjectManager.dto.PagingAndSortingRequestDTO;
 import com.pawelnu.BackendProjectManager.dto.project.ProjectCreateRequestDTO;
 import com.pawelnu.BackendProjectManager.dto.project.ProjectDTO;
 import com.pawelnu.BackendProjectManager.dto.project.ProjectFilteringRequestDTO;
 import com.pawelnu.BackendProjectManager.dto.project.ProjectFilteringResponseDTO;
 import com.pawelnu.BackendProjectManager.entity.ProjectEntity;
 import com.pawelnu.BackendProjectManager.enums.Messages;
-import com.pawelnu.BackendProjectManager.enums.PageValues;
 import com.pawelnu.BackendProjectManager.exception.NotFoundException;
-import com.pawelnu.BackendProjectManager.exception.NotNullOrEmptyException;
 import com.pawelnu.BackendProjectManager.mapper.PagingAndSortingMapper;
 import com.pawelnu.BackendProjectManager.mapper.ProjectMapper;
 import com.pawelnu.BackendProjectManager.repository.project.ProjectRepository;
 import com.pawelnu.BackendProjectManager.repository.project.ProjectSpecification;
 import com.pawelnu.BackendProjectManager.service.IProjectService;
-import lombok.AllArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
-import org.springframework.stereotype.Service;
-
 import java.util.Optional;
 import java.util.UUID;
+import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.stereotype.Service;
 
 @Service
 @AllArgsConstructor
@@ -32,32 +28,32 @@ public class ProjectServiceImpl implements IProjectService {
     private final PagingAndSortingMapper pagingAndSortingMapper;
 
     @Override
-    public Page<ProjectDTO> getAllProjects(
+    public ProjectFilteringResponseDTO getAllProjects(
             Integer pageNumber, Integer pageSize, String sortingField, Boolean isAscendingSorting) {
 
-        if (sortingField == null || sortingField.isEmpty()) {
-            throw new NotNullOrEmptyException(Messages.PROJECT_SORTING_FIELD_CANNOT_BE_NULL_OR_EMPTY.getMsg());
-        }
+        PagingAndSortingRequestDTO requestDTO = new PagingAndSortingRequestDTO();
+        requestDTO.setPageSize(pageSize);
+        requestDTO.setPageNumber(pageNumber);
+        requestDTO.setSortingField(sortingField);
+        requestDTO.setIsAscendingSorting(isAscendingSorting);
 
-        Sort.Direction direction =
-                Boolean.TRUE.equals(isAscendingSorting)
-                        ? Sort.Direction.ASC
-                        : Sort.Direction.DESC;
+        ProjectFilteringRequestDTO filterRequestDTO = new ProjectFilteringRequestDTO();
+        filterRequestDTO.setPaging(requestDTO);
 
-        if (pageNumber == null || pageNumber < 0) {
-            pageNumber = PageValues.PAGE_NUMBER.getValue();
-        }
+        // TODO org.springframework.data.mapping.PropertyReferenceException: No property ' sfsdf '
+        // TODO found for type 'ProjectEntity'
+        // TODO handle this error
+        Page<ProjectEntity> projectsFound =
+                projectRepository.findAll(
+                        ProjectSpecification.filterProject(filterRequestDTO),
+                        pagingAndSortingMapper.toPageable(filterRequestDTO.getPaging()));
 
-        if (pageSize == null || pageSize < 1) {
-            pageSize = PageValues.PAGE_SIZE.getValue();
-        }
-
-        PageRequest pageRequest = PageRequest.of(pageNumber, pageSize, direction, sortingField);
-
-        // TODO customize Response like
-        //  com.pawelnu.BackendProjectManager.service.impl.ProjectServiceImpl.searchProject
-
-        return projectRepository.findAll(pageRequest).map(projectMapper::toDTO);
+        return ProjectFilteringResponseDTO.builder()
+                .projects(projectMapper.toProjectDTOList(projectsFound.getContent()))
+                .paging(
+                        pagingAndSortingMapper.toPagingAndSortingMetadataDTO(
+                                projectsFound, filterRequestDTO.getPaging()))
+                .build();
     }
 
     @Override
@@ -99,14 +95,13 @@ public class ProjectServiceImpl implements IProjectService {
         Page<ProjectEntity> projectsFound =
                 projectRepository.findAll(
                         ProjectSpecification.filterProject(projectFilteringRequestDTO),
-                        pagingAndSortingMapper.toPageable(
-                                projectFilteringRequestDTO.getPaging()));
+                        pagingAndSortingMapper.toPageable(projectFilteringRequestDTO.getPaging()));
 
         return ProjectFilteringResponseDTO.builder()
                 .projects(projectMapper.toProjectDTOList(projectsFound.getContent()))
                 .paging(
-                        pagingAndSortingMapper.toPagingAndSortingMetadataDTO(projectsFound,
-                                projectFilteringRequestDTO.getPaging()))
+                        pagingAndSortingMapper.toPagingAndSortingMetadataDTO(
+                                projectsFound, projectFilteringRequestDTO.getPaging()))
                 .build();
     }
 }

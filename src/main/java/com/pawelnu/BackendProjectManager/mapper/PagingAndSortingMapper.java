@@ -17,15 +17,18 @@ public interface PagingAndSortingMapper {
     default Pageable toPageable(PagingAndSortingRequestDTO pagingAndSortingRequestDTO) {
 
         if (pagingAndSortingRequestDTO.getSortingField() == null
-        || pagingAndSortingRequestDTO.getSortingField().isEmpty()) {
-            throw new NotNullOrEmptyException(Messages.PROJECT_SORTING_FIELD_CANNOT_BE_NULL_OR_EMPTY.getMsg());
+                || pagingAndSortingRequestDTO.getSortingField().trim().isEmpty()) {
+            throw new NotNullOrEmptyException(
+                    Messages.PROJECT_SORTING_FIELD_CANNOT_BE_NULL_OR_EMPTY.getMsg());
         }
 
-        if (pagingAndSortingRequestDTO.getPageNumber() < 0) {
+        if (pagingAndSortingRequestDTO.getPageNumber() == null
+                || pagingAndSortingRequestDTO.getPageNumber() < 0) {
             pagingAndSortingRequestDTO.setPageNumber(PageValues.PAGE_NUMBER.getValue());
         }
 
-        if (pagingAndSortingRequestDTO.getPageSize() < 1) {
+        if (pagingAndSortingRequestDTO.getPageSize() == null
+                || pagingAndSortingRequestDTO.getPageSize() < 1) {
             pagingAndSortingRequestDTO.setPageSize(PageValues.PAGE_SIZE.getValue());
         }
 
@@ -41,8 +44,8 @@ public interface PagingAndSortingMapper {
                 pagingAndSortingRequestDTO.getSortingField());
     }
 
-    default PagingAndSortingMetadataDTO toPagingAndSortingMetadataDTO(Page<?> page,
-                                                                      PagingAndSortingRequestDTO pagingAndSortingRequestDTO) {
+    default PagingAndSortingMetadataDTO toPagingAndSortingMetadataDTO(
+            Page<?> page, PagingAndSortingRequestDTO pagingAndSortingRequestDTO) {
         return PagingAndSortingMetadataDTO.builder()
                 .pageNumber(page.getNumber())
                 .pageSize(page.getSize())
