@@ -1,9 +1,10 @@
 package com.pawelnu.BackendProjectManager.mapper;
 
-import com.pawelnu.BackendProjectManager.dto.ProjectCreateRequestDTO;
-import com.pawelnu.BackendProjectManager.dto.ProjectDTO;
+import com.pawelnu.BackendProjectManager.dto.project.ProjectCreateRequestDTO;
+import com.pawelnu.BackendProjectManager.dto.project.ProjectDTO;
 import com.pawelnu.BackendProjectManager.entity.ProjectEntity;
-import com.pawelnu.BackendProjectManager.entity.enums.IsFinished;
+import com.pawelnu.BackendProjectManager.enums.Status;
+import java.util.List;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -15,11 +16,13 @@ public interface ProjectMapper {
     @Mapping(target = "id", ignore = true)
     ProjectEntity toEntity(ProjectCreateRequestDTO projectCreateRequest);
 
-    default String isFinishedToString(IsFinished isFinished) {
-        return isFinished.getValue();
+    List<ProjectDTO> toProjectDTOList(List<ProjectEntity> projects);
+
+    default String statusToString(Status status) {
+        return status.getValue();
     }
 
-    default IsFinished toIsFinishedEnum(String projectStatus) {
-        return IsFinished.fromValue(projectStatus);
+    default Status statusToEnum(String projectStatus) {
+        return Status.fromValue(projectStatus);
     }
 }

@@ -19,7 +19,7 @@ databaseChangeLog:
                     nullable: false
                     unique: true
               - column:
-                  name: is_finished
+                  name: status
                   type: varchar(3)
                   constraints:
                     nullable: false
