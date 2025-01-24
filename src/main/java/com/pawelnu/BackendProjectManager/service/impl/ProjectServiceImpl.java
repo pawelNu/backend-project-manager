@@ -23,82 +23,82 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class ProjectServiceImpl implements IProjectService {
 
-    private final ProjectMapper projectMapper;
-    private final ProjectRepository projectRepository;
-    private final PagingAndSortingMapper pagingAndSortingMapper;
+  private final ProjectMapper projectMapper;
+  private final ProjectRepository projectRepository;
+  private final PagingAndSortingMapper pagingAndSortingMapper;
 
-    @Override
-    public ProjectFilteringResponseDTO getAllProjects(
-            Integer pageNumber, Integer pageSize, String sortingField, Boolean isAscendingSorting) {
+  @Override
+  public ProjectFilteringResponseDTO getAllProjects(
+      Integer pageNumber, Integer pageSize, String sortingField, Boolean isAscendingSorting) {
 
-        PagingAndSortingRequestDTO requestDTO = new PagingAndSortingRequestDTO();
-        requestDTO.setPageSize(pageSize);
-        requestDTO.setPageNumber(pageNumber);
-        requestDTO.setSortingField(sortingField);
-        requestDTO.setIsAscendingSorting(isAscendingSorting);
+    PagingAndSortingRequestDTO requestDTO = new PagingAndSortingRequestDTO();
+    requestDTO.setPageSize(pageSize);
+    requestDTO.setPageNumber(pageNumber);
+    requestDTO.setSortingField(sortingField);
+    requestDTO.setIsAscendingSorting(isAscendingSorting);
 
-        ProjectFilteringRequestDTO filterRequestDTO = new ProjectFilteringRequestDTO();
-        filterRequestDTO.setPaging(requestDTO);
+    ProjectFilteringRequestDTO filterRequestDTO = new ProjectFilteringRequestDTO();
+    filterRequestDTO.setPaging(requestDTO);
 
-        Page<ProjectEntity> projectsFound =
-                projectRepository.findAll(
-                        ProjectSpecification.filterProject(filterRequestDTO),
-                        pagingAndSortingMapper.toPageable(filterRequestDTO.getPaging()));
+    Page<ProjectEntity> projectsFound =
+        projectRepository.findAll(
+            ProjectSpecification.filterProject(filterRequestDTO),
+            pagingAndSortingMapper.toPageable(filterRequestDTO.getPaging()));
 
-        return ProjectFilteringResponseDTO.builder()
-                .projects(projectMapper.toProjectDTOList(projectsFound.getContent()))
-                .paging(
-                        pagingAndSortingMapper.toPagingAndSortingMetadataDTO(
-                                projectsFound, filterRequestDTO.getPaging()))
-                .build();
+    return ProjectFilteringResponseDTO.builder()
+        .projects(projectMapper.toProjectDTOList(projectsFound.getContent()))
+        .paging(
+            pagingAndSortingMapper.toPagingAndSortingMetadataDTO(
+                projectsFound, filterRequestDTO.getPaging()))
+        .build();
+  }
+
+  @Override
+  public ProjectDTO getProjectById(UUID id) {
+    Optional<ProjectEntity> projectById = projectRepository.findById(id);
+    if (projectById.isPresent()) {
+      return projectMapper.toDTO(projectById.get());
+    } else {
+      throw new NotFoundException(Messages.PROJECT_NOT_FOUND.getMsg() + id);
+    }
+  }
+
+  @Override
+  public ProjectDTO createProject(ProjectCreateRequestDTO projectCreateRequest) {
+    ProjectEntity projectEntity = projectMapper.toEntity(projectCreateRequest);
+    ProjectEntity savedProject = projectRepository.save(projectEntity);
+    return projectMapper.toDTO(savedProject);
+  }
+
+  @Override
+  public String deleteProjectById(UUID id) {
+    Optional<ProjectEntity> projectById = projectRepository.findById(id);
+    if (projectById.isPresent()) {
+      projectRepository.delete(projectById.get());
+      return "Project: " + projectById.get().getName() + " was deleted.";
+    } else {
+      throw new NotFoundException(Messages.PROJECT_NOT_FOUND.getMsg() + id);
+    }
+  }
+
+  @Override
+  public ProjectFilteringResponseDTO searchProject(
+      ProjectFilteringRequestDTO projectFilteringRequestDTO) {
+
+    if (projectFilteringRequestDTO == null) {
+      projectFilteringRequestDTO = new ProjectFilteringRequestDTO();
     }
 
-    @Override
-    public ProjectDTO getProjectById(UUID id) {
-        Optional<ProjectEntity> projectById = projectRepository.findById(id);
-        if (projectById.isPresent()) {
-            return projectMapper.toDTO(projectById.get());
-        } else {
-            throw new NotFoundException(Messages.PROJECT_NOT_FOUND.getMsg() + id);
-        }
-    }
+    Page<ProjectEntity> projectsFound =
+        projectRepository.findAll(
+            ProjectSpecification.filterProject(projectFilteringRequestDTO),
+            pagingAndSortingMapper.toPageable(projectFilteringRequestDTO.getPaging()));
 
-    @Override
-    public ProjectDTO createProject(ProjectCreateRequestDTO projectCreateRequest) {
-        ProjectEntity projectEntity = projectMapper.toEntity(projectCreateRequest);
-        ProjectEntity savedProject = projectRepository.save(projectEntity);
-        return projectMapper.toDTO(savedProject);
-    }
-
-    @Override
-    public String deleteProjectById(UUID id) {
-        Optional<ProjectEntity> projectById = projectRepository.findById(id);
-        if (projectById.isPresent()) {
-            projectRepository.delete(projectById.get());
-            return "Project: " + projectById.get().getName() + " was deleted.";
-        } else {
-            throw new NotFoundException(Messages.PROJECT_NOT_FOUND.getMsg() + id);
-        }
-    }
-
-    @Override
-    public ProjectFilteringResponseDTO searchProject(
-            ProjectFilteringRequestDTO projectFilteringRequestDTO) {
-
-        if (projectFilteringRequestDTO == null) {
-            projectFilteringRequestDTO = new ProjectFilteringRequestDTO();
-        }
-
-        Page<ProjectEntity> projectsFound =
-                projectRepository.findAll(
-                        ProjectSpecification.filterProject(projectFilteringRequestDTO),
-                        pagingAndSortingMapper.toPageable(projectFilteringRequestDTO.getPaging()));
-
-        return ProjectFilteringResponseDTO.builder()
-                .projects(projectMapper.toProjectDTOList(projectsFound.getContent()))
-                .paging(
-                        pagingAndSortingMapper.toPagingAndSortingMetadataDTO(
-                                projectsFound, projectFilteringRequestDTO.getPaging()))
-                .build();
-    }
+    return ProjectFilteringResponseDTO.builder()
+        .projects(projectMapper.toProjectDTOList(projectsFound.getContent()))
+        .paging(
+            pagingAndSortingMapper.toPagingAndSortingMetadataDTO(
+                projectsFound, projectFilteringRequestDTO.getPaging()))
+        .build();
+  }
 }

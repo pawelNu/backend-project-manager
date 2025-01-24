@@ -1,3 +1,6 @@
+api:
+  host: localhost
+
 server:
   port: 8080
 
@@ -19,6 +22,18 @@ spring:
   liquibase:
     change-log: classpath:/db/changelog/db.changelog-master.yaml
     enabled: true
+
+springdoc:
+  api-docs:
+    path: /projectManager
+  swagger-ui:
+    path: /
+    docExpansion: none
+    tags-sorter: alpha
+    operations-sorter: method
+    syntaxHighlight:
+      theme: arta
+    disable-swagger-default-url: true
 
 #logging:
 #  level:
