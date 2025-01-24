@@ -1,6 +1,6 @@
 package com.pawelnu.BackendProjectManager.entity;
 
-import com.pawelnu.BackendProjectManager.enums.Status;
+import com.pawelnu.BackendProjectManager.enums.ProjectStatus;
 import jakarta.persistence.*;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
@@ -14,10 +14,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ProjectEntity {
 
-    @Id private UUID id = UUID.randomUUID();
+  @Id private UUID id = UUID.randomUUID();
 
-    private String name;
+  private String name;
 
-    @Enumerated(value = EnumType.STRING)
-    private Status status;
+  @Enumerated(value = EnumType.STRING)
+  private ProjectStatus projectStatus;
 }

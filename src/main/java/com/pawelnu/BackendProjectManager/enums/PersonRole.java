@@ -6,16 +6,17 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum Status {
-  MAINTAINED("Maintained"),
-  CLOSED("Closed");
+public enum PersonRole {
+  CLIENT("Client"),
+  CLIENT_LEADER("Client leader"),
+  EMPLOYEE("Employee");
 
   private final String value;
 
-  public static Status fromValue(String value) {
-    for (Status status : values()) {
-      if (status.value.equalsIgnoreCase(value)) {
-        return status;
+  public static PersonRole fromValue(String value) {
+    for (PersonRole projectStatus : values()) {
+      if (projectStatus.value.equalsIgnoreCase(value)) {
+        return projectStatus;
       }
     }
     throw new BadRequestException("Unsupported project status: " + value);

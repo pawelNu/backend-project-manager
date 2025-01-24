@@ -3,7 +3,7 @@ package com.pawelnu.BackendProjectManager.repository.project;
 import com.pawelnu.BackendProjectManager.dto.project.ProjectFilteringRequestDTO;
 import com.pawelnu.BackendProjectManager.entity.ProjectEntity;
 import com.pawelnu.BackendProjectManager.entity.ProjectEntity_;
-import com.pawelnu.BackendProjectManager.enums.Status;
+import com.pawelnu.BackendProjectManager.enums.ProjectStatus;
 import jakarta.persistence.criteria.Predicate;
 import java.util.List;
 import lombok.AccessLevel;
@@ -56,7 +56,7 @@ public class ProjectSpecification {
               .map(
                   status ->
                       criteriaBuilder.equal(
-                          root.get(ProjectEntity_.STATUS), Status.fromValue(status)))
+                          root.get(ProjectEntity_.STATUS), ProjectStatus.fromValue(status)))
               .toArray(Predicate[]::new);
 
       return criteriaBuilder.or(predicates);

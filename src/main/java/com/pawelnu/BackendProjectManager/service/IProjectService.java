@@ -4,19 +4,21 @@ import com.pawelnu.BackendProjectManager.dto.project.ProjectCreateRequestDTO;
 import com.pawelnu.BackendProjectManager.dto.project.ProjectDTO;
 import com.pawelnu.BackendProjectManager.dto.project.ProjectFilteringRequestDTO;
 import com.pawelnu.BackendProjectManager.dto.project.ProjectFilteringResponseDTO;
+import com.pawelnu.BackendProjectManager.enums.ProjectStatus;
 import java.util.UUID;
 
 public interface IProjectService {
 
-    ProjectFilteringResponseDTO getAllProjects(
-            Integer pageNumber, Integer pageSize, String field, Boolean isAscendingSorting);
+  ProjectFilteringResponseDTO getAllProjects(
+      Integer pageNumber, Integer pageSize, String field, Boolean isAscendingSorting);
 
-    ProjectDTO getProjectById(UUID id);
+  ProjectDTO getProjectById(UUID id);
 
-    ProjectDTO createProject(ProjectCreateRequestDTO projectCreateRequest);
+  ProjectDTO createProject(ProjectCreateRequestDTO projectCreateRequest);
 
-    String deleteProjectById(UUID id);
+  String deleteProjectById(UUID id);
 
-    ProjectFilteringResponseDTO searchProject(
-            ProjectFilteringRequestDTO projectFilteringRequestDTO);
+  ProjectFilteringResponseDTO searchProject(ProjectFilteringRequestDTO projectFilteringRequestDTO);
+
+  ProjectDTO changeProjectStatus(ProjectStatus projectStatus);
 }
