@@ -1,26 +1,31 @@
 package com.pawelnu.BackendProjectManager.entity;
 
+import com.pawelnu.BackendProjectManager.enums.CompanyStatus;
 import jakarta.persistence.*;
 import java.util.List;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "persons")
+@Table(name = "companies")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class PersonEntity {
+@Builder
+public class CompanyEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   private UUID id;
 
-  @OneToMany(mappedBy = "registeringPerson")
-  private List<TicketEntity> registeringTickets;
+  private String name;
 
-  @OneToMany(mappedBy = "assignedPerson")
-  private List<TicketEntity> assignedTickets;
+  @Enumerated(value = EnumType.STRING)
+  private CompanyStatus status;
+
+  @OneToMany(mappedBy = "company", cascade = CascadeType.ALL)
+  private List<ProjectEntity> projects;
 }

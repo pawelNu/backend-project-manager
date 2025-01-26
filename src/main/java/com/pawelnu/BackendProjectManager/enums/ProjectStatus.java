@@ -1,11 +1,11 @@
 package com.pawelnu.BackendProjectManager.enums;
 
 import com.pawelnu.BackendProjectManager.exception.BadRequestException;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 @Getter
-@AllArgsConstructor
+@RequiredArgsConstructor
 public enum ProjectStatus {
   MAINTAINED("Maintained"),
   CLOSED("Closed");

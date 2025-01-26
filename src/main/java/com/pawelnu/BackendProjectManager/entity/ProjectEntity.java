@@ -24,4 +24,8 @@ public class ProjectEntity {
 
   @Enumerated(value = EnumType.STRING)
   private ProjectStatus projectStatus;
+
+  @ManyToOne
+  @JoinColumn(name = "company_id")
+  private CompanyEntity company;
 }
