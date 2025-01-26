@@ -7,7 +7,7 @@ import com.pawelnu.BackendProjectManager.dto.project.ProjectFilteringResponseDTO
 import com.pawelnu.BackendProjectManager.enums.ProjectStatus;
 import java.util.UUID;
 
-public interface IProjectService {
+public interface ProjectService {
 
   ProjectFilteringResponseDTO getAllProjects(
       Integer pageNumber, Integer pageSize, String field, Boolean isAscendingSorting);

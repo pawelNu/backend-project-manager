@@ -4,7 +4,7 @@
 // import com.pawelnu.BackendProjectManager.dto.project.ProjectDTO;
 // import com.pawelnu.BackendProjectManager.dto.project.ProjectFilteringRequestDTO;
 // import com.pawelnu.BackendProjectManager.dto.project.ProjectFilteringResponseDTO;
-// import com.pawelnu.BackendProjectManager.service.IProjectService;
+// import com.pawelnu.BackendProjectManager.service.ProjectService;
 // import io.swagger.v3.oas.annotations.tags.Tag;
 // import java.util.UUID;
 // import lombok.AllArgsConstructor;
@@ -18,7 +18,7 @@
 // @Tag(name = "ProjectController")
 // public class ProjectController {
 //
-//    private final IProjectService projectService;
+//    private final ProjectService projectService;
 //
 //    @GetMapping
 //    public ResponseEntity<ProjectFilteringResponseDTO> getAllProjects(

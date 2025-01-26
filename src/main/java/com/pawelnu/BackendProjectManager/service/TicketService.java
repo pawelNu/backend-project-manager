@@ -6,7 +6,7 @@ import com.pawelnu.BackendProjectManager.dto.ticket.TicketDTO;
 import com.pawelnu.BackendProjectManager.dto.ticket.TicketsFilteringResponseDTO;
 import java.util.UUID;
 
-public interface ITicketService {
+public interface TicketService {
 
   TicketsFilteringResponseDTO getAllTickets(
       Integer pageNumber, Integer pageSize, String field, Boolean isAscendingSorting);
@@ -21,6 +21,5 @@ public interface ITicketService {
 
   TicketsFilteringResponseDTO searchProject(TIcketFilteringRequestDTO tIcketFilteringRequestDTO);
 
-  //  TODO change ticket status
   //  TODO CRUD entry to ticket history
 }

@@ -12,7 +12,7 @@
 // import com.pawelnu.BackendProjectManager.mapper.ProjectMapper;
 // import com.pawelnu.BackendProjectManager.repository.project.ProjectRepository;
 // import com.pawelnu.BackendProjectManager.repository.project.ProjectSpecification;
-// import com.pawelnu.BackendProjectManager.service.IProjectService;
+// import com.pawelnu.BackendProjectManager.service.ProjectService;
 // import java.util.Optional;
 // import java.util.UUID;
 // import lombok.AllArgsConstructor;
@@ -21,7 +21,7 @@
 //
 // @Service
 // @AllArgsConstructor
-// public class ProjectServiceImpl implements IProjectService {
+// public class ProjectServiceImpl implements ProjectService {
 //
 //  private final ProjectMapper projectMapper;
 //  private final ProjectRepository projectRepository;

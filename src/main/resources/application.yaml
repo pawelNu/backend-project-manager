@@ -19,6 +19,8 @@ spring:
         dialect: org.hibernate.dialect.H2Dialect
         format_sql: true
     show-sql: true
+  jackson:
+    time-zone: UTC
 
 #  liquibase:
 #    change-log: classpath:/db/changelog/db.changelog-master.yaml

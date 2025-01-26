@@ -7,7 +7,7 @@ import com.pawelnu.BackendProjectManager.dto.person.PersonFilteringRequestDTO;
 import com.pawelnu.BackendProjectManager.enums.PersonRole;
 import java.util.UUID;
 
-public interface IPersonService {
+public interface PersonService {
 
   PeopleFilteringResponseDTO getAllPeople(
       Integer pageNumber, Integer pageSize, String field, Boolean isAscendingSorting);
