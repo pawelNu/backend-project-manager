@@ -1,4 +1,4 @@
-package com.pawelnu.BackendProjectManager.dto.pearson;
+package com.pawelnu.BackendProjectManager.dto.person;
 
 import com.pawelnu.BackendProjectManager.dto.PagingAndSortingMetadataDTO;
 import java.util.List;

@@ -1,9 +1,9 @@
 package com.pawelnu.BackendProjectManager.service;
 
-import com.pawelnu.BackendProjectManager.dto.pearson.PeopleFilteringResponseDTO;
-import com.pawelnu.BackendProjectManager.dto.pearson.PersonCreateRequestDTO;
-import com.pawelnu.BackendProjectManager.dto.pearson.PersonDTO;
-import com.pawelnu.BackendProjectManager.dto.pearson.PersonFilteringRequestDTO;
+import com.pawelnu.BackendProjectManager.dto.person.PeopleFilteringResponseDTO;
+import com.pawelnu.BackendProjectManager.dto.person.PersonCreateRequestDTO;
+import com.pawelnu.BackendProjectManager.dto.person.PersonDTO;
+import com.pawelnu.BackendProjectManager.dto.person.PersonFilteringRequestDTO;
 import com.pawelnu.BackendProjectManager.enums.PersonRole;
 import java.util.UUID;
 

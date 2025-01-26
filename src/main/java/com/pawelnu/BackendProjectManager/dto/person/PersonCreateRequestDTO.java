@@ -1,9 +1,9 @@
-package com.pawelnu.BackendProjectManager.dto.pearson;
+package com.pawelnu.BackendProjectManager.dto.person;
 
 import lombok.Data;
 
 @Data
-public class PersonDTO {
+public class PersonCreateRequestDTO {
 
   private String firstName;
   private String lastName;
