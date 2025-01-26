@@ -4,6 +4,7 @@ import com.pawelnu.BackendProjectManager.enums.ProjectStatus;
 import jakarta.persistence.*;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -12,9 +13,12 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class ProjectEntity {
 
-  @Id private UUID id = UUID.randomUUID();
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  private UUID id;
 
   private String name;
 
