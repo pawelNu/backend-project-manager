@@ -3,12 +3,14 @@ package com.pawelnu.BackendProjectManager.config.init;
 import com.pawelnu.BackendProjectManager.entity.CompanyEntity;
 import com.pawelnu.BackendProjectManager.entity.PersonEntity;
 import com.pawelnu.BackendProjectManager.entity.ProjectEntity;
+import com.pawelnu.BackendProjectManager.entity.TicketEntity;
 import com.pawelnu.BackendProjectManager.enums.CompanyStatus;
 import com.pawelnu.BackendProjectManager.enums.PersonRole;
 import com.pawelnu.BackendProjectManager.enums.ProjectStatus;
 import com.pawelnu.BackendProjectManager.repository.CompanyRepository;
 import com.pawelnu.BackendProjectManager.repository.PersonRepository;
 import com.pawelnu.BackendProjectManager.repository.ProjectRepository;
+import com.pawelnu.BackendProjectManager.repository.TicketRepository;
 import jakarta.annotation.PostConstruct;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -23,17 +25,19 @@ public class DataInit {
   private final CompanyRepository companyRepository;
   private final ProjectRepository projectRepository;
   private final PersonRepository personRepository;
+  private final TicketRepository ticketRepository;
 
   @PostConstruct
   private void loadData() {
 
     List<CompanyEntity> companies = createCompanies();
-    createProjects(companies);
-    createPeople(companies);
+    List<ProjectEntity> projects = createProjects(companies);
+    List<PersonEntity> people = createPeople(companies);
+    createdTickets(people, projects);
   }
 
   private List<CompanyEntity> createCompanies() {
-   CompanyEntity c1 =
+    CompanyEntity c1 =
         CompanyEntity.builder().name("Drive S.A.").status(CompanyStatus.ACTIVE).build();
     CompanyEntity c2 =
         CompanyEntity.builder().name("Tele S.A.").status(CompanyStatus.ACTIVE).build();
@@ -47,7 +51,7 @@ public class DataInit {
     return companyRepository.saveAll(companies);
   }
 
-  private void createProjects(List<CompanyEntity> companies) {
+  private List<ProjectEntity> createProjects(List<CompanyEntity> companies) {
     List<ProjectEntity> projects =
         List.of(
             ProjectEntity.builder()
@@ -66,10 +70,10 @@ public class DataInit {
                 .company(companies.get(2))
                 .build());
 
-    projectRepository.saveAll(projects);
+    return projectRepository.saveAll(projects);
   }
 
-  private void createPeople(List<CompanyEntity> companies) {
+  private List<PersonEntity> createPeople(List<CompanyEntity> companies) {
     List<PersonEntity> people =
         List.of(
             PersonEntity.builder()
@@ -90,6 +94,33 @@ public class DataInit {
                 .role(PersonRole.EMPLOYEE)
                 .company(companies.get(3))
                 .build());
-    personRepository.saveAll(people);
+    return personRepository.saveAll(people);
+  }
+
+  private void createdTickets(List<PersonEntity> people, List<ProjectEntity> projects) {
+    List<TicketEntity> tickets =
+        List.of(
+            TicketEntity.builder()
+                .seriesNumber(202501270001L)
+                .title("Problem with something")
+                .registeringPerson(people.get(0))
+                .assignedPerson(people.get(2))
+                .project(projects.get(0))
+                .build(),
+            TicketEntity.builder()
+                .seriesNumber(202501270001L)
+                .title("Problem with something 2")
+                .registeringPerson(people.get(0))
+                .assignedPerson(people.get(2))
+                .project(projects.get(0))
+                .build(),
+            TicketEntity.builder()
+                .seriesNumber(202501270001L)
+                .title("Problem with something else")
+                .registeringPerson(people.get(1))
+                .assignedPerson(people.get(2))
+                .project(projects.get(0))
+                .build());
+    ticketRepository.saveAll(tickets);
   }
 }

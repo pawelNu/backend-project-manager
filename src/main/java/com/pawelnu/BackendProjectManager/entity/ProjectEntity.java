@@ -2,6 +2,7 @@ package com.pawelnu.BackendProjectManager.entity;
 
 import com.pawelnu.BackendProjectManager.enums.ProjectStatus;
 import jakarta.persistence.*;
+import java.util.List;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,4 +29,7 @@ public class ProjectEntity {
   @ManyToOne
   @JoinColumn(name = "company_id")
   private CompanyEntity company;
+
+  @OneToMany(mappedBy = "project")
+  private List<TicketEntity> tickets;
 }
