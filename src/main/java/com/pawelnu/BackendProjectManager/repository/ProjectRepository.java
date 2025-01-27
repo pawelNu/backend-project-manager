@@ -1,4 +1,4 @@
-package com.pawelnu.BackendProjectManager.repository.project;
+package com.pawelnu.BackendProjectManager.repository;
 
 import com.pawelnu.BackendProjectManager.entity.ProjectEntity;
 import java.util.UUID;

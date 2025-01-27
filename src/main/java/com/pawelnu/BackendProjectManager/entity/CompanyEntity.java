@@ -28,4 +28,7 @@ public class CompanyEntity {
 
   @OneToMany(mappedBy = "company", cascade = CascadeType.ALL)
   private List<ProjectEntity> projects;
+
+  @OneToMany(mappedBy = "company", cascade = CascadeType.ALL)
+  private List<PersonEntity> companyEmployees;
 }

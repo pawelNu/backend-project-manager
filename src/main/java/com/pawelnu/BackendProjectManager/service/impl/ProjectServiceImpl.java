@@ -10,7 +10,7 @@
 // import com.pawelnu.BackendProjectManager.exception.NotFoundException;
 // import com.pawelnu.BackendProjectManager.mapper.PagingAndSortingMapper;
 // import com.pawelnu.BackendProjectManager.mapper.ProjectMapper;
-// import com.pawelnu.BackendProjectManager.repository.project.ProjectRepository;
+// import com.pawelnu.BackendProjectManager.repository.ProjectRepository;
 // import com.pawelnu.BackendProjectManager.repository.project.ProjectSpecification;
 // import com.pawelnu.BackendProjectManager.service.ProjectService;
 // import java.util.Optional;

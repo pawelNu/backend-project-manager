@@ -1,4 +1,4 @@
-// package com.pawelnu.BackendProjectManager.repository.project;
+// package com.pawelnu.BackendProjectManager.repository.impl;
 //
 // import com.pawelnu.BackendProjectManager.dto.project.ProjectFilteringRequestDTO;
 // import com.pawelnu.BackendProjectManager.entity.ProjectEntity;

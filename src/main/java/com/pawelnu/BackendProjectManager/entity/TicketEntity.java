@@ -16,7 +16,10 @@ import org.springframework.data.annotation.LastModifiedDate;
 @AllArgsConstructor
 public class TicketEntity {
 
-  @Id private UUID id = UUID.randomUUID();
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  private UUID id;
+
   private Long seriesNumber;
   private String title;
 
