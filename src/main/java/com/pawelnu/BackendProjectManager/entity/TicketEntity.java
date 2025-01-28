@@ -1,14 +1,14 @@
 package com.pawelnu.BackendProjectManager.entity;
 
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 @Entity
 @Table(name = "tickets")
@@ -37,8 +37,11 @@ public class TicketEntity {
   @JoinColumn(name = "project_id")
   private ProjectEntity project;
 
-  //  TODO: why this is null?
   @Version private Integer version;
-  @CreatedDate private LocalDateTime createdDate;
-  @LastModifiedDate private LocalDateTime lastModificationDate;
+
+  @CreationTimestamp
+  @Column(updatable = false)
+  private ZonedDateTime createdDate;
+
+  @UpdateTimestamp private ZonedDateTime lastModifiedDate;
 }
