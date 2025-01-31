@@ -1,17 +1,21 @@
-package com.pawelnu.BackendProjectManager.config.init;
+package com.pawelnu.BackendProjectManager.config;
 
 import com.pawelnu.BackendProjectManager.entity.CompanyEntity;
 import com.pawelnu.BackendProjectManager.entity.PersonEntity;
 import com.pawelnu.BackendProjectManager.entity.ProjectEntity;
 import com.pawelnu.BackendProjectManager.entity.TicketEntity;
+import com.pawelnu.BackendProjectManager.entity.TicketHierarchyEntity;
 import com.pawelnu.BackendProjectManager.enums.CompanyStatus;
 import com.pawelnu.BackendProjectManager.enums.PersonRole;
 import com.pawelnu.BackendProjectManager.enums.ProjectStatus;
 import com.pawelnu.BackendProjectManager.repository.CompanyRepository;
 import com.pawelnu.BackendProjectManager.repository.PersonRepository;
 import com.pawelnu.BackendProjectManager.repository.ProjectRepository;
+import com.pawelnu.BackendProjectManager.repository.TicketHierarchyRepository;
 import com.pawelnu.BackendProjectManager.repository.TicketRepository;
 import jakarta.annotation.PostConstruct;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -22,10 +26,12 @@ import org.springframework.stereotype.Component;
 @Log4j2
 public class DataInit {
 
+  private static long counter = 0;
   private final CompanyRepository companyRepository;
   private final ProjectRepository projectRepository;
   private final PersonRepository personRepository;
   private final TicketRepository ticketRepository;
+  private final TicketHierarchyRepository ticketHierarchyRepository;
 
   @PostConstruct
   private void loadData() {
@@ -33,7 +39,8 @@ public class DataInit {
     List<CompanyEntity> companies = createCompanies();
     List<ProjectEntity> projects = createProjects(companies);
     List<PersonEntity> people = createPeople(companies);
-    createdTickets(people, projects);
+    createTickets(people, projects);
+    createTicketsWithSubTickets(people, projects);
   }
 
   private List<CompanyEntity> createCompanies() {
@@ -97,30 +104,89 @@ public class DataInit {
     return personRepository.saveAll(people);
   }
 
-  private void createdTickets(List<PersonEntity> people, List<ProjectEntity> projects) {
+  private void createTickets(List<PersonEntity> people, List<ProjectEntity> projects) {
     List<TicketEntity> tickets =
         List.of(
             TicketEntity.builder()
-                .seriesNumber(202501270001L)
+                .seriesNumber(generateSeriesNumber())
                 .title("Problem with something")
                 .registeringPerson(people.get(0))
                 .assignedPerson(people.get(2))
                 .project(projects.get(0))
                 .build(),
             TicketEntity.builder()
-                .seriesNumber(202501270001L)
+                .seriesNumber(generateSeriesNumber())
                 .title("Problem with something 2")
                 .registeringPerson(people.get(0))
                 .assignedPerson(people.get(2))
                 .project(projects.get(0))
                 .build(),
             TicketEntity.builder()
-                .seriesNumber(202501270001L)
+                .seriesNumber(generateSeriesNumber())
                 .title("Problem with something else")
                 .registeringPerson(people.get(1))
                 .assignedPerson(people.get(2))
                 .project(projects.get(0))
                 .build());
     ticketRepository.saveAll(tickets);
+  }
+
+  private void createTicketsWithSubTickets(
+      List<PersonEntity> people, List<ProjectEntity> projects) {
+    List<TicketEntity> ticketEntities = createMainTicketAndSubTickets(people, projects);
+    List<TicketHierarchyEntity> subTickets = createTicketHierarchy(ticketEntities);
+  }
+
+  private List<TicketHierarchyEntity> createTicketHierarchy(List<TicketEntity> ticketEntities) {
+    List<TicketHierarchyEntity> subTickets =
+        List.of(
+            TicketHierarchyEntity.builder()
+                .parentTicket(ticketEntities.get(0))
+                .childTicket(ticketEntities.get(1))
+                .level(1)
+                .build(),
+            TicketHierarchyEntity.builder()
+                .parentTicket(ticketEntities.get(0))
+                .childTicket(ticketEntities.get(2))
+                .level(2)
+                .build());
+    return ticketHierarchyRepository.saveAll(subTickets);
+  }
+
+  private List<TicketEntity> createMainTicketAndSubTickets(
+      List<PersonEntity> people, List<ProjectEntity> projects) {
+    List<TicketEntity> tickets =
+        List.of(
+            TicketEntity.builder()
+                .seriesNumber(generateSeriesNumber())
+                .title("Main ticket")
+                .registeringPerson(people.get(0))
+                .assignedPerson(people.get(2))
+                .project(projects.get(0))
+                .build(),
+            TicketEntity.builder()
+                .seriesNumber(generateSeriesNumber())
+                .title("SubTicket level 1")
+                .registeringPerson(people.get(0))
+                .assignedPerson(people.get(2))
+                .project(projects.get(0))
+                .build(),
+            TicketEntity.builder()
+                .seriesNumber(generateSeriesNumber())
+                .title("SubTicket level 2")
+                .registeringPerson(people.get(1))
+                .assignedPerson(people.get(2))
+                .project(projects.get(0))
+                .build());
+    List<TicketEntity> ticketEntities = ticketRepository.saveAll(tickets);
+    return ticketEntities;
+  }
+
+  public static Long generateSeriesNumber() {
+    LocalDateTime now = LocalDateTime.now();
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+    String formattedDate = now.format(formatter);
+    counter++;
+    return Long.parseLong(formattedDate) + counter;
   }
 }

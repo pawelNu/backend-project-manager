@@ -2,6 +2,7 @@ package com.pawelnu.BackendProjectManager.entity;
 
 import jakarta.persistence.*;
 import java.time.ZonedDateTime;
+import java.util.List;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -36,6 +37,12 @@ public class TicketEntity {
   @ManyToOne
   @JoinColumn(name = "project_id")
   private ProjectEntity project;
+
+  @OneToOne(mappedBy = "parentTicket")
+  private TicketHierarchyEntity parentTicket;
+
+  @OneToMany(mappedBy = "childTicket")
+  private List<TicketHierarchyEntity> childTickets;
 
   @Version private Integer version;
 
