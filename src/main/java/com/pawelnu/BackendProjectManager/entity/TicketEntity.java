@@ -1,15 +1,12 @@
 package com.pawelnu.BackendProjectManager.entity;
 
 import jakarta.persistence.*;
-import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 @Entity
 @Table(name = "tickets")
@@ -17,7 +14,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class TicketEntity {
+public class TicketEntity extends Auditable {
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
@@ -44,11 +41,6 @@ public class TicketEntity {
   @OneToMany(mappedBy = "childTicket")
   private List<TicketHierarchyEntity> childTickets;
 
-  @Version private Integer version;
-
-  @CreationTimestamp
-  @Column(updatable = false)
-  private ZonedDateTime createdDate;
-
-  @UpdateTimestamp private ZonedDateTime lastModifiedDate;
+  @OneToMany(mappedBy = "ticket")
+  private List<TicketHistoryEntity> ticketHistories;
 }

@@ -5,15 +5,19 @@ import com.pawelnu.BackendProjectManager.entity.PersonEntity;
 import com.pawelnu.BackendProjectManager.entity.ProjectEntity;
 import com.pawelnu.BackendProjectManager.entity.TicketEntity;
 import com.pawelnu.BackendProjectManager.entity.TicketHierarchyEntity;
+import com.pawelnu.BackendProjectManager.entity.TicketHistoryEntity;
 import com.pawelnu.BackendProjectManager.enums.CompanyStatus;
 import com.pawelnu.BackendProjectManager.enums.PersonRole;
 import com.pawelnu.BackendProjectManager.enums.ProjectStatus;
+import com.pawelnu.BackendProjectManager.enums.TicketStatus;
 import com.pawelnu.BackendProjectManager.repository.CompanyRepository;
 import com.pawelnu.BackendProjectManager.repository.PersonRepository;
 import com.pawelnu.BackendProjectManager.repository.ProjectRepository;
 import com.pawelnu.BackendProjectManager.repository.TicketHierarchyRepository;
+import com.pawelnu.BackendProjectManager.repository.TicketHistoryRepository;
 import com.pawelnu.BackendProjectManager.repository.TicketRepository;
 import jakarta.annotation.PostConstruct;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -32,6 +36,7 @@ public class DataInit {
   private final PersonRepository personRepository;
   private final TicketRepository ticketRepository;
   private final TicketHierarchyRepository ticketHierarchyRepository;
+  private final TicketHistoryRepository ticketHistoryRepository;
 
   @PostConstruct
   private void loadData() {
@@ -41,6 +46,7 @@ public class DataInit {
     List<PersonEntity> people = createPeople(companies);
     createTickets(people, projects);
     createTicketsWithSubTickets(people, projects);
+    createTicketWithHistory(people, projects);
   }
 
   private List<CompanyEntity> createCompanies() {
@@ -98,6 +104,18 @@ public class DataInit {
             PersonEntity.builder()
                 .firstName("John")
                 .lastName("Black")
+                .role(PersonRole.EMPLOYEE)
+                .company(companies.get(3))
+                .build(),
+            PersonEntity.builder()
+                .firstName("Adam")
+                .lastName("Blue")
+                .role(PersonRole.EMPLOYEE)
+                .company(companies.get(3))
+                .build(),
+            PersonEntity.builder()
+                .firstName("Service")
+                .lastName("User")
                 .role(PersonRole.EMPLOYEE)
                 .company(companies.get(3))
                 .build());
@@ -188,5 +206,59 @@ public class DataInit {
     String formattedDate = now.format(formatter);
     counter++;
     return Long.parseLong(formattedDate) + counter;
+  }
+
+  private void createTicketWithHistory(List<PersonEntity> people, List<ProjectEntity> projects) {
+    TicketEntity ticketWithHistory =
+        TicketEntity.builder()
+            .seriesNumber(generateSeriesNumber())
+            .title("Ticket with history")
+            .registeringPerson(people.get(0))
+            .assignedPerson(people.get(2))
+            .project(projects.get(0))
+            .build();
+    TicketEntity savedTicket = ticketRepository.save(ticketWithHistory);
+    TicketHistoryEntity h1 =
+        TicketHistoryEntity.builder()
+            .ticket(savedTicket)
+            .date(Instant.now())
+            .fromState(TicketStatus.CREATED)
+            .toState(TicketStatus.ASSIGNED)
+            .fromPerson(people.get(0))
+            .toPerson(people.get(2))
+            .comment("Created ticket for problem xyz.")
+            .build();
+    TicketHistoryEntity h2 =
+        TicketHistoryEntity.builder()
+            .ticket(savedTicket)
+            .date(Instant.now())
+            .fromState(TicketStatus.ASSIGNED)
+            .toState(TicketStatus.ASSIGNED)
+            .fromPerson(people.get(2))
+            .toPerson(people.get(3))
+            .comment("Assigned problem to further analysis.")
+            .build();
+    TicketHistoryEntity h3 =
+        TicketHistoryEntity.builder()
+            .ticket(savedTicket)
+            .date(Instant.now())
+            .fromState(TicketStatus.ASSIGNED)
+            .toState(TicketStatus.SEND_TO_CLIENT)
+            .fromPerson(people.get(3))
+            .toPerson(people.get(0))
+            .comment("Analysis completed. Problem no longer exists.")
+            .build();
+    TicketHistoryEntity h4 =
+        TicketHistoryEntity.builder()
+            .ticket(savedTicket)
+            .date(Instant.now())
+            .fromState(TicketStatus.SEND_TO_CLIENT)
+            .toState(TicketStatus.CLOSED)
+            .fromPerson(people.get(0))
+            .toPerson(people.get(4))
+            .comment("Analysis completed. Problem no longer exists.")
+            .build();
+    List<TicketHistoryEntity> ticketHistories = List.of(h1, h2, h3, h4);
+    ticketHistoryRepository.saveAll(ticketHistories);
   }
 }

@@ -14,9 +14,9 @@ public enum PersonRole {
   private final String value;
 
   public static PersonRole fromValue(String value) {
-    for (PersonRole projectStatus : values()) {
-      if (projectStatus.value.equalsIgnoreCase(value)) {
-        return projectStatus;
+    for (PersonRole personRole : values()) {
+      if (personRole.value.equalsIgnoreCase(value)) {
+        return personRole;
       }
     }
     throw new BadRequestException("Unsupported project status: " + value);

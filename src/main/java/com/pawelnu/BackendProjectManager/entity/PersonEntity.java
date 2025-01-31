@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class PersonEntity {
+public class PersonEntity extends Auditable {
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)

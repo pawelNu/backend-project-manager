@@ -19,7 +19,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class TicketHierarchyEntity {
+public class TicketHierarchyEntity extends Auditable {
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
