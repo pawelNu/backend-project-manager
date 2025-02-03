@@ -37,6 +37,7 @@ public class CompanyServiceImpl implements CompanyService {
   @Override
   public CompanyDTO createCompany(CompanyCreateRequestDTO companyCreateRequestDTO) {
     CompanyEntity companyEntity = mapper.toEntity(companyCreateRequestDTO);
+    companyEntity.setStatus(CompanyStatus.ACTIVE);
     CompanyEntity savedCompany = repository.save(companyEntity);
     return mapper.toDTO(savedCompany);
   }

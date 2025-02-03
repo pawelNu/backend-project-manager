@@ -17,6 +17,9 @@ public class CompanyController implements CompanyRestApi {
   @Override
   public ResponseEntity<CompanyDTO> createCompany(
       String authorizationHeader, CompanyCreateRequestDTO body) {
+//    TODO add authentication
+//    TODO add authorization
+//    TODO add request logging
     CompanyDTO createdCompany = service.createCompany(body);
     return ResponseEntity.status(HttpStatus.CREATED).body(createdCompany);
   }

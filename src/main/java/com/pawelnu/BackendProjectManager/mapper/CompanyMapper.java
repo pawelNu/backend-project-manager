@@ -14,15 +14,15 @@ public interface CompanyMapper {
   CompanyDTO toDTO(CompanyEntity companyEntity);
 
   @Mapping(target = "id", ignore = true)
-  CompanyEntity toEntity(CompanyCreateRequestDTO projectCreateRequest);
+  CompanyEntity toEntity(CompanyCreateRequestDTO companyCreateRequest);
 
-  List<CompanyDTO> toCompanyDTOList(List<CompanyEntity> projects);
+  List<CompanyDTO> toCompanyDTOList(List<CompanyEntity> companys);
 
-  default String statusToString(CompanyStatus projectStatus) {
-    return projectStatus.getValue();
+  default String statusToString(CompanyStatus companyStatus) {
+    return companyStatus.getValue();
   }
 
-  default CompanyStatus statusToEnum(String projectStatus) {
-    return CompanyStatus.fromValue(projectStatus);
+  default CompanyStatus statusToEnum(String companyStatus) {
+    return CompanyStatus.fromValue(companyStatus);
   }
 }
