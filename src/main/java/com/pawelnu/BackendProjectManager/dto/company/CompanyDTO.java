@@ -1,10 +1,10 @@
-package com.pawelnu.BackendProjectManager.dto.project;
+package com.pawelnu.BackendProjectManager.dto.company;
 
 import java.util.UUID;
 import lombok.Data;
 
 @Data
-public class ProjectDTO {
+public class CompanyDTO {
 
   private UUID id;
   private String name;
