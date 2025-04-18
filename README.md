@@ -2,14 +2,14 @@
 
 <!-- TOC -->
 * [Project Manager - Backend](#project-manager---backend)
-  * [Technology stack:](#technology-stack)
-      * [Main](#main)
-      * [DB](#db)
-      * [Tools/libs](#toolslibs)
-  * [Github repositories](#github-repositories)
-  * [Postman collection](#postman-collection)
-  * [Code standards](#code-standards)
-  * [Commit prefixes:](#commit-prefixes)
+* [Technology stack:](#technology-stack)
+	* [Main](#main)
+	* [DB](#db)
+	* [Tools/libs](#toolslibs)
+* [Github repositories](#github-repositories)
+* [Postman collection](#postman-collection)
+* [Code standards](#code-standards)
+* [Commit prefixes:](#commit-prefixes)
 <!-- TOC -->
 
 ## Technology stack:

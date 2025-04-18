@@ -5,6 +5,6 @@ import lombok.Data;
 @Data
 public class ProjectCreateRequestDTO {
 
-    private String name;
-    private String status = "No";
+  private String name;
+  private String status = "No";
 }

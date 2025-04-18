@@ -8,15 +8,14 @@ import java.util.UUID;
 
 public interface IProjectService {
 
-    ProjectFilteringResponseDTO getAllProjects(
-            Integer pageNumber, Integer pageSize, String field, Boolean isAscendingSorting);
+  ProjectFilteringResponseDTO getAllProjects(
+      Integer pageNumber, Integer pageSize, String field, Boolean isAscendingSorting);
 
-    ProjectDTO getProjectById(UUID id);
+  ProjectDTO getProjectById(UUID id);
 
-    ProjectDTO createProject(ProjectCreateRequestDTO projectCreateRequest);
+  ProjectDTO createProject(ProjectCreateRequestDTO projectCreateRequest);
 
-    String deleteProjectById(UUID id);
+  String deleteProjectById(UUID id);
 
-    ProjectFilteringResponseDTO searchProject(
-            ProjectFilteringRequestDTO projectFilteringRequestDTO);
+  ProjectFilteringResponseDTO searchProject(ProjectFilteringRequestDTO projectFilteringRequestDTO);
 }

@@ -1,9 +1,11 @@
 package com.pawelnu.BackendProjectManager.entity;
 
-import com.pawelnu.BackendProjectManager.enums.Status;
+import com.pawelnu.BackendProjectManager.enums.ProjectStatus;
 import jakarta.persistence.*;
+import java.util.List;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -12,12 +14,22 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProjectEntity {
+@Builder
+public class ProjectEntity extends Auditable {
 
-    @Id private UUID id = UUID.randomUUID();
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  private UUID id;
 
-    private String name;
+  private String name;
 
-    @Enumerated(value = EnumType.STRING)
-    private Status status;
+  @Enumerated(value = EnumType.STRING)
+  private ProjectStatus projectStatus;
+
+  @ManyToOne
+  @JoinColumn(name = "company_id")
+  private CompanyEntity company;
+
+  @OneToMany(mappedBy = "project")
+  private List<TicketEntity> tickets;
 }

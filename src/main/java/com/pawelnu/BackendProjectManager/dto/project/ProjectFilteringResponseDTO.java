@@ -9,6 +9,6 @@ import lombok.Data;
 @Builder
 public class ProjectFilteringResponseDTO {
 
-    private List<ProjectDTO> projects;
-    private PagingAndSortingMetadataDTO paging;
+  private List<ProjectDTO> projects;
+  private PagingAndSortingMetadataDTO paging;
 }

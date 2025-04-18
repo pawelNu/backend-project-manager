@@ -16,53 +16,52 @@ import org.springframework.data.domain.Sort;
 @Mapper(componentModel = "spring")
 public interface PagingAndSortingMapper {
 
-    default Pageable toPageable(PagingAndSortingRequestDTO pagingAndSortingRequestDTO) {
+  default Pageable toPageable(PagingAndSortingRequestDTO pagingAndSortingRequestDTO) {
 
-        String sortingField = pagingAndSortingRequestDTO.getSortingField();
+    String sortingField = pagingAndSortingRequestDTO.getSortingField();
 
-        if (sortingField == null || sortingField.isEmpty()) {
-            throw new NotNullOrEmptyException(
-                    Messages.SORTING_FIELD_CANNOT_BE_NULL_OR_EMPTY.getMsg());
-        }
-
-        if (!ListValues.projectSortingFields().contains(sortingField)) {
-            throw new NotFoundSortingFieldException(
-                    Messages.NOT_FOUND_SORTING_FIELD.getMsg() + sortingField);
-        }
-
-        if (pagingAndSortingRequestDTO.getPageNumber() == null
-                || pagingAndSortingRequestDTO.getPageNumber() < 0) {
-            pagingAndSortingRequestDTO.setPageNumber(PageValues.PAGE_NUMBER.getValue());
-        }
-
-        if (pagingAndSortingRequestDTO.getPageSize() == null
-                || pagingAndSortingRequestDTO.getPageSize() < 1) {
-            pagingAndSortingRequestDTO.setPageSize(PageValues.PAGE_SIZE.getValue());
-        }
-
-        Sort.Direction direction =
-                Boolean.TRUE.equals(pagingAndSortingRequestDTO.getIsAscendingSorting())
-                        ? Sort.Direction.ASC
-                        : Sort.Direction.DESC;
-
-        return PageRequest.of(
-                (pagingAndSortingRequestDTO.getPageNumber()),
-                pagingAndSortingRequestDTO.getPageSize(),
-                direction,
-                pagingAndSortingRequestDTO.getSortingField());
+    if (sortingField == null || sortingField.isEmpty()) {
+      throw new NotNullOrEmptyException(Messages.SORTING_FIELD_CANNOT_BE_NULL_OR_EMPTY.getMsg());
     }
 
-    default PagingAndSortingMetadataDTO toPagingAndSortingMetadataDTO(
-            Page<?> page, PagingAndSortingRequestDTO pagingAndSortingRequestDTO) {
-        return PagingAndSortingMetadataDTO.builder()
-                .pageNumber(page.getNumber())
-                .pageSize(page.getSize())
-                .totalPages(page.getTotalPages())
-                .totalElements(page.getTotalElements())
-                .first(page.isFirst())
-                .last(page.isLast())
-                .sortingField(pagingAndSortingRequestDTO.getSortingField())
-                .isAscendingSorting(pagingAndSortingRequestDTO.getIsAscendingSorting())
-                .build();
+    if (!ListValues.projectSortingFields().contains(sortingField)) {
+      throw new NotFoundSortingFieldException(
+          Messages.NOT_FOUND_SORTING_FIELD.getMsg() + sortingField);
     }
+
+    if (pagingAndSortingRequestDTO.getPageNumber() == null
+        || pagingAndSortingRequestDTO.getPageNumber() < 0) {
+      pagingAndSortingRequestDTO.setPageNumber(PageValues.PAGE_NUMBER.getValue());
+    }
+
+    if (pagingAndSortingRequestDTO.getPageSize() == null
+        || pagingAndSortingRequestDTO.getPageSize() < 1) {
+      pagingAndSortingRequestDTO.setPageSize(PageValues.PAGE_SIZE.getValue());
+    }
+
+    Sort.Direction direction =
+        Boolean.TRUE.equals(pagingAndSortingRequestDTO.getIsAscendingSorting())
+            ? Sort.Direction.ASC
+            : Sort.Direction.DESC;
+
+    return PageRequest.of(
+        (pagingAndSortingRequestDTO.getPageNumber()),
+        pagingAndSortingRequestDTO.getPageSize(),
+        direction,
+        pagingAndSortingRequestDTO.getSortingField());
+  }
+
+  default PagingAndSortingMetadataDTO toPagingAndSortingMetadataDTO(
+      Page<?> page, PagingAndSortingRequestDTO pagingAndSortingRequestDTO) {
+    return PagingAndSortingMetadataDTO.builder()
+        .pageNumber(page.getNumber())
+        .pageSize(page.getSize())
+        .totalPages(page.getTotalPages())
+        .totalElements(page.getTotalElements())
+        .first(page.isFirst())
+        .last(page.isLast())
+        .sortingField(pagingAndSortingRequestDTO.getSortingField())
+        .isAscendingSorting(pagingAndSortingRequestDTO.getIsAscendingSorting())
+        .build();
+  }
 }

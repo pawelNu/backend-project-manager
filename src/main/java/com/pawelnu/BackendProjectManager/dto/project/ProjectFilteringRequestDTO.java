@@ -8,7 +8,7 @@ import lombok.Data;
 @Data
 public class ProjectFilteringRequestDTO {
 
-    private List<String> projectNameKeywords = new ArrayList<>();
-    private List<String> projectStatuses = new ArrayList<>();
-    private PagingAndSortingRequestDTO paging = new PagingAndSortingRequestDTO();
+  private List<String> projectNameKeywords = new ArrayList<>();
+  private List<String> projectStatuses = new ArrayList<>();
+  private PagingAndSortingRequestDTO paging = new PagingAndSortingRequestDTO();
 }

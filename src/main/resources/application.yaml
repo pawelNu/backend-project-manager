@@ -1,3 +1,6 @@
+api:
+  host: localhost
+
 server:
   port: 8080
 
@@ -5,20 +8,35 @@ spring:
   datasource:
     url: jdbc:h2:mem:projectmanager
     username: test
-    password: test
+    password:
     driverClassName: org.h2.Driver
   h2:
     console.enabled: true
   jpa:
     properties:
       hibernate:
+        ddl-auto: create
         dialect: org.hibernate.dialect.H2Dialect
-        format_sql: false
+        format_sql: true
     show-sql: true
+  jackson:
+    time-zone: UTC
 
-  liquibase:
-    change-log: classpath:/db/changelog/db.changelog-master.yaml
-    enabled: true
+#  liquibase:
+#    change-log: classpath:/db/changelog/db.changelog-master.yaml
+#    enabled: true
+
+springdoc:
+  api-docs:
+    path: /projectManager
+  swagger-ui:
+    path: /
+    docExpansion: none
+    tags-sorter: alpha
+    operations-sorter: method
+    syntaxHighlight:
+      theme: arta
+    disable-swagger-default-url: true
 
 #logging:
 #  level:

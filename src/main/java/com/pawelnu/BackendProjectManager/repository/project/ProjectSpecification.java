@@ -13,59 +13,53 @@ import org.springframework.data.jpa.domain.Specification;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ProjectSpecification {
 
-    public static Specification<ProjectEntity> filterProject(
-            ProjectFilteringRequestDTO projectFilteringRequestDTO) {
+  public static Specification<ProjectEntity> filterProject(
+      ProjectFilteringRequestDTO projectFilteringRequestDTO) {
 
-        Specification<ProjectEntity> specification = Specification.where(null);
+    Specification<ProjectEntity> specification = Specification.where(null);
 
-        if (projectFilteringRequestDTO != null) {
-            specification =
-                    specification
-                            .and(
-                                    findByProjectName(
-                                            projectFilteringRequestDTO.getProjectNameKeywords()))
-                            .and(
-                                    findByProjectStatus(
-                                            projectFilteringRequestDTO.getProjectStatuses()));
-        }
-
-        return specification;
+    if (projectFilteringRequestDTO != null) {
+      specification =
+          specification
+              .and(findByProjectName(projectFilteringRequestDTO.getProjectNameKeywords()))
+              .and(findByProjectStatus(projectFilteringRequestDTO.getProjectStatuses()));
     }
 
-    private static Specification<ProjectEntity> findByProjectName(List<String> keywords) {
-        if (keywords == null || keywords.isEmpty()) {
-            return null;
-        }
-        return (root, query, criteriaBuilder) -> {
-            Predicate[] predicates =
-                    keywords.stream()
-                            .map(
-                                    keyword ->
-                                            criteriaBuilder.like(
-                                                    criteriaBuilder.lower(
-                                                            root.get(ProjectEntity_.NAME)),
-                                                    "%" + keyword.toLowerCase() + "%"))
-                            .toArray(Predicate[]::new);
+    return specification;
+  }
 
-            return criteriaBuilder.or(predicates);
-        };
+  private static Specification<ProjectEntity> findByProjectName(List<String> keywords) {
+    if (keywords == null || keywords.isEmpty()) {
+      return null;
     }
+    return (root, query, criteriaBuilder) -> {
+      Predicate[] predicates =
+          keywords.stream()
+              .map(
+                  keyword ->
+                      criteriaBuilder.like(
+                          criteriaBuilder.lower(root.get(ProjectEntity_.NAME)),
+                          "%" + keyword.toLowerCase() + "%"))
+              .toArray(Predicate[]::new);
 
-    private static Specification<ProjectEntity> findByProjectStatus(List<String> projectStatuses) {
-        if (projectStatuses == null || projectStatuses.isEmpty()) {
-            return null;
-        }
-        return (root, query, criteriaBuilder) -> {
-            Predicate[] predicates =
-                    projectStatuses.stream()
-                            .map(
-                                    status ->
-                                            criteriaBuilder.equal(
-                                                    root.get(ProjectEntity_.STATUS),
-                                                    Status.fromValue(status)))
-                            .toArray(Predicate[]::new);
+      return criteriaBuilder.or(predicates);
+    };
+  }
 
-            return criteriaBuilder.or(predicates);
-        };
+  private static Specification<ProjectEntity> findByProjectStatus(List<String> projectStatuses) {
+    if (projectStatuses == null || projectStatuses.isEmpty()) {
+      return null;
     }
+    return (root, query, criteriaBuilder) -> {
+      Predicate[] predicates =
+          projectStatuses.stream()
+              .map(
+                  status ->
+                      criteriaBuilder.equal(
+                          root.get(ProjectEntity_.STATUS), Status.fromValue(status)))
+              .toArray(Predicate[]::new);
+
+      return criteriaBuilder.or(predicates);
+    };
+  }
 }
