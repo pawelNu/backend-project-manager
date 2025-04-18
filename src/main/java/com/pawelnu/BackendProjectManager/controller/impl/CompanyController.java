@@ -20,7 +20,16 @@ public class CompanyController implements CompanyRestApi {
     //    TODO add authentication
     //    TODO add authorization
     //    TODO add request logging
+
     CompanyDTO createdCompany = service.createCompany(body);
+
     return ResponseEntity.status(HttpStatus.CREATED).body(createdCompany);
   }
+
+  //  TODO get all companies list
+  //  TODO get company by id
+  //  TODO post company
+  //  TODO put compnay by id
+  //  TODO delete company by id
+  //  TODO add custom filters
 }
