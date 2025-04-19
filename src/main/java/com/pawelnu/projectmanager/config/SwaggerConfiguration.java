@@ -52,7 +52,7 @@ public class SwaggerConfiguration {
                 .version(PomProperties.getReleaseWithDesc()))
         .externalDocs(
             new ExternalDocumentation()
-                .url("/projectManager.yaml")
+                .url("/project-manager.yaml")
                 .description("Download YAML docs"))
         .addSecurityItem(new SecurityRequirement().addList(securitySchemeName))
         .components(
