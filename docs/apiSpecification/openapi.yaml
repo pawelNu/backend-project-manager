@@ -1,0 +1,15 @@
+openapi: 3.0.0
+info:
+  title: API Project Manger
+  version: release 2025-04-19
+
+paths:
+  /companies:
+    $ref: ./paths/companies.yaml
+
+components:
+  schemas:
+    CompanyDTO:
+      $ref: ./components/schemas/companies/CompanyDTO.yaml
+    CompanyListResponseDTO:
+      $ref: ./components/schemas/companies/CompanyListResponseDTO.yaml
