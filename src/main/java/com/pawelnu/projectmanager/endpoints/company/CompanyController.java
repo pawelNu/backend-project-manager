@@ -17,6 +17,7 @@ public class CompanyController implements CompaniesApi {
       @Valid Integer pageSize,
       @Valid String sortingField,
       @Valid Boolean isAscendingSorting) {
+//    TODO finish implementation
     return null;
   }
 }
