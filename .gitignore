@@ -34,6 +34,5 @@ build/
 /.mvn/
 /mvnw
 /mvnw.cmd
-/docs/
 /logs/
-/docs/api/TODO.txt
+/docs/scripts/utils.py

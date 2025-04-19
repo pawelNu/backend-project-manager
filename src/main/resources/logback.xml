@@ -28,7 +28,7 @@
     <appender-ref ref="Console"/>
   </root>
 
-  <logger name="com.pawelnu.BackendProjectManager" level="debug" additivity="false">
+  <logger name="com.pawelnu.projectmanager" level="debug" additivity="false">
     <appender-ref ref="Console"/>
     <appender-ref ref="RollingFile"/>
   </logger>

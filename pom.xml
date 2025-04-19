@@ -87,11 +87,11 @@
     <!--			<scope>provided</scope>-->
     <!--		</dependency>-->
 
-    <!--		<dependency>-->
-    <!--			<groupId>com.pawelNu.BackendProjectManager</groupId>-->
-    <!--			<artifactId>rest-api</artifactId>-->
-    <!--			<version>1.0.0</version>-->
-    <!--		</dependency>-->
+    		<dependency>
+    			<groupId>com.pawelnu.projectmanager</groupId>
+    			<artifactId>projectmanager-rest-api</artifactId>
+    			<version>0.1.0</version>
+    		</dependency>
 
     <dependency>
       <groupId>org.zalando</groupId>

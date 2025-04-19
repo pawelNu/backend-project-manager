@@ -1,0 +1,34 @@
+get:
+  tags:
+    - CompaniesController
+  operationId: getAllCompanies
+  parameters:
+    - name: pageNumber
+      in: query
+      required: false
+      schema:
+        type: integer
+        format: int32
+    - name: pageSize
+      in: query
+      required: false
+      schema:
+        type: integer
+        format: int32
+    - name: sortingField
+      in: query
+      required: false
+      schema:
+        type: string
+    - name: isAscendingSorting
+      in: query
+      required: false
+      schema:
+        type: boolean
+  responses:
+    "200":
+      description: OK
+      content:
+        "*/*":
+          schema:
+            $ref: ../components/schemas/companies/CompanyListResponseDTO.yaml

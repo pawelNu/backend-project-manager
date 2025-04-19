@@ -1,0 +1,12 @@
+package com.pawelnu.projectmanager.dto.project;
+
+import java.util.UUID;
+import lombok.Data;
+
+@Data
+public class ProjectDTO {
+
+  private UUID id;
+  private String name;
+  private String status;
+}
