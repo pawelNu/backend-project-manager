@@ -25,17 +25,39 @@ public class CompanyService {
   private final PagingAndSortingMapper pageMapper;
 
   public CompanyListResponseDTO getAllCompanies(
-      Integer pageNumber, Integer pageSize, String sortingField, Boolean isAscendingSorting) {
-    Sort sort =
-        isAscendingSorting ? Sort.by(sortingField).ascending() : Sort.by(sortingField).descending();
-    Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
+      Integer pageNumber, Integer pageSize, String sortedBy, String direction) {
+    Pageable pageable = preparePageable(pageNumber, pageSize, sortedBy, direction);
     Page<CompanyEntity> page = companyRepository.findAll(pageable);
     List<CompanyDTO> companyDTOs = page.getContent().stream().map(companyMapper::toDTO).toList();
-    Order pageSort = page.getSort().stream().findFirst().orElse(Sort.Order.by("name"));
+    Order pageSort = page.getSort().stream().findFirst().orElse(null);
     PagingAndSortingMetadataDTO paging = pageMapper.toPagingAndSortingMetadataDTO(page, pageSort);
     CompanyListResponseDTO response = new CompanyListResponseDTO();
     response.setData(companyDTOs);
     response.setPaging(paging);
     return response;
   }
+
+  private static Pageable preparePageable(Integer pageNumber, Integer pageSize, String sortedBy,
+      String direction) {
+    if (pageNumber == null) {
+      pageNumber = 0;
+    }
+    if (pageSize == null) {
+      pageSize = 10;
+    }
+    Sort sort = getSort(sortedBy, direction);
+    return PageRequest.of(pageNumber, pageSize, sort);
+  }
+
+  private static Sort getSort(String sortedBy, String direction) {
+    if (direction != null && sortedBy != null) {
+      return switch (direction.toLowerCase()) {
+        case "asc" -> Sort.by(sortedBy).ascending();
+        case "desc" -> Sort.by(sortedBy).descending();
+        default -> Sort.unsorted();
+      };
+    }
+    return Sort.unsorted();
+  }
+
 }

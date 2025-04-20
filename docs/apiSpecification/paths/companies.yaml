@@ -5,26 +5,32 @@ get:
   parameters:
     - name: pageNumber
       in: query
-      required: true
+      description: Page number from 0
+      required: false
       schema:
         type: integer
         format: int32
+        default: 0
     - name: pageSize
       in: query
-      required: true
+      description: Page size
+      required: false
       schema:
         type: integer
         format: int32
-    - name: sortingField
+        default: 10
+    - name: sortedBy
       in: query
-      required: true
+      description: Name of sorting field
+      required: false
       schema:
         type: string
-    - name: isAscendingSorting
+    - name: direction
       in: query
-      required: true
+      description: "Direction of sorting: asc, desc, empty - no order"
+      required: false
       schema:
-        type: boolean
+        type: string
   responses:
     "200":
       description: OK

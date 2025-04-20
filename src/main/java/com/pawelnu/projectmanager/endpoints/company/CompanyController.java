@@ -2,6 +2,7 @@ package com.pawelnu.projectmanager.endpoints.company;
 
 import com.pawelnu.projectmanager.api.CompaniesApi;
 import com.pawelnu.projectmanager.model.CompanyListResponseDTO;
+import com.pawelnu.projectmanager.utils.ResponseErrors;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
@@ -15,12 +16,10 @@ public class CompanyController implements CompaniesApi {
   private final CompanyService service;
 
   @Override
-  public ResponseEntity<CompanyListResponseDTO> getAllCompanies(
-      @NotNull @Valid Integer pageNumber,
-      @NotNull @Valid Integer pageSize,
-      @NotNull @Valid String sortingField,
-      @NotNull @Valid Boolean isAscendingSorting) {
+  public ResponseEntity<CompanyListResponseDTO> getAllCompanies(@Valid Integer pageNumber,
+      @Valid Integer pageSize, @Valid String sortedBy, @Valid String direction) {
     return ResponseEntity.ok(
-        service.getAllCompanies(pageNumber, pageSize, sortingField, isAscendingSorting));
+        service.getAllCompanies(pageNumber, pageSize, sortedBy, direction));
   }
+  
 }

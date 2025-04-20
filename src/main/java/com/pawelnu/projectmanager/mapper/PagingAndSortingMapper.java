@@ -53,16 +53,6 @@ public interface PagingAndSortingMapper {
   }
 
   default PagingAndSortingMetadataDTO toPagingAndSortingMetadataDTO(Page<?> page, Order sort) {
-    //    return PagingAndSortingMetadataDTO.builder()
-    //        .pageNumber(page.getNumber())
-    //        .pageSize(page.getSize())
-    //        .totalPages(page.getTotalPages())
-    //        .totalElements(page.getTotalElements())
-    //        .first(page.isFirst())
-    //        .last(page.isLast())
-    //        .sortingField(pagingAndSortingRequestDTO.getSortingField())
-    //        .isAscendingSorting(pagingAndSortingRequestDTO.getIsAscendingSorting())
-    //        .build();
     PagingAndSortingMetadataDTO paging = new PagingAndSortingMetadataDTO();
     paging.setPageNumber(page.getNumber());
     paging.setPageSize(page.getSize());
@@ -72,8 +62,13 @@ public interface PagingAndSortingMapper {
     paging.setLast(page.isLast());
     paging.setHasPrevious(page.hasPrevious());
     paging.setHasNext(page.hasNext());
-    paging.setSortingField(sort.getProperty());
-    paging.setIsAscendingSorting(sort.isAscending());
+    if (sort == null) {
+      paging.setSortingField(null);
+      paging.setIsAscendingSorting(null);
+    } else {
+      paging.setSortingField(sort.getProperty());
+      paging.setIsAscendingSorting(sort.isAscending());
+    }
     return paging;
   }
 }
