@@ -1,10 +1,9 @@
 package com.pawelnu.projectmanager.mapper;
 
 import com.pawelnu.projectmanager.dto.company.CompanyCreateRequestDTO;
-import com.pawelnu.projectmanager.dto.company.CompanyDTO;
-import com.pawelnu.projectmanager.entity.CompanyEntity;
+import com.pawelnu.projectmanager.endpoints.company.CompanyEntity;
 import com.pawelnu.projectmanager.enums.CompanyStatus;
-import java.util.List;
+import com.pawelnu.projectmanager.model.CompanyDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -16,7 +15,7 @@ public interface CompanyMapper {
   @Mapping(target = "id", ignore = true)
   CompanyEntity toEntity(CompanyCreateRequestDTO companyCreateRequest);
 
-  List<CompanyDTO> toCompanyDTOList(List<CompanyEntity> companys);
+  //  List<CompanyDTO> toCompanyDTOList(List<CompanyEntity> companys);
 
   default String statusToString(CompanyStatus companyStatus) {
     return companyStatus.getValue();

@@ -39,5 +39,6 @@ public class PomProperties {
   public static void setLocaleProperties() {
     Locale.setDefault(new Locale("pl", "PL"));
     TimeZone.setDefault(TimeZone.getTimeZone("Europe/Warsaw"));
+    //    TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
   }
 }

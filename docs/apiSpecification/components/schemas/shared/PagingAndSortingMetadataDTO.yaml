@@ -20,3 +20,7 @@ properties:
     type: string
   isAscendingSorting:
     type: boolean
+  hasPrevious:
+    type: boolean
+  hasNext:
+    type: boolean

@@ -1,5 +1,6 @@
 package com.pawelnu.projectmanager.entity;
 
+import com.pawelnu.projectmanager.endpoints.company.CompanyEntity;
 import com.pawelnu.projectmanager.enums.ProjectStatus;
 import jakarta.persistence.*;
 import java.util.List;

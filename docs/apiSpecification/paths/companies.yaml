@@ -5,30 +5,30 @@ get:
   parameters:
     - name: pageNumber
       in: query
-      required: false
+      required: true
       schema:
         type: integer
         format: int32
     - name: pageSize
       in: query
-      required: false
+      required: true
       schema:
         type: integer
         format: int32
     - name: sortingField
       in: query
-      required: false
+      required: true
       schema:
         type: string
     - name: isAscendingSorting
       in: query
-      required: false
+      required: true
       schema:
         type: boolean
   responses:
     "200":
       description: OK
       content:
-        "*/*":
+        application/json:
           schema:
             $ref: ../components/schemas/companies/CompanyListResponseDTO.yaml

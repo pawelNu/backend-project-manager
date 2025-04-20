@@ -1,6 +1,5 @@
-package com.pawelnu.projectmanager.repository;
+package com.pawelnu.projectmanager.endpoints.company;
 
-import com.pawelnu.projectmanager.entity.CompanyEntity;
 import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 

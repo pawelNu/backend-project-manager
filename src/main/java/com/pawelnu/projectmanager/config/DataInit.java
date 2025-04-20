@@ -1,6 +1,8 @@
 package com.pawelnu.projectmanager.config;
 
-import com.pawelnu.projectmanager.entity.CompanyEntity;
+import com.github.javafaker.Faker;
+import com.pawelnu.projectmanager.endpoints.company.CompanyEntity;
+import com.pawelnu.projectmanager.endpoints.company.CompanyRepository;
 import com.pawelnu.projectmanager.entity.PersonEntity;
 import com.pawelnu.projectmanager.entity.ProjectEntity;
 import com.pawelnu.projectmanager.entity.TicketEntity;
@@ -10,7 +12,6 @@ import com.pawelnu.projectmanager.enums.CompanyStatus;
 import com.pawelnu.projectmanager.enums.PersonRole;
 import com.pawelnu.projectmanager.enums.ProjectStatus;
 import com.pawelnu.projectmanager.enums.TicketStatus;
-import com.pawelnu.projectmanager.repository.CompanyRepository;
 import com.pawelnu.projectmanager.repository.PersonRepository;
 import com.pawelnu.projectmanager.repository.ProjectRepository;
 import com.pawelnu.projectmanager.repository.TicketHierarchyRepository;
@@ -20,9 +21,11 @@ import jakarta.annotation.PostConstruct;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -30,6 +33,7 @@ import org.springframework.stereotype.Component;
 @Log4j2
 public class DataInit {
 
+  private final Faker faker = new Faker();
   private static long counter = 0;
   private final CompanyRepository companyRepository;
   private final ProjectRepository projectRepository;
@@ -37,30 +41,32 @@ public class DataInit {
   private final TicketRepository ticketRepository;
   private final TicketHierarchyRepository ticketHierarchyRepository;
   private final TicketHistoryRepository ticketHistoryRepository;
+  private final JdbcTemplate jdbcTemplate;
 
   @PostConstruct
   private void loadData() {
 
     List<CompanyEntity> companies = createCompanies();
-    List<ProjectEntity> projects = createProjects(companies);
-    List<PersonEntity> people = createPeople(companies);
-    createTickets(people, projects);
-    createTicketsWithSubTickets(people, projects);
-    createTicketWithHistory(people, projects);
+    //    List<ProjectEntity> projects = createProjects(companies);
+    //    List<PersonEntity> people = createPeople(companies);
+    //    createTickets(people, projects);
+    //    createTicketsWithSubTickets(people, projects);
+    //    createTicketWithHistory(people, projects);
   }
 
   private List<CompanyEntity> createCompanies() {
-    CompanyEntity c1 =
-        CompanyEntity.builder().name("Drive S.A.").status(CompanyStatus.ACTIVE).build();
-    CompanyEntity c2 =
-        CompanyEntity.builder().name("Tele S.A.").status(CompanyStatus.ACTIVE).build();
-    CompanyEntity c3 =
-        CompanyEntity.builder().name("Account S.A.").status(CompanyStatus.TERMINATED).build();
-    CompanyEntity c4 =
-        CompanyEntity.builder().name("Main Company S.A.").status(CompanyStatus.ACTIVE).build();
-
-    List<CompanyEntity> companies = List.of(c1, c2, c3, c4);
-
+    List<CompanyEntity> companies = new ArrayList<>();
+    for (int i = 0; i < 10; i++) {
+      CompanyEntity c =
+          CompanyEntity.builder()
+              .name(faker.company().name())
+              .nip(String.valueOf(faker.number().randomNumber(10, true)))
+              .regon(String.valueOf(faker.number().randomNumber(9, true)))
+              .website("https://" + faker.internet().domainName())
+              .status(i % 2 == 0 ? CompanyStatus.ACTIVE : CompanyStatus.TERMINATED)
+              .build();
+      companies.add(c);
+    }
     return companyRepository.saveAll(companies);
   }
 

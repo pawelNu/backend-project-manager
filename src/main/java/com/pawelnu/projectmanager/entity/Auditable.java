@@ -13,8 +13,10 @@ public abstract class Auditable {
   @Version private Integer version;
 
   @CreationTimestamp
-  @Column(updatable = false)
+  @Column(updatable = false, columnDefinition = "timestamp(6) without time zone")
   private Instant created;
 
-  @UpdateTimestamp private Instant lastModified;
+  @UpdateTimestamp
+  @Column(columnDefinition = "timestamp(6) without time zone")
+  private Instant lastModified;
 }
