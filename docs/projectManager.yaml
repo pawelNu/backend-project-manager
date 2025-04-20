@@ -1,0 +1,204 @@
+openapi: 3.0.0
+info:
+  title: API Project Manger
+  description: "Application: <b>Project Manger</b><br>Database: <b>jdbc:h2:mem:projectmanager</b>"
+  version: release 2025-01-17
+externalDocs:
+  description: Pobierz dokumentację w YAML
+  url: /projectManager.yaml
+servers:
+  - url: http://localhost:8080
+    description: Generated server url
+security:
+  - Authorization: []
+paths:
+  /projects:
+    get:
+      tags:
+        - ProjectController
+      operationId: getAllProjects
+      parameters:
+        - name: pageNumber
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int32
+        - name: pageSize
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int32
+        - name: sortingField
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: isAscendingSorting
+          in: query
+          required: false
+          schema:
+            type: boolean
+      responses:
+        "200":
+          description: OK
+          content:
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/ProjectFilteringResponseDTO"
+    post:
+      tags:
+        - ProjectController
+      operationId: createProject
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProjectCreateRequestDTO"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/ProjectDTO"
+  /projects/search:
+    post:
+      tags:
+        - ProjectController
+      operationId: searchProject
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProjectFilteringRequestDTO"
+      responses:
+        "200":
+          description: OK
+          content:
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/ProjectFilteringResponseDTO"
+  /projects/{id}:
+    get:
+      tags:
+        - ProjectController
+      operationId: getProjectById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: OK
+          content:
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/ProjectDTO"
+    delete:
+      tags:
+        - ProjectController
+      operationId: deleteProjectById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: string
+components:
+  schemas:
+    ProjectCreateRequestDTO:
+      type: object
+      properties:
+        name:
+          type: string
+        status:
+          type: string
+    ProjectDTO:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        status:
+          type: string
+    PagingAndSortingRequestDTO:
+      type: object
+      properties:
+        pageNumber:
+          type: integer
+          format: int32
+        pageSize:
+          type: integer
+          format: int32
+        sortingField:
+          type: string
+        isAscendingSorting:
+          type: boolean
+    ProjectFilteringRequestDTO:
+      type: object
+      properties:
+        projectNameKeywords:
+          type: array
+          items:
+            type: string
+        projectStatuses:
+          type: array
+          items:
+            type: string
+        paging:
+          $ref: "#/components/schemas/PagingAndSortingRequestDTO"
+    PagingAndSortingMetadataDTO:
+      type: object
+      properties:
+        pageNumber:
+          type: integer
+          format: int32
+        pageSize:
+          type: integer
+          format: int32
+        totalPages:
+          type: integer
+          format: int32
+        totalElements:
+          type: integer
+          format: int64
+        first:
+          type: boolean
+        last:
+          type: boolean
+        sortingField:
+          type: string
+        isAscendingSorting:
+          type: boolean
+    ProjectFilteringResponseDTO:
+      type: object
+      properties:
+        projects:
+          type: array
+          items:
+            $ref: "#/components/schemas/ProjectDTO"
+        paging:
+          $ref: "#/components/schemas/PagingAndSortingMetadataDTO"
+  securitySchemes:
+    Authorization:
+      type: oauth2
+      name: Authorization
+      flows:
+        clientCredentials:
+          tokenUrl: http://localhost:8080/oauth/token

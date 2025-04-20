@@ -1,0 +1,13 @@
+type: object
+properties:
+  id:
+    type: string
+    format: uuid
+  name:
+    type: string
+  nip:
+    type: string
+  regon:
+    type: string
+  website:
+    type: string
