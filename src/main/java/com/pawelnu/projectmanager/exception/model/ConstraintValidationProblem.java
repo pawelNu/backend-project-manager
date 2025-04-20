@@ -16,9 +16,7 @@ public class ConstraintValidationProblem extends ThrowableProblem {
   public ConstraintValidationProblem(final StatusType status, final List<Violation> violations) {
     this.status = status;
     this.violations =
-        violations != null
-            ? Collections.unmodifiableList(violations)
-            : Collections.emptyList();
+        violations != null ? Collections.unmodifiableList(violations) : Collections.emptyList();
   }
 
   @Override

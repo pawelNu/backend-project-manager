@@ -43,9 +43,7 @@ public class GlobalExceptionHandler implements ProblemHandling {
     StatusType status = this.defaultConstraintViolationStatus();
     List<Violation> violations =
         this.createViolations(exception.getBindingResult()).stream()
-            .sorted(
-                Comparator.comparing(Violation::getField)
-                    .thenComparing(Violation::getMessage))
+            .sorted(Comparator.comparing(Violation::getField).thenComparing(Violation::getMessage))
             .toList();
     Problem problem = new ConstraintValidationProblem(status, violations);
     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(problem);

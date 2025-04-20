@@ -37,8 +37,8 @@ public class CompanyService {
     return response;
   }
 
-  private static Pageable preparePageable(Integer pageNumber, Integer pageSize, String sortedBy,
-      String direction) {
+  private static Pageable preparePageable(
+      Integer pageNumber, Integer pageSize, String sortedBy, String direction) {
     if (pageNumber == null) {
       pageNumber = 0;
     }
@@ -59,5 +59,4 @@ public class CompanyService {
     }
     return Sort.unsorted();
   }
-
 }
