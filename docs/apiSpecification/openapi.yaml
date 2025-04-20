@@ -6,6 +6,8 @@ info:
 paths:
   /companies:
     $ref: ./paths/companies.yaml
+  /companies{id}:
+    $ref: ./paths/companies_id.yaml
 
 components:
   schemas:

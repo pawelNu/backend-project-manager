@@ -1,0 +1,19 @@
+get:
+  tags:
+    - CompaniesController
+  operationId: getCompanyById
+  parameters:
+    - name: id
+      in: path
+      description: Company id
+      required: true
+      schema:
+        type: string
+        format: uuid
+  responses:
+    "200":
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/companies/CompanyDTO.yaml
