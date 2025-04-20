@@ -1,0 +1,11 @@
+databaseChangeLog:
+  - changeSet:
+      id: 0.2.0_01
+      author: pawelNu
+      changes:
+        - sqlFile:
+            path: "company/create_companies_table.sql"
+            relativeToChangelogFile: true
+  - include:
+      file: "test_data/company/insert-data-companies.yaml"
+      relativeToChangelogFile: true
