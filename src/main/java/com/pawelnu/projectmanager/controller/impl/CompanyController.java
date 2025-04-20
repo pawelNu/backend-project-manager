@@ -26,10 +26,9 @@
 //    return ResponseEntity.status(HttpStatus.CREATED).body(createdCompany);
 //  }
 //
-//  //  TODO get all companies list
 //  //  TODO get company by id
 //  //  TODO post company
-//  //  TODO put compnay by id
+//  //  TODO put company by id
 //  //  TODO delete company by id
 //  //  TODO add custom filters
 // }
