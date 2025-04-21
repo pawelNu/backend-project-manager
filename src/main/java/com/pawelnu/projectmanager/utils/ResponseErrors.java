@@ -6,6 +6,7 @@ import static java.lang.annotation.ElementType.TYPE;
 
 import com.pawelnu.projectmanager.exception.model.BadRequestModel;
 import com.pawelnu.projectmanager.exception.model.InternalServerErrorModel;
+import com.pawelnu.projectmanager.exception.model.SimpleErrorResponse;
 import com.pawelnu.projectmanager.exception.model.UnauthorizedModel;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -34,6 +35,14 @@ import org.springframework.http.MediaType;
       @Content(
           mediaType = MediaType.APPLICATION_JSON_VALUE,
           schema = @Schema(implementation = UnauthorizedModel.class))
+    })
+@ApiResponse(
+    responseCode = "404",
+    description = "Not found",
+    content = {
+      @Content(
+          mediaType = MediaType.APPLICATION_JSON_VALUE,
+          schema = @Schema(implementation = SimpleErrorResponse.class))
     })
 @ApiResponse(
     responseCode = "500",

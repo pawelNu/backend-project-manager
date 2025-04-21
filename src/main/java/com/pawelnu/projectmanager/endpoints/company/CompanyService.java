@@ -1,17 +1,18 @@
 package com.pawelnu.projectmanager.endpoints.company;
 
+import com.pawelnu.projectmanager.exception.NotFoundException;
 import com.pawelnu.projectmanager.mapper.CompanyMapper;
 import com.pawelnu.projectmanager.mapper.PagingAndSortingMapper;
 import com.pawelnu.projectmanager.model.CompanyDTO;
 import com.pawelnu.projectmanager.model.CompanyListResponseDTO;
 import com.pawelnu.projectmanager.model.PagingAndSortingMetadataDTO;
+import com.pawelnu.projectmanager.utils.Shared;
 import java.util.List;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Order;
 import org.springframework.stereotype.Service;
 
@@ -24,9 +25,11 @@ public class CompanyService {
   private final CompanyMapper companyMapper;
   private final PagingAndSortingMapper pageMapper;
 
+  private static final String COMPANY_NOT_FOUND_MSG = "Company not found with id: ";
+
   public CompanyListResponseDTO getAllCompanies(
       Integer pageNumber, Integer pageSize, String sortedBy, String direction) {
-    Pageable pageable = preparePageable(pageNumber, pageSize, sortedBy, direction);
+    Pageable pageable = Shared.preparePageable(pageNumber, pageSize, sortedBy, direction);
     Page<CompanyEntity> page = companyRepository.findAll(pageable);
     List<CompanyDTO> companyDTOs = page.getContent().stream().map(companyMapper::toDTO).toList();
     Order pageSort = page.getSort().stream().findFirst().orElse(null);
@@ -37,26 +40,10 @@ public class CompanyService {
     return response;
   }
 
-  private static Pageable preparePageable(
-      Integer pageNumber, Integer pageSize, String sortedBy, String direction) {
-    if (pageNumber == null) {
-      pageNumber = 0;
-    }
-    if (pageSize == null) {
-      pageSize = 10;
-    }
-    Sort sort = getSort(sortedBy, direction);
-    return PageRequest.of(pageNumber, pageSize, sort);
-  }
-
-  private static Sort getSort(String sortedBy, String direction) {
-    if (direction != null && sortedBy != null) {
-      return switch (direction.toLowerCase()) {
-        case "asc" -> Sort.by(sortedBy).ascending();
-        case "desc" -> Sort.by(sortedBy).descending();
-        default -> Sort.unsorted();
-      };
-    }
-    return Sort.unsorted();
+  public CompanyDTO getCompanyById(UUID id) {
+    return companyRepository
+        .findById(id)
+        .map(companyMapper::toDTO)
+        .orElseThrow(() -> new NotFoundException(COMPANY_NOT_FOUND_MSG + id));
   }
 }
