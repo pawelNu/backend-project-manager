@@ -23,8 +23,7 @@ public class CompanyController implements CompaniesApi {
   public ResponseEntity<CompanyDTO> createCompany(
       @Valid CompanyCreateRequestDTO companyCreateRequestDTO) {
     CompanyDTO company = service.createCompany(companyCreateRequestDTO);
-    return ResponseEntity.status(HttpStatus.CREATED)
-        .body(company);
+    return ResponseEntity.status(HttpStatus.CREATED).body(company);
   }
 
   @Override

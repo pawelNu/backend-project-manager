@@ -2,7 +2,7 @@
 
 ## Architecture Decision Record
 
-### 19-04-2025
+### 2025-04-19
 
 | Decision                                             | Reason                                       |
 |------------------------------------------------------|----------------------------------------------|
@@ -12,6 +12,12 @@
 | React chosen for frontend                            | Popular frontend library. Good documentation |
 | Render chosen for hosting                            | Free options, alternative for Heroku         |
 | Liquibase chosen for database management             | Good documentation. Already had experience   |
+
+### 2025-04-21
+
+| Decision                                                | Reason                                                                      |
+|---------------------------------------------------------|-----------------------------------------------------------------------------|
+| Abandoning api and models generation from specification | Unnecessary additional work and no ability to customize validation messages |
 
 ### Example table
 
