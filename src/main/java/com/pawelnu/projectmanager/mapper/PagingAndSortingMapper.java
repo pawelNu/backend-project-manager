@@ -1,12 +1,12 @@
 package com.pawelnu.projectmanager.mapper;
 
+import com.pawelnu.projectmanager.dto.PagingAndSortingMetadataDTO;
 import com.pawelnu.projectmanager.dto.PagingAndSortingRequestDTO;
 import com.pawelnu.projectmanager.enums.Messages;
 import com.pawelnu.projectmanager.enums.PageValues;
 import com.pawelnu.projectmanager.exception.NotFoundSortingFieldException;
 import com.pawelnu.projectmanager.exception.NotNullOrEmptyException;
 import com.pawelnu.projectmanager.listvalues.ListValues;
-import com.pawelnu.projectmanager.model.PagingAndSortingMetadataDTO;
 import org.mapstruct.Mapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;

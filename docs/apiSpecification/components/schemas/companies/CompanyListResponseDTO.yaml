@@ -4,5 +4,5 @@ properties:
     type: array
     items:
       $ref: ./CompanyDTO.yaml
-  paging:
+  page:
     $ref: ../shared/PagingAndSortingMetadataDTO.yaml

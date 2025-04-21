@@ -15,3 +15,7 @@ components:
       $ref: ./components/schemas/companies/CompanyDTO.yaml
     CompanyListResponseDTO:
       $ref: ./components/schemas/companies/CompanyListResponseDTO.yaml
+    CompanyCreateRequestDTO:
+      $ref: ./components/schemas/companies/CompanyCreateRequestDTO.yaml
+    PagingAndSortingMetadataDTO:
+      $ref: ./components/schemas/shared/PagingAndSortingMetadataDTO.yaml

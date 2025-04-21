@@ -10,10 +10,10 @@ public class Shared {
   public static Pageable preparePageable(
       Integer pageNumber, Integer pageSize, String sortedBy, String direction) {
     if (pageNumber == null) {
-      pageNumber = Request.PAGE;
+      pageNumber = Request.PAGE_NUMBER;
     }
     if (pageSize == null) {
-      pageSize = Request.SIZE;
+      pageSize = Request.PAGE_SIZE_NUMBER;
     }
     Sort sort = getSort(sortedBy, direction);
     return PageRequest.of(pageNumber, pageSize, sort);
