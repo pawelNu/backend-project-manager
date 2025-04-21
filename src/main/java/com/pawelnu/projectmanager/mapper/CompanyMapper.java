@@ -1,8 +1,9 @@
 package com.pawelnu.projectmanager.mapper;
 
-import com.pawelnu.projectmanager.dto.company.CompanyCreateRequestDTO;
+
 import com.pawelnu.projectmanager.endpoints.company.CompanyEntity;
 import com.pawelnu.projectmanager.enums.CompanyStatus;
+import com.pawelnu.projectmanager.model.CompanyCreateRequestDTO;
 import com.pawelnu.projectmanager.model.CompanyDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

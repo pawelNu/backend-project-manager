@@ -3,10 +3,12 @@ package com.pawelnu.projectmanager.endpoints.company;
 import com.pawelnu.projectmanager.exception.NotFoundException;
 import com.pawelnu.projectmanager.mapper.CompanyMapper;
 import com.pawelnu.projectmanager.mapper.PagingAndSortingMapper;
+import com.pawelnu.projectmanager.model.CompanyCreateRequestDTO;
 import com.pawelnu.projectmanager.model.CompanyDTO;
 import com.pawelnu.projectmanager.model.CompanyListResponseDTO;
 import com.pawelnu.projectmanager.model.PagingAndSortingMetadataDTO;
 import com.pawelnu.projectmanager.utils.Shared;
+import jakarta.validation.Valid;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Order;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -46,4 +49,11 @@ public class CompanyService {
         .map(companyMapper::toDTO)
         .orElseThrow(() -> new NotFoundException(COMPANY_NOT_FOUND_MSG + id));
   }
+  public CompanyDTO createCompany(
+      CompanyCreateRequestDTO companyCreateRequestDTO) {
+    CompanyEntity companyEntity = companyMapper.toEntity(companyCreateRequestDTO);
+    CompanyEntity savedCompany = companyRepository.save(companyEntity);
+    return companyMapper.toDTO(savedCompany);
+  }
+
 }
