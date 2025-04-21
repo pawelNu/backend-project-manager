@@ -1,6 +1,7 @@
 package com.pawelnu.projectmanager.exception;
 
 import com.pawelnu.projectmanager.exception.model.ConstraintValidationProblem;
+import com.pawelnu.projectmanager.exception.model.SimpleErrorResponse;
 import java.util.Comparator;
 import java.util.List;
 import org.springframework.http.HttpStatus;
@@ -23,8 +24,8 @@ public class GlobalExceptionHandler implements ProblemHandling {
   }
 
   @ExceptionHandler(NotFoundException.class)
-  public ResponseEntity<String> handleNotFoundException(NotFoundException e) {
-    return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+  public ResponseEntity<SimpleErrorResponse> handleNotFoundException(NotFoundException e) {
+    return new ResponseEntity<>(new SimpleErrorResponse(e.getMessage()), HttpStatus.NOT_FOUND);
   }
 
   @ExceptionHandler(NotNullOrEmptyException.class)
