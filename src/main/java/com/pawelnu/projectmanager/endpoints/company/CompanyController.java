@@ -1,5 +1,6 @@
 package com.pawelnu.projectmanager.endpoints.company;
 
+import com.pawelnu.projectmanager.dto.SimpleResponse;
 import jakarta.validation.Valid;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -41,7 +42,11 @@ public class CompanyController implements CompanyRestApi {
     return ResponseEntity.ok(service.editCompanyById(id, body));
   }
 
-  //  //  TODO delete company by id
+  @Override
+  public ResponseEntity<SimpleResponse> deleteCompanyById(String authorizationHeader, UUID id) {
+    return ResponseEntity.ok(service.deleteCompanyById(id));
+  }
+
   //  //  TODO add custom filters
   //    //    TODO add authentication
   //    //    TODO add authorization

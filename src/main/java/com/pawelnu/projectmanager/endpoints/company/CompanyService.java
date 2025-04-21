@@ -1,6 +1,7 @@
 package com.pawelnu.projectmanager.endpoints.company;
 
 import com.pawelnu.projectmanager.dto.PagingAndSortingMetadataDTO;
+import com.pawelnu.projectmanager.dto.SimpleResponse;
 import com.pawelnu.projectmanager.exception.NotFoundException;
 import com.pawelnu.projectmanager.mapper.PagingAndSortingMapper;
 import com.pawelnu.projectmanager.utils.Shared;
@@ -55,6 +56,16 @@ public class CompanyService {
       companyMapper.toEntity(body, existingCompany);
       CompanyEntity updatedCompany = companyRepository.save(existingCompany);
       return companyMapper.toDTO(updatedCompany);
+    } else {
+      throw new NotFoundException(COMPANY_NOT_FOUND_MSG + id);
+    }
+  }
+
+  public SimpleResponse deleteCompanyById(UUID id) {
+    Optional<CompanyEntity> companyToDelete = companyRepository.findById(id);
+    if (companyToDelete.isPresent()) {
+      companyRepository.delete(companyToDelete.get());
+      return SimpleResponse.builder().message("Deleted company with id: " + id).build();
     } else {
       throw new NotFoundException(COMPANY_NOT_FOUND_MSG + id);
     }
