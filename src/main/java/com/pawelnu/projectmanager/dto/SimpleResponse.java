@@ -6,5 +6,5 @@ import lombok.Data;
 @Data
 @Builder
 public class SimpleResponse {
-private String message;
+  private String message;
 }
