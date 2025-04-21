@@ -35,7 +35,6 @@ public class CompanyController implements CompanyRestApi {
     return ResponseEntity.ok(service.getCompanyById(id));
   }
 
-  //  //  TODO post company
   //  //  TODO put company by id
   //  //  TODO delete company by id
   //  //  TODO add custom filters
