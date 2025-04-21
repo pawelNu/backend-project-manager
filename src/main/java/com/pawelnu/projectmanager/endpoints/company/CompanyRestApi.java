@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Tag(name = "Companies")
 @RequestMapping("companies")
 public interface CompanyRestApi {
+
   // TODO @RequestHeader(required = false change to true, when auth will be done
   @ApiResponse(
       responseCode = "201",
@@ -88,4 +90,21 @@ public interface CompanyRestApi {
       @Parameter(hidden = true) @RequestHeader(required = false, value = Request.AUTH_HEADER)
           String authorizationHeader,
       @Parameter() @PathVariable() UUID id);
+
+  @ApiResponse(
+      responseCode = "200",
+      description = "OK",
+      content = {
+        @Content(
+            mediaType = MediaType.APPLICATION_JSON_VALUE,
+            schema = @Schema(implementation = CompanyDTO.class))
+      })
+  @ResponseErrors
+  @PutMapping("/{id}")
+  @Operation(description = "Edit company by id.")
+  ResponseEntity<CompanyDTO> editCompanyById(
+      @Parameter(hidden = true) @RequestHeader(required = false, value = Request.AUTH_HEADER)
+          String authorizationHeader,
+      @Parameter() @PathVariable() UUID id,
+      @Valid @RequestBody CompanyEditRequestDTO body);
 }

@@ -2,10 +2,10 @@ package com.pawelnu.projectmanager.endpoints.company;
 
 import com.pawelnu.projectmanager.dto.PagingAndSortingMetadataDTO;
 import com.pawelnu.projectmanager.exception.NotFoundException;
-import com.pawelnu.projectmanager.mapper.CompanyMapper;
 import com.pawelnu.projectmanager.mapper.PagingAndSortingMapper;
 import com.pawelnu.projectmanager.utils.Shared;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -46,5 +46,17 @@ public class CompanyService {
     CompanyEntity companyEntity = companyMapper.toEntity(companyCreateRequestDTO);
     CompanyEntity savedCompany = companyRepository.save(companyEntity);
     return companyMapper.toDTO(savedCompany);
+  }
+
+  public CompanyDTO editCompanyById(UUID id, CompanyEditRequestDTO body) {
+    Optional<CompanyEntity> companyToEdit = companyRepository.findById(id);
+    if (companyToEdit.isPresent()) {
+      CompanyEntity existingCompany = companyToEdit.get();
+      companyMapper.toEntity(body, existingCompany);
+      CompanyEntity updatedCompany = companyRepository.save(existingCompany);
+      return companyMapper.toDTO(updatedCompany);
+    } else {
+      throw new NotFoundException(COMPANY_NOT_FOUND_MSG + id);
+    }
   }
 }

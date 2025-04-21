@@ -1,11 +1,9 @@
-package com.pawelnu.projectmanager.mapper;
+package com.pawelnu.projectmanager.endpoints.company;
 
-import com.pawelnu.projectmanager.endpoints.company.CompanyCreateRequestDTO;
-import com.pawelnu.projectmanager.endpoints.company.CompanyDTO;
-import com.pawelnu.projectmanager.endpoints.company.CompanyEntity;
 import com.pawelnu.projectmanager.enums.CompanyStatus;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 
 @Mapper(componentModel = "spring")
 public interface CompanyMapper {
@@ -14,6 +12,10 @@ public interface CompanyMapper {
 
   @Mapping(target = "id", ignore = true)
   CompanyEntity toEntity(CompanyCreateRequestDTO companyCreateRequest);
+
+  @Mapping(target = "id", ignore = true)
+  CompanyEntity toEntity(
+      CompanyEditRequestDTO companyEditRequestDTO, @MappingTarget CompanyEntity companyEntity);
 
   //  List<CompanyDTO> toCompanyDTOList(List<CompanyEntity> companys);
 

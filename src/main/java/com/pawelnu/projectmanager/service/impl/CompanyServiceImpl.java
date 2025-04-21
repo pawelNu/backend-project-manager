@@ -8,7 +8,7 @@
 // import com.pawelnu.projectmanager.endpoints.company.CompanyEntity;
 // import com.pawelnu.projectmanager.endpoints.company.CompanyRepository;
 // import com.pawelnu.projectmanager.enums.CompanyStatus;
-// import com.pawelnu.projectmanager.mapper.CompanyMapper;
+// import com.pawelnu.projectmanager.endpoints.company.CompanyMapper;
 // import com.pawelnu.projectmanager.service.CompanyService;
 // import java.util.List;
 // import java.util.UUID;
