@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @Tag(name = "Companies")
 @RequestMapping("companies")
-public interface CompanyRestApi {
+public interface CompanyApi {
 
   // TODO @RequestHeader(required = false change to true, when auth will be done
   @ApiResponse(
@@ -76,6 +76,22 @@ public interface CompanyRestApi {
       @Parameter(description = "Sorting direction [asc, desc, other - not sorted]")
           @RequestParam(required = false, name = Request.DIRECTION_NAME)
           String direction);
+
+  @ApiResponse(
+      responseCode = "200",
+      description = "OK",
+      content = {
+        @Content(
+            mediaType = MediaType.APPLICATION_JSON_VALUE,
+            schema = @Schema(implementation = CompanyListResponseDTO.class))
+      })
+  @ResponseErrors
+  @PostMapping("/filter")
+  @Operation(description = "Filter companies")
+  ResponseEntity<CompanyListResponseDTO> filterCompanies(
+      @Parameter(hidden = true) @RequestHeader(required = false, value = Request.AUTH_HEADER)
+          String authorizationHeader,
+      @Valid @RequestBody CompanyFilterRequestDTO body);
 
   @ApiResponse(
       responseCode = "200",

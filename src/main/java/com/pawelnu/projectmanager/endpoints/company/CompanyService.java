@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 public class CompanyService {
 
   private final CompanyRepository companyRepository;
+  private final CompanyRepositoryQuery companyRepositoryQuery;
   private final CompanyMapper companyMapper;
   private final PagingAndSortingMapper pageMapper;
 
@@ -29,10 +30,12 @@ public class CompanyService {
   public CompanyListResponseDTO getAllCompanies(
       Integer pageNumber, Integer pageSize, String sortedBy, String direction) {
     Pageable pageable = Shared.preparePageable(pageNumber, pageSize, sortedBy, direction);
-    Page<CompanyEntity> page = companyRepository.findAll(pageable);
-    List<CompanyDTO> companyDTOs = page.getContent().stream().map(companyMapper::toDTO).toList();
-    Order pageSort = page.getSort().stream().findFirst().orElse(null);
-    PagingAndSortingMetadataDTO paging = pageMapper.toPagingAndSortingMetadataDTO(page, pageSort);
+    Page<CompanyEntity> companiesPage = companyRepository.findAll(pageable);
+    List<CompanyDTO> companyDTOs =
+        companiesPage.getContent().stream().map(companyMapper::toDTO).toList();
+    Order pageSort = companiesPage.getSort().stream().findFirst().orElse(null);
+    PagingAndSortingMetadataDTO paging =
+        pageMapper.toPagingAndSortingMetadataDTO(companiesPage, pageSort);
     return CompanyListResponseDTO.builder().data(companyDTOs).page(paging).build();
   }
 
@@ -69,5 +72,15 @@ public class CompanyService {
     } else {
       throw new NotFoundException(COMPANY_NOT_FOUND_MSG + id);
     }
+  }
+
+  public CompanyListResponseDTO filterCompanies(CompanyFilterRequestDTO body) {
+    Page<CompanyEntity> filteredCompanies = companyRepositoryQuery.filterCompanies(body);
+    List<CompanyDTO> companyDTOs =
+        filteredCompanies.getContent().stream().map(companyMapper::toDTO).toList();
+    Order pageSort = filteredCompanies.getSort().stream().findFirst().orElse(null);
+    PagingAndSortingMetadataDTO paging =
+        pageMapper.toPagingAndSortingMetadataDTO(filteredCompanies, pageSort);
+    return CompanyListResponseDTO.builder().data(companyDTOs).page(paging).build();
   }
 }
