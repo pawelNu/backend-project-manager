@@ -1,5 +1,6 @@
 package com.pawelnu.projectmanager.endpoints.company;
 
+import com.pawelnu.projectmanager.dto.SimpleResponse;
 import com.pawelnu.projectmanager.utils.Consts.Request;
 import com.pawelnu.projectmanager.utils.ResponseErrors;
 import io.swagger.v3.oas.annotations.Operation;
@@ -12,6 +13,7 @@ import jakarta.validation.Valid;
 import java.util.UUID;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -107,4 +109,20 @@ public interface CompanyRestApi {
           String authorizationHeader,
       @Parameter() @PathVariable() UUID id,
       @Valid @RequestBody CompanyEditRequestDTO body);
+
+  @ApiResponse(
+      responseCode = "200",
+      description = "OK",
+      content = {
+        @Content(
+            mediaType = MediaType.APPLICATION_JSON_VALUE,
+            schema = @Schema(implementation = SimpleResponse.class))
+      })
+  @ResponseErrors
+  @DeleteMapping("/{id}")
+  @Operation(description = "Delete company by id.")
+  ResponseEntity<SimpleResponse> deleteCompanyById(
+      @Parameter(hidden = true) @RequestHeader(required = false, value = Request.AUTH_HEADER)
+          String authorizationHeader,
+      @Parameter() @PathVariable() UUID id);
 }
