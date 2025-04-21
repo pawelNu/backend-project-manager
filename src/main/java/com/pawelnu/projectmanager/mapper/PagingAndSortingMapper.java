@@ -20,37 +20,31 @@ public interface PagingAndSortingMapper {
 
     String sortingField = page.getSortedBy();
 
-//    if (sortingField == null || sortingField.isEmpty()) {
-//      throw new NotNullOrEmptyException(Messages.SORTING_FIELD_CANNOT_BE_NULL_OR_EMPTY.getMsg());
-//    }
+    //    if (sortingField == null || sortingField.isEmpty()) {
+    //      throw new
+    // NotNullOrEmptyException(Messages.SORTING_FIELD_CANNOT_BE_NULL_OR_EMPTY.getMsg());
+    //    }
 
     if (!ListValues.projectSortingFields().contains(sortingField)) {
       throw new NotFoundSortingFieldException(
           Messages.NOT_FOUND_SORTING_FIELD.getMsg() + sortingField);
     }
 
-    if (page.getPageNumber() == null
-        || page.getPageNumber() < 0) {
+    if (page.getPageNumber() == null || page.getPageNumber() < 0) {
       page.setPageNumber(PageValues.PAGE_NUMBER.getValue());
     }
 
-    if (page.getPageSize() == null
-        || page.getPageSize() < 1) {
+    if (page.getPageSize() == null || page.getPageSize() < 1) {
       page.setPageSize(PageValues.PAGE_SIZE.getValue());
     }
 
     if (page.getDirection() == null) {
-      return PageRequest.of(
-          page.getPageNumber(),
-          page.getPageSize());
+      return PageRequest.of(page.getPageNumber(), page.getPageSize());
     } else {
       Sort.Direction direction =
           "asc".equals(page.getDirection()) ? Sort.Direction.ASC : Sort.Direction.DESC;
       return PageRequest.of(
-          (page.getPageNumber()),
-          page.getPageSize(),
-          direction,
-          page.getSortedBy());
+          (page.getPageNumber()), page.getPageSize(), direction, page.getSortedBy());
     }
   }
 

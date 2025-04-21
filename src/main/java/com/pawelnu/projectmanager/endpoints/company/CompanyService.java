@@ -31,9 +31,11 @@ public class CompanyService {
       Integer pageNumber, Integer pageSize, String sortedBy, String direction) {
     Pageable pageable = Shared.preparePageable(pageNumber, pageSize, sortedBy, direction);
     Page<CompanyEntity> companiesPage = companyRepository.findAll(pageable);
-    List<CompanyDTO> companyDTOs = companiesPage.getContent().stream().map(companyMapper::toDTO).toList();
+    List<CompanyDTO> companyDTOs =
+        companiesPage.getContent().stream().map(companyMapper::toDTO).toList();
     Order pageSort = companiesPage.getSort().stream().findFirst().orElse(null);
-    PagingAndSortingMetadataDTO paging = pageMapper.toPagingAndSortingMetadataDTO(companiesPage, pageSort);
+    PagingAndSortingMetadataDTO paging =
+        pageMapper.toPagingAndSortingMetadataDTO(companiesPage, pageSort);
     return CompanyListResponseDTO.builder().data(companyDTOs).page(paging).build();
   }
 
@@ -74,11 +76,11 @@ public class CompanyService {
 
   public CompanyListResponseDTO filterCompanies(CompanyFilterRequestDTO body) {
     Page<CompanyEntity> filteredCompanies = companyRepositoryQuery.filterCompanies(body);
-    List<CompanyDTO> companyDTOs = filteredCompanies.getContent().stream().map(companyMapper::toDTO).toList();
+    List<CompanyDTO> companyDTOs =
+        filteredCompanies.getContent().stream().map(companyMapper::toDTO).toList();
     Order pageSort = filteredCompanies.getSort().stream().findFirst().orElse(null);
-    PagingAndSortingMetadataDTO paging = pageMapper.toPagingAndSortingMetadataDTO(filteredCompanies, pageSort);
+    PagingAndSortingMetadataDTO paging =
+        pageMapper.toPagingAndSortingMetadataDTO(filteredCompanies, pageSort);
     return CompanyListResponseDTO.builder().data(companyDTOs).page(paging).build();
   }
-
-
 }

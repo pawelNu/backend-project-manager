@@ -17,7 +17,7 @@ public class CompanyRepositoryQuery {
     QCompanyEntity company = QCompanyEntity.companyEntity;
     BooleanBuilder predicate = new BooleanBuilder();
     if (body.getName() != null) {
-      predicate.or(company.name.likeIgnoreCase("%"+body.getName().toLowerCase()+"%"));
+      predicate.or(company.name.likeIgnoreCase("%" + body.getName().toLowerCase() + "%"));
     }
     if (body.getNip() != null) {
       predicate.or(company.nip.eq(body.getNip()));

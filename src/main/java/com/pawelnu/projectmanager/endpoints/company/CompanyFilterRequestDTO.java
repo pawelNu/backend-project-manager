@@ -8,10 +8,10 @@ import lombok.Data;
 @Data
 public class CompanyFilterRequestDTO {
 
-
   private String name;
   private String nip;
   private String regon;
+
   @Valid
   @NotNull(message = "Paging information must not be null.")
   private PagingAndSortingRequestDTO page = new PagingAndSortingRequestDTO();

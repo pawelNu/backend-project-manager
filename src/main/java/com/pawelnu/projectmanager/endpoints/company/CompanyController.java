@@ -52,7 +52,6 @@ public class CompanyController implements CompanyApi {
     return ResponseEntity.ok(service.filterCompanies(body));
   }
 
-
   //    //    TODO add authentication
   //    //    TODO add authorization
   //    //    TODO add request logging

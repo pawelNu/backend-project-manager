@@ -1,6 +1,5 @@
 package com.pawelnu.projectmanager.endpoints.company;
 
-import com.github.javafaker.Company;
 import com.querydsl.core.types.Predicate;
 import java.util.UUID;
 import org.springframework.data.domain.Page;
