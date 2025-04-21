@@ -1,10 +1,10 @@
 package com.pawelnu.projectmanager.dto;
 
-import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
-@Builder
+@NoArgsConstructor
 public class PagingAndSortingMetadataDTO {
 
   private Integer pageNumber;
@@ -15,4 +15,6 @@ public class PagingAndSortingMetadataDTO {
   private Boolean last;
   private String sortingField;
   private Boolean isAscendingSorting;
+  private Boolean hasPrevious;
+  private Boolean hasNext;
 }

@@ -1,7 +1,7 @@
 // package com.pawelnu.projectmanager.service.impl;
 //
-// import com.pawelnu.projectmanager.dto.company.CompanyCreateRequestDTO;
-// import com.pawelnu.projectmanager.dto.company.CompanyDTO;
+// import com.pawelnu.projectmanager.endpoints.company.CompanyCreateRequestDTO;
+// import com.pawelnu.projectmanager.endpoints.company.CompanyDTO;
 // import com.pawelnu.projectmanager.dto.company.CompanyName;
 // import com.pawelnu.projectmanager.dto.company.UpdateCompany;
 // import com.pawelnu.projectmanager.dto.company.UpdatedCompanyDTO;

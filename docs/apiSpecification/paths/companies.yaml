@@ -38,3 +38,21 @@ get:
         application/json:
           schema:
             $ref: ../components/schemas/companies/CompanyListResponseDTO.yaml
+
+post:
+  tags:
+    - CompaniesController
+  operationId: createCompany
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../components/schemas/companies/CompanyCreateRequestDTO.yaml
+    required: true
+  responses:
+    "200":
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/companies/CompanyDTO.yaml

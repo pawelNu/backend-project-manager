@@ -1,10 +1,10 @@
 package com.pawelnu.projectmanager.service;
 
-import com.pawelnu.projectmanager.dto.company.CompanyCreateRequestDTO;
-import com.pawelnu.projectmanager.dto.company.CompanyDTO;
 import com.pawelnu.projectmanager.dto.company.CompanyName;
 import com.pawelnu.projectmanager.dto.company.UpdateCompany;
 import com.pawelnu.projectmanager.dto.company.UpdatedCompanyDTO;
+import com.pawelnu.projectmanager.endpoints.company.CompanyCreateRequestDTO;
+import com.pawelnu.projectmanager.endpoints.company.CompanyDTO;
 import com.pawelnu.projectmanager.enums.CompanyStatus;
 import java.util.List;
 import java.util.UUID;

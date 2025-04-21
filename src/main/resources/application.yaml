@@ -22,9 +22,6 @@ spring:
     show-sql: true
   jackson:
     time-zone: UTC
-  devtools:
-    restart:
-      poll-interval: 500ms
 
   liquibase:
     change-log: classpath:/db/changelog/db.changelog-master.yaml

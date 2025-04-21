@@ -84,12 +84,6 @@
     <!--		</dependency>-->
 
     <dependency>
-      <groupId>com.pawelnu.projectmanager</groupId>
-      <artifactId>projectmanager-rest-api</artifactId>
-      <version>0.1.0</version>
-    </dependency>
-
-    <dependency>
       <groupId>org.zalando</groupId>
       <artifactId>problem-spring-web-starter</artifactId>
       <version>0.29.1</version>
@@ -119,12 +113,6 @@
       <groupId>com.github.javafaker</groupId>
       <artifactId>javafaker</artifactId>
       <version>1.0.2</version>
-    </dependency>
-    <!-- https://mvnrepository.com/artifact/org.zalando/problem-spring-web -->
-    <dependency>
-      <groupId>org.zalando</groupId>
-      <artifactId>problem-spring-web</artifactId>
-      <version>0.29.1</version>
     </dependency>
 
   </dependencies>
