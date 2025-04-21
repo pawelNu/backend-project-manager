@@ -35,7 +35,12 @@ public class CompanyController implements CompanyRestApi {
     return ResponseEntity.ok(service.getCompanyById(id));
   }
 
-  //  //  TODO put company by id
+  @Override
+  public ResponseEntity<CompanyDTO> editCompanyById(
+      String authorizationHeader, UUID id, CompanyEditRequestDTO body) {
+    return ResponseEntity.ok(service.editCompanyById(id, body));
+  }
+
   //  //  TODO delete company by id
   //  //  TODO add custom filters
   //    //    TODO add authentication
