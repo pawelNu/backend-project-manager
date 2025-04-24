@@ -9,11 +9,17 @@ import lombok.Data;
 @Data
 public class CompanyFilterRequestDTO {
 
-  private List<String> names;
-  private List<String> nips;
-  private List<String> regons;
+  private CompanyFilters filters;
 
   @Valid
   @NotNull(message = "Paging information must not be null.")
   private PagingAndSortingRequestDTO page = new PagingAndSortingRequestDTO();
+}
+
+@Data
+class CompanyFilters {
+
+  private List<String> names;
+  private List<String> nips;
+  private List<String> regons;
 }
