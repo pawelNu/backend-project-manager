@@ -15,15 +15,19 @@ public class CompanyRepositoryQuery {
 
   public Page<CompanyEntity> filterCompanies(CompanyFilterRequestDTO body) {
     QCompanyEntity company = QCompanyEntity.companyEntity;
-    BooleanBuilder predicate = new BooleanBuilder();
-    if (body.getName() != null) {
-      predicate.or(company.name.likeIgnoreCase("%" + body.getName().toLowerCase() + "%"));
+    BooleanBuilder allConditions = new BooleanBuilder();
+    if (body.getNames() != null && !body.getNames().isEmpty()) {
+      BooleanBuilder namesCondition = new BooleanBuilder();
+      for (String name : body.getNames()) {
+        namesCondition.or(company.name.likeIgnoreCase("%" + name.toLowerCase() + "%"));
+      }
+      allConditions.or(namesCondition);
     }
-    if (body.getNip() != null) {
-      predicate.or(company.nip.eq(body.getNip()));
+    if (body.getNips() != null && !body.getNips().isEmpty()) {
+      allConditions.or(company.nip.in(body.getNips()));
     }
-    if (body.getRegon() != null) {
-      predicate.or(company.regon.eq(body.getRegon()));
+    if (body.getRegons() != null && !body.getRegons().isEmpty()) {
+      allConditions.or(company.regon.in(body.getRegons()));
     }
     Pageable pageable =
         Shared.preparePageable(
@@ -31,6 +35,6 @@ public class CompanyRepositoryQuery {
             body.getPage().getPageSize(),
             body.getPage().getSortedBy(),
             body.getPage().getDirection());
-    return companyRepository.findAll(predicate, pageable);
+    return companyRepository.findAll(allConditions, pageable);
   }
 }
