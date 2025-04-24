@@ -11,7 +11,7 @@
   </parent>
   <groupId>com.pawelnu</groupId>
   <artifactId>BackendProjectManager</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>BackendProjectManager-0.1.0</version>
   <name>BackendProjectManager</name>
   <description>Project Manager - backend</description>
 
