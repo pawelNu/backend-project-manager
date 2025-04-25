@@ -2,9 +2,12 @@ package com.pawelnu.projectmanager.endpoints.company;
 
 import com.pawelnu.projectmanager.utils.Shared;
 import com.querydsl.core.BooleanBuilder;
+import java.util.Map;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -15,15 +18,19 @@ public class CompanyRepositoryQuery {
 
   public Page<CompanyEntity> filterCompanies(CompanyFilterRequestDTO body) {
     QCompanyEntity company = QCompanyEntity.companyEntity;
-    BooleanBuilder predicate = new BooleanBuilder();
-    if (body.getName() != null) {
-      predicate.or(company.name.likeIgnoreCase("%" + body.getName().toLowerCase() + "%"));
+    BooleanBuilder allConditions = new BooleanBuilder();
+    if (body.getFilters().getNames() != null && !body.getFilters().getNames().isEmpty()) {
+      BooleanBuilder namesCondition = new BooleanBuilder();
+      for (String name : body.getFilters().getNames()) {
+        namesCondition.or(company.name.likeIgnoreCase("%" + name.toLowerCase() + "%"));
+      }
+      allConditions.or(namesCondition);
     }
-    if (body.getNip() != null) {
-      predicate.or(company.nip.eq(body.getNip()));
+    if (body.getFilters().getNips() != null && !body.getFilters().getNips().isEmpty()) {
+      allConditions.or(company.nip.in(body.getFilters().getNips()));
     }
-    if (body.getRegon() != null) {
-      predicate.or(company.regon.eq(body.getRegon()));
+    if (body.getFilters().getRegons() != null && !body.getFilters().getRegons().isEmpty()) {
+      allConditions.or(company.regon.in(body.getFilters().getRegons()));
     }
     Pageable pageable =
         Shared.preparePageable(
@@ -31,6 +38,27 @@ public class CompanyRepositoryQuery {
             body.getPage().getPageSize(),
             body.getPage().getSortedBy(),
             body.getPage().getDirection());
-    return companyRepository.findAll(predicate, pageable);
+    return companyRepository.findAll(allConditions, pageable);
+  }
+
+  public Page<CompanyEntity> filterCompanies(
+      Map<String, String> filters, int offset, int limit, String sortDir, String sortField) {
+    QCompanyEntity company = QCompanyEntity.companyEntity;
+    BooleanBuilder allConditions = new BooleanBuilder();
+
+    if (filters.containsKey("name")) {
+      allConditions.and(company.name.likeIgnoreCase("%" + filters.get("name") + "%"));
+    }
+    if (filters.containsKey("nip")) {
+      allConditions.and(company.nip.eq(filters.get("nip")));
+    }
+    if (filters.containsKey("regon")) {
+      allConditions.and(company.regon.eq(filters.get("regon")));
+    }
+
+    Pageable pageable =
+        PageRequest.of(
+            offset / limit, limit, Sort.by(Sort.Direction.fromString(sortDir), sortField));
+    return companyRepository.findAll(allConditions, pageable);
   }
 }

@@ -23,9 +23,9 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -33,7 +33,7 @@ import org.springframework.stereotype.Component;
 @Log4j2
 public class DataInit {
 
-  private final Faker faker = new Faker();
+  private final Faker faker = new Faker(new Random(12345));
   private static long counter = 0;
   private final CompanyRepository companyRepository;
   private final ProjectRepository projectRepository;
@@ -41,7 +41,6 @@ public class DataInit {
   private final TicketRepository ticketRepository;
   private final TicketHierarchyRepository ticketHierarchyRepository;
   private final TicketHistoryRepository ticketHistoryRepository;
-  private final JdbcTemplate jdbcTemplate;
 
   @PostConstruct
   private void loadData() {
@@ -56,7 +55,7 @@ public class DataInit {
 
   private List<CompanyEntity> createCompanies() {
     List<CompanyEntity> companies = new ArrayList<>();
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < 30; i++) {
       CompanyEntity c =
           CompanyEntity.builder()
               .name(faker.company().name())

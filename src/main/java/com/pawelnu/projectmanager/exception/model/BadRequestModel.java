@@ -1,13 +1,12 @@
 package com.pawelnu.projectmanager.exception.model;
 
-import java.util.List;
+import java.util.Map;
+import lombok.Builder;
 import lombok.Getter;
-import org.zalando.problem.violations.Violation;
 
 @Getter
+@Builder
 public class BadRequestModel {
-  private String title;
-  private Integer status;
-  private String detail;
-  private List<Violation> violations;
+
+  private Map<String, Object> errors;
 }
