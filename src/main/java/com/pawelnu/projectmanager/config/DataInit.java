@@ -76,27 +76,26 @@ public class DataInit {
   private List<CompanyAddressEntity> createCompanyAddresses(List<CompanyEntity> companies) {
     List<CompanyAddressEntity> companyAddresses = new ArrayList<>();
     for (CompanyEntity company : companies) {
-      CompanyAddressEntity ca = CompanyAddressEntity.builder()
-          .company(company)
-          .street(faker.address().streetName())
-          .streetNumber(faker.address().streetAddressNumber())
-          .city(faker.address().city())
-          .zipCode(faker.address().zipCode())
-          .country(faker.address().country())
-          .phoneNumber(faker.phoneNumber().cellPhone())
-          .emailAddress(faker.internet().safeEmailAddress(formatStringToEmail(company.getName())))
-          .addressType("main")
-          .build();
+      CompanyAddressEntity ca =
+          CompanyAddressEntity.builder()
+              .company(company)
+              .street(faker.address().streetName())
+              .streetNumber(faker.address().streetAddressNumber())
+              .city(faker.address().city())
+              .zipCode(faker.address().zipCode())
+              .country(faker.address().country())
+              .phoneNumber(faker.phoneNumber().cellPhone())
+              .emailAddress(
+                  faker.internet().safeEmailAddress(formatStringToEmail(company.getName())))
+              .addressType("main")
+              .build();
       companyAddresses.add(ca);
     }
     return companyAddressRepository.saveAll(companyAddresses);
   }
 
   private String formatStringToEmail(String s) {
-    return s.replaceAll(" ", "_")
-        .replaceAll(",", "")
-        .replaceAll("-", "_")
-        .toLowerCase();
+    return s.replaceAll(" ", "_").replaceAll(",", "").replaceAll("-", "_").toLowerCase();
   }
 
   private List<ProjectEntity> createProjects(List<CompanyEntity> companies) {

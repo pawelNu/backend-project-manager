@@ -29,8 +29,7 @@ public class CompanyEntity extends Auditable {
   @GeneratedValue(strategy = GenerationType.AUTO)
   private UUID id;
 
-  @NotNull
-  private String name;
+  @NotNull private String name;
 
   @NotNull
   @Size(min = 10, max = 10)
@@ -40,15 +39,14 @@ public class CompanyEntity extends Auditable {
   @Size(min = 9, max = 9)
   private String regon;
 
-  @NotNull
-  private String website;
+  @NotNull private String website;
 
   @Enumerated(value = EnumType.STRING)
   private CompanyStatus status;
 
-//  @OneToMany(mappedBy = "company", cascade = CascadeType.ALL)
-//  private List<ProjectEntity> projects;
-//
-//  @OneToMany(mappedBy = "company", cascade = CascadeType.ALL)
-//  private List<PersonEntity> companyEmployees;
+  //  @OneToMany(mappedBy = "company", cascade = CascadeType.ALL)
+  //  private List<ProjectEntity> projects;
+  //
+  //  @OneToMany(mappedBy = "company", cascade = CascadeType.ALL)
+  //  private List<PersonEntity> companyEmployees;
 }

@@ -29,6 +29,7 @@ public class CompanyAddressEntity extends Auditable {
   @ManyToOne
   @JoinColumn(name = "company_id")
   private CompanyEntity company;
+
   private String street;
   private String streetNumber;
   private String city;
