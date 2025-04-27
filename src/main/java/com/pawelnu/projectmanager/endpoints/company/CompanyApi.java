@@ -106,7 +106,7 @@ public interface CompanyApi {
               array = @ArraySchema(schema = @Schema(implementation = CompanyDTO.class))))
   @ResponseErrors
   @GetMapping("")
-  ResponseEntity<List<CompanyDTO>> listPosts(
+  ResponseEntity<List<CompanyDTO>> getCompaniesList(
       @Parameter(hidden = true) @RequestHeader(required = false, value = Request.AUTH_HEADER)
           String authorizationHeader,
       @Parameter(description = "Sort as JSON string, e.g. [\"title\",\"ASC\"]")
