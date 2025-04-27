@@ -1,9 +1,9 @@
 package com.pawelnu.projectmanager.endpoints.companyaddress;
 
 import com.pawelnu.projectmanager.dto.SimpleResponse;
-import com.pawelnu.projectmanager.endpoints.company.CompanyCreateRequestDTO;
 import com.pawelnu.projectmanager.endpoints.company.CompanyDTO;
 import com.pawelnu.projectmanager.endpoints.company.CompanyEditRequestDTO;
+import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -12,10 +12,17 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 public class CompanyAddressController implements CompanyAddressApi {
+  private final CompanyAddressService service;
 
   @Override
-  public ResponseEntity<CompanyDTO> createCompanyAddress(
-      String authorizationHeader, CompanyCreateRequestDTO body) {
+  public ResponseEntity<CompanyAddressDTO> createCompanyAddress(
+      String authorizationHeader, CompanyAddressCreateRequestDTO body) {
+    return null;
+  }
+
+  @Override
+  public ResponseEntity<List<CompanyDTO>> getCompanyAddressesList(
+      String authorizationHeader, String sort, String range, String filter) {
     return null;
   }
 
