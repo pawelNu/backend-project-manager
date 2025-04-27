@@ -6,6 +6,4 @@ import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 
 public interface CompanyAddressRepository
     extends JpaRepository<CompanyAddressEntity, UUID>,
-    QuerydslPredicateExecutor<CompanyAddressEntity> {
-
-}
+        QuerydslPredicateExecutor<CompanyAddressEntity> {}
