@@ -96,7 +96,8 @@ public interface CompanyApi {
           String authorizationHeader,
       @Valid @RequestBody CompanyFilterRequestDTO body);
 
-  @Operation(description = "List posts with filtering, sorting and pagination (react-admin format)")
+  @Operation(
+      description = "List companies with filtering, sorting and pagination (react-admin format)")
   @ApiResponse(
       responseCode = "200",
       description = "OK",

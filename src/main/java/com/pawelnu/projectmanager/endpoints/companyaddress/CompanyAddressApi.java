@@ -1,8 +1,6 @@
 package com.pawelnu.projectmanager.endpoints.companyaddress;
 
 import com.pawelnu.projectmanager.dto.SimpleResponse;
-import com.pawelnu.projectmanager.endpoints.company.CompanyDTO;
-import com.pawelnu.projectmanager.endpoints.company.CompanyEditRequestDTO;
 import com.pawelnu.projectmanager.utils.Consts.Request;
 import com.pawelnu.projectmanager.utils.Path;
 import com.pawelnu.projectmanager.utils.ResponseErrors;
@@ -49,17 +47,19 @@ public interface CompanyAddressApi {
           String authorizationHeader,
       @Valid @RequestBody CompanyAddressCreateRequestDTO body);
 
-  @Operation(description = "List posts with filtering, sorting and pagination (react-admin format)")
+  @Operation(
+      description =
+          "List company addresses with filtering, sorting and pagination (react-admin format)")
   @ApiResponse(
       responseCode = "200",
       description = "OK",
       content =
           @Content(
               mediaType = MediaType.APPLICATION_JSON_VALUE,
-              array = @ArraySchema(schema = @Schema(implementation = CompanyDTO.class))))
+              array = @ArraySchema(schema = @Schema(implementation = CompanyAddressDTO.class))))
   @ResponseErrors
   @GetMapping("")
-  ResponseEntity<List<CompanyDTO>> getCompanyAddressesList(
+  ResponseEntity<List<CompanyAddressDTO>> getCompanyAddressesList(
       @Parameter(hidden = true) @RequestHeader(required = false, value = Request.AUTH_HEADER)
           String authorizationHeader,
       @Parameter(description = "Sort as JSON string, e.g. [\"title\",\"ASC\"]")
@@ -77,12 +77,12 @@ public interface CompanyAddressApi {
       content = {
         @Content(
             mediaType = MediaType.APPLICATION_JSON_VALUE,
-            schema = @Schema(implementation = CompanyDTO.class))
+            schema = @Schema(implementation = CompanyAddressDTO.class))
       })
   @ResponseErrors
   @GetMapping("/{id}")
   @Operation(description = "Get company address by id.")
-  ResponseEntity<CompanyDTO> getCompanyAddressById(
+  ResponseEntity<CompanyAddressDTO> getCompanyAddressById(
       @Parameter(hidden = true) @RequestHeader(required = false, value = Request.AUTH_HEADER)
           String authorizationHeader,
       @Parameter() @PathVariable() UUID id);
@@ -93,16 +93,16 @@ public interface CompanyAddressApi {
       content = {
         @Content(
             mediaType = MediaType.APPLICATION_JSON_VALUE,
-            schema = @Schema(implementation = CompanyDTO.class))
+            schema = @Schema(implementation = CompanyAddressDTO.class))
       })
   @ResponseErrors
   @PutMapping("/{id}")
   @Operation(description = "Edit company address by id.")
-  ResponseEntity<CompanyDTO> editCompanyAddressById(
+  ResponseEntity<CompanyAddressDTO> editCompanyAddressById(
       @Parameter(hidden = true) @RequestHeader(required = false, value = Request.AUTH_HEADER)
           String authorizationHeader,
       @Parameter() @PathVariable() UUID id,
-      @Valid @RequestBody CompanyEditRequestDTO body);
+      @Valid @RequestBody CompanyAddressEditRequestDTO body);
 
   @ApiResponse(
       responseCode = "200",

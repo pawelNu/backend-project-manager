@@ -65,7 +65,7 @@ public class CompanyAddressService {
   public CompanyAddressesListResponseDTO filterCompanies(String sort, String range, String filter) {
 
     List<String> sortList = Shared.parseJsonList(objectMapper, sort);
-    String sortField = !sortList.isEmpty() ? sortList.get(0) : "name";
+    String sortField = !sortList.isEmpty() ? sortList.get(0) : "city";
     String sortDir = sortList.size() > 1 ? sortList.get(1) : "ASC";
 
     List<Integer> rangeList = Shared.parseJsonListInt(objectMapper, range);
