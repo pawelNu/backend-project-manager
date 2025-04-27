@@ -12,7 +12,6 @@ import com.pawelnu.projectmanager.entity.TicketHierarchyEntity;
 import com.pawelnu.projectmanager.entity.TicketHistoryEntity;
 import com.pawelnu.projectmanager.enums.CompanyStatus;
 import com.pawelnu.projectmanager.enums.PersonRole;
-import com.pawelnu.projectmanager.enums.ProjectStatus;
 import com.pawelnu.projectmanager.enums.TicketStatus;
 import com.pawelnu.projectmanager.repository.PersonRepository;
 import com.pawelnu.projectmanager.repository.ProjectRepository;
@@ -76,48 +75,32 @@ public class DataInit {
   private List<CompanyAddressEntity> createCompanyAddresses(List<CompanyEntity> companies) {
     List<CompanyAddressEntity> companyAddresses = new ArrayList<>();
     for (CompanyEntity company : companies) {
-      CompanyAddressEntity ca =
-          CompanyAddressEntity.builder()
-              .company(company)
-              .street(faker.address().streetName())
-              .streetNumber(faker.address().streetAddressNumber())
-              .city(faker.address().city())
-              .zipCode(faker.address().zipCode())
-              .country(faker.address().country())
-              .phoneNumber(faker.phoneNumber().cellPhone())
-              .emailAddress(
-                  faker.internet().safeEmailAddress(formatStringToEmail(company.getName())))
-              .addressType("main")
-              .build();
+      CompanyAddressEntity ca = generateCompanyAddress(company);
+      CompanyAddressEntity ca2 = generateCompanyAddress(company);
       companyAddresses.add(ca);
+      companyAddresses.add(ca2);
     }
     return companyAddressRepository.saveAll(companyAddresses);
   }
 
-  private String formatStringToEmail(String s) {
-    return s.replaceAll(" ", "_").replaceAll(",", "").replaceAll("-", "_").toLowerCase();
+  private CompanyAddressEntity generateCompanyAddress(CompanyEntity company) {
+    CompanyAddressEntity ca =
+        CompanyAddressEntity.builder()
+            .company(company)
+            .street(faker.address().streetName())
+            .streetNumber(faker.address().streetAddressNumber())
+            .city(faker.address().city())
+            .zipCode(faker.address().zipCode())
+            .country(faker.address().country())
+            .phoneNumber(faker.phoneNumber().cellPhone())
+            .emailAddress(faker.internet().safeEmailAddress(formatStringToEmail(company.getName())))
+            .addressType("main")
+            .build();
+    return ca;
   }
 
-  private List<ProjectEntity> createProjects(List<CompanyEntity> companies) {
-    List<ProjectEntity> projects =
-        List.of(
-            ProjectEntity.builder()
-                .name("Transport Company")
-                .projectStatus(ProjectStatus.MAINTAINED)
-                .company(companies.get(0))
-                .build(),
-            ProjectEntity.builder()
-                .name("Telecommunication Company")
-                .projectStatus(ProjectStatus.MAINTAINED)
-                .company(companies.get(1))
-                .build(),
-            ProjectEntity.builder()
-                .name("Outsourcing Company")
-                .projectStatus(ProjectStatus.CLOSED)
-                .company(companies.get(2))
-                .build());
-
-    return projectRepository.saveAll(projects);
+  private String formatStringToEmail(String s) {
+    return s.replaceAll(" ", "_").replaceAll(",", "").replaceAll("-", "_").toLowerCase();
   }
 
   private List<PersonEntity> createPeople(List<CompanyEntity> companies) {
