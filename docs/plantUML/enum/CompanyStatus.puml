@@ -1,0 +1,7 @@
+@startuml CompanyStatus
+enum CompanyStatus {
+  + ACTIVE
+  + INACTIVE
+  + SUSPENDED
+}
+@enduml

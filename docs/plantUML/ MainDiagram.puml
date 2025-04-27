@@ -1,0 +1,6 @@
+@startuml MainDiagram
+!include User.puml
+!include Product.puml
+
+User --> Product : buys
+@enduml

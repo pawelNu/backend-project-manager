@@ -1,0 +1,18 @@
+@startuml CompanyEntity
+!include ../enum/CompanyStatus.puml
+!include Auditable.puml
+
+class CompanyEntity {
+  +UUID id
+  +String name "NOT NULL"
+  +String nip "NOT NULL, Size(min=10, max=10)"
+  +String regon "NOT NULL, Size(min=9, max=9)"
+  +String website "NOT NULL"
+  +CompanyStatus status "Enumerated(EnumType.STRING)"
+  +List<ProjectEntity> projects "OneToMany(mappedBy='company')"
+  +List<PersonEntity> companyEmployees "OneToMany(mappedBy='company')"
+}
+
+CompanyEntity -|> Auditable : inherits
+CompanyEntity --> CompanyStatus : "status : CompanyStatus"
+@enduml
