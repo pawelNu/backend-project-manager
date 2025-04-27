@@ -19,6 +19,12 @@
 |---------------------------------------------------------|-----------------------------------------------------------------------------|
 | Abandoning api and models generation from specification | Unnecessary additional work and no ability to customize validation messages |
 
+### 2025-04-27
+
+| Decision                | Reason                      |
+|-------------------------|-----------------------------|
+| Abandoning erm diagrams | Unnecessary additional work |
+
 ### Example table
 
 | Decision | Reason |
