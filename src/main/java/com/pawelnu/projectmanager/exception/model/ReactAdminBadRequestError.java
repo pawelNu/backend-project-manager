@@ -6,7 +6,7 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class BadRequestModel {
+public class ReactAdminBadRequestError {
 
   private Map<String, Object> errors;
 }

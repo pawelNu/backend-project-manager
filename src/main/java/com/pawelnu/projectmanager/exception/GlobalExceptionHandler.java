@@ -1,7 +1,7 @@
 package com.pawelnu.projectmanager.exception;
 
-import com.pawelnu.projectmanager.exception.model.BadRequestModel;
-import com.pawelnu.projectmanager.exception.model.SimpleErrorResponse;
+import com.pawelnu.projectmanager.exception.model.ReactAdminBadRequestError;
+import com.pawelnu.projectmanager.exception.model.ReactAdminError;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,8 +21,8 @@ public class GlobalExceptionHandler {
   }
 
   @ExceptionHandler(NotFoundException.class)
-  public ResponseEntity<SimpleErrorResponse> handleNotFoundException(NotFoundException e) {
-    return new ResponseEntity<>(new SimpleErrorResponse(e.getMessage()), HttpStatus.NOT_FOUND);
+  public ResponseEntity<ReactAdminError> handleNotFoundException(NotFoundException e) {
+    return new ResponseEntity<>(new ReactAdminError(e.getMessage()), HttpStatus.NOT_FOUND);
   }
 
   @ExceptionHandler(NotNullOrEmptyException.class)
@@ -36,7 +36,7 @@ public class GlobalExceptionHandler {
   }
 
   @ExceptionHandler(MethodArgumentNotValidException.class)
-  public ResponseEntity<BadRequestModel> handleValidationErrors(
+  public ResponseEntity<ReactAdminBadRequestError> handleValidationErrors(
       MethodArgumentNotValidException exception) {
 
     List<FieldError> fieldErrors = exception.getBindingResult().getFieldErrors();
@@ -54,7 +54,13 @@ public class GlobalExceptionHandler {
               "Some of the provided values are not valid. Please fix them and retry."));
     }
 
-    BadRequestModel response = BadRequestModel.builder().errors(errors).build();
+    ReactAdminBadRequestError response = ReactAdminBadRequestError.builder().errors(errors).build();
     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+  }
+
+  @ExceptionHandler(Exception.class)
+  public ResponseEntity<ReactAdminError> handleException(Exception e) {
+    return new ResponseEntity<>(
+        new ReactAdminError(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
   }
 }

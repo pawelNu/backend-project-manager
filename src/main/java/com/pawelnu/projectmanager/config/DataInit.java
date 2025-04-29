@@ -3,6 +3,8 @@ package com.pawelnu.projectmanager.config;
 import com.github.javafaker.Faker;
 import com.pawelnu.projectmanager.endpoints.company.CompanyEntity;
 import com.pawelnu.projectmanager.endpoints.company.CompanyRepository;
+import com.pawelnu.projectmanager.endpoints.companyaddress.CompanyAddressEntity;
+import com.pawelnu.projectmanager.endpoints.companyaddress.CompanyAddressRepository;
 import com.pawelnu.projectmanager.entity.PersonEntity;
 import com.pawelnu.projectmanager.entity.ProjectEntity;
 import com.pawelnu.projectmanager.entity.TicketEntity;
@@ -10,7 +12,6 @@ import com.pawelnu.projectmanager.entity.TicketHierarchyEntity;
 import com.pawelnu.projectmanager.entity.TicketHistoryEntity;
 import com.pawelnu.projectmanager.enums.CompanyStatus;
 import com.pawelnu.projectmanager.enums.PersonRole;
-import com.pawelnu.projectmanager.enums.ProjectStatus;
 import com.pawelnu.projectmanager.enums.TicketStatus;
 import com.pawelnu.projectmanager.repository.PersonRepository;
 import com.pawelnu.projectmanager.repository.ProjectRepository;
@@ -36,6 +37,7 @@ public class DataInit {
   private final Faker faker = new Faker(new Random(12345));
   private static long counter = 0;
   private final CompanyRepository companyRepository;
+  private final CompanyAddressRepository companyAddressRepository;
   private final ProjectRepository projectRepository;
   private final PersonRepository personRepository;
   private final TicketRepository ticketRepository;
@@ -46,6 +48,7 @@ public class DataInit {
   private void loadData() {
 
     List<CompanyEntity> companies = createCompanies();
+    createCompanyAddresses(companies);
     //    List<ProjectEntity> projects = createProjects(companies);
     //    List<PersonEntity> people = createPeople(companies);
     //    createTickets(people, projects);
@@ -69,26 +72,35 @@ public class DataInit {
     return companyRepository.saveAll(companies);
   }
 
-  private List<ProjectEntity> createProjects(List<CompanyEntity> companies) {
-    List<ProjectEntity> projects =
-        List.of(
-            ProjectEntity.builder()
-                .name("Transport Company")
-                .projectStatus(ProjectStatus.MAINTAINED)
-                .company(companies.get(0))
-                .build(),
-            ProjectEntity.builder()
-                .name("Telecommunication Company")
-                .projectStatus(ProjectStatus.MAINTAINED)
-                .company(companies.get(1))
-                .build(),
-            ProjectEntity.builder()
-                .name("Outsourcing Company")
-                .projectStatus(ProjectStatus.CLOSED)
-                .company(companies.get(2))
-                .build());
+  private List<CompanyAddressEntity> createCompanyAddresses(List<CompanyEntity> companies) {
+    List<CompanyAddressEntity> companyAddresses = new ArrayList<>();
+    for (CompanyEntity company : companies) {
+      CompanyAddressEntity ca = generateCompanyAddress(company);
+      CompanyAddressEntity ca2 = generateCompanyAddress(company);
+      companyAddresses.add(ca);
+      companyAddresses.add(ca2);
+    }
+    return companyAddressRepository.saveAll(companyAddresses);
+  }
 
-    return projectRepository.saveAll(projects);
+  private CompanyAddressEntity generateCompanyAddress(CompanyEntity company) {
+    CompanyAddressEntity ca =
+        CompanyAddressEntity.builder()
+            .company(company)
+            .street(faker.address().streetName())
+            .streetNumber(faker.address().streetAddressNumber())
+            .city(faker.address().city())
+            .zipCode(faker.address().zipCode())
+            .country(faker.address().country())
+            .phoneNumber(faker.phoneNumber().cellPhone())
+            .emailAddress(faker.internet().safeEmailAddress(formatStringToEmail(company.getName())))
+            .addressType("main")
+            .build();
+    return ca;
+  }
+
+  private String formatStringToEmail(String s) {
+    return s.replaceAll(" ", "_").replaceAll(",", "").replaceAll("-", "_").toLowerCase();
   }
 
   private List<PersonEntity> createPeople(List<CompanyEntity> companies) {
