@@ -1,7 +1,6 @@
 package com.pawelnu.projectmanager.endpoints.employee;
 
 import com.pawelnu.projectmanager.dto.SimpleResponse;
-import com.pawelnu.projectmanager.endpoints.companyaddress.CompanyAddressCreateRequestDTO;
 import com.pawelnu.projectmanager.endpoints.companyaddress.CompanyAddressDTO;
 import com.pawelnu.projectmanager.endpoints.companyaddress.CompanyAddressEditRequestDTO;
 import com.pawelnu.projectmanager.utils.Consts.Request;
