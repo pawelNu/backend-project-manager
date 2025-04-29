@@ -1,8 +1,6 @@
 package com.pawelnu.projectmanager.endpoints.employee;
 
 import com.pawelnu.projectmanager.dto.SimpleResponse;
-import com.pawelnu.projectmanager.endpoints.companyaddress.CompanyAddressDTO;
-import com.pawelnu.projectmanager.endpoints.companyaddress.CompanyAddressEditRequestDTO;
 import com.pawelnu.projectmanager.utils.Consts.Request;
 import com.pawelnu.projectmanager.utils.Path;
 import com.pawelnu.projectmanager.utils.ResponseErrors;
@@ -50,8 +48,7 @@ public interface EmployeeApi {
       @Valid @RequestBody EmployeeCreateRequestDTO body);
 
   @Operation(
-      description =
-          "List employees with filtering, sorting and pagination (react-admin format)")
+      description = "List employees with filtering, sorting and pagination (react-admin format)")
   @ApiResponse(
       responseCode = "200",
       description = "OK",
