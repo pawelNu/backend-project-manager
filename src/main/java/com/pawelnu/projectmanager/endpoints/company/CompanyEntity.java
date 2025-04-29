@@ -6,7 +6,6 @@ import com.pawelnu.projectmanager.enums.CompanyStatus;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -49,7 +48,7 @@ public class CompanyEntity extends Auditable {
   @Enumerated(value = EnumType.STRING)
   private CompanyStatus status;
 
-  @OneToMany(mappedBy = "company", fetch = FetchType.EAGER)
+  @OneToMany(mappedBy = "company")
   private List<CompanyAddressEntity> addresses = new ArrayList<>();
 
   //  @OneToMany(mappedBy = "company", cascade = CascadeType.ALL)

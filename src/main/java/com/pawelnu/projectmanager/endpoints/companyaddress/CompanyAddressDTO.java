@@ -9,6 +9,7 @@ import lombok.Data;
 public class CompanyAddressDTO {
 
   private UUID id;
+  private String companyName;
   private String street;
   private String streetNumber;
   private String city;

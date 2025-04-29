@@ -4,10 +4,8 @@ import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
 import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.ElementType.TYPE;
 
-import com.pawelnu.projectmanager.exception.model.BadRequestModel;
-import com.pawelnu.projectmanager.exception.model.InternalServerErrorModel;
-import com.pawelnu.projectmanager.exception.model.SimpleErrorResponse;
-import com.pawelnu.projectmanager.exception.model.UnauthorizedModel;
+import com.pawelnu.projectmanager.exception.model.ReactAdminBadRequestError;
+import com.pawelnu.projectmanager.exception.model.ReactAdminError;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -26,7 +24,7 @@ import org.springframework.http.MediaType;
     content = {
       @Content(
           mediaType = MediaType.APPLICATION_JSON_VALUE,
-          schema = @Schema(implementation = BadRequestModel.class))
+          schema = @Schema(implementation = ReactAdminBadRequestError.class))
     })
 @ApiResponse(
     responseCode = "401",
@@ -34,7 +32,7 @@ import org.springframework.http.MediaType;
     content = {
       @Content(
           mediaType = MediaType.APPLICATION_JSON_VALUE,
-          schema = @Schema(implementation = UnauthorizedModel.class))
+          schema = @Schema(implementation = ReactAdminError.class))
     })
 @ApiResponse(
     responseCode = "404",
@@ -42,7 +40,7 @@ import org.springframework.http.MediaType;
     content = {
       @Content(
           mediaType = MediaType.APPLICATION_JSON_VALUE,
-          schema = @Schema(implementation = SimpleErrorResponse.class))
+          schema = @Schema(implementation = ReactAdminError.class))
     })
 @ApiResponse(
     responseCode = "500",
@@ -50,6 +48,6 @@ import org.springframework.http.MediaType;
     content = {
       @Content(
           mediaType = MediaType.APPLICATION_JSON_VALUE,
-          schema = @Schema(implementation = InternalServerErrorModel.class))
+          schema = @Schema(implementation = ReactAdminError.class))
     })
 public @interface ResponseErrors {}

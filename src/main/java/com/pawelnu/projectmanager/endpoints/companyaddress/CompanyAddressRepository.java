@@ -11,5 +11,6 @@ public interface CompanyAddressRepository
     extends JpaRepository<CompanyAddressEntity, UUID>,
         QuerydslPredicateExecutor<CompanyAddressEntity> {
 
+  //  @EntityGraph(attributePaths = {"company"})
   Page<CompanyAddressEntity> findAll(Predicate predicate, Pageable pageable);
 }

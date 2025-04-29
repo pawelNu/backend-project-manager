@@ -18,7 +18,7 @@ spring:
         default_schema: dev
         jdbc:
             time_zone: UTC
-        format_sql: true
+        format_sql: false
     show-sql: true
   jackson:
     time-zone: UTC

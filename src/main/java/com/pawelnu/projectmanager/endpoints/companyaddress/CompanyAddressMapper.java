@@ -7,6 +7,7 @@ import org.mapstruct.MappingTarget;
 @Mapper(componentModel = "spring")
 public interface CompanyAddressMapper {
 
+  @Mapping(source = "company.name", target = "companyName")
   CompanyAddressDTO toDTO(CompanyAddressEntity companyAddressEntity);
 
   @Mapping(target = "id", ignore = true)

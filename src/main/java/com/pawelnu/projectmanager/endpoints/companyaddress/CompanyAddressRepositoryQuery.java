@@ -1,12 +1,20 @@
 package com.pawelnu.projectmanager.endpoints.companyaddress;
 
+import com.pawelnu.projectmanager.endpoints.company.QCompanyEntity;
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.Order;
+import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.dsl.PathBuilder;
+import com.querydsl.jpa.impl.JPAQuery;
+import com.querydsl.jpa.impl.JPAQueryFactory;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 
@@ -16,51 +24,85 @@ import org.springframework.stereotype.Repository;
 public class CompanyAddressRepositoryQuery {
 
   private final CompanyAddressRepository companyAddressRepository;
+  private final JPAQueryFactory qf;
 
   public Page<CompanyAddressEntity> filterCompanies(
       Map<String, String> filters, int offset, int limit, String sortDir, String sortField) {
     log.info(filters.toString());
-    QCompanyAddressEntity company = QCompanyAddressEntity.companyAddressEntity;
+    QCompanyAddressEntity address = QCompanyAddressEntity.companyAddressEntity;
+    QCompanyEntity company = QCompanyEntity.companyEntity;
     BooleanBuilder allConditions = new BooleanBuilder();
 
-    if (filters.containsKey(company.street.getMetadata().getName())) {
-      allConditions.and(
-          company.street.likeIgnoreCase(
-              "%" + filters.get(company.street.getMetadata().getName()) + "%"));
+    if (filters.containsKey("companyName")) {
+      allConditions.and(company.name.likeIgnoreCase("%" + filters.get("companyName") + "%"));
     }
-    if (filters.containsKey(company.streetNumber.getMetadata().getName())) {
+    if (filters.containsKey(address.street.getMetadata().getName())) {
       allConditions.and(
-          company.streetNumber.eq(filters.get(company.streetNumber.getMetadata().getName())));
+          address.street.likeIgnoreCase(
+              "%" + filters.get(address.street.getMetadata().getName()) + "%"));
     }
-    if (filters.containsKey(company.city.getMetadata().getName())) {
+    if (filters.containsKey(address.streetNumber.getMetadata().getName())) {
       allConditions.and(
-          company.city.likeIgnoreCase(
-              "%" + filters.get(company.city.getMetadata().getName()) + "%"));
+          address.streetNumber.eq(filters.get(address.streetNumber.getMetadata().getName())));
     }
-    if (filters.containsKey(company.zipCode.getMetadata().getName())) {
-      allConditions.and(company.zipCode.eq(filters.get(company.zipCode.getMetadata().getName())));
-    }
-    if (filters.containsKey(company.country.getMetadata().getName())) {
+    if (filters.containsKey(address.city.getMetadata().getName())) {
       allConditions.and(
-          company.country.likeIgnoreCase(
-              "%" + filters.get(company.country.getMetadata().getName()) + "%"));
+          address.city.likeIgnoreCase(
+              "%" + filters.get(address.city.getMetadata().getName()) + "%"));
     }
-    if (filters.containsKey(company.phoneNumber.getMetadata().getName())) {
-      allConditions.and(
-          company.phoneNumber.eq(filters.get(company.phoneNumber.getMetadata().getName())));
+    if (filters.containsKey(address.zipCode.getMetadata().getName())) {
+      allConditions.and(address.zipCode.eq(filters.get(address.zipCode.getMetadata().getName())));
     }
-    if (filters.containsKey(company.emailAddress.getMetadata().getName())) {
+    if (filters.containsKey(address.country.getMetadata().getName())) {
       allConditions.and(
-          company.emailAddress.eq(filters.get(company.emailAddress.getMetadata().getName())));
+          address.country.likeIgnoreCase(
+              "%" + filters.get(address.country.getMetadata().getName()) + "%"));
     }
-    if (filters.containsKey(company.addressType.getMetadata().getName())) {
+    if (filters.containsKey(address.phoneNumber.getMetadata().getName())) {
       allConditions.and(
-          company.addressType.eq(filters.get(company.addressType.getMetadata().getName())));
+          address.phoneNumber.eq(filters.get(address.phoneNumber.getMetadata().getName())));
+    }
+    if (filters.containsKey(address.emailAddress.getMetadata().getName())) {
+      allConditions.and(
+          address.emailAddress.eq(filters.get(address.emailAddress.getMetadata().getName())));
+    }
+    if (filters.containsKey(address.addressType.getMetadata().getName())) {
+      allConditions.and(
+          address.addressType.eq(filters.get(address.addressType.getMetadata().getName())));
     }
 
-    Pageable pageable =
-        PageRequest.of(
-            offset / limit, limit, Sort.by(Sort.Direction.fromString(sortDir), sortField));
-    return companyAddressRepository.findAll(allConditions, pageable);
+    JPAQuery<CompanyAddressEntity> query =
+        qf.selectFrom(address)
+            .leftJoin(address.company, company)
+            .fetchJoin()
+            .where(allConditions)
+            .offset(offset)
+            .limit(limit);
+
+    if (!sortField.isEmpty()) {
+      if (sortField.equals("companyName")) {
+        query.orderBy(sortDir.equalsIgnoreCase("DESC") ? company.name.desc() : company.name.asc());
+      } else {
+        PathBuilder<CompanyAddressEntity> entityPath =
+            new PathBuilder<>(CompanyAddressEntity.class, "companyAddressEntity");
+        query.orderBy(
+            new OrderSpecifier<>(
+                Sort.Direction.fromString(sortDir) == Sort.Direction.ASC ? Order.ASC : Order.DESC,
+                entityPath.getString(sortField)));
+      }
+    }
+
+    List<CompanyAddressEntity> results = query.fetch();
+    long total =
+        Optional.ofNullable(
+                qf.select(address.count())
+                    .from(address)
+                    .leftJoin(address.company, company)
+                    //                    .fetchJoin()
+                    .where(allConditions)
+                    .fetchOne())
+            .orElse(0L);
+
+    return new PageImpl<>(results, PageRequest.of(offset / limit, limit), total);
   }
 }
