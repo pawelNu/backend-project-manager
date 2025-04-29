@@ -2,6 +2,8 @@ package com.pawelnu.projectmanager.endpoints.companyaddress;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pawelnu.projectmanager.dto.SimpleResponse;
+import com.pawelnu.projectmanager.endpoints.company.CompanyEntity;
+import com.pawelnu.projectmanager.endpoints.company.CompanyRepository;
 import com.pawelnu.projectmanager.exception.NotFoundException;
 import com.pawelnu.projectmanager.mapper.PagingAndSortingMapper;
 import com.pawelnu.projectmanager.utils.Shared;
@@ -20,6 +22,7 @@ import org.springframework.stereotype.Service;
 public class CompanyAddressService {
 
   private final CompanyAddressRepository companyAddressRepository;
+  private final CompanyRepository companyRepository;
   private final CompanyAddressRepositoryQuery companyAddressRepositoryQuery;
   private final CompanyAddressMapper companyAddressMapper;
   private final PagingAndSortingMapper pageMapper;
@@ -35,7 +38,9 @@ public class CompanyAddressService {
   }
 
   public CompanyAddressDTO createCompany(CompanyAddressCreateRequestDTO body) {
+    CompanyEntity companyRef = companyRepository.getReferenceById(body.getCompanyId());
     CompanyAddressEntity addressEntity = companyAddressMapper.toEntity(body);
+    addressEntity.setCompany(companyRef);
     CompanyAddressEntity savedCompany = companyAddressRepository.save(addressEntity);
     return companyAddressMapper.toDTO(savedCompany);
   }
