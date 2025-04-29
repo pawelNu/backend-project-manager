@@ -51,17 +51,17 @@ public interface EmployeeApi {
 
   @Operation(
       description =
-          "List company addresses with filtering, sorting and pagination (react-admin format)")
+          "List employees with filtering, sorting and pagination (react-admin format)")
   @ApiResponse(
       responseCode = "200",
       description = "OK",
       content =
           @Content(
               mediaType = MediaType.APPLICATION_JSON_VALUE,
-              array = @ArraySchema(schema = @Schema(implementation = CompanyAddressDTO.class))))
+              array = @ArraySchema(schema = @Schema(implementation = EmployeeDTO.class))))
   @ResponseErrors
   @GetMapping("")
-  ResponseEntity<List<CompanyAddressDTO>> getCompanyAddressesList(
+  ResponseEntity<List<EmployeeDTO>> getEmployeeList(
       @Parameter(hidden = true) @RequestHeader(required = false, value = Request.AUTH_HEADER)
           String authorizationHeader,
       @Parameter(description = "Sort as JSON string, e.g. [\"title\",\"ASC\"]")
@@ -79,12 +79,12 @@ public interface EmployeeApi {
       content = {
         @Content(
             mediaType = MediaType.APPLICATION_JSON_VALUE,
-            schema = @Schema(implementation = CompanyAddressDTO.class))
+            schema = @Schema(implementation = EmployeeDTO.class))
       })
   @ResponseErrors
   @GetMapping("/{id}")
-  @Operation(description = "Get company address by id.")
-  ResponseEntity<CompanyAddressDTO> getCompanyAddressById(
+  @Operation(description = "Get employee by id.")
+  ResponseEntity<EmployeeDTO> getEmployeeById(
       @Parameter(hidden = true) @RequestHeader(required = false, value = Request.AUTH_HEADER)
           String authorizationHeader,
       @Parameter() @PathVariable() UUID id);
@@ -95,16 +95,16 @@ public interface EmployeeApi {
       content = {
         @Content(
             mediaType = MediaType.APPLICATION_JSON_VALUE,
-            schema = @Schema(implementation = CompanyAddressDTO.class))
+            schema = @Schema(implementation = EmployeeDTO.class))
       })
   @ResponseErrors
   @PutMapping("/{id}")
-  @Operation(description = "Edit company address by id.")
-  ResponseEntity<CompanyAddressDTO> editCompanyAddressById(
+  @Operation(description = "Edit employee by id.")
+  ResponseEntity<EmployeeDTO> editEmployeeById(
       @Parameter(hidden = true) @RequestHeader(required = false, value = Request.AUTH_HEADER)
           String authorizationHeader,
       @Parameter() @PathVariable() UUID id,
-      @Valid @RequestBody CompanyAddressEditRequestDTO body);
+      @Valid @RequestBody EmployeeEditRequestDTO body);
 
   @ApiResponse(
       responseCode = "200",
@@ -116,8 +116,8 @@ public interface EmployeeApi {
       })
   @ResponseErrors
   @DeleteMapping("/{id}")
-  @Operation(description = "Delete company address by id.")
-  ResponseEntity<SimpleResponse> deleteCompanyAddressById(
+  @Operation(description = "Delete employee by id.")
+  ResponseEntity<SimpleResponse> deleteEmployeeById(
       @Parameter(hidden = true) @RequestHeader(required = false, value = Request.AUTH_HEADER)
           String authorizationHeader,
       @Parameter() @PathVariable() UUID id);
