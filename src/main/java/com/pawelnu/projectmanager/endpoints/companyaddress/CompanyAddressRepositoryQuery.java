@@ -72,7 +72,8 @@ public class CompanyAddressRepositoryQuery {
     }
 
     JPAQuery<CompanyAddressEntity> query =
-        queryFactory.selectFrom(address)
+        queryFactory
+            .selectFrom(address)
             .leftJoin(address.company, company)
             .fetchJoin()
             .where(allConditions)
@@ -95,7 +96,8 @@ public class CompanyAddressRepositoryQuery {
     List<CompanyAddressEntity> results = query.fetch();
     long total =
         Optional.ofNullable(
-                queryFactory.select(address.count())
+                queryFactory
+                    .select(address.count())
                     .from(address)
                     .leftJoin(address.company, company)
                     .where(allConditions)

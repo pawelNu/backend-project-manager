@@ -9,17 +9,17 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-public class EmployeeController implements EmployeeApi{
+public class EmployeeController implements EmployeeApi {
 
   @Override
-  public ResponseEntity<EmployeeDTO> createEmployee(String authorizationHeader,
-      EmployeeCreateRequestDTO body) {
+  public ResponseEntity<EmployeeDTO> createEmployee(
+      String authorizationHeader, EmployeeCreateRequestDTO body) {
     return null;
   }
 
   @Override
-  public ResponseEntity<List<EmployeeDTO>> getEmployeeList(String authorizationHeader, String sort,
-      String range, String filter) {
+  public ResponseEntity<List<EmployeeDTO>> getEmployeeList(
+      String authorizationHeader, String sort, String range, String filter) {
     return null;
   }
 
@@ -29,8 +29,8 @@ public class EmployeeController implements EmployeeApi{
   }
 
   @Override
-  public ResponseEntity<EmployeeDTO> editEmployeeById(String authorizationHeader, UUID id,
-      EmployeeEditRequestDTO body) {
+  public ResponseEntity<EmployeeDTO> editEmployeeById(
+      String authorizationHeader, UUID id, EmployeeEditRequestDTO body) {
     return null;
   }
 

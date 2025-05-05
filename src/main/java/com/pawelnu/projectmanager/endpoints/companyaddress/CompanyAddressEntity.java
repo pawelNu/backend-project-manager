@@ -1,6 +1,5 @@
 package com.pawelnu.projectmanager.endpoints.companyaddress;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.pawelnu.projectmanager.endpoints.company.CompanyEntity;
 import com.pawelnu.projectmanager.entity.Auditable;
 import jakarta.persistence.Entity;
