@@ -1,6 +1,5 @@
-package com.pawelnu.projectmanager.endpoints.companyaddress;
+package com.pawelnu.projectmanager.endpoints.employee;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.pawelnu.projectmanager.endpoints.company.CompanyEntity;
 import com.pawelnu.projectmanager.entity.Auditable;
 import jakarta.persistence.Entity;
@@ -17,26 +16,33 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "company_addresses")
+@Table(name = "employees")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CompanyAddressEntity extends Auditable {
+public class EmployeeEntity extends Auditable {
+
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   private UUID id;
 
+  private String firstName;
+  private String lastName;
+  private String username;
+  private String email;
+  private String phoneNumber;
+
+  //  @Enumerated(EnumType.STRING)
+  //  private PersonRole role;
+
+  //  @OneToMany(mappedBy = "registeringPerson")
+  //  private List<TicketEntity> registeringTickets;
+  //
+  //  @OneToMany(mappedBy = "assignedPerson")
+  //  private List<TicketEntity> assignedTickets;
+
   @ManyToOne
   @JoinColumn(name = "company_id")
   private CompanyEntity company;
-
-  private String street;
-  private String streetNumber;
-  private String city;
-  private String zipCode;
-  private String country;
-  private String phoneNumber;
-  private String emailAddress;
-  private String addressType;
 }

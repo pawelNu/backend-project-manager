@@ -24,7 +24,7 @@ import org.springframework.stereotype.Repository;
 public class CompanyAddressRepositoryQuery {
 
   private final CompanyAddressRepository companyAddressRepository;
-  private final JPAQueryFactory qf;
+  private final JPAQueryFactory queryFactory;
 
   public Page<CompanyAddressEntity> filterCompanies(
       Map<String, String> filters, int offset, int limit, String sortDir, String sortField) {
@@ -72,7 +72,7 @@ public class CompanyAddressRepositoryQuery {
     }
 
     JPAQuery<CompanyAddressEntity> query =
-        qf.selectFrom(address)
+        queryFactory.selectFrom(address)
             .leftJoin(address.company, company)
             .fetchJoin()
             .where(allConditions)
@@ -95,10 +95,9 @@ public class CompanyAddressRepositoryQuery {
     List<CompanyAddressEntity> results = query.fetch();
     long total =
         Optional.ofNullable(
-                qf.select(address.count())
+                queryFactory.select(address.count())
                     .from(address)
                     .leftJoin(address.company, company)
-                    //                    .fetchJoin()
                     .where(allConditions)
                     .fetchOne())
             .orElse(0L);

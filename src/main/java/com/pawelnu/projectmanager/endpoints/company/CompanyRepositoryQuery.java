@@ -1,20 +1,32 @@
 package com.pawelnu.projectmanager.endpoints.company;
 
+import com.pawelnu.projectmanager.endpoints.companyaddress.QCompanyAddressEntity;
 import com.pawelnu.projectmanager.utils.Shared;
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.Tuple;
+import com.querydsl.core.types.Projections;
+import com.querydsl.jpa.impl.JPAQuery;
+import com.querydsl.jpa.impl.JPAQueryFactory;
+import java.util.List;
 import java.util.Map;
-import lombok.AllArgsConstructor;
+import java.util.Optional;
+import java.util.UUID;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 
 @Repository
-@AllArgsConstructor
+@RequiredArgsConstructor
+@Slf4j
 public class CompanyRepositoryQuery {
 
-  private CompanyRepository companyRepository;
+  private final CompanyRepository companyRepository;
+  private final JPAQueryFactory queryFactory;
 
   public Page<CompanyEntity> filterCompanies(CompanyFilterRequestDTO body) {
     QCompanyEntity company = QCompanyEntity.companyEntity;
@@ -32,18 +44,15 @@ public class CompanyRepositoryQuery {
     if (body.getFilters().getRegons() != null && !body.getFilters().getRegons().isEmpty()) {
       allConditions.or(company.regon.in(body.getFilters().getRegons()));
     }
-    Pageable pageable =
-        Shared.preparePageable(
-            body.getPage().getPageNumber(),
-            body.getPage().getPageSize(),
-            body.getPage().getSortedBy(),
-            body.getPage().getDirection());
+    Pageable pageable = Shared.preparePageable(body.getPage().getPageNumber(),
+        body.getPage().getPageSize(), body.getPage().getSortedBy(), body.getPage().getDirection());
     return companyRepository.findAll(allConditions, pageable);
   }
 
-  public Page<CompanyEntity> filterCompanies(
-      Map<String, String> filters, int offset, int limit, String sortDir, String sortField) {
+  public Page<CompanyEntity> filterCompanies(Map<String, String> filters, int offset, int limit,
+      String sortDir, String sortField) {
     QCompanyEntity company = QCompanyEntity.companyEntity;
+    QCompanyAddressEntity address = QCompanyAddressEntity.companyAddressEntity;
     BooleanBuilder allConditions = new BooleanBuilder();
 
     if (filters.containsKey("name")) {
@@ -56,9 +65,49 @@ public class CompanyRepositoryQuery {
       allConditions.and(company.regon.eq(filters.get("regon")));
     }
 
-    Pageable pageable =
-        PageRequest.of(
-            offset / limit, limit, Sort.by(Sort.Direction.fromString(sortDir), sortField));
-    return companyRepository.findAll(allConditions, pageable);
+    Pageable pageable = PageRequest.of(offset / limit, limit,
+        Sort.by(Sort.Direction.fromString(sortDir), sortField));
+
+    // Zapytanie
+//    TODO fix pagination
+    JPAQuery<CompanyEntity> query = queryFactory.selectFrom(company) // Zaczynamy od CompanyEntity
+        .leftJoin(company.addresses, address) // LEFT JOIN dla adresów
+        .fetchJoin() // fetchJoin załaduje dane z tabeli address w jednym zapytaniu
+        .where(allConditions) // Zastosowanie warunków filtrów
+        .offset(offset) // Paginacja
+        .limit(limit); // Paginacja
+
+    // Wykonanie zapytania
+    List<CompanyEntity> content = query.fetch();
+    long total = Optional.ofNullable(
+        queryFactory.select(company.count()).from(company).leftJoin(company.addresses, address)
+            .where(allConditions).fetchOne()).orElse(0L);
+
+    // Zwrócenie wyników jako Page
+    return new PageImpl<>(content, pageable, total);
+  }
+
+  public Optional<CompanyEntity> findById(UUID id) {
+    QCompanyEntity company = QCompanyEntity.companyEntity;
+    QCompanyAddressEntity address = QCompanyAddressEntity.companyAddressEntity;
+
+    List<CompanyEntity> fetch = queryFactory.selectFrom(company)
+        .innerJoin(company.addresses, address)
+        .fetchJoin()
+        .where(company.id.eq(id))
+        .fetch();
+
+    if (fetch != null && !fetch.isEmpty()) {
+      CompanyEntity companyEntity = fetch.getFirst();
+      return Optional.of(companyEntity);
+    }
+    return Optional.empty();
+  }
+
+  record CompanyWithAddressDTO(UUID companyId, String companyName, String nip, String regon,
+                               String website, UUID addressId, String street, String streetNumber,
+                               String city, String zipCode, String country, String phoneNumber,
+                               String emailAddress, String addressType) {
+
   }
 }

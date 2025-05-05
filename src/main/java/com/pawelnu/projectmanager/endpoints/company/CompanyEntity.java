@@ -1,11 +1,13 @@
 package com.pawelnu.projectmanager.endpoints.company;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.pawelnu.projectmanager.endpoints.companyaddress.CompanyAddressEntity;
 import com.pawelnu.projectmanager.entity.Auditable;
 import com.pawelnu.projectmanager.enums.CompanyStatus;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;

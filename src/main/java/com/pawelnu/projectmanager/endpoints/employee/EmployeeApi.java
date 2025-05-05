@@ -26,8 +26,8 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@Tag(name = "Company Addresses")
-@RequestMapping(Path.API_COMPANY_ADDRESSES)
+@Tag(name = "Employee")
+@RequestMapping(Path.API_EMPLOYEES)
 public interface EmployeeApi {
 
   // TODO @RequestHeader(required = false change to true, when auth will be done
