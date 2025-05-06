@@ -30,7 +30,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RequestMapping(Path.API_EMPLOYEES)
 public interface EmployeeApi {
 
-  // TODO @RequestHeader(required = false change to true, when auth will be done
   @ApiResponse(
       responseCode = "201",
       description = "Created",
@@ -43,7 +42,7 @@ public interface EmployeeApi {
   @PostMapping("")
   @Operation(description = "Add new employee.")
   ResponseEntity<EmployeeDTO> createEmployee(
-      @Parameter(hidden = true) @RequestHeader(required = false, value = Request.AUTH_HEADER)
+      @Parameter(hidden = true) @RequestHeader(value = Request.AUTH_HEADER)
           String authorizationHeader,
       @Valid @RequestBody EmployeeCreateRequestDTO body);
 
@@ -59,7 +58,7 @@ public interface EmployeeApi {
   @ResponseErrors
   @GetMapping("")
   ResponseEntity<List<EmployeeDTO>> getEmployeeList(
-      @Parameter(hidden = true) @RequestHeader(required = false, value = Request.AUTH_HEADER)
+      @Parameter(hidden = true) @RequestHeader(value = Request.AUTH_HEADER)
           String authorizationHeader,
       @Parameter(description = "Sort as JSON string, e.g. [\"title\",\"ASC\"]")
           @RequestParam(required = false)
@@ -82,7 +81,7 @@ public interface EmployeeApi {
   @GetMapping("/{id}")
   @Operation(description = "Get employee by id.")
   ResponseEntity<EmployeeDTO> getEmployeeById(
-      @Parameter(hidden = true) @RequestHeader(required = false, value = Request.AUTH_HEADER)
+      @Parameter(hidden = true) @RequestHeader(value = Request.AUTH_HEADER)
           String authorizationHeader,
       @Parameter() @PathVariable() UUID id);
 
@@ -98,7 +97,7 @@ public interface EmployeeApi {
   @PutMapping("/{id}")
   @Operation(description = "Edit employee by id.")
   ResponseEntity<EmployeeDTO> editEmployeeById(
-      @Parameter(hidden = true) @RequestHeader(required = false, value = Request.AUTH_HEADER)
+      @Parameter(hidden = true) @RequestHeader(value = Request.AUTH_HEADER)
           String authorizationHeader,
       @Parameter() @PathVariable() UUID id,
       @Valid @RequestBody EmployeeEditRequestDTO body);
@@ -115,7 +114,7 @@ public interface EmployeeApi {
   @DeleteMapping("/{id}")
   @Operation(description = "Delete employee by id.")
   ResponseEntity<SimpleResponse> deleteEmployeeById(
-      @Parameter(hidden = true) @RequestHeader(required = false, value = Request.AUTH_HEADER)
+      @Parameter(hidden = true) @RequestHeader(value = Request.AUTH_HEADER)
           String authorizationHeader,
       @Parameter() @PathVariable() UUID id);
 }

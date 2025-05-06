@@ -30,7 +30,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RequestMapping(Path.API_COMPANY_ADDRESSES)
 public interface CompanyAddressApi {
 
-  // TODO @RequestHeader(required = false change to true, when auth will be done
   @ApiResponse(
       responseCode = "201",
       description = "Created",
@@ -43,7 +42,7 @@ public interface CompanyAddressApi {
   @PostMapping("")
   @Operation(description = "Add new company address.")
   ResponseEntity<CompanyAddressDTO> createCompanyAddress(
-      @Parameter(hidden = true) @RequestHeader(required = false, value = Request.AUTH_HEADER)
+      @Parameter(hidden = true) @RequestHeader(value = Request.AUTH_HEADER)
           String authorizationHeader,
       @Valid @RequestBody CompanyAddressCreateRequestDTO body);
 
@@ -60,7 +59,7 @@ public interface CompanyAddressApi {
   @ResponseErrors
   @GetMapping("")
   ResponseEntity<List<CompanyAddressDTO>> getCompanyAddressesList(
-      @Parameter(hidden = true) @RequestHeader(required = false, value = Request.AUTH_HEADER)
+      @Parameter(hidden = true) @RequestHeader(value = Request.AUTH_HEADER)
           String authorizationHeader,
       @Parameter(description = "Sort as JSON string, e.g. [\"title\",\"ASC\"]")
           @RequestParam(required = false)
@@ -83,7 +82,7 @@ public interface CompanyAddressApi {
   @GetMapping("/{id}")
   @Operation(description = "Get company address by id.")
   ResponseEntity<CompanyAddressDTO> getCompanyAddressById(
-      @Parameter(hidden = true) @RequestHeader(required = false, value = Request.AUTH_HEADER)
+      @Parameter(hidden = true) @RequestHeader(value = Request.AUTH_HEADER)
           String authorizationHeader,
       @Parameter() @PathVariable() UUID id);
 
@@ -99,7 +98,7 @@ public interface CompanyAddressApi {
   @PutMapping("/{id}")
   @Operation(description = "Edit company address by id.")
   ResponseEntity<CompanyAddressDTO> editCompanyAddressById(
-      @Parameter(hidden = true) @RequestHeader(required = false, value = Request.AUTH_HEADER)
+      @Parameter(hidden = true) @RequestHeader(value = Request.AUTH_HEADER)
           String authorizationHeader,
       @Parameter() @PathVariable() UUID id,
       @Valid @RequestBody CompanyAddressEditRequestDTO body);
@@ -116,7 +115,7 @@ public interface CompanyAddressApi {
   @DeleteMapping("/{id}")
   @Operation(description = "Delete company address by id.")
   ResponseEntity<SimpleResponse> deleteCompanyAddressById(
-      @Parameter(hidden = true) @RequestHeader(required = false, value = Request.AUTH_HEADER)
+      @Parameter(hidden = true) @RequestHeader(value = Request.AUTH_HEADER)
           String authorizationHeader,
       @Parameter() @PathVariable() UUID id);
 }

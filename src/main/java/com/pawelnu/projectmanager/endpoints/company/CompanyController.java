@@ -63,7 +63,6 @@ public class CompanyController implements CompanyApi {
     return ResponseEntity.ok().header("Content-Range", contentRange).body(result.getData());
   }
 
-  //    //    TODO add authentication
   //    //    TODO add authorization
   //    //    TODO add request logging
 }
