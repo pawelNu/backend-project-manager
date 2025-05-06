@@ -1,9 +1,11 @@
 package com.pawelnu.projectmanager.endpoints.employee;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.pawelnu.projectmanager.exception.NotFoundException;
 import com.pawelnu.projectmanager.utils.Shared;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -18,6 +20,7 @@ public class EmployeeService {
   private final EmployeeRepositoryQuery employeeRepositoryQuery;
   private final EmployeeMapper employeeMapper;
   private final ObjectMapper objectMapper;
+  private static final String EMPLOYEE_NOT_FOUND_MSG = "Employee not found with id: ";
 
   public EmployeeDTO createEmployee(EmployeeCreateRequestDTO body) {
     EmployeeEntity entity = employeeMapper.toEntity(body);
@@ -50,5 +53,12 @@ public class EmployeeService {
         .start(offset)
         .end(end)
         .build();
+  }
+
+  public EmployeeDTO getEmployeeById(UUID id) {
+    return employeeRepository
+        .findById(id)
+        .map(employeeMapper::toDTO)
+        .orElseThrow(() -> new NotFoundException(EMPLOYEE_NOT_FOUND_MSG + id));
   }
 }

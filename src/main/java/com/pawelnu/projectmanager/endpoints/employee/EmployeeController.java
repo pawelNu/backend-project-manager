@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class EmployeeController implements EmployeeApi {
   private final EmployeeService employeeService;
+  private final EmployeeRepository employeeRepository;
 
   @Override
   public ResponseEntity<EmployeeDTO> createEmployee(
@@ -22,7 +23,6 @@ public class EmployeeController implements EmployeeApi {
   @Override
   public ResponseEntity<List<EmployeeDTO>> getEmployeeList(
       String authorizationHeader, String sort, String range, String filter) {
-    //     TODO getEmployeeList
     EmployeesListResponseDTO result = employeeService.getEmployeeList(sort, range, filter);
     String contentRange =
         String.format(
@@ -32,8 +32,8 @@ public class EmployeeController implements EmployeeApi {
 
   @Override
   public ResponseEntity<EmployeeDTO> getEmployeeById(String authorizationHeader, UUID id) {
-    //    TODO getEmployeeById
-    return null;
+    EmployeeDTO employeeDTO = employeeService.getEmployeeById(id);
+    return ResponseEntity.ok(employeeDTO);
   }
 
   @Override
