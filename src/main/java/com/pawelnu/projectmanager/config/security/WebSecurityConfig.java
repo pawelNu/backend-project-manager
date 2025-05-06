@@ -2,6 +2,7 @@ package com.pawelnu.projectmanager.config.security;
 
 import com.pawelnu.projectmanager.config.security.jwt.AuthEntryPointJwt;
 import com.pawelnu.projectmanager.config.security.jwt.AuthTokenFilter;
+import com.pawelnu.projectmanager.config.security.jwt.JwtUtils;
 import com.pawelnu.projectmanager.config.security.services.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -27,10 +28,11 @@ public class WebSecurityConfig {
 
   private final UserDetailsServiceImpl userDetailsService;
   private final AuthEntryPointJwt unauthorizedHandler;
+  private final JwtUtils jwtUtils;
 
   @Bean
   public AuthTokenFilter authenticationJwtTokenFilter() {
-    return new AuthTokenFilter();
+    return new AuthTokenFilter(jwtUtils, userDetailsService);
   }
 
   @Bean

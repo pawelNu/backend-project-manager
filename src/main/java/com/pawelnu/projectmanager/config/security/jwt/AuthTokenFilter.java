@@ -6,9 +6,9 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,36 +17,38 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 @Component
+@RequiredArgsConstructor
+@Slf4j
 public class AuthTokenFilter extends OncePerRequestFilter {
-  @Autowired private JwtUtils jwtUtils;
 
-  @Autowired private UserDetailsServiceImpl userDetailsService;
-
-  private static final Logger logger = LoggerFactory.getLogger(AuthTokenFilter.class);
+  private final JwtUtils jwtUtils;
+  private final UserDetailsServiceImpl userDetailsService;
 
   @Override
   protected void doFilterInternal(
-      HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+      HttpServletRequest request,
+      @NonNull HttpServletResponse response,
+      @NonNull FilterChain filterChain)
       throws ServletException, IOException {
-    logger.debug("AuthTokenFilter called for URI: {}", request.getRequestURI());
+    log.debug("AuthTokenFilter called for URI: {}", request.getRequestURI());
     try {
       String jwt = parseJwt(request);
       if (jwt != null && jwtUtils.validateJwtToken(jwt)) {
-        String username = jwtUtils.getUserNameFromJwtToken(jwt);
+        String username = jwtUtils.getUserNameFromJwtCookieToken(jwt);
 
         UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
         UsernamePasswordAuthenticationToken authentication =
             new UsernamePasswordAuthenticationToken(
                 userDetails, null, userDetails.getAuthorities());
-        logger.debug("Roles from JWT: {}", userDetails.getAuthorities());
+        log.debug("Roles from JWT: {}", userDetails.getAuthorities());
 
         authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
       }
     } catch (Exception e) {
-      logger.error("Cannot set user authentication: {}", e);
+      log.error("Cannot set user authentication:", e);
     }
 
     filterChain.doFilter(request, response);
@@ -54,7 +56,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 
   private String parseJwt(HttpServletRequest request) {
     String jwt = jwtUtils.getJwtFromCookies(request);
-    logger.debug("AuthTokenFilter.java: {}", jwt);
+    log.debug("AuthTokenFilter.java: {}", jwt);
     return jwt;
   }
 }

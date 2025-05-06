@@ -102,7 +102,7 @@ public class DataInit {
         .firstName(firstName)
         .lastName(lastName)
         .username(username)
-        .password("test")
+        .password("$2a$12$pwnwU5hQ52IO2wwP3WOjOOKc8JgIPLQayTe4C956A165W2oyHGtMC")
         .email(faker.internet().safeEmailAddress(formatStringToEmail(firstName + "." + lastName)))
         .phoneNumber(faker.phoneNumber().cellPhone())
         .company(company)

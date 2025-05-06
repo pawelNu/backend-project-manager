@@ -5,6 +5,7 @@ import com.pawelnu.projectmanager.exception.model.ReactAdminError;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -13,33 +14,39 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
+@Slf4j
 public class GlobalExceptionHandler {
 
   @ExceptionHandler(BadRequestException.class)
   public ResponseEntity<String> handleBadRequestException(BadRequestException e) {
+    log.error("Stacktrace:", e);
     return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
   }
 
   @ExceptionHandler(NotFoundException.class)
   public ResponseEntity<ReactAdminError> handleNotFoundException(NotFoundException e) {
+    log.error("Stacktrace:", e);
     return new ResponseEntity<>(new ReactAdminError(e.getMessage()), HttpStatus.NOT_FOUND);
   }
 
   @ExceptionHandler(NotNullOrEmptyException.class)
   public ResponseEntity<String> handleNotNullOrEmptyException(NotNullOrEmptyException e) {
+    log.error("Stacktrace:", e);
     return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
   }
 
   @ExceptionHandler(NotFoundSortingFieldException.class)
   public ResponseEntity<String> handleNotFoundPropertyException(NotFoundSortingFieldException e) {
+    log.error("Stacktrace:", e);
     return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
   }
 
   @ExceptionHandler(MethodArgumentNotValidException.class)
   public ResponseEntity<ReactAdminBadRequestError> handleValidationErrors(
-      MethodArgumentNotValidException exception) {
+      MethodArgumentNotValidException e) {
+    log.error("Stacktrace:", e);
 
-    List<FieldError> fieldErrors = exception.getBindingResult().getFieldErrors();
+    List<FieldError> fieldErrors = e.getBindingResult().getFieldErrors();
     Map<String, Object> errors = new HashMap<>();
 
     for (FieldError fieldError : fieldErrors) {
@@ -66,6 +73,7 @@ public class GlobalExceptionHandler {
 
   @ExceptionHandler(Exception.class)
   public ResponseEntity<ReactAdminError> handleException(Exception e) {
+    log.error("Stacktrace:", e);
     return new ResponseEntity<>(
         new ReactAdminError(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
   }

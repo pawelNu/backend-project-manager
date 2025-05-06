@@ -11,7 +11,7 @@ spring:
     password: test
     driverClassName: org.postgresql.Driver
   app:
-    jwtSecret: mySecretKey123912738
+    jwtSecret: sdfsdfsdfsfasdffdjgdo4u3j4lewkljde0ge04jltrkjeu2lk3jrrwrfssf
     jwtExpirationMs: 300000000
   jpa:
     hibernate:

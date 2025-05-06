@@ -5,8 +5,11 @@ import com.pawelnu.projectmanager.config.security.services.UserDetailsImpl;
 import com.pawelnu.projectmanager.endpoints.employee.EmployeeEntity;
 import com.pawelnu.projectmanager.endpoints.employee.EmployeeRepository;
 import com.pawelnu.projectmanager.exception.model.SimpleErrorResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -18,20 +21,25 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
+@Tag(name = "Auth")
 public class AuthController {
 
   private final JwtUtils jwtUtils;
   private final AuthenticationManager authenticationManager;
   private final EmployeeRepository employeeRepository;
-  private final RoleRepository roleRepository;
 
-  PasswordEncoder encoder;
+  //  private final RoleRepository roleRepository;
+
+  //  PasswordEncoder encoder;
 
   @PostMapping("/signin")
   public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
@@ -52,18 +60,22 @@ public class AuthController {
 
     UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 
-    ResponseCookie jwtCookie = jwtUtils.generateJwtCookie(userDetails);
+    String jwtCookie = jwtUtils.generateTokenFromUserDetails(userDetails);
 
-    List<String> roles =
-        userDetails.getAuthorities().stream()
-            .map(item -> item.getAuthority())
-            .collect(Collectors.toList());
+    //    List<String> roles =
+    //        userDetails.getAuthorities().stream()
+    //            .map(item -> item.getAuthority())
+    //            .collect(Collectors.toList());
 
     UserInfoResponse response =
-        new UserInfoResponse(
-            userDetails.getId(), userDetails.getUsername(), roles, jwtCookie.toString());
+        UserInfoResponse.builder()
+            .id(userDetails.getId())
+            .username(userDetails.getUsername())
+            .roles(null)
+            .jwtToken(jwtCookie)
+            .build();
 
-    return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, jwtCookie.toString()).body(response);
+    return ResponseEntity.ok(response);
   }
 
   @PostMapping("/signup")
@@ -77,12 +89,16 @@ public class AuthController {
       return ResponseEntity.badRequest().body(new SimpleErrorResponse("Email is already in use!"));
     }
 
-    // Create new user's account
     EmployeeEntity user =
-        new EmployeeEntity(
-            signUpRequest.getUsername(),
-            signUpRequest.getEmail(),
-            encoder.encode(signUpRequest.getPassword()));
+        EmployeeEntity.builder()
+            .firstName("test")
+            .lastName("test")
+            .username(signUpRequest.getUsername())
+            .password(signUpRequest.getPassword())
+            .email(signUpRequest.getEmail())
+            .phoneNumber("test")
+            .company(null)
+            .build();
 
     //    Set<String> strRoles = signUpRequest.getRole();
     //    Set<Role> roles = new HashSet<>();
@@ -122,8 +138,11 @@ public class AuthController {
 
   @GetMapping("/username")
   public String currentUserName(Authentication authentication) {
-    if (authentication != null) return authentication.getName();
-    else return "";
+    if (authentication != null) {
+      return authentication.getName();
+    } else {
+      return "";
+    }
   }
 
   @GetMapping("/user")
@@ -136,7 +155,12 @@ public class AuthController {
             .collect(Collectors.toList());
 
     UserInfoResponse response =
-        new UserInfoResponse(userDetails.getId(), userDetails.getUsername(), roles);
+        UserInfoResponse.builder()
+            .id(userDetails.getId())
+            .username(userDetails.getUsername())
+            .roles(null)
+            .jwtToken(null)
+            .build();
 
     return ResponseEntity.ok().body(response);
   }
@@ -146,6 +170,6 @@ public class AuthController {
     ResponseCookie cookie = jwtUtils.getCleanJwtCookie();
     return ResponseEntity.ok()
         .header(HttpHeaders.SET_COOKIE, cookie.toString())
-        .body(new MessageResponse("You've been signed out!"));
+        .body(new SimpleErrorResponse("You've been signed out!"));
   }
 }
