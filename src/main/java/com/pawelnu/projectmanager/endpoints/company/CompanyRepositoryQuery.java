@@ -89,19 +89,4 @@ public class CompanyRepositoryQuery {
     return Optional.empty();
   }
 
-  record CompanyWithAddressDTO(
-      UUID companyId,
-      String companyName,
-      String nip,
-      String regon,
-      String website,
-      UUID addressId,
-      String street,
-      String streetNumber,
-      String city,
-      String zipCode,
-      String country,
-      String phoneNumber,
-      String emailAddress,
-      String addressType) {}
 }
