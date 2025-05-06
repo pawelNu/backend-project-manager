@@ -3,7 +3,6 @@ package com.pawelnu.projectmanager.endpoints.company;
 import com.pawelnu.projectmanager.endpoints.companyaddress.QCompanyAddressEntity;
 import com.pawelnu.projectmanager.utils.Shared;
 import com.querydsl.core.BooleanBuilder;
-import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
 import java.util.Map;
@@ -12,7 +11,6 @@ import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -54,7 +52,6 @@ public class CompanyRepositoryQuery {
   public Page<CompanyEntity> filterCompanies(
       Map<String, String> filters, int offset, int limit, String sortDir, String sortField) {
     QCompanyEntity company = QCompanyEntity.companyEntity;
-    QCompanyAddressEntity address = QCompanyAddressEntity.companyAddressEntity;
     BooleanBuilder allConditions = new BooleanBuilder();
 
     if (filters.containsKey("name")) {
@@ -70,32 +67,7 @@ public class CompanyRepositoryQuery {
     Pageable pageable =
         PageRequest.of(
             offset / limit, limit, Sort.by(Sort.Direction.fromString(sortDir), sortField));
-
-    // Zapytanie
-    //    TODO fix pagination
-    JPAQuery<CompanyEntity> query =
-        queryFactory
-            .selectFrom(company) // Zaczynamy od CompanyEntity
-            .leftJoin(company.addresses, address) // LEFT JOIN dla adresów
-            .fetchJoin() // fetchJoin załaduje dane z tabeli address w jednym zapytaniu
-            .where(allConditions) // Zastosowanie warunków filtrów
-            .offset(offset) // Paginacja
-            .limit(limit); // Paginacja
-
-    // Wykonanie zapytania
-    List<CompanyEntity> content = query.fetch();
-    long total =
-        Optional.ofNullable(
-                queryFactory
-                    .select(company.count())
-                    .from(company)
-                    .leftJoin(company.addresses, address)
-                    .where(allConditions)
-                    .fetchOne())
-            .orElse(0L);
-
-    // Zwrócenie wyników jako Page
-    return new PageImpl<>(content, pageable, total);
+    return companyRepository.findAll(allConditions, pageable);
   }
 
   public Optional<CompanyEntity> findById(UUID id) {

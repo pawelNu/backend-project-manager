@@ -8,7 +8,7 @@ import lombok.Data;
 @Builder
 public class CompanyListResponseDTO2 {
 
-  private List<CompanyDTO> data;
+  private List<CompanySimpleDTO> data;
   private long totalElements;
   private int start;
   private long end;

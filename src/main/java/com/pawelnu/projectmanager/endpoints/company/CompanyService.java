@@ -101,7 +101,8 @@ public class CompanyService {
 
     Page<CompanyEntity> page =
         companyRepositoryQuery.filterCompanies(filters, offset, limit, sortDir, sortField);
-    List<CompanyDTO> companyDTOs = page.getContent().stream().map(companyMapper::toDTO).toList();
+    List<CompanySimpleDTO> companyDTOs =
+        page.getContent().stream().map(companyMapper::toSimpleDTO).toList();
 
     long totalElements = page.getTotalElements();
     long end = Math.min(offset + limit - 1, totalElements - 1);

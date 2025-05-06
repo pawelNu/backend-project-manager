@@ -104,10 +104,10 @@ public interface CompanyApi {
       content =
           @Content(
               mediaType = MediaType.APPLICATION_JSON_VALUE,
-              array = @ArraySchema(schema = @Schema(implementation = CompanyDTO.class))))
+              array = @ArraySchema(schema = @Schema(implementation = CompanySimpleDTO.class))))
   @ResponseErrors
   @GetMapping("")
-  ResponseEntity<List<CompanyDTO>> getCompaniesList(
+  ResponseEntity<List<CompanySimpleDTO>> getCompaniesList(
       @Parameter(hidden = true) @RequestHeader(required = false, value = Request.AUTH_HEADER)
           String authorizationHeader,
       @Parameter(description = "Sort as JSON string, e.g. [\"title\",\"ASC\"]")

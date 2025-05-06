@@ -54,7 +54,7 @@ public class CompanyController implements CompanyApi {
   }
 
   @Override
-  public ResponseEntity<List<CompanyDTO>> getCompaniesList(
+  public ResponseEntity<List<CompanySimpleDTO>> getCompaniesList(
       String authorizationHeader, String sort, String range, String filter) {
     CompanyListResponseDTO2 result = service.filterCompanies(sort, range, filter);
     String contentRange =

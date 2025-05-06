@@ -11,6 +11,8 @@ public interface CompanyMapper {
   @Mapping(target = "addresses", source = "addresses")
   CompanyDTO toDTO(CompanyEntity companyEntity);
 
+  CompanySimpleDTO toSimpleDTO(CompanyEntity companyEntity);
+
   @Mapping(target = "id", ignore = true)
   CompanyEntity toEntity(CompanyCreateRequestDTO companyCreateRequest);
 
