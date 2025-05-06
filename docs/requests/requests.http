@@ -1,0 +1,23 @@
+@host=http://localhost:8080
+
+###
+
+# @name login
+POST {{host}}/api/auth/login
+Accept: application/json
+Content-Type: application/json
+
+{
+  "username": "Noreen_King24892",
+  "password": "test"
+}
+
+@token = {{login.response.body.jwtToken}}
+###
+
+GET {{host}}/api/companies
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+###
