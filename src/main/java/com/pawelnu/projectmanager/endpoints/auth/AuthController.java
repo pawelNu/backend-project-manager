@@ -5,6 +5,7 @@ import com.pawelnu.projectmanager.config.security.services.UserDetailsImpl;
 import com.pawelnu.projectmanager.endpoints.employee.EmployeeEntity;
 import com.pawelnu.projectmanager.endpoints.employee.EmployeeRepository;
 import com.pawelnu.projectmanager.exception.model.SimpleErrorResponse;
+import com.pawelnu.projectmanager.utils.Path;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.util.HashMap;
@@ -12,9 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -28,7 +27,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping(Path.API_AUTH)
 @RequiredArgsConstructor
 @Tag(name = "Auth")
 public class AuthController {
@@ -41,8 +40,8 @@ public class AuthController {
 
   //  PasswordEncoder encoder;
 
-  @PostMapping("/signin")
-  public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
+  @PostMapping("/login")
+  public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
     Authentication authentication;
     try {
       authentication =
@@ -60,7 +59,7 @@ public class AuthController {
 
     UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 
-    String jwtCookie = jwtUtils.generateTokenFromUserDetails(userDetails);
+    String jwtString = jwtUtils.generateTokenFromUsername(userDetails.getUsername());
 
     //    List<String> roles =
     //        userDetails.getAuthorities().stream()
@@ -72,13 +71,14 @@ public class AuthController {
             .id(userDetails.getId())
             .username(userDetails.getUsername())
             .roles(null)
-            .jwtToken(jwtCookie)
+            .jwtToken(jwtString)
+            .expireAt(jwtUtils.getExpirationDateFromToken(jwtString))
             .build();
 
     return ResponseEntity.ok(response);
   }
 
-  @PostMapping("/signup")
+  @PostMapping("/register-user")
   public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
     if (employeeRepository.existsByUsername(signUpRequest.getUsername())) {
       return ResponseEntity.badRequest()
@@ -163,13 +163,5 @@ public class AuthController {
             .build();
 
     return ResponseEntity.ok().body(response);
-  }
-
-  @PostMapping("/signout")
-  public ResponseEntity<?> signoutUser() {
-    ResponseCookie cookie = jwtUtils.getCleanJwtCookie();
-    return ResponseEntity.ok()
-        .header(HttpHeaders.SET_COOKIE, cookie.toString())
-        .body(new SimpleErrorResponse("You've been signed out!"));
   }
 }

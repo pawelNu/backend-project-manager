@@ -12,7 +12,7 @@ spring:
     driverClassName: org.postgresql.Driver
   app:
     jwtSecret: sdfsdfsdfsfasdffdjgdo4u3j4lewkljde0ge04jltrkjeu2lk3jrrwrfssf
-    jwtExpirationMs: 300000000
+    jwtExpirationMin: 15
   jpa:
     hibernate:
       ddl-auto: create-drop
