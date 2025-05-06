@@ -10,6 +10,9 @@ spring:
     username: postgres
     password: test
     driverClassName: org.postgresql.Driver
+  app:
+    jwtSecret: mySecretKey123912738
+    jwtExpirationMs: 300000000
   jpa:
     hibernate:
       ddl-auto: create-drop

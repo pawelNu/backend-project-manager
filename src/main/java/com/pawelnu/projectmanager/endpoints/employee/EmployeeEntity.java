@@ -31,6 +31,7 @@ public class EmployeeEntity extends Auditable {
   @NotNull private String firstName;
   @NotNull private String lastName;
   @NotNull private String username;
+  @NotNull private String password;
   @NotNull private String email;
   @NotNull private String phoneNumber;
 
