@@ -10,32 +10,38 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 public class EmployeeController implements EmployeeApi {
+  private final EmployeeService employeeService;
 
   @Override
   public ResponseEntity<EmployeeDTO> createEmployee(
       String authorizationHeader, EmployeeCreateRequestDTO body) {
-    return null;
+    EmployeeDTO employee = employeeService.createEmployee(body);
+    return ResponseEntity.ok(employee);
   }
 
   @Override
   public ResponseEntity<List<EmployeeDTO>> getEmployeeList(
       String authorizationHeader, String sort, String range, String filter) {
+    //     TODO getEmployeeList
     return null;
   }
 
   @Override
   public ResponseEntity<EmployeeDTO> getEmployeeById(String authorizationHeader, UUID id) {
+    //    TODO getEmployeeById
     return null;
   }
 
   @Override
   public ResponseEntity<EmployeeDTO> editEmployeeById(
       String authorizationHeader, UUID id, EmployeeEditRequestDTO body) {
+    //    TODO editEmployeeById
     return null;
   }
 
   @Override
   public ResponseEntity<SimpleResponse> deleteEmployeeById(String authorizationHeader, UUID id) {
+    //    TODO deleteEmployeeById
     return null;
   }
 }
