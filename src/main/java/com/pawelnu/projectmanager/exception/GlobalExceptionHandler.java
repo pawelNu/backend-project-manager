@@ -43,7 +43,13 @@ public class GlobalExceptionHandler {
     Map<String, Object> errors = new HashMap<>();
 
     for (FieldError fieldError : fieldErrors) {
-      errors.put(fieldError.getField(), fieldError.getDefaultMessage());
+      if (errors.containsKey(fieldError.getField())) {
+        String key = fieldError.getField();
+        Object value = errors.get(key);
+        errors.put(key, value.toString() + ", " + fieldError.getDefaultMessage());
+      } else {
+        errors.put(fieldError.getField(), fieldError.getDefaultMessage());
+      }
     }
 
     if (!errors.containsKey("root")) {
