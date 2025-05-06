@@ -68,8 +68,10 @@ public class WebSecurityConfig {
                     .permitAll()
                     .requestMatchers("/swagger-ui/**")
                     .permitAll()
-//                    .requestMatchers("/v3/api-docs/**", "/v3/api-docs").permitAll()
-                    .requestMatchers("/project-manager/**").permitAll()
+                    //                    .requestMatchers("/v3/api-docs/**",
+                    // "/v3/api-docs").permitAll()
+                    .requestMatchers("/project-manager/**")
+                    .permitAll()
                     .requestMatchers("/h2-console/**")
                     .permitAll()
                     // .requestMatchers("/api/admin/**")
