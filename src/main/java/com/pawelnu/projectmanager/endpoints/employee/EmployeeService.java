@@ -16,4 +16,9 @@ public class EmployeeService {
     EmployeeEntity save = employeeRepository.save(entity);
     return employeeMapper.toDTO(save);
   }
+
+  public EmployeesListResponseDTO getEmployeeList(String sort, String range, String filter) {
+    //    TODO getEmployeeList
+    return null;
+  }
 }
