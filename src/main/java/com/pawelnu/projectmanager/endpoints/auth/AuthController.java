@@ -78,8 +78,8 @@ public class AuthController {
     return ResponseEntity.ok(response);
   }
 
-//  TODO fix register user
-//  TODO fix Error: response status is 500 change to 401 or 403
+  //  TODO fix register user
+  //  TODO fix Error: response status is 500 change to 401 or 403
   @PostMapping("/register-user")
   public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
     if (employeeRepository.existsByUsername(signUpRequest.getUsername())) {
