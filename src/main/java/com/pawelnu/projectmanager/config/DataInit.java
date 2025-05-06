@@ -11,7 +11,10 @@ import com.pawelnu.projectmanager.enums.CompanyStatus;
 import jakarta.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
+import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
@@ -22,7 +25,6 @@ import org.springframework.stereotype.Component;
 public class DataInit {
 
   private final Faker faker = new Faker(new Random(12345));
-  private static long counter = 0;
   private final CompanyRepository companyRepository;
   private final CompanyAddressRepository companyAddressRepository;
   private final EmployeeRepository employeeRepository;
@@ -43,17 +45,22 @@ public class DataInit {
   private List<CompanyEntity> createCompanies() {
     List<CompanyEntity> companies = new ArrayList<>();
     for (int i = 0; i < 30; i++) {
-      CompanyEntity c =
-          CompanyEntity.builder()
-              .name(faker.company().name())
-              .nip(String.valueOf(faker.number().randomNumber(10, true)))
-              .regon(String.valueOf(faker.number().randomNumber(9, true)))
-              .website("https://" + faker.internet().domainName())
-              .status(i % 2 == 0 ? CompanyStatus.ACTIVE : CompanyStatus.TERMINATED)
-              .build();
+      CompanyEntity c = generateCompany(i);
       companies.add(c);
     }
     return companyRepository.saveAll(companies);
+  }
+
+  private CompanyEntity generateCompany(int i) {
+    CompanyEntity c =
+        CompanyEntity.builder()
+            .name(faker.company().name())
+            .nip(String.valueOf(faker.number().randomNumber(10, true)))
+            .regon(String.valueOf(faker.number().randomNumber(9, true)))
+            .website("https://" + faker.internet().domainName())
+            .status(i % 2 == 0 ? CompanyStatus.ACTIVE : CompanyStatus.TERMINATED)
+            .build();
+    return c;
   }
 
   private List<CompanyAddressEntity> createCompanyAddresses(List<CompanyEntity> companies) {
@@ -87,7 +94,7 @@ public class DataInit {
     return s.replaceAll(" ", "_").replaceAll(",", "").replaceAll("-", "_").toLowerCase();
   }
 
-  private EmployeeEntity createEmployee() {
+  private EmployeeEntity createEmployee(CompanyEntity company) {
     String firstName = faker.name().firstName();
     String lastName = faker.name().lastName();
     String username = firstName + "_" + lastName + faker.number().randomNumber(5, true);
@@ -97,13 +104,25 @@ public class DataInit {
         .username(username)
         .email(faker.internet().safeEmailAddress(formatStringToEmail(firstName + "." + lastName)))
         .phoneNumber(faker.phoneNumber().cellPhone())
+        .company(company)
         .build();
   }
 
+  private CompanyEntity getCompanyFromDb(List<UUID> companyUUIDs) {
+    UUID randomUUID = UUID.randomUUID();
+    if (!companyUUIDs.isEmpty()) {
+      randomUUID = companyUUIDs.get(ThreadLocalRandom.current().nextInt(companyUUIDs.size()));
+    }
+    Optional<CompanyEntity> companyEntity = companyRepository.findById(randomUUID);
+    return companyEntity.orElseThrow();
+  }
+
   private void createEmployees() {
+    List<UUID> allIds = companyRepository.findAllIds();
     List<EmployeeEntity> employees = new ArrayList<>();
     for (int i = 0; i < 30; i++) {
-      EmployeeEntity employee = createEmployee();
+      CompanyEntity companyFromDb = getCompanyFromDb(allIds);
+      EmployeeEntity employee = createEmployee(companyFromDb);
       employees.add(employee);
     }
     employeeRepository.saveAll(employees);

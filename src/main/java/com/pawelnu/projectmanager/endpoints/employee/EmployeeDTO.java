@@ -13,4 +13,5 @@ public class EmployeeDTO extends Auditable {
   private String username;
   private String email;
   private String phoneNumber;
+  private String companyName;
 }

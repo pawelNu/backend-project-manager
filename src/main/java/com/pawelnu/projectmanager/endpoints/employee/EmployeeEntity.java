@@ -9,6 +9,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -27,11 +28,11 @@ public class EmployeeEntity extends Auditable {
   @GeneratedValue(strategy = GenerationType.AUTO)
   private UUID id;
 
-  private String firstName;
-  private String lastName;
-  private String username;
-  private String email;
-  private String phoneNumber;
+  @NotNull private String firstName;
+  @NotNull private String lastName;
+  @NotNull private String username;
+  @NotNull private String email;
+  @NotNull private String phoneNumber;
 
   //  @Enumerated(EnumType.STRING)
   //  private PersonRole role;
@@ -42,6 +43,7 @@ public class EmployeeEntity extends Auditable {
   //  @OneToMany(mappedBy = "assignedPerson")
   //  private List<TicketEntity> assignedTickets;
 
+  @NotNull
   @ManyToOne
   @JoinColumn(name = "company_id")
   private CompanyEntity company;

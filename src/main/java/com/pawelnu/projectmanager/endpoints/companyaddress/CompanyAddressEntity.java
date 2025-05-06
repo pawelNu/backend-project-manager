@@ -9,6 +9,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,20 +23,22 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class CompanyAddressEntity extends Auditable {
+
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   private UUID id;
 
   @ManyToOne
   @JoinColumn(name = "company_id")
+  @NotNull
   private CompanyEntity company;
 
-  private String street;
-  private String streetNumber;
-  private String city;
-  private String zipCode;
-  private String country;
-  private String phoneNumber;
-  private String emailAddress;
-  private String addressType;
+  @NotNull private String street;
+  @NotNull private String streetNumber;
+  @NotNull private String city;
+  @NotNull private String zipCode;
+  @NotNull private String country;
+  @NotNull private String phoneNumber;
+  @NotNull private String emailAddress;
+  @NotNull private String addressType;
 }

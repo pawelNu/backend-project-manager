@@ -45,6 +45,7 @@ public class CompanyEntity extends Auditable {
 
   @NotNull private String website;
 
+  @NotNull
   @Enumerated(value = EnumType.STRING)
   private CompanyStatus status;
 

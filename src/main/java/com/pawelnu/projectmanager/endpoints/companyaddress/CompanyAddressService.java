@@ -5,7 +5,6 @@ import com.pawelnu.projectmanager.dto.SimpleResponse;
 import com.pawelnu.projectmanager.endpoints.company.CompanyEntity;
 import com.pawelnu.projectmanager.endpoints.company.CompanyRepository;
 import com.pawelnu.projectmanager.exception.NotFoundException;
-import com.pawelnu.projectmanager.mapper.PagingAndSortingMapper;
 import com.pawelnu.projectmanager.utils.Shared;
 import java.util.List;
 import java.util.Map;
@@ -25,7 +24,6 @@ public class CompanyAddressService {
   private final CompanyRepository companyRepository;
   private final CompanyAddressRepositoryQuery companyAddressRepositoryQuery;
   private final CompanyAddressMapper companyAddressMapper;
-  private final PagingAndSortingMapper pageMapper;
   private final ObjectMapper objectMapper;
 
   private static final String COMPANY_ADDRESS_NOT_FOUND_MSG = "Company address not found with id: ";

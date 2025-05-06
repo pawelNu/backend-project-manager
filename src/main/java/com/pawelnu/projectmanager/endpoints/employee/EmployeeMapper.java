@@ -9,5 +9,6 @@ public interface EmployeeMapper {
   @Mapping(target = "id", ignore = true)
   EmployeeEntity toEntity(EmployeeCreateRequestDTO dto);
 
+  @Mapping(source = "company.name", target = "companyName")
   EmployeeDTO toDTO(EmployeeEntity entity);
 }
