@@ -88,5 +88,4 @@ public class CompanyRepositoryQuery {
     }
     return Optional.empty();
   }
-
 }
