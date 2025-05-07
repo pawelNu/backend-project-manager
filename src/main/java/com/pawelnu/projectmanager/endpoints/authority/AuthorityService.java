@@ -1,6 +1,5 @@
 package com.pawelnu.projectmanager.endpoints.authority;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -11,6 +10,12 @@ import org.springframework.stereotype.Service;
 public class AuthorityService {
 
   private final AuthorityRepository authorityRepository;
-  private final ObjectMapper objectMapper;
+  private final AuthorityMapper authorityMapper;
   private static final String AUTHORITY_NOT_FOUND_MSG = "Authority not found with id: ";
+
+  public AuthorityDTO createAuthority(AuthorityCreateRequestDTO body) {
+    AuthorityEntity entity = authorityMapper.toEntity(body);
+    AuthorityEntity save = authorityRepository.save(entity);
+    return authorityMapper.toDTO(save);
+  }
 }

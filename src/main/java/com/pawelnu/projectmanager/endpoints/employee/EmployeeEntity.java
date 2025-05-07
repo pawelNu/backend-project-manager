@@ -1,17 +1,15 @@
 package com.pawelnu.projectmanager.endpoints.employee;
 
-import com.pawelnu.projectmanager.endpoints.authority.AuthorityEntity;
+import com.pawelnu.projectmanager.endpoints.authority.AuthorityEmployeeEntity;
 import com.pawelnu.projectmanager.endpoints.company.CompanyEntity;
 import com.pawelnu.projectmanager.entity.Auditable;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import java.util.HashSet;
@@ -55,10 +53,13 @@ public class EmployeeEntity extends Auditable {
   @JoinColumn(name = "company_id")
   private CompanyEntity company;
 
-  @ManyToMany(fetch = FetchType.EAGER)
-  @JoinTable(
-      name = "employee_authorities",
-      joinColumns = @JoinColumn(name = "employee_id"),
-      inverseJoinColumns = @JoinColumn(name = "authority_id"))
-  private Set<AuthorityEntity> authorities = new HashSet<>();
+  @OneToMany(mappedBy = "employee")
+  private Set<AuthorityEmployeeEntity> authorities = new HashSet<>();
+
+  //  @ManyToMany(fetch = FetchType.EAGER)
+  //  @JoinTable(
+  //      name = "employee_authorities",
+  //      joinColumns = @JoinColumn(name = "employee_id"),
+  //      inverseJoinColumns = @JoinColumn(name = "authority_id"))
+  //  private Set<AuthorityEntity> authorities = new HashSet<>();
 }

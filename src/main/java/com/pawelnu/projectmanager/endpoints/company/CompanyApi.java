@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.UUID;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -95,6 +96,7 @@ public interface CompanyApi {
           String authorizationHeader,
       @Valid @RequestBody CompanyFilterRequestDTO body);
 
+  @PreAuthorize("hasAuthority('COMPANY_GET_LIST')")
   @Operation(
       description = "List companies with filtering, sorting and pagination (react-admin format)")
   @ApiResponse(

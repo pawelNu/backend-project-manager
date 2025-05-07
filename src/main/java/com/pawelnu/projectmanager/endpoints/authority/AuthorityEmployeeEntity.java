@@ -1,14 +1,12 @@
 package com.pawelnu.projectmanager.endpoints.authority;
 
-import com.pawelnu.projectmanager.entity.Auditable;
+import com.pawelnu.projectmanager.endpoints.employee.EmployeeEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,16 +14,21 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "authorities")
+@Table(name = "employee_authorities")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class AuthorityEntity extends Auditable {
+public class AuthorityEmployeeEntity {
 
   @Id @GeneratedValue private UUID id;
-  @NotNull private String name;
 
-  @ManyToMany(mappedBy = "authority")
-  private Set<AuthorityEmployeeEntity> employees = new HashSet<>();
+  //  @NotNull private String authority;
+  @ManyToOne
+  @JoinColumn(name = "employee_id")
+  private EmployeeEntity employee;
+
+  @ManyToOne
+  @JoinColumn(name = "authority_id")
+  private AuthorityEntity authority;
 }

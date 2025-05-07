@@ -27,7 +27,7 @@ public class UserDetailsImpl implements UserDetails {
   public static UserDetailsImpl build(EmployeeEntity user) {
     List<GrantedAuthority> authorities =
         user.getAuthorities().stream()
-            .map(role -> new SimpleGrantedAuthority(role.getAuthority()))
+            .map(role -> new SimpleGrantedAuthority(role.getAuthority().getName()))
             .collect(Collectors.toList());
 
     return new UserDetailsImpl(

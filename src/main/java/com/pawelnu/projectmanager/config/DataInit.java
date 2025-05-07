@@ -1,6 +1,8 @@
 package com.pawelnu.projectmanager.config;
 
 import com.github.javafaker.Faker;
+import com.pawelnu.projectmanager.endpoints.authority.AuthorityEntity;
+import com.pawelnu.projectmanager.endpoints.authority.AuthorityRepository;
 import com.pawelnu.projectmanager.endpoints.company.CompanyEntity;
 import com.pawelnu.projectmanager.endpoints.company.CompanyRepository;
 import com.pawelnu.projectmanager.endpoints.companyaddress.CompanyAddressEntity;
@@ -13,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 import lombok.RequiredArgsConstructor;
@@ -24,10 +27,14 @@ import org.springframework.stereotype.Component;
 @Log4j2
 public class DataInit {
 
+  private final AuthorityRepository authorityRepository;
+
   private final Faker faker = new Faker(new Random(12345));
   private final CompanyRepository companyRepository;
   private final CompanyAddressRepository companyAddressRepository;
   private final EmployeeRepository employeeRepository;
+  private static final String PASSWORD =
+      "$2a$12$pwnwU5hQ52IO2wwP3WOjOOKc8JgIPLQayTe4C956A165W2oyHGtMC";
 
   @PostConstruct
   private void loadData() {
@@ -35,6 +42,7 @@ public class DataInit {
     List<CompanyEntity> companies = createCompanies();
     createCompanyAddresses(companies);
     createEmployees();
+    generateAuthorities();
     //    List<ProjectEntity> projects = createProjects(companies);
     //    List<PersonEntity> people = createPeople(companies);
     //    createTickets(people, projects);
@@ -102,7 +110,7 @@ public class DataInit {
         .firstName(firstName)
         .lastName(lastName)
         .username(username)
-        .password("$2a$12$pwnwU5hQ52IO2wwP3WOjOOKc8JgIPLQayTe4C956A165W2oyHGtMC")
+        .password(PASSWORD)
         .email(faker.internet().safeEmailAddress(formatStringToEmail(firstName + "." + lastName)))
         .phoneNumber(faker.phoneNumber().cellPhone())
         .company(company)
@@ -126,6 +134,42 @@ public class DataInit {
       EmployeeEntity employee = createEmployee(companyFromDb);
       employees.add(employee);
     }
+    EmployeeEntity testEmployee = createTestEmployee(allIds);
+    employees.add(testEmployee);
     employeeRepository.saveAll(employees);
+  }
+
+  private EmployeeEntity createTestEmployee(List<UUID> allIds) {
+    CompanyEntity companyFromDb = getCompanyFromDb(allIds);
+    return EmployeeEntity.builder()
+        .firstName("test")
+        .lastName("test")
+        .username("test")
+        .password(PASSWORD)
+        .email(faker.internet().safeEmailAddress(formatStringToEmail("test" + "." + "test")))
+        .phoneNumber(faker.phoneNumber().cellPhone())
+        .company(companyFromDb)
+        .build();
+  }
+
+  private List<AuthorityEntity> createAuthority(String controllerName) {
+    List<AuthorityEntity> authorities = new ArrayList<>();
+    Set<String> operations =
+        Set.of("create", "get_list", "get_by_id", "update_by_id", "delete_by_id");
+    for (String operation : operations) {
+      authorities.add(
+          AuthorityEntity.builder().name((controllerName + "_" + operation).toUpperCase()).build());
+    }
+    return authorities;
+  }
+
+  private void generateAuthorities() {
+    List<AuthorityEntity> allAuthorities = new ArrayList<>();
+    Set<String> controllers = Set.of("authority", "company", "companyAddress", "employee");
+    for (String controller : controllers) {
+      List<AuthorityEntity> authorities = createAuthority(controller);
+      allAuthorities.addAll(authorities);
+    }
+    authorityRepository.saveAll(allAuthorities);
   }
 }
