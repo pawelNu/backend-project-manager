@@ -34,16 +34,16 @@ public interface AuthorityApi {
       responseCode = "201",
       description = "Created",
       content = {
-          @Content(
-              mediaType = MediaType.APPLICATION_JSON_VALUE,
-              schema = @Schema(implementation = AuthorityDTO.class))
+        @Content(
+            mediaType = MediaType.APPLICATION_JSON_VALUE,
+            schema = @Schema(implementation = AuthorityDTO.class))
       })
   @ResponseErrors
   @PostMapping("")
   @Operation(description = "Add new authority.")
   ResponseEntity<AuthorityDTO> createAuthority(
       @Parameter(hidden = true) @RequestHeader(value = Request.AUTH_HEADER)
-      String authorizationHeader,
+          String authorizationHeader,
       @Valid @RequestBody AuthorityCreateRequestDTO body);
 
   @Operation(
@@ -52,53 +52,53 @@ public interface AuthorityApi {
       responseCode = "200",
       description = "OK",
       content =
-      @Content(
-          mediaType = MediaType.APPLICATION_JSON_VALUE,
-          array = @ArraySchema(schema = @Schema(implementation = AuthorityDTO.class))))
+          @Content(
+              mediaType = MediaType.APPLICATION_JSON_VALUE,
+              array = @ArraySchema(schema = @Schema(implementation = AuthorityDTO.class))))
   @ResponseErrors
   @GetMapping("")
   ResponseEntity<List<AuthorityDTO>> getAuthorityList(
       @Parameter(hidden = true) @RequestHeader(value = Request.AUTH_HEADER)
-      String authorizationHeader,
+          String authorizationHeader,
       @Parameter(description = "Sort as JSON string, e.g. [\"title\",\"ASC\"]")
-      @RequestParam(required = false)
-      String sort,
+          @RequestParam(required = false)
+          String sort,
       @Parameter(description = "Range as JSON string, e.g. [0, 24]") @RequestParam(required = false)
-      String range,
+          String range,
       @Parameter(description = "Filter as JSON string, e.g. {\"title\":\"bar\"}")
-      @RequestParam(required = false)
-      String filter);
+          @RequestParam(required = false)
+          String filter);
 
   @ApiResponse(
       responseCode = "200",
       description = "OK",
       content = {
-          @Content(
-              mediaType = MediaType.APPLICATION_JSON_VALUE,
-              schema = @Schema(implementation = AuthorityDTO.class))
+        @Content(
+            mediaType = MediaType.APPLICATION_JSON_VALUE,
+            schema = @Schema(implementation = AuthorityDTO.class))
       })
   @ResponseErrors
   @GetMapping("/{id}")
   @Operation(description = "Get authority by id.")
   ResponseEntity<AuthorityDTO> getAuthorityById(
       @Parameter(hidden = true) @RequestHeader(value = Request.AUTH_HEADER)
-      String authorizationHeader,
+          String authorizationHeader,
       @Parameter() @PathVariable() UUID id);
 
   @ApiResponse(
       responseCode = "200",
       description = "OK",
       content = {
-          @Content(
-              mediaType = MediaType.APPLICATION_JSON_VALUE,
-              schema = @Schema(implementation = AuthorityDTO.class))
+        @Content(
+            mediaType = MediaType.APPLICATION_JSON_VALUE,
+            schema = @Schema(implementation = AuthorityDTO.class))
       })
   @ResponseErrors
   @PutMapping("/{id}")
   @Operation(description = "Edit authority by id.")
   ResponseEntity<AuthorityDTO> editAuthorityById(
       @Parameter(hidden = true) @RequestHeader(value = Request.AUTH_HEADER)
-      String authorizationHeader,
+          String authorizationHeader,
       @Parameter() @PathVariable() UUID id,
       @Valid @RequestBody AuthorityEditRequestDTO body);
 
@@ -106,15 +106,15 @@ public interface AuthorityApi {
       responseCode = "200",
       description = "OK",
       content = {
-          @Content(
-              mediaType = MediaType.APPLICATION_JSON_VALUE,
-              schema = @Schema(implementation = SimpleResponse.class))
+        @Content(
+            mediaType = MediaType.APPLICATION_JSON_VALUE,
+            schema = @Schema(implementation = SimpleResponse.class))
       })
   @ResponseErrors
   @DeleteMapping("/{id}")
   @Operation(description = "Delete authority by id.")
   ResponseEntity<SimpleResponse> deleteAuthorityById(
       @Parameter(hidden = true) @RequestHeader(value = Request.AUTH_HEADER)
-      String authorizationHeader,
+          String authorizationHeader,
       @Parameter() @PathVariable() UUID id);
 }

@@ -13,5 +13,4 @@ public class AuthorityService {
   private final AuthorityRepository authorityRepository;
   private final ObjectMapper objectMapper;
   private static final String AUTHORITY_NOT_FOUND_MSG = "Authority not found with id: ";
-
 }

@@ -2,9 +2,9 @@ package com.pawelnu.projectmanager.endpoints.auth;
 
 import com.pawelnu.projectmanager.config.security.jwt.JwtUtils;
 import com.pawelnu.projectmanager.config.security.services.UserDetailsImpl;
-import com.pawelnu.projectmanager.exception.model.SimpleResponse;
 import com.pawelnu.projectmanager.endpoints.employee.EmployeeEntity;
 import com.pawelnu.projectmanager.endpoints.employee.EmployeeRepository;
+import com.pawelnu.projectmanager.exception.model.SimpleResponse;
 import com.pawelnu.projectmanager.utils.Path;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -83,8 +83,7 @@ public class AuthController {
   @PostMapping("/register-user")
   public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
     if (employeeRepository.existsByUsername(signUpRequest.getUsername())) {
-      return ResponseEntity.badRequest()
-          .body(new SimpleResponse("Username is already taken!"));
+      return ResponseEntity.badRequest().body(new SimpleResponse("Username is already taken!"));
     }
 
     if (employeeRepository.existsByEmail(signUpRequest.getEmail())) {
@@ -152,9 +151,7 @@ public class AuthController {
     UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 
     List<String> roles =
-        userDetails.getAuthorities().stream()
-            .map(GrantedAuthority::getAuthority)
-            .toList();
+        userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
 
     UserInfoResponse response =
         UserInfoResponse.builder()

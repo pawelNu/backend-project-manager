@@ -5,6 +5,5 @@ import lombok.Data;
 
 @Data
 public class AuthorityEditRequestDTO {
-  @NotNull
-  private String authority;
+  @NotNull private String authority;
 }
