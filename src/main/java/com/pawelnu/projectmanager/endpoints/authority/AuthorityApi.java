@@ -117,4 +117,20 @@ public interface AuthorityApi {
       @Parameter(hidden = true) @RequestHeader(value = Request.AUTH_HEADER)
           String authorizationHeader,
       @Parameter() @PathVariable() UUID id);
+
+  @ApiResponse(
+      responseCode = "201",
+      description = "Created",
+      content = {
+        @Content(
+            mediaType = MediaType.APPLICATION_JSON_VALUE,
+            schema = @Schema(implementation = AddAuthorityToUserResponseDTO.class))
+      })
+  @ResponseErrors
+  @PostMapping("/add-authority-to-user")
+  @Operation(description = "Add authority to user.")
+  ResponseEntity<AddAuthorityToUserResponseDTO> addAuthorityToUser(
+      @Parameter(hidden = true) @RequestHeader(value = Request.AUTH_HEADER)
+          String authorizationHeader,
+      @Valid @RequestBody AddAuthorityToUserRequestDTO body);
 }

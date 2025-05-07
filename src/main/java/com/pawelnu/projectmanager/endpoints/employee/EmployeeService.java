@@ -20,7 +20,7 @@ public class EmployeeService {
   private final EmployeeRepositoryQuery employeeRepositoryQuery;
   private final EmployeeMapper employeeMapper;
   private final ObjectMapper objectMapper;
-  private static final String EMPLOYEE_NOT_FOUND_MSG = "Employee not found with id: ";
+  public static final String EMPLOYEE_NOT_FOUND_MSG = "Employee not found with id: ";
 
   public EmployeeDTO createEmployee(EmployeeCreateRequestDTO body) {
     EmployeeEntity entity = employeeMapper.toEntity(body);

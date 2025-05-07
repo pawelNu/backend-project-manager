@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthorityController implements AuthorityApi {
 
   private final AuthorityService authorityService;
+  private final AuthorityEmployeeService authorityEmployeeService;
 
   @Override
   public ResponseEntity<AuthorityDTO> createAuthority(
@@ -41,5 +42,12 @@ public class AuthorityController implements AuthorityApi {
   @Override
   public ResponseEntity<SimpleResponse> deleteAuthorityById(String authorizationHeader, UUID id) {
     return null;
+  }
+
+  @Override
+  public ResponseEntity<AddAuthorityToUserResponseDTO> addAuthorityToUser(
+      String authorizationHeader, AddAuthorityToUserRequestDTO body) {
+    AddAuthorityToUserResponseDTO response = authorityEmployeeService.addAuthorityToUser(body);
+    return ResponseEntity.status(HttpStatus.CREATED).body(response);
   }
 }

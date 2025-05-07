@@ -11,7 +11,7 @@ public class AuthorityService {
 
   private final AuthorityRepository authorityRepository;
   private final AuthorityMapper authorityMapper;
-  private static final String AUTHORITY_NOT_FOUND_MSG = "Authority not found with id: ";
+  public static final String AUTHORITY_NOT_FOUND_MSG = "Authority not found with id: ";
 
   public AuthorityDTO createAuthority(AuthorityCreateRequestDTO body) {
     AuthorityEntity entity = authorityMapper.toEntity(body);
