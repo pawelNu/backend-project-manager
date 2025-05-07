@@ -2,16 +2,15 @@ package com.pawelnu.projectmanager.endpoints.auth;
 
 import com.pawelnu.projectmanager.config.security.jwt.JwtUtils;
 import com.pawelnu.projectmanager.config.security.services.UserDetailsImpl;
+import com.pawelnu.projectmanager.exception.model.SimpleResponse;
 import com.pawelnu.projectmanager.endpoints.employee.EmployeeEntity;
 import com.pawelnu.projectmanager.endpoints.employee.EmployeeRepository;
-import com.pawelnu.projectmanager.exception.model.SimpleErrorResponse;
 import com.pawelnu.projectmanager.utils.Path;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +18,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -84,11 +84,11 @@ public class AuthController {
   public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
     if (employeeRepository.existsByUsername(signUpRequest.getUsername())) {
       return ResponseEntity.badRequest()
-          .body(new SimpleErrorResponse("Username is already taken!"));
+          .body(new SimpleResponse("Username is already taken!"));
     }
 
     if (employeeRepository.existsByEmail(signUpRequest.getEmail())) {
-      return ResponseEntity.badRequest().body(new SimpleErrorResponse("Email is already in use!"));
+      return ResponseEntity.badRequest().body(new SimpleResponse("Email is already in use!"));
     }
 
     EmployeeEntity user =
@@ -135,7 +135,7 @@ public class AuthController {
     //    user.setRoles(roles);
     employeeRepository.save(user);
 
-    return ResponseEntity.ok(new SimpleErrorResponse("User registered successfully! OK!"));
+    return ResponseEntity.ok(new SimpleResponse("User registered successfully! OK!"));
   }
 
   @GetMapping("/username")
@@ -153,8 +153,8 @@ public class AuthController {
 
     List<String> roles =
         userDetails.getAuthorities().stream()
-            .map(item -> item.getAuthority())
-            .collect(Collectors.toList());
+            .map(GrantedAuthority::getAuthority)
+            .toList();
 
     UserInfoResponse response =
         UserInfoResponse.builder()

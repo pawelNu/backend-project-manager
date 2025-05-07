@@ -1,7 +1,7 @@
 package com.pawelnu.projectmanager.endpoints.companyaddress;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.pawelnu.projectmanager.dto.SimpleResponse;
+import com.pawelnu.projectmanager.exception.model.SimpleResponse;
 import com.pawelnu.projectmanager.endpoints.company.CompanyEntity;
 import com.pawelnu.projectmanager.endpoints.company.CompanyRepository;
 import com.pawelnu.projectmanager.exception.NotFoundException;

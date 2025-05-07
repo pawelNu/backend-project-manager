@@ -1,6 +1,6 @@
 package com.pawelnu.projectmanager.endpoints.companyaddress;
 
-import com.pawelnu.projectmanager.dto.SimpleResponse;
+import com.pawelnu.projectmanager.exception.model.SimpleResponse;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;

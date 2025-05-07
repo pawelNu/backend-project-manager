@@ -1,6 +1,6 @@
 package com.pawelnu.projectmanager.endpoints.employee;
 
-import com.pawelnu.projectmanager.dto.SimpleResponse;
+import com.pawelnu.projectmanager.exception.model.SimpleResponse;
 import com.pawelnu.projectmanager.utils.Consts.Request;
 import com.pawelnu.projectmanager.utils.Path;
 import com.pawelnu.projectmanager.utils.ResponseErrors;

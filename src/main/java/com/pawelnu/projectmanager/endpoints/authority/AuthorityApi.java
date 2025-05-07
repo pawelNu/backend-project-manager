@@ -1,4 +1,4 @@
-package com.pawelnu.projectmanager.endpoints.companyaddress;
+package com.pawelnu.projectmanager.endpoints.authority;
 
 import com.pawelnu.projectmanager.exception.model.SimpleResponse;
 import com.pawelnu.projectmanager.utils.Consts.Request;
@@ -26,96 +26,95 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@Tag(name = "Company Addresses")
-@RequestMapping(Path.API_COMPANY_ADDRESSES)
-public interface CompanyAddressApi {
+@Tag(name = "Authorities")
+@RequestMapping(Path.API_AUTHORITIES)
+public interface AuthorityApi {
 
   @ApiResponse(
       responseCode = "201",
       description = "Created",
       content = {
-        @Content(
-            mediaType = MediaType.APPLICATION_JSON_VALUE,
-            schema = @Schema(implementation = CompanyAddressDTO.class))
+          @Content(
+              mediaType = MediaType.APPLICATION_JSON_VALUE,
+              schema = @Schema(implementation = AuthorityDTO.class))
       })
   @ResponseErrors
   @PostMapping("")
-  @Operation(description = "Add new company address.")
-  ResponseEntity<CompanyAddressDTO> createCompanyAddress(
+  @Operation(description = "Add new authority.")
+  ResponseEntity<AuthorityDTO> createAuthority(
       @Parameter(hidden = true) @RequestHeader(value = Request.AUTH_HEADER)
-          String authorizationHeader,
-      @Valid @RequestBody CompanyAddressCreateRequestDTO body);
+      String authorizationHeader,
+      @Valid @RequestBody AuthorityCreateRequestDTO body);
 
   @Operation(
-      description =
-          "List company addresses with filtering, sorting and pagination (react-admin format)")
+      description = "List authorities with filtering, sorting and pagination (react-admin format)")
   @ApiResponse(
       responseCode = "200",
       description = "OK",
       content =
-          @Content(
-              mediaType = MediaType.APPLICATION_JSON_VALUE,
-              array = @ArraySchema(schema = @Schema(implementation = CompanyAddressDTO.class))))
+      @Content(
+          mediaType = MediaType.APPLICATION_JSON_VALUE,
+          array = @ArraySchema(schema = @Schema(implementation = AuthorityDTO.class))))
   @ResponseErrors
   @GetMapping("")
-  ResponseEntity<List<CompanyAddressDTO>> getCompanyAddressesList(
+  ResponseEntity<List<AuthorityDTO>> getAuthorityList(
       @Parameter(hidden = true) @RequestHeader(value = Request.AUTH_HEADER)
-          String authorizationHeader,
+      String authorizationHeader,
       @Parameter(description = "Sort as JSON string, e.g. [\"title\",\"ASC\"]")
-          @RequestParam(required = false)
-          String sort,
+      @RequestParam(required = false)
+      String sort,
       @Parameter(description = "Range as JSON string, e.g. [0, 24]") @RequestParam(required = false)
-          String range,
+      String range,
       @Parameter(description = "Filter as JSON string, e.g. {\"title\":\"bar\"}")
-          @RequestParam(required = false)
-          String filter);
+      @RequestParam(required = false)
+      String filter);
 
   @ApiResponse(
       responseCode = "200",
       description = "OK",
       content = {
-        @Content(
-            mediaType = MediaType.APPLICATION_JSON_VALUE,
-            schema = @Schema(implementation = CompanyAddressDTO.class))
+          @Content(
+              mediaType = MediaType.APPLICATION_JSON_VALUE,
+              schema = @Schema(implementation = AuthorityDTO.class))
       })
   @ResponseErrors
   @GetMapping("/{id}")
-  @Operation(description = "Get company address by id.")
-  ResponseEntity<CompanyAddressDTO> getCompanyAddressById(
+  @Operation(description = "Get authority by id.")
+  ResponseEntity<AuthorityDTO> getAuthorityById(
       @Parameter(hidden = true) @RequestHeader(value = Request.AUTH_HEADER)
-          String authorizationHeader,
+      String authorizationHeader,
       @Parameter() @PathVariable() UUID id);
 
   @ApiResponse(
       responseCode = "200",
       description = "OK",
       content = {
-        @Content(
-            mediaType = MediaType.APPLICATION_JSON_VALUE,
-            schema = @Schema(implementation = CompanyAddressDTO.class))
+          @Content(
+              mediaType = MediaType.APPLICATION_JSON_VALUE,
+              schema = @Schema(implementation = AuthorityDTO.class))
       })
   @ResponseErrors
   @PutMapping("/{id}")
-  @Operation(description = "Edit company address by id.")
-  ResponseEntity<CompanyAddressDTO> editCompanyAddressById(
+  @Operation(description = "Edit authority by id.")
+  ResponseEntity<AuthorityDTO> editAuthorityById(
       @Parameter(hidden = true) @RequestHeader(value = Request.AUTH_HEADER)
-          String authorizationHeader,
+      String authorizationHeader,
       @Parameter() @PathVariable() UUID id,
-      @Valid @RequestBody CompanyAddressEditRequestDTO body);
+      @Valid @RequestBody AuthorityEditRequestDTO body);
 
   @ApiResponse(
       responseCode = "200",
       description = "OK",
       content = {
-        @Content(
-            mediaType = MediaType.APPLICATION_JSON_VALUE,
-            schema = @Schema(implementation = SimpleResponse.class))
+          @Content(
+              mediaType = MediaType.APPLICATION_JSON_VALUE,
+              schema = @Schema(implementation = SimpleResponse.class))
       })
   @ResponseErrors
   @DeleteMapping("/{id}")
-  @Operation(description = "Delete company address by id.")
-  ResponseEntity<SimpleResponse> deleteCompanyAddressById(
+  @Operation(description = "Delete authority by id.")
+  ResponseEntity<SimpleResponse> deleteAuthorityById(
       @Parameter(hidden = true) @RequestHeader(value = Request.AUTH_HEADER)
-          String authorizationHeader,
+      String authorizationHeader,
       @Parameter() @PathVariable() UUID id);
 }

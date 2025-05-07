@@ -9,6 +9,7 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,7 +23,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class AuthorityEntity {
 
-  @Id @GeneratedValue private Long id;
+  @Id @GeneratedValue private UUID id;
   @NotNull private String authority;
 
   @ManyToMany(mappedBy = "authorities")
