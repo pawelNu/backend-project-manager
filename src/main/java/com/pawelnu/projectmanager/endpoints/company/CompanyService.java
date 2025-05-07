@@ -23,7 +23,7 @@ import org.springframework.stereotype.Service;
 public class CompanyService {
 
   private final CompanyRepository companyRepository;
-  private final CompanyRepositoryQuery companyRepositoryQuery;
+  private final CompanyQueryRepository companyQueryRepository;
   private final CompanyMapper companyMapper;
   private final PagingAndSortingMapper pageMapper;
   private final ObjectMapper objectMapper;
@@ -43,7 +43,7 @@ public class CompanyService {
   }
 
   public CompanyDTO getCompanyById(UUID id) {
-    return companyRepositoryQuery
+    return companyQueryRepository
         .findById(id)
         .map(companyMapper::toDTO)
         .orElseThrow(() -> new NotFoundException(COMPANY_NOT_FOUND_MSG + id));
@@ -78,7 +78,7 @@ public class CompanyService {
   }
 
   public CompanyListResponseDTO filterCompanies(CompanyFilterRequestDTO body) {
-    Page<CompanyEntity> filteredCompanies = companyRepositoryQuery.filterCompanies(body);
+    Page<CompanyEntity> filteredCompanies = companyQueryRepository.filterCompanies(body);
     List<CompanyDTO> companyDTOs =
         filteredCompanies.getContent().stream().map(companyMapper::toDTO).toList();
     Order pageSort = filteredCompanies.getSort().stream().findFirst().orElse(null);
@@ -100,7 +100,7 @@ public class CompanyService {
     Map<String, String> filters = Shared.parseJsonMap(objectMapper, filter);
 
     Page<CompanyEntity> page =
-        companyRepositoryQuery.filterCompanies(filters, offset, limit, sortDir, sortField);
+        companyQueryRepository.filterCompanies(filters, offset, limit, sortDir, sortField);
     List<CompanySimpleDTO> companyDTOs =
         page.getContent().stream().map(companyMapper::toSimpleDTO).toList();
 

@@ -19,7 +19,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 @RequiredArgsConstructor
 @Slf4j
-public class CompanyRepositoryQuery {
+public class CompanyQueryRepository {
 
   private final CompanyRepository companyRepository;
   private final JPAQueryFactory queryFactory;

@@ -1,9 +1,10 @@
 package com.pawelnu.projectmanager.config.security.services;
 
-import com.pawelnu.projectmanager.endpoints.employee.EmployeeEntity;
-import com.pawelnu.projectmanager.endpoints.employee.EmployeeRepository;
-import com.pawelnu.projectmanager.exception.NotFoundException;
+import com.pawelnu.projectmanager.endpoints.employee.EmployeeMapper;
+import com.pawelnu.projectmanager.endpoints.employee.EmployeeRowDTO;
+import com.pawelnu.projectmanager.endpoints.employee.EmployeeService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -12,18 +13,17 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-  private final EmployeeRepository employeeRepository;
+  private final EmployeeService employeeService;
+  private final EmployeeMapper employeeMapper;
 
   @Override
   @Transactional
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-    EmployeeEntity user =
-        employeeRepository
-            .findByUsername(username)
-            .orElseThrow(() -> new NotFoundException("User not found with username: " + username));
-
-    return UserDetailsImpl.build(user);
+    EmployeeRowDTO employeeRowDTO = employeeService.findByUsernameWithAuthorities(username);
+    UserDetailsDTO userDetails = employeeMapper.toUserDetailsDTO(employeeRowDTO);
+    return UserDetailsImpl.build(userDetails);
   }
 }

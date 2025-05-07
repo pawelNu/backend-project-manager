@@ -22,7 +22,7 @@ public class CompanyAddressService {
 
   private final CompanyAddressRepository companyAddressRepository;
   private final CompanyRepository companyRepository;
-  private final CompanyAddressRepositoryQuery companyAddressRepositoryQuery;
+  private final CompanyAddressQueryRepository companyAddressQueryRepository;
   private final CompanyAddressMapper companyAddressMapper;
   private final ObjectMapper objectMapper;
 
@@ -78,7 +78,7 @@ public class CompanyAddressService {
     Map<String, String> filters = Shared.parseJsonMap(objectMapper, filter);
 
     Page<CompanyAddressEntity> page =
-        companyAddressRepositoryQuery.filterCompanies(filters, offset, limit, sortDir, sortField);
+        companyAddressQueryRepository.filterCompanies(filters, offset, limit, sortDir, sortField);
     List<CompanyAddressDTO> companyDTOs =
         page.getContent().stream().map(companyAddressMapper::toDTO).toList();
 

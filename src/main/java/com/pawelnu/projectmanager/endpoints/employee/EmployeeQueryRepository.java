@@ -1,9 +1,12 @@
 package com.pawelnu.projectmanager.endpoints.employee;
 
+import com.pawelnu.projectmanager.endpoints.authority.QAuthorityEmployeeEntity;
+import com.pawelnu.projectmanager.endpoints.authority.QAuthorityEntity;
 import com.pawelnu.projectmanager.endpoints.company.QCompanyEntity;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -21,9 +24,10 @@ import org.springframework.stereotype.Repository;
 @Repository
 @RequiredArgsConstructor
 @Slf4j
-public class EmployeeRepositoryQuery {
+public class EmployeeQueryRepository {
 
   private final JPAQueryFactory queryFactory;
+  private final EmployeeMapper employeeMapper;
 
   public Page<EmployeeEntity> getEmployeeList(
       Map<String, String> filters, int offset, int limit, String sortDir, String sortField) {
@@ -95,5 +99,31 @@ public class EmployeeRepositoryQuery {
             .orElse(0L);
 
     return new PageImpl<>(results, PageRequest.of(offset / limit, limit), total);
+  }
+
+  public List<EmployeeAuthorityRowDTO> findByUsernameWithAuthorities(String username) {
+    QEmployeeEntity employee = QEmployeeEntity.employeeEntity;
+    QAuthorityEmployeeEntity authEmp = QAuthorityEmployeeEntity.authorityEmployeeEntity;
+    QAuthorityEntity authority = QAuthorityEntity.authorityEntity;
+
+    List<EmployeeAuthorityRowDTO> result =
+        queryFactory
+            .select(
+                Projections.constructor(
+                    EmployeeAuthorityRowDTO.class,
+                    employee.id,
+                    employee.username,
+                    employee.email,
+                    employee.password,
+                    authority.name))
+            .from(employee)
+            .leftJoin(employee.authorities, authEmp)
+            .leftJoin(authEmp.authority, authority)
+            .where(employee.username.eq(username))
+            .fetch();
+    if (result != null && !result.isEmpty()) {
+      return result;
+    }
+    return List.of();
   }
 }

@@ -21,7 +21,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 @RequiredArgsConstructor
 @Slf4j
-public class CompanyAddressRepositoryQuery {
+public class CompanyAddressQueryRepository {
 
   private final CompanyAddressRepository companyAddressRepository;
   private final JPAQueryFactory queryFactory;

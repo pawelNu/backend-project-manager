@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 public class EmployeeService {
 
   private final EmployeeRepository employeeRepository;
-  private final EmployeeRepositoryQuery employeeRepositoryQuery;
+  private final EmployeeQueryRepository employeeQueryRepository;
   private final EmployeeMapper employeeMapper;
   private final ObjectMapper objectMapper;
   public static final String EMPLOYEE_NOT_FOUND_MSG = "Employee not found with id: ";
@@ -41,7 +41,7 @@ public class EmployeeService {
     Map<String, String> filters = Shared.parseJsonMap(objectMapper, filter);
 
     Page<EmployeeEntity> page =
-        employeeRepositoryQuery.getEmployeeList(filters, offset, limit, sortDir, sortField);
+        employeeQueryRepository.getEmployeeList(filters, offset, limit, sortDir, sortField);
     List<EmployeeDTO> companyDTOs = page.getContent().stream().map(employeeMapper::toDTO).toList();
 
     long totalElements = page.getTotalElements();
@@ -60,5 +60,15 @@ public class EmployeeService {
         .findById(id)
         .map(employeeMapper::toDTO)
         .orElseThrow(() -> new NotFoundException(EMPLOYEE_NOT_FOUND_MSG + id));
+  }
+
+  public EmployeeRowDTO findByUsernameWithAuthorities(String username) {
+    List<EmployeeAuthorityRowDTO> rows =
+        employeeQueryRepository.findByUsernameWithAuthorities(username);
+    if (rows.isEmpty()) {
+      throw new NotFoundException("User not found with username: " + username);
+    } else {
+      return employeeMapper.toEmployeeRowDTO(rows);
+    }
   }
 }

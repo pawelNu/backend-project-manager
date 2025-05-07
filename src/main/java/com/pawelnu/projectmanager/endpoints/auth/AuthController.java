@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -30,6 +31,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(Path.API_AUTH)
 @RequiredArgsConstructor
 @Tag(name = "Auth")
+@Slf4j
 public class AuthController {
 
   private final JwtUtils jwtUtils;
@@ -43,12 +45,14 @@ public class AuthController {
   @PostMapping("/login")
   public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
     Authentication authentication;
+    log.info("Login attempt for: " + loginRequest.getUsername());
     try {
       authentication =
           authenticationManager.authenticate(
               new UsernamePasswordAuthenticationToken(
                   loginRequest.getUsername(), loginRequest.getPassword()));
-    } catch (AuthenticationException exception) {
+    } catch (AuthenticationException e) {
+      log.error("StackTrace:", e);
       Map<String, Object> map = new HashMap<>();
       map.put("message", "Bad credentials");
       map.put("status", false);
