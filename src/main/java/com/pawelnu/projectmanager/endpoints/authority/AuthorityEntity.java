@@ -27,5 +27,5 @@ public class AuthorityEntity extends Auditable {
   @NotNull private String name;
 
   @ManyToMany(mappedBy = "authority")
-  private Set<AuthorityEmployeeEntity> employees = new HashSet<>();
+  private Set<EmployeeAuthorityEntity> employees = new HashSet<>();
 }

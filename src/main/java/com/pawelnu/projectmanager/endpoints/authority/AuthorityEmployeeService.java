@@ -28,9 +28,9 @@ public class AuthorityEmployeeService {
         employeeRepository
             .findById(body.getUserId())
             .orElseThrow(() -> new NotFoundException(EMPLOYEE_NOT_FOUND_MSG + body.getUserId()));
-    AuthorityEmployeeEntity entity =
-        AuthorityEmployeeEntity.builder().authority(authority).employee(employee).build();
-    AuthorityEmployeeEntity save = authorityEmployeeRepository.save(entity);
+    EmployeeAuthorityEntity entity =
+        EmployeeAuthorityEntity.builder().authority(authority).employee(employee).build();
+    EmployeeAuthorityEntity save = authorityEmployeeRepository.save(entity);
     return authorityEmployeeMapper.toDTO(save);
   }
 }

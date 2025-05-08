@@ -1,7 +1,7 @@
 package com.pawelnu.projectmanager.config;
 
 import com.github.javafaker.Faker;
-import com.pawelnu.projectmanager.endpoints.authority.AuthorityEmployeeEntity;
+import com.pawelnu.projectmanager.endpoints.authority.EmployeeAuthorityEntity;
 import com.pawelnu.projectmanager.endpoints.authority.AuthorityEmployeeRepository;
 import com.pawelnu.projectmanager.endpoints.authority.AuthorityEntity;
 import com.pawelnu.projectmanager.endpoints.authority.AuthorityRepository;
@@ -179,10 +179,11 @@ public class DataInit {
   }
 
   private void addAuthorityToUser() {
+    List<EmployeeAuthorityEntity> employeeAuthorities = new ArrayList<>();
     EmployeeEntity employee = employeeRepository.findByUsername("test").orElseThrow();
-    AuthorityEntity authority = authorityRepository.findByName("COMPANY_GET_LIST").orElseThrow();
-    AuthorityEmployeeEntity entity =
-        AuthorityEmployeeEntity.builder().employee(employee).authority(authority).build();
+    List<AuthorityEntity> authorities = authorityRepository.findAll();
+    EmployeeAuthorityEntity entity =
+        EmployeeAuthorityEntity.builder().employee(employee).authority(authority).build();
     authorityEmployeeRepository.save(entity);
   }
 }

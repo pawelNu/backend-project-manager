@@ -1,6 +1,6 @@
 package com.pawelnu.projectmanager.endpoints.employee;
 
-import com.pawelnu.projectmanager.endpoints.authority.AuthorityEmployeeEntity;
+import com.pawelnu.projectmanager.endpoints.authority.EmployeeAuthorityEntity;
 import com.pawelnu.projectmanager.endpoints.company.CompanyEntity;
 import com.pawelnu.projectmanager.entity.Auditable;
 import jakarta.persistence.Entity;
@@ -54,7 +54,7 @@ public class EmployeeEntity extends Auditable {
   private CompanyEntity company;
 
   @OneToMany(mappedBy = "employee")
-  private Set<AuthorityEmployeeEntity> authorities = new HashSet<>();
+  private Set<EmployeeAuthorityEntity> authorities = new HashSet<>();
 
   //  @ManyToMany(fetch = FetchType.EAGER)
   //  @JoinTable(

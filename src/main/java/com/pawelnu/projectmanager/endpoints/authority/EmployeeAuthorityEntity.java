@@ -19,7 +19,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class AuthorityEmployeeEntity {
+public class EmployeeAuthorityEntity {
 
   @Id @GeneratedValue private UUID id;
 
