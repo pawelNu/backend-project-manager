@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -41,10 +40,7 @@ public interface CompanyApi {
   @ResponseErrors
   @PostMapping("")
   @Operation(description = "Add new company.")
-  ResponseEntity<CompanyDTO> create(
-      @Parameter(hidden = true) @RequestHeader(value = Request.AUTH_HEADER)
-          String authorizationHeader,
-      @Valid @RequestBody CompanyCreateRequestDTO body);
+  ResponseEntity<CompanyDTO> create(@Valid @RequestBody CompanyCreateRequestDTO body);
 
   @ApiResponse(
       responseCode = "200",
@@ -58,8 +54,6 @@ public interface CompanyApi {
   @GetMapping("/pagination")
   @Operation(description = "Get list of companies.")
   ResponseEntity<CompanyListResponseDTO> getAllCompanies(
-      @Parameter(hidden = true) @RequestHeader(value = Request.AUTH_HEADER)
-          String authorizationHeader,
       @Parameter(description = "Page number from 0")
           @RequestParam(
               required = false,
@@ -91,8 +85,6 @@ public interface CompanyApi {
   @PostMapping("/filter")
   @Operation(description = "Filter companies")
   ResponseEntity<CompanyListResponseDTO> filterCompanies(
-      @Parameter(hidden = true) @RequestHeader(value = Request.AUTH_HEADER)
-          String authorizationHeader,
       @Valid @RequestBody CompanyFilterRequestDTO body);
 
   @Operation(
@@ -107,8 +99,6 @@ public interface CompanyApi {
   @ResponseErrors
   @GetMapping("")
   ResponseEntity<List<CompanySimpleDTO>> getList(
-      @Parameter(hidden = true) @RequestHeader(value = Request.AUTH_HEADER)
-          String authorizationHeader,
       @Parameter(description = "Sort as JSON string, e.g. [\"title\",\"ASC\"]")
           @RequestParam(required = false)
           String sort,
@@ -129,10 +119,7 @@ public interface CompanyApi {
   @ResponseErrors
   @GetMapping("/{id}")
   @Operation(description = "Get company by id.")
-  ResponseEntity<CompanyDTO> getById(
-      @Parameter(hidden = true) @RequestHeader(value = Request.AUTH_HEADER)
-          String authorizationHeader,
-      @Parameter() @PathVariable() UUID id);
+  ResponseEntity<CompanyDTO> getById(@Parameter() @PathVariable() UUID id);
 
   @ApiResponse(
       responseCode = "200",
@@ -146,10 +133,7 @@ public interface CompanyApi {
   @PutMapping("/{id}")
   @Operation(description = "Edit company by id.")
   ResponseEntity<CompanyDTO> editById(
-      @Parameter(hidden = true) @RequestHeader(value = Request.AUTH_HEADER)
-          String authorizationHeader,
-      @Parameter() @PathVariable() UUID id,
-      @Valid @RequestBody CompanyEditRequestDTO body);
+      @Parameter() @PathVariable() UUID id, @Valid @RequestBody CompanyEditRequestDTO body);
 
   @ApiResponse(
       responseCode = "200",
@@ -162,8 +146,5 @@ public interface CompanyApi {
   @ResponseErrors
   @DeleteMapping("/{id}")
   @Operation(description = "Delete company by id.")
-  ResponseEntity<SimpleResponse> deleteById(
-      @Parameter(hidden = true) @RequestHeader(value = Request.AUTH_HEADER)
-          String authorizationHeader,
-      @Parameter() @PathVariable() UUID id);
+  ResponseEntity<SimpleResponse> deleteById(@Parameter() @PathVariable() UUID id);
 }

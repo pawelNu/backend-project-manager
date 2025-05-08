@@ -15,47 +15,39 @@ public class CompanyController implements CompanyApi {
   private final CompanyService service;
 
   @Override
-  public ResponseEntity<CompanyDTO> create(
-      String authorizationHeader, CompanyCreateRequestDTO companyCreateRequestDTO) {
+  public ResponseEntity<CompanyDTO> create(CompanyCreateRequestDTO companyCreateRequestDTO) {
     CompanyDTO company = service.createCompany(companyCreateRequestDTO);
     return ResponseEntity.status(HttpStatus.CREATED).body(company);
   }
 
   @Override
   public ResponseEntity<CompanyListResponseDTO> getAllCompanies(
-      String authorizationHeader,
-      Integer pageNumber,
-      Integer pageSize,
-      String sortedBy,
-      String direction) {
+      Integer pageNumber, Integer pageSize, String sortedBy, String direction) {
     return ResponseEntity.ok(service.getAllCompanies(pageNumber, pageSize, sortedBy, direction));
   }
 
   @Override
-  public ResponseEntity<CompanyDTO> getById(String authorizationHeader, UUID id) {
+  public ResponseEntity<CompanyDTO> getById(UUID id) {
     return ResponseEntity.ok(service.getCompanyById(id));
   }
 
   @Override
-  public ResponseEntity<CompanyDTO> editById(
-      String authorizationHeader, UUID id, CompanyEditRequestDTO body) {
+  public ResponseEntity<CompanyDTO> editById(UUID id, CompanyEditRequestDTO body) {
     return ResponseEntity.ok(service.editCompanyById(id, body));
   }
 
   @Override
-  public ResponseEntity<SimpleResponse> deleteById(String authorizationHeader, UUID id) {
+  public ResponseEntity<SimpleResponse> deleteById(UUID id) {
     return ResponseEntity.ok(service.deleteCompanyById(id));
   }
 
   @Override
-  public ResponseEntity<CompanyListResponseDTO> filterCompanies(
-      String authorizationHeader, CompanyFilterRequestDTO body) {
+  public ResponseEntity<CompanyListResponseDTO> filterCompanies(CompanyFilterRequestDTO body) {
     return ResponseEntity.ok(service.filterCompanies(body));
   }
 
   @Override
-  public ResponseEntity<List<CompanySimpleDTO>> getList(
-      String authorizationHeader, String sort, String range, String filter) {
+  public ResponseEntity<List<CompanySimpleDTO>> getList(String sort, String range, String filter) {
     CompanyListResponseDTO2 result = service.filterCompanies(sort, range, filter);
     String contentRange =
         String.format(

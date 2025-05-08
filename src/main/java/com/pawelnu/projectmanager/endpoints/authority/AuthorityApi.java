@@ -1,7 +1,6 @@
 package com.pawelnu.projectmanager.endpoints.authority;
 
 import com.pawelnu.projectmanager.exception.model.SimpleResponse;
-import com.pawelnu.projectmanager.utils.Consts.Request;
 import com.pawelnu.projectmanager.utils.Path;
 import com.pawelnu.projectmanager.utils.ResponseErrors;
 import io.swagger.v3.oas.annotations.Operation;
@@ -22,7 +21,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -41,10 +39,7 @@ public interface AuthorityApi {
   @ResponseErrors
   @PostMapping("")
   @Operation(description = "Add new authority.")
-  ResponseEntity<AuthorityDTO> createAuthority(
-      @Parameter(hidden = true) @RequestHeader(value = Request.AUTH_HEADER)
-          String authorizationHeader,
-      @Valid @RequestBody AuthorityCreateRequestDTO body);
+  ResponseEntity<AuthorityDTO> createAuthority(@Valid @RequestBody AuthorityCreateRequestDTO body);
 
   @Operation(
       description = "List authorities with filtering, sorting and pagination (react-admin format)")
@@ -58,8 +53,6 @@ public interface AuthorityApi {
   @ResponseErrors
   @GetMapping("")
   ResponseEntity<List<AuthorityDTO>> getAuthorityList(
-      @Parameter(hidden = true) @RequestHeader(value = Request.AUTH_HEADER)
-          String authorizationHeader,
       @Parameter(description = "Sort as JSON string, e.g. [\"title\",\"ASC\"]")
           @RequestParam(required = false)
           String sort,
@@ -80,10 +73,7 @@ public interface AuthorityApi {
   @ResponseErrors
   @GetMapping("/{id}")
   @Operation(description = "Get authority by id.")
-  ResponseEntity<AuthorityDTO> getAuthorityById(
-      @Parameter(hidden = true) @RequestHeader(value = Request.AUTH_HEADER)
-          String authorizationHeader,
-      @Parameter() @PathVariable() UUID id);
+  ResponseEntity<AuthorityDTO> getAuthorityById(@Parameter() @PathVariable() UUID id);
 
   @ApiResponse(
       responseCode = "200",
@@ -97,10 +87,7 @@ public interface AuthorityApi {
   @PutMapping("/{id}")
   @Operation(description = "Edit authority by id.")
   ResponseEntity<AuthorityDTO> editAuthorityById(
-      @Parameter(hidden = true) @RequestHeader(value = Request.AUTH_HEADER)
-          String authorizationHeader,
-      @Parameter() @PathVariable() UUID id,
-      @Valid @RequestBody AuthorityEditRequestDTO body);
+      @Parameter() @PathVariable() UUID id, @Valid @RequestBody AuthorityEditRequestDTO body);
 
   @ApiResponse(
       responseCode = "200",
@@ -113,10 +100,7 @@ public interface AuthorityApi {
   @ResponseErrors
   @DeleteMapping("/{id}")
   @Operation(description = "Delete authority by id.")
-  ResponseEntity<SimpleResponse> deleteAuthorityById(
-      @Parameter(hidden = true) @RequestHeader(value = Request.AUTH_HEADER)
-          String authorizationHeader,
-      @Parameter() @PathVariable() UUID id);
+  ResponseEntity<SimpleResponse> deleteAuthorityById(@Parameter() @PathVariable() UUID id);
 
   @ApiResponse(
       responseCode = "201",
@@ -130,7 +114,5 @@ public interface AuthorityApi {
   @PostMapping("/add-authority-to-user")
   @Operation(description = "Add authority to user.")
   ResponseEntity<AddAuthorityToUserResponseDTO> addAuthorityToUser(
-      @Parameter(hidden = true) @RequestHeader(value = Request.AUTH_HEADER)
-          String authorizationHeader,
       @Valid @RequestBody AddAuthorityToUserRequestDTO body);
 }

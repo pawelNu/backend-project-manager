@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
@@ -14,6 +15,9 @@ public interface EmployeeMapper {
 
   @Mapping(target = "id", ignore = true)
   EmployeeEntity toEntity(EmployeeCreateRequestDTO dto);
+
+  @Mapping(target = "id", ignore = true)
+  EmployeeEntity toEntity(EmployeeEditRequestDTO body, @MappingTarget EmployeeEntity entity);
 
   @Mapping(source = "company.name", target = "companyName")
   EmployeeDTO toDTO(EmployeeEntity entity);

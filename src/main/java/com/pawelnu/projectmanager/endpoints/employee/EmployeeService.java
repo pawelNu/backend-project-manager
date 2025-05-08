@@ -2,9 +2,11 @@ package com.pawelnu.projectmanager.endpoints.employee;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pawelnu.projectmanager.exception.NotFoundException;
+import com.pawelnu.projectmanager.exception.model.SimpleResponse;
 import com.pawelnu.projectmanager.utils.Shared;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -69,6 +71,28 @@ public class EmployeeService {
       throw new NotFoundException("User not found with username: " + username);
     } else {
       return employeeMapper.toEmployeeRowDTO(rows);
+    }
+  }
+
+  public EmployeeDTO editById(UUID id, EmployeeEditRequestDTO body) {
+    Optional<EmployeeEntity> employeeToEdit = employeeRepository.findById(id);
+    if (employeeToEdit.isPresent()) {
+      EmployeeEntity existingEmployee = employeeToEdit.get();
+      employeeMapper.toEntity(body, existingEmployee);
+      EmployeeEntity updatedEmployee = employeeRepository.save(existingEmployee);
+      return employeeMapper.toDTO(updatedEmployee);
+    } else {
+      throw new NotFoundException(EMPLOYEE_NOT_FOUND_MSG + id);
+    }
+  }
+
+  public SimpleResponse deleteById(UUID id) {
+    Optional<EmployeeEntity> employeeToDelete = employeeRepository.findById(id);
+    if (employeeToDelete.isPresent()) {
+      employeeRepository.delete(employeeToDelete.get());
+      return SimpleResponse.builder().message("Deleted employee with id: " + id).build();
+    } else {
+      throw new NotFoundException(EMPLOYEE_NOT_FOUND_MSG + id);
     }
   }
 }

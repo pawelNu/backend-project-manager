@@ -76,7 +76,7 @@ public class DataInit {
     return c;
   }
 
-  private List<CompanyAddressEntity> createCompanyAddresses(List<CompanyEntity> companies) {
+  private void createCompanyAddresses(List<CompanyEntity> companies) {
     List<CompanyAddressEntity> companyAddresses = new ArrayList<>();
     for (CompanyEntity company : companies) {
       CompanyAddressEntity ca = generateCompanyAddress(company);
@@ -84,7 +84,7 @@ public class DataInit {
       companyAddresses.add(ca);
       companyAddresses.add(ca2);
     }
-    return companyAddressRepository.saveAll(companyAddresses);
+    companyAddressRepository.saveAll(companyAddresses);
   }
 
   private CompanyAddressEntity generateCompanyAddress(CompanyEntity company) {

@@ -15,15 +15,13 @@ public class CompanyAddressController implements CompanyAddressApi {
   private final CompanyAddressService service;
 
   @Override
-  public ResponseEntity<CompanyAddressDTO> create(
-      String authorizationHeader, CompanyAddressCreateRequestDTO body) {
+  public ResponseEntity<CompanyAddressDTO> create(CompanyAddressCreateRequestDTO body) {
     CompanyAddressDTO result = service.createCompany(body);
     return ResponseEntity.status(HttpStatus.CREATED).body(result);
   }
 
   @Override
-  public ResponseEntity<List<CompanyAddressDTO>> getList(
-      String authorizationHeader, String sort, String range, String filter) {
+  public ResponseEntity<List<CompanyAddressDTO>> getList(String sort, String range, String filter) {
     CompanyAddressesListResponseDTO result = service.filterCompanies(sort, range, filter);
     String contentRange =
         String.format(
@@ -32,20 +30,19 @@ public class CompanyAddressController implements CompanyAddressApi {
   }
 
   @Override
-  public ResponseEntity<CompanyAddressDTO> getById(String authorizationHeader, UUID id) {
+  public ResponseEntity<CompanyAddressDTO> getById(UUID id) {
     CompanyAddressDTO result = service.getCompanyById(id);
     return ResponseEntity.ok(result);
   }
 
   @Override
-  public ResponseEntity<CompanyAddressDTO> editById(
-      String authorizationHeader, UUID id, CompanyAddressEditRequestDTO body) {
+  public ResponseEntity<CompanyAddressDTO> editById(UUID id, CompanyAddressEditRequestDTO body) {
     CompanyAddressDTO result = service.editCompanyById(id, body);
     return ResponseEntity.ok(result);
   }
 
   @Override
-  public ResponseEntity<SimpleResponse> deleteById(String authorizationHeader, UUID id) {
+  public ResponseEntity<SimpleResponse> deleteById(UUID id) {
     SimpleResponse result = service.deleteCompanyById(id);
     return ResponseEntity.ok(result);
   }

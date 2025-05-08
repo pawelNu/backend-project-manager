@@ -16,37 +16,35 @@ public class AuthorityController implements AuthorityApi {
   private final EmployeeAuthorityService employeeAuthorityService;
 
   @Override
-  public ResponseEntity<AuthorityDTO> createAuthority(
-      String authorizationHeader, AuthorityCreateRequestDTO body) {
+  public ResponseEntity<AuthorityDTO> createAuthority(AuthorityCreateRequestDTO body) {
     AuthorityDTO authorityDTO = authorityService.createAuthority(body);
     return ResponseEntity.status(HttpStatus.CREATED).body(authorityDTO);
   }
 
   @Override
   public ResponseEntity<List<AuthorityDTO>> getAuthorityList(
-      String authorizationHeader, String sort, String range, String filter) {
+      String sort, String range, String filter) {
     return null;
   }
 
   @Override
-  public ResponseEntity<AuthorityDTO> getAuthorityById(String authorizationHeader, UUID id) {
+  public ResponseEntity<AuthorityDTO> getAuthorityById(UUID id) {
     return null;
   }
 
   @Override
-  public ResponseEntity<AuthorityDTO> editAuthorityById(
-      String authorizationHeader, UUID id, AuthorityEditRequestDTO body) {
+  public ResponseEntity<AuthorityDTO> editAuthorityById(UUID id, AuthorityEditRequestDTO body) {
     return null;
   }
 
   @Override
-  public ResponseEntity<SimpleResponse> deleteAuthorityById(String authorizationHeader, UUID id) {
+  public ResponseEntity<SimpleResponse> deleteAuthorityById(UUID id) {
     return null;
   }
 
   @Override
   public ResponseEntity<AddAuthorityToUserResponseDTO> addAuthorityToUser(
-      String authorizationHeader, AddAuthorityToUserRequestDTO body) {
+      AddAuthorityToUserRequestDTO body) {
     AddAuthorityToUserResponseDTO response = employeeAuthorityService.addAuthorityToUser(body);
     return ResponseEntity.status(HttpStatus.CREATED).body(response);
   }

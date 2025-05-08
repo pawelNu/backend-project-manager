@@ -1,7 +1,6 @@
 package com.pawelnu.projectmanager.endpoints.employee;
 
 import com.pawelnu.projectmanager.exception.model.SimpleResponse;
-import com.pawelnu.projectmanager.utils.Consts.Request;
 import com.pawelnu.projectmanager.utils.Path;
 import com.pawelnu.projectmanager.utils.ResponseErrors;
 import io.swagger.v3.oas.annotations.Operation;
@@ -22,7 +21,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -41,10 +39,7 @@ public interface EmployeeApi {
   @ResponseErrors
   @PostMapping("")
   @Operation(description = "Add new employee.")
-  ResponseEntity<EmployeeDTO> create(
-      @Parameter(hidden = true) @RequestHeader(value = Request.AUTH_HEADER)
-          String authorizationHeader,
-      @Valid @RequestBody EmployeeCreateRequestDTO body);
+  ResponseEntity<EmployeeDTO> create(@Valid @RequestBody EmployeeCreateRequestDTO body);
 
   @Operation(
       description = "List employees with filtering, sorting and pagination (react-admin format)")
@@ -58,8 +53,6 @@ public interface EmployeeApi {
   @ResponseErrors
   @GetMapping("")
   ResponseEntity<List<EmployeeDTO>> getList(
-      @Parameter(hidden = true) @RequestHeader(value = Request.AUTH_HEADER)
-          String authorizationHeader,
       @Parameter(description = "Sort as JSON string, e.g. [\"title\",\"ASC\"]")
           @RequestParam(required = false)
           String sort,
@@ -80,10 +73,7 @@ public interface EmployeeApi {
   @ResponseErrors
   @GetMapping("/{id}")
   @Operation(description = "Get employee by id.")
-  ResponseEntity<EmployeeDTO> getById(
-      @Parameter(hidden = true) @RequestHeader(value = Request.AUTH_HEADER)
-          String authorizationHeader,
-      @Parameter() @PathVariable() UUID id);
+  ResponseEntity<EmployeeDTO> getById(@Parameter() @PathVariable() UUID id);
 
   @ApiResponse(
       responseCode = "200",
@@ -97,10 +87,7 @@ public interface EmployeeApi {
   @PutMapping("/{id}")
   @Operation(description = "Edit employee by id.")
   ResponseEntity<EmployeeDTO> editById(
-      @Parameter(hidden = true) @RequestHeader(value = Request.AUTH_HEADER)
-          String authorizationHeader,
-      @Parameter() @PathVariable() UUID id,
-      @Valid @RequestBody EmployeeEditRequestDTO body);
+      @Parameter() @PathVariable() UUID id, @Valid @RequestBody EmployeeEditRequestDTO body);
 
   @ApiResponse(
       responseCode = "200",
@@ -113,8 +100,5 @@ public interface EmployeeApi {
   @ResponseErrors
   @DeleteMapping("/{id}")
   @Operation(description = "Delete employee by id.")
-  ResponseEntity<SimpleResponse> deleteById(
-      @Parameter(hidden = true) @RequestHeader(value = Request.AUTH_HEADER)
-          String authorizationHeader,
-      @Parameter() @PathVariable() UUID id);
+  ResponseEntity<SimpleResponse> deleteById(@Parameter() @PathVariable() UUID id);
 }
