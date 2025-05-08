@@ -12,8 +12,10 @@ public class SecurityUtils {
   public static void hasAuthority(String authority) {
     Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
-    if (auth == null || auth.getAuthorities().stream().map(GrantedAuthority::getAuthority)
-        .noneMatch(a -> a.equals(authority))) {
+    if (auth == null
+        || auth.getAuthorities().stream()
+            .map(GrantedAuthority::getAuthority)
+            .noneMatch(a -> a.equals(authority))) {
       log.error("Missing required authority: {}", authority);
       throw new AccessDeniedException("Access denied");
     }
@@ -24,8 +26,8 @@ public class SecurityUtils {
 
     StackTraceElement caller = null;
     for (StackTraceElement element : stackTrace) {
-      if (!element.getClassName().equals(SecurityUtils.class.getName()) && !element.getClassName()
-          .startsWith("java.lang.Thread")) {
+      if (!element.getClassName().equals(SecurityUtils.class.getName())
+          && !element.getClassName().startsWith("java.lang.Thread")) {
         caller = element;
         break;
       }
@@ -45,11 +47,12 @@ public class SecurityUtils {
 
     Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
-    if (auth == null || auth.getAuthorities().stream().map(GrantedAuthority::getAuthority)
-        .noneMatch(a -> a.equals(requiredAuthority))) {
+    if (auth == null
+        || auth.getAuthorities().stream()
+            .map(GrantedAuthority::getAuthority)
+            .noneMatch(a -> a.equals(requiredAuthority))) {
       log.error("Missing required authority: {}", requiredAuthority);
       throw new AccessDeniedException("Access denied");
     }
   }
-
 }
