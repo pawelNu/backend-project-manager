@@ -41,7 +41,7 @@ public interface CompanyAddressApi {
   @ResponseErrors
   @PostMapping("")
   @Operation(description = "Add new company address.")
-  ResponseEntity<CompanyAddressDTO> createCompanyAddress(
+  ResponseEntity<CompanyAddressDTO> create(
       @Parameter(hidden = true) @RequestHeader(value = Request.AUTH_HEADER)
           String authorizationHeader,
       @Valid @RequestBody CompanyAddressCreateRequestDTO body);
@@ -58,7 +58,7 @@ public interface CompanyAddressApi {
               array = @ArraySchema(schema = @Schema(implementation = CompanyAddressDTO.class))))
   @ResponseErrors
   @GetMapping("")
-  ResponseEntity<List<CompanyAddressDTO>> getCompanyAddressesList(
+  ResponseEntity<List<CompanyAddressDTO>> getList(
       @Parameter(hidden = true) @RequestHeader(value = Request.AUTH_HEADER)
           String authorizationHeader,
       @Parameter(description = "Sort as JSON string, e.g. [\"title\",\"ASC\"]")
@@ -81,7 +81,7 @@ public interface CompanyAddressApi {
   @ResponseErrors
   @GetMapping("/{id}")
   @Operation(description = "Get company address by id.")
-  ResponseEntity<CompanyAddressDTO> getCompanyAddressById(
+  ResponseEntity<CompanyAddressDTO> getById(
       @Parameter(hidden = true) @RequestHeader(value = Request.AUTH_HEADER)
           String authorizationHeader,
       @Parameter() @PathVariable() UUID id);
@@ -97,7 +97,7 @@ public interface CompanyAddressApi {
   @ResponseErrors
   @PutMapping("/{id}")
   @Operation(description = "Edit company address by id.")
-  ResponseEntity<CompanyAddressDTO> editCompanyAddressById(
+  ResponseEntity<CompanyAddressDTO> editById(
       @Parameter(hidden = true) @RequestHeader(value = Request.AUTH_HEADER)
           String authorizationHeader,
       @Parameter() @PathVariable() UUID id,
@@ -114,7 +114,7 @@ public interface CompanyAddressApi {
   @ResponseErrors
   @DeleteMapping("/{id}")
   @Operation(description = "Delete company address by id.")
-  ResponseEntity<SimpleResponse> deleteCompanyAddressById(
+  ResponseEntity<SimpleResponse> deleteById(
       @Parameter(hidden = true) @RequestHeader(value = Request.AUTH_HEADER)
           String authorizationHeader,
       @Parameter() @PathVariable() UUID id);

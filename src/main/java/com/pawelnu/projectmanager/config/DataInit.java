@@ -160,7 +160,7 @@ public class DataInit {
   private List<AuthorityEntity> createAuthority(String controllerName) {
     List<AuthorityEntity> authorities = new ArrayList<>();
     Set<String> operations =
-        Set.of("create", "get_list", "get_by_id", "update_by_id", "delete_by_id");
+        Set.of("create", "get_list", "get_by_id", "edit_by_id", "delete_by_id");
     for (String operation : operations) {
       authorities.add(
           AuthorityEntity.builder().name((controllerName + "_" + operation).toUpperCase()).build());

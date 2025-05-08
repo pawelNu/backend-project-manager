@@ -18,6 +18,7 @@ public interface EmployeeMapper {
   @Mapping(source = "company.name", target = "companyName")
   EmployeeDTO toDTO(EmployeeEntity entity);
 
+  @Mapping(source = "userId", target = "id")
   @Mapping(source = "authorities", target = "authorities")
   UserDetailsDTO toUserDetailsDTO(EmployeeRowDTO entity);
 

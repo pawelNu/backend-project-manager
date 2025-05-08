@@ -21,3 +21,10 @@ Content-Type: application/json
 Authorization: Bearer {{token}}
 
 ###
+
+GET {{host}}/api/company-addresses
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+###

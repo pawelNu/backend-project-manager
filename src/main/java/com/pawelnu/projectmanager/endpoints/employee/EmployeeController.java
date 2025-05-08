@@ -14,14 +14,14 @@ public class EmployeeController implements EmployeeApi {
   private final EmployeeRepository employeeRepository;
 
   @Override
-  public ResponseEntity<EmployeeDTO> createEmployee(
+  public ResponseEntity<EmployeeDTO> create(
       String authorizationHeader, EmployeeCreateRequestDTO body) {
     EmployeeDTO employee = employeeService.createEmployee(body);
     return ResponseEntity.ok(employee);
   }
 
   @Override
-  public ResponseEntity<List<EmployeeDTO>> getEmployeeList(
+  public ResponseEntity<List<EmployeeDTO>> getList(
       String authorizationHeader, String sort, String range, String filter) {
     EmployeesListResponseDTO result = employeeService.getEmployeeList(sort, range, filter);
     String contentRange =
@@ -31,20 +31,20 @@ public class EmployeeController implements EmployeeApi {
   }
 
   @Override
-  public ResponseEntity<EmployeeDTO> getEmployeeById(String authorizationHeader, UUID id) {
+  public ResponseEntity<EmployeeDTO> getById(String authorizationHeader, UUID id) {
     EmployeeDTO employeeDTO = employeeService.getEmployeeById(id);
     return ResponseEntity.ok(employeeDTO);
   }
 
   @Override
-  public ResponseEntity<EmployeeDTO> editEmployeeById(
+  public ResponseEntity<EmployeeDTO> editById(
       String authorizationHeader, UUID id, EmployeeEditRequestDTO body) {
     //    TODO editEmployeeById
     return null;
   }
 
   @Override
-  public ResponseEntity<SimpleResponse> deleteEmployeeById(String authorizationHeader, UUID id) {
+  public ResponseEntity<SimpleResponse> deleteById(String authorizationHeader, UUID id) {
     //    TODO deleteEmployeeById
     return null;
   }

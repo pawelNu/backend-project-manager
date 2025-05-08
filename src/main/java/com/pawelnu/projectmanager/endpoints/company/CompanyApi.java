@@ -41,7 +41,7 @@ public interface CompanyApi {
   @ResponseErrors
   @PostMapping("")
   @Operation(description = "Add new company.")
-  ResponseEntity<CompanyDTO> createCompany(
+  ResponseEntity<CompanyDTO> create(
       @Parameter(hidden = true) @RequestHeader(value = Request.AUTH_HEADER)
           String authorizationHeader,
       @Valid @RequestBody CompanyCreateRequestDTO body);
@@ -106,7 +106,7 @@ public interface CompanyApi {
               array = @ArraySchema(schema = @Schema(implementation = CompanySimpleDTO.class))))
   @ResponseErrors
   @GetMapping("")
-  ResponseEntity<List<CompanySimpleDTO>> getCompaniesList(
+  ResponseEntity<List<CompanySimpleDTO>> getList(
       @Parameter(hidden = true) @RequestHeader(value = Request.AUTH_HEADER)
           String authorizationHeader,
       @Parameter(description = "Sort as JSON string, e.g. [\"title\",\"ASC\"]")
@@ -129,7 +129,7 @@ public interface CompanyApi {
   @ResponseErrors
   @GetMapping("/{id}")
   @Operation(description = "Get company by id.")
-  ResponseEntity<CompanyDTO> getCompanyById(
+  ResponseEntity<CompanyDTO> getById(
       @Parameter(hidden = true) @RequestHeader(value = Request.AUTH_HEADER)
           String authorizationHeader,
       @Parameter() @PathVariable() UUID id);
@@ -145,7 +145,7 @@ public interface CompanyApi {
   @ResponseErrors
   @PutMapping("/{id}")
   @Operation(description = "Edit company by id.")
-  ResponseEntity<CompanyDTO> editCompanyById(
+  ResponseEntity<CompanyDTO> editById(
       @Parameter(hidden = true) @RequestHeader(value = Request.AUTH_HEADER)
           String authorizationHeader,
       @Parameter() @PathVariable() UUID id,
@@ -162,7 +162,7 @@ public interface CompanyApi {
   @ResponseErrors
   @DeleteMapping("/{id}")
   @Operation(description = "Delete company by id.")
-  ResponseEntity<SimpleResponse> deleteCompanyById(
+  ResponseEntity<SimpleResponse> deleteById(
       @Parameter(hidden = true) @RequestHeader(value = Request.AUTH_HEADER)
           String authorizationHeader,
       @Parameter() @PathVariable() UUID id);
