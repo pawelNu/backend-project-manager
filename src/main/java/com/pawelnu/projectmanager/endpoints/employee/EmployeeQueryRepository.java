@@ -1,7 +1,7 @@
 package com.pawelnu.projectmanager.endpoints.employee;
 
-import com.pawelnu.projectmanager.endpoints.authority.QAuthorityEmployeeEntity;
 import com.pawelnu.projectmanager.endpoints.authority.QAuthorityEntity;
+import com.pawelnu.projectmanager.endpoints.authority.QEmployeeAuthorityEntity;
 import com.pawelnu.projectmanager.endpoints.company.QCompanyEntity;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Order;
@@ -103,7 +103,7 @@ public class EmployeeQueryRepository {
 
   public List<EmployeeAuthorityRowDTO> findByUsernameWithAuthorities(String username) {
     QEmployeeEntity employee = QEmployeeEntity.employeeEntity;
-    QAuthorityEmployeeEntity authEmp = QAuthorityEmployeeEntity.authorityEmployeeEntity;
+    QEmployeeAuthorityEntity employeeAuthority = QEmployeeAuthorityEntity.employeeAuthorityEntity;
     QAuthorityEntity authority = QAuthorityEntity.authorityEntity;
 
     List<EmployeeAuthorityRowDTO> result =
@@ -117,8 +117,8 @@ public class EmployeeQueryRepository {
                     employee.password,
                     authority.name))
             .from(employee)
-            .leftJoin(employee.authorities, authEmp)
-            .leftJoin(authEmp.authority, authority)
+            .leftJoin(employee.authorities, employeeAuthority)
+            .leftJoin(employeeAuthority.authority, authority)
             .where(employee.username.eq(username))
             .fetch();
     if (result != null && !result.isEmpty()) {

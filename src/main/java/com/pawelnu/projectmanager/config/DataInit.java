@@ -1,10 +1,10 @@
 package com.pawelnu.projectmanager.config;
 
 import com.github.javafaker.Faker;
-import com.pawelnu.projectmanager.endpoints.authority.EmployeeAuthorityRepository;
 import com.pawelnu.projectmanager.endpoints.authority.AuthorityEntity;
 import com.pawelnu.projectmanager.endpoints.authority.AuthorityRepository;
 import com.pawelnu.projectmanager.endpoints.authority.EmployeeAuthorityEntity;
+import com.pawelnu.projectmanager.endpoints.authority.EmployeeAuthorityRepository;
 import com.pawelnu.projectmanager.endpoints.company.CompanyEntity;
 import com.pawelnu.projectmanager.endpoints.company.CompanyRepository;
 import com.pawelnu.projectmanager.endpoints.companyaddress.CompanyAddressEntity;
@@ -170,7 +170,7 @@ public class DataInit {
 
   private void generateAuthorities() {
     List<AuthorityEntity> allAuthorities = new ArrayList<>();
-    Set<String> controllers = Set.of("authority", "company", "companyAddress", "employee");
+    Set<String> controllers = Set.of("authority", "company", "company_address", "employee");
     for (String controller : controllers) {
       List<AuthorityEntity> authorities = createAuthority(controller);
       allAuthorities.addAll(authorities);
