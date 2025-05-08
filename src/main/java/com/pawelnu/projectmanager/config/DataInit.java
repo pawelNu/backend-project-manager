@@ -1,10 +1,10 @@
 package com.pawelnu.projectmanager.config;
 
 import com.github.javafaker.Faker;
-import com.pawelnu.projectmanager.endpoints.authority.EmployeeAuthorityEntity;
-import com.pawelnu.projectmanager.endpoints.authority.AuthorityEmployeeRepository;
+import com.pawelnu.projectmanager.endpoints.authority.EmployeeAuthorityRepository;
 import com.pawelnu.projectmanager.endpoints.authority.AuthorityEntity;
 import com.pawelnu.projectmanager.endpoints.authority.AuthorityRepository;
+import com.pawelnu.projectmanager.endpoints.authority.EmployeeAuthorityEntity;
 import com.pawelnu.projectmanager.endpoints.company.CompanyEntity;
 import com.pawelnu.projectmanager.endpoints.company.CompanyRepository;
 import com.pawelnu.projectmanager.endpoints.companyaddress.CompanyAddressEntity;
@@ -29,7 +29,7 @@ import org.springframework.stereotype.Component;
 @Log4j2
 public class DataInit {
 
-  private final AuthorityEmployeeRepository authorityEmployeeRepository;
+  private final EmployeeAuthorityRepository employeeAuthorityRepository;
 
   private final AuthorityRepository authorityRepository;
 
@@ -182,8 +182,12 @@ public class DataInit {
     List<EmployeeAuthorityEntity> employeeAuthorities = new ArrayList<>();
     EmployeeEntity employee = employeeRepository.findByUsername("test").orElseThrow();
     List<AuthorityEntity> authorities = authorityRepository.findAll();
-    EmployeeAuthorityEntity entity =
-        EmployeeAuthorityEntity.builder().employee(employee).authority(authority).build();
-    authorityEmployeeRepository.save(entity);
+    for (AuthorityEntity authority : authorities) {
+      EmployeeAuthorityEntity entity =
+          EmployeeAuthorityEntity.builder().employee(employee).authority(authority).build();
+      employeeAuthorities.add(entity);
+    }
+
+    employeeAuthorityRepository.saveAll(employeeAuthorities);
   }
 }

@@ -11,12 +11,12 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class AuthorityEmployeeService {
+public class EmployeeAuthorityService {
 
-  private final AuthorityEmployeeRepository authorityEmployeeRepository;
+  private final EmployeeAuthorityRepository employeeAuthorityRepository;
   private final AuthorityRepository authorityRepository;
   private final EmployeeRepository employeeRepository;
-  private final AuthorityEmployeeMapper authorityEmployeeMapper;
+  private final EmployeeAuthorityMapper employeeAuthorityMapper;
 
   public AddAuthorityToUserResponseDTO addAuthorityToUser(AddAuthorityToUserRequestDTO body) {
     AuthorityEntity authority =
@@ -30,7 +30,7 @@ public class AuthorityEmployeeService {
             .orElseThrow(() -> new NotFoundException(EMPLOYEE_NOT_FOUND_MSG + body.getUserId()));
     EmployeeAuthorityEntity entity =
         EmployeeAuthorityEntity.builder().authority(authority).employee(employee).build();
-    EmployeeAuthorityEntity save = authorityEmployeeRepository.save(entity);
-    return authorityEmployeeMapper.toDTO(save);
+    EmployeeAuthorityEntity save = employeeAuthorityRepository.save(entity);
+    return employeeAuthorityMapper.toDTO(save);
   }
 }

@@ -4,7 +4,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
-public interface AuthorityEmployeeMapper {
+public interface EmployeeAuthorityMapper {
 
   @Mapping(source = "authority.name", target = "authorityName")
   @Mapping(source = "employee.username", target = "username")
