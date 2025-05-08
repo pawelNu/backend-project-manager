@@ -8,7 +8,7 @@ Accept: application/json
 Content-Type: application/json
 
 {
-  "username": "Noreen_King24892",
+  "username": "test",
   "password": "test"
 }
 
