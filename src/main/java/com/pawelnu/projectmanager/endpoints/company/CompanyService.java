@@ -2,8 +2,8 @@ package com.pawelnu.projectmanager.endpoints.company;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pawelnu.projectmanager.dto.PagingAndSortingMetadataDTO;
-import com.pawelnu.projectmanager.dto.SimpleResponse;
 import com.pawelnu.projectmanager.exception.NotFoundException;
+import com.pawelnu.projectmanager.exception.model.SimpleResponse;
 import com.pawelnu.projectmanager.mapper.PagingAndSortingMapper;
 import com.pawelnu.projectmanager.utils.Shared;
 import java.util.List;
@@ -23,7 +23,7 @@ import org.springframework.stereotype.Service;
 public class CompanyService {
 
   private final CompanyRepository companyRepository;
-  private final CompanyRepositoryQuery companyRepositoryQuery;
+  private final CompanyQueryRepository companyQueryRepository;
   private final CompanyMapper companyMapper;
   private final PagingAndSortingMapper pageMapper;
   private final ObjectMapper objectMapper;
@@ -43,7 +43,7 @@ public class CompanyService {
   }
 
   public CompanyDTO getCompanyById(UUID id) {
-    return companyRepository
+    return companyQueryRepository
         .findById(id)
         .map(companyMapper::toDTO)
         .orElseThrow(() -> new NotFoundException(COMPANY_NOT_FOUND_MSG + id));
@@ -78,7 +78,7 @@ public class CompanyService {
   }
 
   public CompanyListResponseDTO filterCompanies(CompanyFilterRequestDTO body) {
-    Page<CompanyEntity> filteredCompanies = companyRepositoryQuery.filterCompanies(body);
+    Page<CompanyEntity> filteredCompanies = companyQueryRepository.filterCompanies(body);
     List<CompanyDTO> companyDTOs =
         filteredCompanies.getContent().stream().map(companyMapper::toDTO).toList();
     Order pageSort = filteredCompanies.getSort().stream().findFirst().orElse(null);
@@ -90,7 +90,7 @@ public class CompanyService {
   public CompanyListResponseDTO2 filterCompanies(String sort, String range, String filter) {
 
     List<String> sortList = Shared.parseJsonList(objectMapper, sort);
-    String sortField = !sortList.isEmpty() ? sortList.get(0) : "name";
+    String sortField = sortList.isEmpty() ? "name" : sortList.get(0);
     String sortDir = sortList.size() > 1 ? sortList.get(1) : "ASC";
 
     List<Integer> rangeList = Shared.parseJsonListInt(objectMapper, range);
@@ -100,8 +100,9 @@ public class CompanyService {
     Map<String, String> filters = Shared.parseJsonMap(objectMapper, filter);
 
     Page<CompanyEntity> page =
-        companyRepositoryQuery.filterCompanies(filters, offset, limit, sortDir, sortField);
-    List<CompanyDTO> companyDTOs = page.getContent().stream().map(companyMapper::toDTO).toList();
+        companyQueryRepository.filterCompanies(filters, offset, limit, sortDir, sortField);
+    List<CompanySimpleDTO> companyDTOs =
+        page.getContent().stream().map(companyMapper::toSimpleDTO).toList();
 
     long totalElements = page.getTotalElements();
     long end = Math.min(offset + limit - 1, totalElements - 1);

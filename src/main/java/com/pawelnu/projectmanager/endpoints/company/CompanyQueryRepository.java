@@ -1,9 +1,15 @@
 package com.pawelnu.projectmanager.endpoints.company;
 
+import com.pawelnu.projectmanager.endpoints.companyaddress.QCompanyAddressEntity;
 import com.pawelnu.projectmanager.utils.Shared;
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.jpa.impl.JPAQueryFactory;
+import java.util.List;
 import java.util.Map;
-import lombok.AllArgsConstructor;
+import java.util.Optional;
+import java.util.UUID;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -11,10 +17,12 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 
 @Repository
-@AllArgsConstructor
-public class CompanyRepositoryQuery {
+@RequiredArgsConstructor
+@Slf4j
+public class CompanyQueryRepository {
 
-  private CompanyRepository companyRepository;
+  private final CompanyRepository companyRepository;
+  private final JPAQueryFactory queryFactory;
 
   public Page<CompanyEntity> filterCompanies(CompanyFilterRequestDTO body) {
     QCompanyEntity company = QCompanyEntity.companyEntity;
@@ -60,5 +68,24 @@ public class CompanyRepositoryQuery {
         PageRequest.of(
             offset / limit, limit, Sort.by(Sort.Direction.fromString(sortDir), sortField));
     return companyRepository.findAll(allConditions, pageable);
+  }
+
+  public Optional<CompanyEntity> findById(UUID id) {
+    QCompanyEntity company = QCompanyEntity.companyEntity;
+    QCompanyAddressEntity address = QCompanyAddressEntity.companyAddressEntity;
+
+    List<CompanyEntity> fetch =
+        queryFactory
+            .selectFrom(company)
+            .innerJoin(company.addresses, address)
+            .fetchJoin()
+            .where(company.id.eq(id))
+            .fetch();
+
+    if (fetch != null && !fetch.isEmpty()) {
+      CompanyEntity companyEntity = fetch.getFirst();
+      return Optional.of(companyEntity);
+    }
+    return Optional.empty();
   }
 }

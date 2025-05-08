@@ -15,6 +15,5 @@ public interface CompanyAddressMapper {
 
   @Mapping(target = "id", ignore = true)
   CompanyAddressEntity toEntity(
-      CompanyAddressEditRequestDTO companyEditRequestDTO,
-      @MappingTarget CompanyAddressEntity companyEntity);
+      CompanyAddressEditRequestDTO body, @MappingTarget CompanyAddressEntity entity);
 }

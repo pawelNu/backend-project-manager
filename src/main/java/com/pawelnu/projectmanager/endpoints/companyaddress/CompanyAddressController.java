@@ -1,6 +1,6 @@
 package com.pawelnu.projectmanager.endpoints.companyaddress;
 
-import com.pawelnu.projectmanager.dto.SimpleResponse;
+import com.pawelnu.projectmanager.exception.model.SimpleResponse;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -15,15 +15,13 @@ public class CompanyAddressController implements CompanyAddressApi {
   private final CompanyAddressService service;
 
   @Override
-  public ResponseEntity<CompanyAddressDTO> createCompanyAddress(
-      String authorizationHeader, CompanyAddressCreateRequestDTO body) {
+  public ResponseEntity<CompanyAddressDTO> create(CompanyAddressCreateRequestDTO body) {
     CompanyAddressDTO result = service.createCompany(body);
     return ResponseEntity.status(HttpStatus.CREATED).body(result);
   }
 
   @Override
-  public ResponseEntity<List<CompanyAddressDTO>> getCompanyAddressesList(
-      String authorizationHeader, String sort, String range, String filter) {
+  public ResponseEntity<List<CompanyAddressDTO>> getList(String sort, String range, String filter) {
     CompanyAddressesListResponseDTO result = service.filterCompanies(sort, range, filter);
     String contentRange =
         String.format(
@@ -32,22 +30,19 @@ public class CompanyAddressController implements CompanyAddressApi {
   }
 
   @Override
-  public ResponseEntity<CompanyAddressDTO> getCompanyAddressById(
-      String authorizationHeader, UUID id) {
+  public ResponseEntity<CompanyAddressDTO> getById(UUID id) {
     CompanyAddressDTO result = service.getCompanyById(id);
     return ResponseEntity.ok(result);
   }
 
   @Override
-  public ResponseEntity<CompanyAddressDTO> editCompanyAddressById(
-      String authorizationHeader, UUID id, CompanyAddressEditRequestDTO body) {
+  public ResponseEntity<CompanyAddressDTO> editById(UUID id, CompanyAddressEditRequestDTO body) {
     CompanyAddressDTO result = service.editCompanyById(id, body);
     return ResponseEntity.ok(result);
   }
 
   @Override
-  public ResponseEntity<SimpleResponse> deleteCompanyAddressById(
-      String authorizationHeader, UUID id) {
+  public ResponseEntity<SimpleResponse> deleteById(UUID id) {
     SimpleResponse result = service.deleteCompanyById(id);
     return ResponseEntity.ok(result);
   }

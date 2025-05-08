@@ -1,7 +1,6 @@
 package com.pawelnu.projectmanager.endpoints.companyaddress;
 
-import com.pawelnu.projectmanager.dto.SimpleResponse;
-import com.pawelnu.projectmanager.utils.Consts.Request;
+import com.pawelnu.projectmanager.exception.model.SimpleResponse;
 import com.pawelnu.projectmanager.utils.Path;
 import com.pawelnu.projectmanager.utils.ResponseErrors;
 import io.swagger.v3.oas.annotations.Operation;
@@ -22,7 +21,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -30,7 +28,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RequestMapping(Path.API_COMPANY_ADDRESSES)
 public interface CompanyAddressApi {
 
-  // TODO @RequestHeader(required = false change to true, when auth will be done
   @ApiResponse(
       responseCode = "201",
       description = "Created",
@@ -42,10 +39,7 @@ public interface CompanyAddressApi {
   @ResponseErrors
   @PostMapping("")
   @Operation(description = "Add new company address.")
-  ResponseEntity<CompanyAddressDTO> createCompanyAddress(
-      @Parameter(hidden = true) @RequestHeader(required = false, value = Request.AUTH_HEADER)
-          String authorizationHeader,
-      @Valid @RequestBody CompanyAddressCreateRequestDTO body);
+  ResponseEntity<CompanyAddressDTO> create(@Valid @RequestBody CompanyAddressCreateRequestDTO body);
 
   @Operation(
       description =
@@ -59,9 +53,7 @@ public interface CompanyAddressApi {
               array = @ArraySchema(schema = @Schema(implementation = CompanyAddressDTO.class))))
   @ResponseErrors
   @GetMapping("")
-  ResponseEntity<List<CompanyAddressDTO>> getCompanyAddressesList(
-      @Parameter(hidden = true) @RequestHeader(required = false, value = Request.AUTH_HEADER)
-          String authorizationHeader,
+  ResponseEntity<List<CompanyAddressDTO>> getList(
       @Parameter(description = "Sort as JSON string, e.g. [\"title\",\"ASC\"]")
           @RequestParam(required = false)
           String sort,
@@ -82,10 +74,7 @@ public interface CompanyAddressApi {
   @ResponseErrors
   @GetMapping("/{id}")
   @Operation(description = "Get company address by id.")
-  ResponseEntity<CompanyAddressDTO> getCompanyAddressById(
-      @Parameter(hidden = true) @RequestHeader(required = false, value = Request.AUTH_HEADER)
-          String authorizationHeader,
-      @Parameter() @PathVariable() UUID id);
+  ResponseEntity<CompanyAddressDTO> getById(@Parameter() @PathVariable() UUID id);
 
   @ApiResponse(
       responseCode = "200",
@@ -98,11 +87,8 @@ public interface CompanyAddressApi {
   @ResponseErrors
   @PutMapping("/{id}")
   @Operation(description = "Edit company address by id.")
-  ResponseEntity<CompanyAddressDTO> editCompanyAddressById(
-      @Parameter(hidden = true) @RequestHeader(required = false, value = Request.AUTH_HEADER)
-          String authorizationHeader,
-      @Parameter() @PathVariable() UUID id,
-      @Valid @RequestBody CompanyAddressEditRequestDTO body);
+  ResponseEntity<CompanyAddressDTO> editById(
+      @Parameter() @PathVariable() UUID id, @Valid @RequestBody CompanyAddressEditRequestDTO body);
 
   @ApiResponse(
       responseCode = "200",
@@ -115,8 +101,5 @@ public interface CompanyAddressApi {
   @ResponseErrors
   @DeleteMapping("/{id}")
   @Operation(description = "Delete company address by id.")
-  ResponseEntity<SimpleResponse> deleteCompanyAddressById(
-      @Parameter(hidden = true) @RequestHeader(required = false, value = Request.AUTH_HEADER)
-          String authorizationHeader,
-      @Parameter() @PathVariable() UUID id);
+  ResponseEntity<SimpleResponse> deleteById(@Parameter() @PathVariable() UUID id);
 }

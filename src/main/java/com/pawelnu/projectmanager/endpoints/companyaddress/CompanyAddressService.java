@@ -1,11 +1,10 @@
 package com.pawelnu.projectmanager.endpoints.companyaddress;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.pawelnu.projectmanager.dto.SimpleResponse;
 import com.pawelnu.projectmanager.endpoints.company.CompanyEntity;
 import com.pawelnu.projectmanager.endpoints.company.CompanyRepository;
 import com.pawelnu.projectmanager.exception.NotFoundException;
-import com.pawelnu.projectmanager.mapper.PagingAndSortingMapper;
+import com.pawelnu.projectmanager.exception.model.SimpleResponse;
 import com.pawelnu.projectmanager.utils.Shared;
 import java.util.List;
 import java.util.Map;
@@ -23,9 +22,8 @@ public class CompanyAddressService {
 
   private final CompanyAddressRepository companyAddressRepository;
   private final CompanyRepository companyRepository;
-  private final CompanyAddressRepositoryQuery companyAddressRepositoryQuery;
+  private final CompanyAddressQueryRepository companyAddressQueryRepository;
   private final CompanyAddressMapper companyAddressMapper;
-  private final PagingAndSortingMapper pageMapper;
   private final ObjectMapper objectMapper;
 
   private static final String COMPANY_ADDRESS_NOT_FOUND_MSG = "Company address not found with id: ";
@@ -80,7 +78,7 @@ public class CompanyAddressService {
     Map<String, String> filters = Shared.parseJsonMap(objectMapper, filter);
 
     Page<CompanyAddressEntity> page =
-        companyAddressRepositoryQuery.filterCompanies(filters, offset, limit, sortDir, sortField);
+        companyAddressQueryRepository.filterCompanies(filters, offset, limit, sortDir, sortField);
     List<CompanyAddressDTO> companyDTOs =
         page.getContent().stream().map(companyAddressMapper::toDTO).toList();
 

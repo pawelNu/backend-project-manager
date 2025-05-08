@@ -35,6 +35,14 @@ import org.springframework.http.MediaType;
           schema = @Schema(implementation = ReactAdminError.class))
     })
 @ApiResponse(
+    responseCode = "403",
+    description = "Forbidden",
+    content = {
+      @Content(
+          mediaType = MediaType.APPLICATION_JSON_VALUE,
+          schema = @Schema(implementation = ReactAdminError.class))
+    })
+@ApiResponse(
     responseCode = "404",
     description = "Not found",
     content = {

@@ -22,6 +22,5 @@ public interface TicketService {
   TicketsFilteringResponseDTO searchProject(TIcketFilteringRequestDTO tIcketFilteringRequestDTO);
 
   //  TODO add missing services
-  //  TODO for complex queries use QueryDSL
   //  TODO add controllers
 }
