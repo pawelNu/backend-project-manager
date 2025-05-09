@@ -13,7 +13,7 @@ spring:
   jpa:
     open-in-view: false
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update # TODO change to validate when full schema will be in liquibase
     properties:
       hibernate:
         default_schema: test

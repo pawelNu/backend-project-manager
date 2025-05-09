@@ -1,4 +1,3 @@
-
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5431/project-manager-dev
@@ -15,9 +14,11 @@ spring:
     properties:
       hibernate:
         format_sql: true
-    show-sql: true
+#    show-sql: true
 
-#logging:
-#  level:
-#    org:
-#      hibernate: DEBUG
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: DEBUG
+        orm.jdbc.bind: TRACE

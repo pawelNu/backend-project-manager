@@ -5,7 +5,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.pawelnu.projectmanager.config.DataInit;
+import com.pawelnu.projectmanager.config.security.jwt.JwtUtils;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,8 +29,13 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 @Slf4j
 class CompanyControllerTest {
 
+  @Autowired private JwtUtils jwtUtils;
   @Autowired private MockMvc mockMvc;
   @Autowired private CompanyRepository companyRepository;
+  @Autowired private CompanyService companyService;
+  @Autowired private CompanyQueryRepository companyQueryRepository;
+  private String jwtToken;
+  private UUID companyId;
 
   @Container
   static PostgreSQLContainer<?> postgres =
@@ -48,23 +53,27 @@ class CompanyControllerTest {
   }
 
   @BeforeEach
-  void initData() {
-    companyRepository.deleteAll();
-    CompanyEntity companyEntity =
-        DataInit.generateCompany(UUID.fromString("07075a81-6219-4748-a76f-d9a66f4a79df"), 1);
-    companyRepository.saveAndFlush(companyEntity);
+  void generateJwtToken() {
+    if (jwtToken == null) {
+      jwtToken = jwtUtils.generateTokenFromUsername("test");
+    }
+
+    CompanyListResponseDTO2 companyListResponseDTO2 =
+        companyService.filterCompanies("", "[0,0]", "");
+    companyId = companyListResponseDTO2.getData().getFirst().getId();
   }
 
   @Test
-  void shouldReturnCompanyById() throws Exception {
-    //    TODO start here
+  void shouldReturn_200_getCompanyById() throws Exception {
+    //    TODO change companyId to fixed value when full schema will be in liquibase
     mockMvc
         .perform(
-            get("/api/companies/07075a81-6219-4748-a76f-d9a66f4a79df")
+            get("/api/companies/" + companyId)
+                .header("Authorization", "Bearer " + jwtToken)
                 .accept(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-        .andExpect(jsonPath("$.name").value("OpenAI"));
+        .andExpect(jsonPath("$.name").value("Abernathy LLC"));
   }
 
   @Test

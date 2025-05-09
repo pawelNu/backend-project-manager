@@ -63,6 +63,9 @@ public class CompanyQueryRepository {
     if (filters.containsKey("regon")) {
       allConditions.and(company.regon.eq(filters.get("regon")));
     }
+    if (sortDir == null || sortDir.isEmpty()) {
+      sortDir = "ASC";
+    }
 
     Pageable pageable =
         PageRequest.of(
@@ -77,7 +80,7 @@ public class CompanyQueryRepository {
     List<CompanyEntity> fetch =
         queryFactory
             .selectFrom(company)
-            .innerJoin(company.addresses, address)
+            .leftJoin(company.addresses, address)
             .fetchJoin()
             .where(company.id.eq(id))
             .fetch();
