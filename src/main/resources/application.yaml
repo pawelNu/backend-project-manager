@@ -5,30 +5,19 @@ server:
   port: 8080
 
 spring:
-  datasource:
-    url: jdbc:postgresql://localhost:5431/project-manager?currentSchema=dev
-    username: postgres
-    password: test
-    driverClassName: org.postgresql.Driver
-  app:
-    jwtSecret: sdfsdfsdfsfasdffdjgdo4u3j4lewkljde0ge04jltrkjeu2lk3jrrwrfssf
-    jwtExpirationMin: 600
+  profiles:
+    active: dev
   jpa:
-    open-in-view: false
-    hibernate:
-      ddl-auto: create-drop
     properties:
       hibernate:
-        default_schema: dev
         jdbc:
             time_zone: UTC
-        format_sql: false
     show-sql: true
   jackson:
     time-zone: UTC
   liquibase:
     change-log: classpath:/db/changelog/db.changelog-master.yaml
-    enabled: false
+    enabled: true
 
 springdoc:
   api-docs:

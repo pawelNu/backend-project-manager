@@ -1,0 +1,8 @@
+databaseChangeLog:
+  - changeSet:
+      id: 0.2.0_01
+      author: pawelNu
+      changes:
+        - sqlFile:
+            path: "create_companies_table.sql"
+            relativeToChangelogFile: true

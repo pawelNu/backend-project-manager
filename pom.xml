@@ -62,6 +62,11 @@
       <scope>test</scope>
     </dependency>
     <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-testcontainers</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
       <groupId>org.liquibase</groupId>
       <artifactId>liquibase-core</artifactId>
       <version>4.31.0</version>
@@ -87,13 +92,6 @@
     <!--			<version>${hibernate-jpamodelgen.version}</version>-->
     <!--			<scope>provided</scope>-->
     <!--		</dependency>-->
-
-    <dependency>
-      <groupId>org.zalando</groupId>
-      <artifactId>problem-spring-web-starter</artifactId>
-      <version>0.29.1</version>
-    </dependency>
-
     <!--     https://mvnrepository.com/artifact/com.querydsl/querydsl-apt -->
     <dependency>
       <groupId>com.querydsl</groupId>
@@ -136,6 +134,34 @@
       <version>${jwt.version}</version>
       <scope>runtime</scope>
     </dependency>
+    <!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter -->
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <version>5.13.0-M3</version>
+      <scope>test</scope>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/org.testcontainers/testcontainers -->
+    <dependency>
+      <groupId>org.testcontainers</groupId>
+      <artifactId>testcontainers</artifactId>
+      <version>1.21.0</version>
+      <scope>test</scope>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/org.testcontainers/junit-jupiter -->
+    <dependency>
+      <groupId>org.testcontainers</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <version>1.21.0</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.testcontainers</groupId>
+      <artifactId>postgresql</artifactId>
+      <version>1.21.0</version>
+      <scope>test</scope>
+    </dependency>
+
 
   </dependencies>
 

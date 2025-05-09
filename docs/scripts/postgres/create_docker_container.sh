@@ -1,4 +1,4 @@
-name=project-manager-db
+name=project-manager-dev
 
 # build docker image
 docker build -t $name .

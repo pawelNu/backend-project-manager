@@ -1,8 +1,4 @@
 databaseChangeLog:
-  - changeSet:
-      id: 1
-      author: pawelNu
-      changes:
-        - sqlFile:
-            path: "create_schema.sql"
-            relativeToChangelogFile: true
+  - include:
+      file: "developer/create_user_developer.yaml"
+      relativeToChangelogFile: true

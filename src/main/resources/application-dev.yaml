@@ -1,0 +1,23 @@
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5431/project-manager-dev
+    username: developer
+    password: developer
+    driverClassName: org.postgresql.Driver
+  app:
+    jwtSecret: sdfsdfsdfsfasdffdjgdo4u3j4lewkljde0ge04jltrkjeu2lk3jrrwrfssf
+    jwtExpirationMin: 600
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+    show-sql: true
+
+#logging:
+#  level:
+#    org:
+#      hibernate: DEBUG
