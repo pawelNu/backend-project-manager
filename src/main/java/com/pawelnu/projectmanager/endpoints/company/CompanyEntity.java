@@ -11,8 +11,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -33,19 +31,11 @@ public class CompanyEntity extends Auditable {
   @GeneratedValue(strategy = GenerationType.AUTO)
   private UUID id;
 
-  @NotNull private String name;
-
-  @NotNull
-  @Size(min = 10, max = 10)
+  private String name;
   private String nip;
-
-  @NotNull
-  @Size(min = 9, max = 9)
   private String regon;
+  private String website;
 
-  @NotNull private String website;
-
-  @NotNull
   @Enumerated(value = EnumType.STRING)
   private CompanyStatus status;
 

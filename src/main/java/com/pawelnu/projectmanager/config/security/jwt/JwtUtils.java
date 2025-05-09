@@ -29,7 +29,7 @@ public class JwtUtils {
     String bearerToken = request.getHeader("Authorization");
     log.debug("Authorization Header: {}", bearerToken);
     if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
-      return bearerToken.substring(7); // Remove Bearer prefix
+      return bearerToken.substring(7);
     }
     return null;
   }

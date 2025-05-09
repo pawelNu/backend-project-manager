@@ -1,0 +1,8 @@
+databaseChangeLog:
+  - changeSet:
+      id: sdfsdfsdfsdfsdf
+      author: pawelNu
+      changes:
+        - sqlFile:
+            path: "create_user_developer.sql"
+            relativeToChangelogFile: true

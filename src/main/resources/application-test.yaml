@@ -1,0 +1,21 @@
+api:
+  host: localhost
+
+server:
+  port: 8080
+
+spring:
+  datasource:
+    driverClassName: org.postgresql.Driver
+  app:
+    jwtSecret: sdfsdfsdfsfasdffdjgdo4u3j4lewkljde0ge04jltrkjeu2lk3jrrwrfssf
+    jwtExpirationMin: 600
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: update # TODO change to validate when full schema will be in liquibase
+    properties:
+      hibernate:
+        default_schema: test
+        format_sql: false
+    show-sql: true

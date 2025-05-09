@@ -27,13 +27,13 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 @Log4j2
+// @Profile("dev")
 public class DataInit {
 
   private final EmployeeAuthorityRepository employeeAuthorityRepository;
 
   private final AuthorityRepository authorityRepository;
-
-  private final Faker faker = new Faker(new Random(12345));
+  private static final Faker faker = new Faker(new Random(12345));
   private final CompanyRepository companyRepository;
   private final CompanyAddressRepository companyAddressRepository;
   private final EmployeeRepository employeeRepository;
@@ -42,7 +42,10 @@ public class DataInit {
 
   @PostConstruct
   private void loadData() {
-
+// TODO prepare liquibase for company address
+// TODO prepare liquibase for employee
+// TODO prepare liquibase for authority
+// TODO prepare liquibase for employee authority
     List<CompanyEntity> companies = createCompanies();
     createCompanyAddresses(companies);
     createEmployees();
@@ -74,6 +77,17 @@ public class DataInit {
             .status(i % 2 == 0 ? CompanyStatus.ACTIVE : CompanyStatus.TERMINATED)
             .build();
     return c;
+  }
+
+  public static CompanyEntity generateCompany(UUID id, int i) {
+    return CompanyEntity.builder()
+        .id(id)
+        .name(faker.company().name())
+        .nip(String.valueOf(faker.number().randomNumber(10, true)))
+        .regon(String.valueOf(faker.number().randomNumber(9, true)))
+        .website("https://" + faker.internet().domainName())
+        .status(i % 2 == 0 ? CompanyStatus.ACTIVE : CompanyStatus.TERMINATED)
+        .build();
   }
 
   private void createCompanyAddresses(List<CompanyEntity> companies) {
