@@ -42,7 +42,10 @@ public class DataInit {
 
   @PostConstruct
   private void loadData() {
-
+// TODO prepare liquibase for company address
+// TODO prepare liquibase for employee
+// TODO prepare liquibase for authority
+// TODO prepare liquibase for employee authority
     List<CompanyEntity> companies = createCompanies();
     createCompanyAddresses(companies);
     createEmployees();
