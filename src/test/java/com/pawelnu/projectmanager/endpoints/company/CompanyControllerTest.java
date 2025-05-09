@@ -57,7 +57,7 @@ class CompanyControllerTest {
 
   @Test
   void shouldReturnCompanyById() throws Exception {
-//    TODO start here
+    //    TODO start here
     mockMvc
         .perform(
             get("/api/companies/07075a81-6219-4748-a76f-d9a66f4a79df")
