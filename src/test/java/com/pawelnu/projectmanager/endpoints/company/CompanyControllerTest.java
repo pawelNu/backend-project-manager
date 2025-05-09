@@ -18,6 +18,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.RequestPostProcessor;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -52,6 +53,14 @@ class CompanyControllerTest {
     registry.add("spring.datasource.password", postgres::getPassword);
   }
 
+  private RequestPostProcessor withJwt() {
+    return request -> {
+      request.addHeader("Authorization", "Bearer " + jwtToken);
+      request.addHeader("Accept", MediaType.APPLICATION_JSON_VALUE);
+      return request;
+    };
+  }
+
   @BeforeEach
   void generateJwtToken() {
     if (jwtToken == null) {
@@ -67,10 +76,7 @@ class CompanyControllerTest {
   void shouldReturn_200_getCompanyById() throws Exception {
     //    TODO change companyId to fixed value when full schema will be in liquibase
     mockMvc
-        .perform(
-            get("/api/companies/" + companyId)
-                .header("Authorization", "Bearer " + jwtToken)
-                .accept(MediaType.APPLICATION_JSON))
+        .perform(get("/api/companies/" + companyId).with(withJwt()))
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
         .andExpect(jsonPath("$.name").value("Abernathy LLC"));
