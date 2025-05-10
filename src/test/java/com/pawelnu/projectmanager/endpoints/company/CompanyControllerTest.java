@@ -230,6 +230,7 @@ class CompanyControllerTest {
         .andExpect(jsonPath("$.message").value("Access denied"));
   }
 
+  //  TODO tests for getList()
   @Test
   void getAllCompanies() {}
 
