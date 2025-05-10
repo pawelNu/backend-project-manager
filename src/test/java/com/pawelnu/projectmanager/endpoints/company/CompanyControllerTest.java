@@ -1,10 +1,12 @@
 package com.pawelnu.projectmanager.endpoints.company;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pawelnu.projectmanager.config.security.jwt.JwtUtils;
 import com.pawelnu.projectmanager.utils.Path;
 import java.util.UUID;
@@ -36,6 +38,7 @@ class CompanyControllerTest {
   @Autowired private CompanyRepository companyRepository;
   @Autowired private CompanyService companyService;
   @Autowired private CompanyQueryRepository companyQueryRepository;
+  @Autowired private ObjectMapper objectMapper;
   private String jwtTokenWithAuthorities;
   private String jwtTokenWithoutAuthorities;
   private UUID companyId = UUID.fromString("cf578fec-006b-4604-a5e8-5ad1b3ea2be5");
@@ -134,9 +137,34 @@ class CompanyControllerTest {
   }
 
   @Test
-  void create() {
-    //    TODO prepare tests for create for all responses
+  void shouldReturn_201_createCompany() throws Exception {
+    CompanyCreateRequestDTO request =
+        CompanyCreateRequestDTO.builder()
+            .name("Company test")
+            .nip("1234567890")
+            .regon("123456789")
+            .website("https://company-test.com")
+            .build();
+    String requestBody = objectMapper.writeValueAsString(request);
+    mockMvc
+        .perform(
+            post("/" + Path.API_COMPANIES)
+                .with(withJwt())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestBody))
+        .andExpect(status().isCreated())
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(jsonPath("$.name").value(request.getName()))
+        .andExpect(jsonPath("$.nip").value(request.getNip()))
+        .andExpect(jsonPath("$.regon").value(request.getRegon()))
+        .andExpect(jsonPath("$.status").value("Active"))
+        .andExpect(jsonPath("$.website").value(request.getWebsite()));
   }
+
+  //  TODO shouldReturn_400_createCompany
+  //  TODO shouldReturn_401_createCompany
+  //  TODO shouldReturn_403_createCompany
+  //  TODO shouldReturn_404_createCompany
 
   @Test
   void getAllCompanies() {}
