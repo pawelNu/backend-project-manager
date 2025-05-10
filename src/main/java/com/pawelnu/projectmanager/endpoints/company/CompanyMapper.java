@@ -8,7 +8,8 @@ import org.mapstruct.MappingTarget;
 @Mapper(componentModel = "spring")
 public interface CompanyMapper {
 
-  @Mapping(target = "addresses", source = "addresses")
+  @Mapping(source = "addresses", target = "addresses")
+  @Mapping(source = "status", target = "status")
   CompanyDTO toDTO(CompanyEntity companyEntity);
 
   CompanySimpleDTO toSimpleDTO(CompanyEntity companyEntity);
