@@ -1,0 +1,8 @@
+databaseChangeLog:
+  - changeSet:
+      id: 342f054a-0381-42db-9f6a-6600f6be7da2
+      author: pawelNu
+      changes:
+        - sqlFile:
+            path: "create_employee_authorities_table.sql"
+            relativeToChangelogFile: true

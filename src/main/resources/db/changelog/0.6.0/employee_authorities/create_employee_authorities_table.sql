@@ -1,0 +1,19 @@
+create table employee_authorities (
+id uuid not null,
+authority_id uuid,
+employee_id uuid,
+primary key (id)
+)
+;
+
+alter table if exists employee_authorities
+add constraint fk_employee_authorities_and_authorities
+foreign key (authority_id)
+references authorities
+;
+
+alter table if exists employee_authorities
+add constraint fk_employee_authorities_and_employees
+foreign key (employee_id)
+references employees
+;

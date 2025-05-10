@@ -1,0 +1,11 @@
+databaseChangeLog:
+  - changeSet:
+      id: 9cd9b207-1d65-454c-bd06-ea35e8968c32
+      author: pawelNu
+      changes:
+        - loadUpdateData:
+            file: employee_authorities.csv
+            relativeToChangelogFile: true
+            separator: ','
+            tableName: employee_authorities
+            primaryKey: id
