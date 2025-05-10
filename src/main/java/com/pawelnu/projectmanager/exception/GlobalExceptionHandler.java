@@ -13,6 +13,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 @RestControllerAdvice
 @Slf4j
@@ -43,7 +44,7 @@ public class GlobalExceptionHandler {
   }
 
   @ExceptionHandler(MethodArgumentNotValidException.class)
-  public ResponseEntity<ReactAdminBadRequestError> handleValidationErrors(
+  public ResponseEntity<ReactAdminBadRequestError> handleMethodArgumentNotValidException(
       MethodArgumentNotValidException e) {
     log.error("Stacktrace:", e);
 
@@ -70,6 +71,12 @@ public class GlobalExceptionHandler {
 
     ReactAdminBadRequestError response = ReactAdminBadRequestError.builder().errors(errors).build();
     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+  }
+
+  @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+  public ResponseEntity<ReactAdminError> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException e) {
+    log.error("Stacktrace:", e);
+    return new ResponseEntity<>(new ReactAdminError(e.getMessage()), HttpStatus.BAD_REQUEST);
   }
 
   @ExceptionHandler(AuthorizationDeniedException.class)
