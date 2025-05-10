@@ -42,15 +42,13 @@ public class DataInit {
 
   @PostConstruct
   private void loadData() {
-    // TODO prepare liquibase for authority
-    // TODO prepare liquibase for employee authority
 
-    // List<CompanyEntity> companies = createCompanies();
-    // List<CompanyEntity> companies = companyRepository.findAll();
-    // createCompanyAddresses(companies);
-    // createEmployees();
+    //    List<CompanyEntity> companies = createCompanies();
+    //    List<CompanyEntity> companies = companyRepository.findAll();
+    //    createCompanyAddresses(companies);
+    //    createEmployees();
     //    generateAuthorities();
-    addAuthorityToUser();
+    //    addAuthorityToUser();
     //    List<ProjectEntity> projects = createProjects(companies);
     //    List<PersonEntity> people = createPeople(companies);
     //    createTickets(people, projects);
