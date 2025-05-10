@@ -13,3 +13,9 @@ company_id uuid not null,
 primary key (id)
 )
 ;
+
+alter table if exists employees
+add constraint fk_employees_and_companies
+foreign key (company_id)
+references employees
+;

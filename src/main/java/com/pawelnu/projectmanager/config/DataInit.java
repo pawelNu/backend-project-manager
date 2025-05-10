@@ -45,9 +45,10 @@ public class DataInit {
     // TODO prepare liquibase for employee
     // TODO prepare liquibase for authority
     // TODO prepare liquibase for employee authority
-    List<CompanyEntity> companies = createCompanies();
-    createCompanyAddresses(companies);
-    createEmployees();
+    //    List<CompanyEntity> companies = createCompanies();
+    //    List<CompanyEntity> companies = companyRepository.findAll();
+    //    createCompanyAddresses(companies);
+    //    createEmployees();
     generateAuthorities();
     addAuthorityToUser();
     //    List<ProjectEntity> projects = createProjects(companies);
