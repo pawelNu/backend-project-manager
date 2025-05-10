@@ -36,7 +36,8 @@ class CompanyControllerTest {
   @Autowired private CompanyRepository companyRepository;
   @Autowired private CompanyService companyService;
   @Autowired private CompanyQueryRepository companyQueryRepository;
-  private String jwtToken;
+  private String jwtTokenWithAuthorities;
+  private String jwtTokenWithoutAuthorities;
   private UUID companyId = UUID.fromString("cf578fec-006b-4604-a5e8-5ad1b3ea2be5");
 
   @Container
@@ -55,7 +56,15 @@ class CompanyControllerTest {
 
   private RequestPostProcessor withJwt() {
     return request -> {
-      request.addHeader("Authorization", "Bearer " + jwtToken);
+      request.addHeader("Authorization", "Bearer " + jwtTokenWithAuthorities);
+      request.addHeader("Accept", MediaType.APPLICATION_JSON_VALUE);
+      return request;
+    };
+  }
+
+  private RequestPostProcessor withBadJwt() {
+    return request -> {
+      request.addHeader("Authorization", "Bearer " + jwtTokenWithoutAuthorities);
       request.addHeader("Accept", MediaType.APPLICATION_JSON_VALUE);
       return request;
     };
@@ -63,8 +72,11 @@ class CompanyControllerTest {
 
   @BeforeEach
   void generateJwtToken() {
-    if (jwtToken == null) {
-      jwtToken = jwtUtils.generateTokenFromUsername("test");
+    if (jwtTokenWithAuthorities == null) {
+      jwtTokenWithAuthorities = jwtUtils.generateTokenFromUsername("test");
+    }
+    if (jwtTokenWithoutAuthorities == null) {
+      jwtTokenWithoutAuthorities = jwtUtils.generateTokenFromUsername("Georgine_Welch85182");
     }
   }
 
@@ -98,6 +110,15 @@ class CompanyControllerTest {
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
         .andExpect(
             jsonPath("$.message").value("Full authentication is required to access this resource"));
+  }
+
+  @Test
+  void shouldReturn_403_getCompanyById() throws Exception {
+    mockMvc
+        .perform(get("/" + Path.API_COMPANIES + "/" + companyId).with(withBadJwt()))
+        .andExpect(status().isForbidden())
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(jsonPath("$.message").value("Access denied"));
   }
 
   @Test

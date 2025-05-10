@@ -30,7 +30,7 @@ public class GlobalExceptionHandler {
   @ExceptionHandler(AccessDeniedException.class)
   public ResponseEntity<ReactAdminError> handleAccessDeniedException(AccessDeniedException e) {
     log.error("Stacktrace:", e);
-    return new ResponseEntity<>(new ReactAdminError(e.getMessage()), HttpStatus.UNAUTHORIZED);
+    return new ResponseEntity<>(new ReactAdminError(e.getMessage()), HttpStatus.FORBIDDEN);
   }
 
   @ExceptionHandler(BadRequestException.class)
