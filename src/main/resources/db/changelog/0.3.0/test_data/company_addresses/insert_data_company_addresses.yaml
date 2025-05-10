@@ -1,11 +1,11 @@
 databaseChangeLog:
   - changeSet:
-      id: 0.2.0_002
+      id: 87f429ef-4986-4593-ac30-ef29cbface4f
       author: pawelNu
       changes:
         - loadUpdateData:
-            file: companies.csv
+            file: company_addresses.csv
             relativeToChangelogFile: true
             separator: ','
-            tableName: companies
+            tableName: company_addresses
             primaryKey: id

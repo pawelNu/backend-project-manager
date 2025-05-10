@@ -3,5 +3,5 @@ databaseChangeLog:
       file: "company/create_companies_table.yaml"
       relativeToChangelogFile: true
   - include:
-      file: "test_data/company/insert-data-companies.yaml"
+      file: "test_data/company/insert_data_companies.yaml"
       relativeToChangelogFile: true

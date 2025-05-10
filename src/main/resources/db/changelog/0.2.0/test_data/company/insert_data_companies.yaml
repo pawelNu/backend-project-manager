@@ -1,0 +1,11 @@
+databaseChangeLog:
+  - changeSet:
+      id: 5c84b5a7-1eea-4660-bf5e-ca3a31bbd26a
+      author: pawelNu
+      changes:
+        - loadUpdateData:
+            file: companies.csv
+            relativeToChangelogFile: true
+            separator: ','
+            tableName: companies
+            primaryKey: id
