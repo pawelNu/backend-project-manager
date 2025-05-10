@@ -36,7 +36,7 @@ class CompanyControllerTest {
   @Autowired private CompanyService companyService;
   @Autowired private CompanyQueryRepository companyQueryRepository;
   private String jwtToken;
-  private UUID companyId;
+  private UUID companyId = UUID.fromString("cf578fec-006b-4604-a5e8-5ad1b3ea2be5");
 
   @Container
   static PostgreSQLContainer<?> postgres =
@@ -67,19 +67,18 @@ class CompanyControllerTest {
       jwtToken = jwtUtils.generateTokenFromUsername("test");
     }
 
-    CompanyListResponseDTO2 companyListResponseDTO2 =
-        companyService.filterCompanies("", "[0,0]", "");
-    companyId = companyListResponseDTO2.getData().getFirst().getId();
+    //    CompanyListResponseDTO2 companyListResponseDTO2 =
+    //        companyService.filterCompanies("", "[0,0]", "");
+    //    companyId = companyListResponseDTO2.getData().getFirst().getId();
   }
 
   @Test
   void shouldReturn_200_getCompanyById() throws Exception {
-    //    TODO change companyId to fixed value when full schema will be in liquibase
     mockMvc
         .perform(get("/api/companies/" + companyId).with(withJwt()))
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-        .andExpect(jsonPath("$.name").value("Abernathy LLC"));
+        .andExpect(jsonPath("$.name").value("Hayes-Welch"));
   }
 
   @Test
