@@ -33,12 +33,18 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 @Slf4j
 class CompanyControllerTest {
 
-  @Autowired private JwtUtils jwtUtils;
-  @Autowired private MockMvc mockMvc;
-  @Autowired private CompanyRepository companyRepository;
-  @Autowired private CompanyService companyService;
-  @Autowired private CompanyQueryRepository companyQueryRepository;
-  @Autowired private ObjectMapper objectMapper;
+  @Autowired
+  private JwtUtils jwtUtils;
+  @Autowired
+  private MockMvc mockMvc;
+  @Autowired
+  private CompanyRepository companyRepository;
+  @Autowired
+  private CompanyService companyService;
+  @Autowired
+  private CompanyQueryRepository companyQueryRepository;
+  @Autowired
+  private ObjectMapper objectMapper;
   private String jwtTokenWithAuthorities;
   private String jwtTokenWithoutAuthorities;
   private UUID companyId = UUID.fromString("cf578fec-006b-4604-a5e8-5ad1b3ea2be5");
@@ -188,22 +194,49 @@ class CompanyControllerTest {
                 .value("Some of the provided values are not valid. Please fix them and retry."));
   }
 
-  //  TODO shouldReturn_401_createCompany
+  @Test
+  void shouldReturn_401_createCompany() throws Exception {
+    CompanyCreateRequestDTO request =
+        CompanyCreateRequestDTO.builder()
+            .name("Co")
+            .nip("test")
+            .regon("test")
+            .website("http://company-test.com")
+            .build();
+    String requestBody = objectMapper.writeValueAsString(request);
+    mockMvc
+        .perform(
+            post("/" + Path.API_COMPANIES)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestBody))
+        .andExpect(status().isUnauthorized())
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(
+            jsonPath("$.message").value("Full authentication is required to access this resource"))
+    ;
+  }
+
+  //  TODO
   //  TODO shouldReturn_403_createCompany
   //  TODO shouldReturn_404_createCompany
 
   @Test
-  void getAllCompanies() {}
+  void getAllCompanies() {
+  }
 
   @Test
-  void editById() {}
+  void editById() {
+  }
 
   @Test
-  void deleteById() {}
+  void deleteById() {
+  }
 
   @Test
-  void filterCompanies() {}
+  void filterCompanies() {
+  }
 
   @Test
-  void getList() {}
+  void getList() {
+  }
 }
