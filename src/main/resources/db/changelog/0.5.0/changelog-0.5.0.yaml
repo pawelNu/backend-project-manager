@@ -1,0 +1,7 @@
+databaseChangeLog:
+  - include:
+      file: "authorities/create_authorities_table.yaml"
+      relativeToChangelogFile: true
+  - include:
+      file: "test_data/authorities/insert_data_authorities.yaml"
+      relativeToChangelogFile: true

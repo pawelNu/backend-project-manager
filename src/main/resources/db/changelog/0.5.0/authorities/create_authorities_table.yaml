@@ -1,0 +1,8 @@
+databaseChangeLog:
+  - changeSet:
+      id: 966c06e5-cbaa-4cf6-b0a7-55b8a47937ea
+      author: pawelNu
+      changes:
+        - sqlFile:
+            path: "create_authorities_table.sql"
+            relativeToChangelogFile: true

@@ -1,0 +1,11 @@
+databaseChangeLog:
+  - changeSet:
+      id: 05e47d4e-1652-41eb-bd5f-33d839636607
+      author: pawelNu
+      changes:
+        - loadUpdateData:
+            file: authorities.csv
+            relativeToChangelogFile: true
+            separator: ','
+            tableName: authorities
+            primaryKey: id
