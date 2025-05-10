@@ -74,7 +74,8 @@ public class GlobalExceptionHandler {
   }
 
   @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-  public ResponseEntity<ReactAdminError> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException e) {
+  public ResponseEntity<ReactAdminError> handleMethodArgumentTypeMismatchException(
+      MethodArgumentTypeMismatchException e) {
     log.error("Stacktrace:", e);
     return new ResponseEntity<>(new ReactAdminError(e.getMessage()), HttpStatus.BAD_REQUEST);
   }
