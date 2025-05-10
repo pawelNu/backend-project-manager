@@ -49,7 +49,7 @@ public class DataInit {
     // List<CompanyEntity> companies = companyRepository.findAll();
     // createCompanyAddresses(companies);
     // createEmployees();
-    generateAuthorities();
+    //    generateAuthorities();
     addAuthorityToUser();
     //    List<ProjectEntity> projects = createProjects(companies);
     //    List<PersonEntity> people = createPeople(companies);

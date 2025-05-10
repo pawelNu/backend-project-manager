@@ -1,0 +1,7 @@
+databaseChangeLog:
+  - include:
+      file: "empoloyee/create_employees_table.yaml"
+      relativeToChangelogFile: true
+  - include:
+      file: "test_data/employee/insert_data_employees.yaml"
+      relativeToChangelogFile: true
