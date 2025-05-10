@@ -8,7 +8,9 @@ import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authorization.AuthorizationDeniedException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -19,10 +21,22 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 @Slf4j
 public class GlobalExceptionHandler {
 
-  @ExceptionHandler(BadRequestException.class)
-  public ResponseEntity<String> handleBadRequestException(BadRequestException e) {
+  @ExceptionHandler(AuthenticationException.class)
+  public ResponseEntity<ReactAdminError> handleAuthenticationException(AuthenticationException e) {
     log.error("Stacktrace:", e);
-    return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+    return new ResponseEntity<>(new ReactAdminError(e.getMessage()), HttpStatus.UNAUTHORIZED);
+  }
+
+  @ExceptionHandler(AccessDeniedException.class)
+  public ResponseEntity<ReactAdminError> handleAccessDeniedException(AccessDeniedException e) {
+    log.error("Stacktrace:", e);
+    return new ResponseEntity<>(new ReactAdminError(e.getMessage()), HttpStatus.UNAUTHORIZED);
+  }
+
+  @ExceptionHandler(BadRequestException.class)
+  public ResponseEntity<ReactAdminError> handleBadRequestException(BadRequestException e) {
+    log.error("Stacktrace:", e);
+    return new ResponseEntity<>(new ReactAdminError(e.getMessage()), HttpStatus.BAD_REQUEST);
   }
 
   @ExceptionHandler(NotFoundException.class)
@@ -31,12 +45,14 @@ public class GlobalExceptionHandler {
     return new ResponseEntity<>(new ReactAdminError(e.getMessage()), HttpStatus.NOT_FOUND);
   }
 
+  //  TODO probably to be removed
   @ExceptionHandler(NotNullOrEmptyException.class)
   public ResponseEntity<String> handleNotNullOrEmptyException(NotNullOrEmptyException e) {
     log.error("Stacktrace:", e);
     return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
   }
 
+  //  TODO probably to be removed
   @ExceptionHandler(NotFoundSortingFieldException.class)
   public ResponseEntity<String> handleNotFoundPropertyException(NotFoundSortingFieldException e) {
     log.error("Stacktrace:", e);
