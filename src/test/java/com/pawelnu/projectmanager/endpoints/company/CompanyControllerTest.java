@@ -134,13 +134,12 @@ class CompanyControllerTest {
   }
 
   @Test
-  void create() {}
+  void create() {
+    //    TODO prepare tests for create for all responses
+  }
 
   @Test
   void getAllCompanies() {}
-
-  @Test
-  void getById() {}
 
   @Test
   void editById() {}
