@@ -31,16 +31,11 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 @Slf4j
 class CompanyControllerTest {
 
-  @Autowired
-  private JwtUtils jwtUtils;
-  @Autowired
-  private MockMvc mockMvc;
-  @Autowired
-  private CompanyRepository companyRepository;
-  @Autowired
-  private CompanyService companyService;
-  @Autowired
-  private CompanyQueryRepository companyQueryRepository;
+  @Autowired private JwtUtils jwtUtils;
+  @Autowired private MockMvc mockMvc;
+  @Autowired private CompanyRepository companyRepository;
+  @Autowired private CompanyService companyService;
+  @Autowired private CompanyQueryRepository companyQueryRepository;
   private String jwtToken;
   private UUID companyId = UUID.fromString("cf578fec-006b-4604-a5e8-5ad1b3ea2be5");
 
@@ -76,37 +71,65 @@ class CompanyControllerTest {
   @Test
   void shouldReturn_200_getCompanyById() throws Exception {
     mockMvc
-        .perform(get(Path.API_COMPANIES + "/" + companyId).with(withJwt()))
+        .perform(get("/" + Path.API_COMPANIES + "/" + companyId).with(withJwt()))
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
         .andExpect(jsonPath("$.name").value("Hayes-Welch"));
   }
 
   @Test
-  void create() {
+  void shouldReturn_400_getCompanyById() throws Exception {
+    mockMvc
+        .perform(get("/" + Path.API_COMPANIES + "/invalid-uuid").with(withJwt()))
+        .andExpect(status().isBadRequest())
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(
+            jsonPath("$.message")
+                .value(
+                    "Method parameter 'id': Failed to convert value of type 'java.lang.String' to"
+                        + " required type 'java.util.UUID'; Invalid UUID string: invalid-uuid"));
   }
 
   @Test
-  void getAllCompanies() {
+  void shouldReturn_401_getCompanyById() throws Exception {
+    mockMvc
+        .perform(get("/" + Path.API_COMPANIES + "/" + companyId))
+        .andExpect(status().isUnauthorized())
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(
+            jsonPath("$.message").value("Full authentication is required to access this resource"));
   }
 
   @Test
-  void getById() {
+  void shouldReturn_404_getCompanyById() throws Exception {
+    mockMvc
+        .perform(
+            get("/" + Path.API_COMPANIES + "/cf578fec-006b-4604-a5e8-5ad1b2ea2be5").with(withJwt()))
+        .andExpect(status().isNotFound())
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(
+            jsonPath("$.message")
+                .value("Company not found with id: cf578fec-006b-4604-a5e8-5ad1b2ea2be5"));
   }
 
   @Test
-  void editById() {
-  }
+  void create() {}
 
   @Test
-  void deleteById() {
-  }
+  void getAllCompanies() {}
 
   @Test
-  void filterCompanies() {
-  }
+  void getById() {}
 
   @Test
-  void getList() {
-  }
+  void editById() {}
+
+  @Test
+  void deleteById() {}
+
+  @Test
+  void filterCompanies() {}
+
+  @Test
+  void getList() {}
 }
