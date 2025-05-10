@@ -13,6 +13,19 @@ Content-Type: application/json
 }
 
 @token = {{login.response.body.jwtToken}}
+
+###
+# @name login2
+POST {{host}}/api/auth/login
+Accept: application/json
+Content-Type: application/json
+
+{
+  "username": "Georgine_Welch85182",
+  "password": "test"
+}
+
+@token = {{login2.response.body.jwtToken}}
 ###
 
 GET {{host}}/api/companies

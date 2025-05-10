@@ -13,9 +13,15 @@ spring:
   jpa:
     open-in-view: false
     hibernate:
-      ddl-auto: update # TODO change to validate when full schema will be in liquibase
+      ddl-auto: validate
     properties:
       hibernate:
-        default_schema: test
         format_sql: false
-    show-sql: true
+#    show-sql: true
+
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: DEBUG
+        orm.jdbc.bind: TRACE

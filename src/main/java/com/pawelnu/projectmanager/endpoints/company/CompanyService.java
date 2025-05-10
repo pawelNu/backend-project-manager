@@ -2,6 +2,7 @@ package com.pawelnu.projectmanager.endpoints.company;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pawelnu.projectmanager.dto.PagingAndSortingMetadataDTO;
+import com.pawelnu.projectmanager.enums.CompanyStatus;
 import com.pawelnu.projectmanager.exception.NotFoundException;
 import com.pawelnu.projectmanager.exception.model.SimpleResponse;
 import com.pawelnu.projectmanager.mapper.PagingAndSortingMapper;
@@ -51,6 +52,7 @@ public class CompanyService {
 
   public CompanyDTO createCompany(CompanyCreateRequestDTO companyCreateRequestDTO) {
     CompanyEntity companyEntity = companyMapper.toEntity(companyCreateRequestDTO);
+    companyEntity.setStatus(CompanyStatus.ACTIVE);
     CompanyEntity savedCompany = companyRepository.save(companyEntity);
     return companyMapper.toDTO(savedCompany);
   }

@@ -8,17 +8,13 @@ import com.pawelnu.projectmanager.exception.model.SimpleResponse;
 import com.pawelnu.projectmanager.utils.Path;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -43,21 +39,14 @@ public class AuthController {
   //  PasswordEncoder encoder;
 
   @PostMapping("/login")
-  public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
+  public ResponseEntity<UserInfoResponse> login(@RequestBody LoginRequest loginRequest) {
     Authentication authentication;
     log.info("Login attempt for: " + loginRequest.getUsername());
-    try {
-      authentication =
-          authenticationManager.authenticate(
-              new UsernamePasswordAuthenticationToken(
-                  loginRequest.getUsername(), loginRequest.getPassword()));
-    } catch (AuthenticationException e) {
-      log.error("StackTrace:", e);
-      Map<String, Object> map = new HashMap<>();
-      map.put("message", "Bad credentials");
-      map.put("status", false);
-      return new ResponseEntity<Object>(map, HttpStatus.NOT_FOUND);
-    }
+    //    try {
+    authentication =
+        authenticationManager.authenticate(
+            new UsernamePasswordAuthenticationToken(
+                loginRequest.getUsername(), loginRequest.getPassword()));
 
     SecurityContextHolder.getContext().setAuthentication(authentication);
 

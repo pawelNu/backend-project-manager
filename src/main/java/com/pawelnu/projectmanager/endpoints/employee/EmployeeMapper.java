@@ -3,6 +3,7 @@ package com.pawelnu.projectmanager.endpoints.employee;
 import com.pawelnu.projectmanager.config.security.services.UserDetailsDTO;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -36,7 +37,10 @@ public interface EmployeeMapper {
 
   default EmployeeRowDTO toEmployeeRowDTO(List<EmployeeAuthorityRowDTO> rows) {
     List<String> authorities =
-        rows.stream().map(EmployeeAuthorityRowDTO::getAuthorityName).collect(Collectors.toList());
+        rows.stream()
+            .map(EmployeeAuthorityRowDTO::getAuthorityName)
+            .filter(Objects::nonNull)
+            .toList();
     EmployeeAuthorityRowDTO first = rows.getFirst();
     return EmployeeRowDTO.builder()
         .userId(first.getUserId())
