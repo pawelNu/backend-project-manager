@@ -6,6 +6,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.pawelnu.projectmanager.config.security.jwt.JwtUtils;
+import com.pawelnu.projectmanager.utils.Path;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,11 +31,16 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 @Slf4j
 class CompanyControllerTest {
 
-  @Autowired private JwtUtils jwtUtils;
-  @Autowired private MockMvc mockMvc;
-  @Autowired private CompanyRepository companyRepository;
-  @Autowired private CompanyService companyService;
-  @Autowired private CompanyQueryRepository companyQueryRepository;
+  @Autowired
+  private JwtUtils jwtUtils;
+  @Autowired
+  private MockMvc mockMvc;
+  @Autowired
+  private CompanyRepository companyRepository;
+  @Autowired
+  private CompanyService companyService;
+  @Autowired
+  private CompanyQueryRepository companyQueryRepository;
   private String jwtToken;
   private UUID companyId = UUID.fromString("cf578fec-006b-4604-a5e8-5ad1b3ea2be5");
 
@@ -43,8 +49,7 @@ class CompanyControllerTest {
       new PostgreSQLContainer<>("postgres:17")
           .withDatabaseName("testdb")
           .withUsername("user")
-          .withPassword("password")
-          .withInitScript("schema.sql");
+          .withPassword("password");
 
   @DynamicPropertySource
   static void postgresProperties(DynamicPropertyRegistry registry) {
@@ -66,39 +71,42 @@ class CompanyControllerTest {
     if (jwtToken == null) {
       jwtToken = jwtUtils.generateTokenFromUsername("test");
     }
-
-    //    CompanyListResponseDTO2 companyListResponseDTO2 =
-    //        companyService.filterCompanies("", "[0,0]", "");
-    //    companyId = companyListResponseDTO2.getData().getFirst().getId();
   }
 
   @Test
   void shouldReturn_200_getCompanyById() throws Exception {
     mockMvc
-        .perform(get("/api/companies/" + companyId).with(withJwt()))
+        .perform(get(Path.API_COMPANIES + "/" + companyId).with(withJwt()))
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
         .andExpect(jsonPath("$.name").value("Hayes-Welch"));
   }
 
   @Test
-  void create() {}
+  void create() {
+  }
 
   @Test
-  void getAllCompanies() {}
+  void getAllCompanies() {
+  }
 
   @Test
-  void getById() {}
+  void getById() {
+  }
 
   @Test
-  void editById() {}
+  void editById() {
+  }
 
   @Test
-  void deleteById() {}
+  void deleteById() {
+  }
 
   @Test
-  void filterCompanies() {}
+  void filterCompanies() {
+  }
 
   @Test
-  void getList() {}
+  void getList() {
+  }
 }
