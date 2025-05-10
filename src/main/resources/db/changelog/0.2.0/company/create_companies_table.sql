@@ -7,5 +7,7 @@ nip varchar(10) not null,
 id uuid not null,
 name varchar(255) not null,
 status varchar(255) not null check (status in ('ACTIVE','TERMINATED')),
-website varchar(255) not null, primary key (id)
+website varchar(255) not null,
+primary key (id)
 )
+;

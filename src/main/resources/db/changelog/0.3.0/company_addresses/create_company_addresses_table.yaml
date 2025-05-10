@@ -1,8 +1,8 @@
 databaseChangeLog:
   - changeSet:
-      id: a272e945-6b2a-4841-8fd5-bf94617f18b2
+      id: 42c230b3-1302-4478-9522-f657ff4e6433
       author: pawelNu
       changes:
         - sqlFile:
-            path: "create_companies_table.sql"
+            path: "create_company_addresses_table.sql"
             relativeToChangelogFile: true
