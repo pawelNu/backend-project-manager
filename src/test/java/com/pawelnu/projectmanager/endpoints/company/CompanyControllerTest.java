@@ -161,7 +161,33 @@ class CompanyControllerTest {
         .andExpect(jsonPath("$.website").value(request.getWebsite()));
   }
 
-  //  TODO shouldReturn_400_createCompany
+  @Test
+  void shouldReturn_400_createCompany() throws Exception {
+    CompanyCreateRequestDTO request =
+        CompanyCreateRequestDTO.builder()
+            .name("Co")
+            .nip("test")
+            .regon("test")
+            .website("http://company-test.com")
+            .build();
+    String requestBody = objectMapper.writeValueAsString(request);
+    mockMvc
+        .perform(
+            post("/" + Path.API_COMPANIES)
+                .with(withJwt())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestBody))
+        .andExpect(status().isBadRequest())
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(jsonPath("$.errors.website").value("URL must start with https://"))
+        .andExpect(jsonPath("$.errors.nip").value("NIP must contain exactly 10 digits"))
+        .andExpect(jsonPath("$.errors.regon").value("REGON must contain exactly 9 digits"))
+        .andExpect(jsonPath("$.errors.name").value("Name must be 3-255 characters"))
+        .andExpect(
+            jsonPath("$.errors.root.serverError")
+                .value("Some of the provided values are not valid. Please fix them and retry."));
+  }
+
   //  TODO shouldReturn_401_createCompany
   //  TODO shouldReturn_403_createCompany
   //  TODO shouldReturn_404_createCompany
