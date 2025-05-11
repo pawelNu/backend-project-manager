@@ -250,7 +250,7 @@ class CompanyControllerTest {
   }
 
   @Test
-  void shouldReturn_200_getCompanyListWithFilters() throws Exception {
+  void shouldReturn_200_getCompanyList_withFilters() throws Exception {
     Map<String, String> filter = Map.of("name", "berg");
     String filterStrig = objectMapper.writeValueAsString(filter);
     MvcResult response =
@@ -266,6 +266,54 @@ class CompanyControllerTest {
     assertEquals("items 0-0/1", headerContentRange);
     assertEquals(1, responseBody.size());
     assertEquals("Padberg Inc", responseBody.getFirst().getName());
+  }
+  @Test
+  void shouldReturn_200_getCompanyList_withFiltersAndSort() throws Exception {
+    List<String> sort = List.of("name", "DESC" );
+    Map<String, String> filter = Map.of("name", "llc","status", "active");
+    String sortString = objectMapper.writeValueAsString(sort);
+    String filterStrig = objectMapper.writeValueAsString(filter);
+    MvcResult response =
+        mockMvc
+            .perform(get("/" + Path.API_COMPANIES).with(withJwt())
+                .param("sort", sortString)
+                .param("filter", filterStrig)
+            )
+            .andReturn();
+    int status = response.getResponse().getStatus();
+    String headerContentRange = response.getResponse().getHeader("Content-Range");
+    String contentAsString = response.getResponse().getContentAsString();
+    List<CompanySimpleDTO> responseBody =
+        objectMapper.readValue(contentAsString, new TypeReference<>() {});
+    assertEquals(HttpStatus.OK.value(), status);
+    assertEquals("items 0-1/2", headerContentRange);
+    assertEquals(2, responseBody.size());
+    assertEquals("Skiles LLC", responseBody.getFirst().getName());
+    assertEquals("Schiller LLC", responseBody.get(1).getName());
+  }
+  @Test
+  void shouldReturn_200_getCompanyList_withFiltersAndSort() throws Exception {
+    List<String> sort = List.of("name", "DESC" );
+    Map<String, String> filter = Map.of("name", "llc","status", "active");
+    String sortString = objectMapper.writeValueAsString(sort);
+    String filterStrig = objectMapper.writeValueAsString(filter);
+    MvcResult response =
+        mockMvc
+            .perform(get("/" + Path.API_COMPANIES).with(withJwt())
+                .param("sort", sortString)
+                .param("filter", filterStrig)
+            )
+            .andReturn();
+    int status = response.getResponse().getStatus();
+    String headerContentRange = response.getResponse().getHeader("Content-Range");
+    String contentAsString = response.getResponse().getContentAsString();
+    List<CompanySimpleDTO> responseBody =
+        objectMapper.readValue(contentAsString, new TypeReference<>() {});
+    assertEquals(HttpStatus.OK.value(), status);
+    assertEquals("items 0-1/2", headerContentRange);
+    assertEquals(2, responseBody.size());
+    assertEquals("Skiles LLC", responseBody.getFirst().getName());
+    assertEquals("Schiller LLC", responseBody.get(1).getName());
   }
 
   @Test

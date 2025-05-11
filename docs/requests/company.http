@@ -1,0 +1,24 @@
+@host=http://localhost:8080
+
+###
+
+# @name login
+POST {{host}}/api/auth/login
+Accept: application/json
+Content-Type: application/json
+
+{
+  "username": "test",
+  "password": "test"
+}
+
+@token = {{login.response.body.jwtToken}}
+
+###
+
+GET {{host}}/api/companies?sort=%5B%22name%22%2C%22DESC%22%5D&filter=%7B%22name%22%3A%22llc%22%2C%22status%22%3A%22active%22%7D
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+###

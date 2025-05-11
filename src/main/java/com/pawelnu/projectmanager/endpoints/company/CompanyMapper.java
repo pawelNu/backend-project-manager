@@ -12,6 +12,7 @@ public interface CompanyMapper {
   @Mapping(source = "status", target = "status")
   CompanyDTO toDTO(CompanyEntity companyEntity);
 
+  @Mapping(source = "status", target = "status")
   CompanySimpleDTO toSimpleDTO(CompanyEntity companyEntity);
 
   @Mapping(target = "id", ignore = true)
