@@ -10,10 +10,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pawelnu.projectmanager.config.security.jwt.JwtUtils;
+import com.pawelnu.projectmanager.exception.model.ReactAdminError;
 import com.pawelnu.projectmanager.utils.Path;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import javax.swing.text.html.HTML;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -300,10 +302,7 @@ class CompanyControllerTest {
     String rangeString = objectMapper.writeValueAsString(range);
     MvcResult response =
         mockMvc
-            .perform(
-                get("/" + Path.API_COMPANIES)
-                    .with(withJwt())
-                    .param("range", rangeString))
+            .perform(get("/" + Path.API_COMPANIES).with(withJwt()).param("range", rangeString))
             .andReturn();
     int status = response.getResponse().getStatus();
     String headerContentRange = response.getResponse().getHeader("Content-Range");
@@ -332,13 +331,15 @@ class CompanyControllerTest {
 
   @Test
   void shouldReturn_401_getCompanyList() throws Exception {
-    //  TODO tests for getList()
-    mockMvc
-        .perform(get("/" + Path.API_COMPANIES + "/" + companyId))
-        .andExpect(status().isInternalServerError())
-        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-        .andExpect(
-            jsonPath("$.message").value("Full authentication is required to access this resource"));
+    MvcResult response = mockMvc
+        .perform(get("/" + Path.API_COMPANIES)).andReturn();
+    int status = response.getResponse().getStatus();
+    String contentAsString = response.getResponse().getContentAsString();
+    ReactAdminError responseBody = objectMapper.readValue(contentAsString,
+        ReactAdminError.class);
+    assertEquals(HttpStatus.UNAUTHORIZED.value(), status);
+    ReactAdminError expectedResponse = new ReactAdminError("Full authentication is required to access this resource");
+    assertEquals(expectedResponse, responseBody);
   }
 
   @Test
