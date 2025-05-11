@@ -15,7 +15,6 @@ import com.pawelnu.projectmanager.utils.Path;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import javax.swing.text.html.HTML;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -331,25 +330,26 @@ class CompanyControllerTest {
 
   @Test
   void shouldReturn_401_getCompanyList() throws Exception {
-    MvcResult response = mockMvc
-        .perform(get("/" + Path.API_COMPANIES)).andReturn();
+    MvcResult response = mockMvc.perform(get("/" + Path.API_COMPANIES)).andReturn();
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
-    ReactAdminError responseBody = objectMapper.readValue(contentAsString,
-        ReactAdminError.class);
+    ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
     assertEquals(HttpStatus.UNAUTHORIZED.value(), status);
-    ReactAdminError expectedResponse = new ReactAdminError("Full authentication is required to access this resource");
+    ReactAdminError expectedResponse =
+        new ReactAdminError("Full authentication is required to access this resource");
     assertEquals(expectedResponse, responseBody);
   }
 
   @Test
   void shouldReturn_403_getCompanyList() throws Exception {
-    //  TODO tests for getList()
-    mockMvc
-        .perform(get("/" + Path.API_COMPANIES + "/" + companyId).with(withBadJwt()))
-        .andExpect(status().isInternalServerError())
-        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-        .andExpect(jsonPath("$.message").value("Access denied"));
+    MvcResult response = mockMvc.perform(get("/" + Path.API_COMPANIES).with(withBadJwt())).andReturn();
+    int status = response.getResponse().getStatus();
+    String contentAsString = response.getResponse().getContentAsString();
+    ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
+    assertEquals(HttpStatus.FORBIDDEN.value(), status);
+    ReactAdminError expectedResponse =
+        new ReactAdminError("Access denied");
+    assertEquals(expectedResponse, responseBody);
   }
 
   @Test
