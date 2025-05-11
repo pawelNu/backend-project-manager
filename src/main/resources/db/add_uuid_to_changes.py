@@ -1,50 +1,37 @@
 import os
-import uuid
 import re
 
-def is_uuid(s):
-  """Sprawdza, czy dany string to UUID"""
-  try:
-    val = uuid.UUID(s)
-    return str(val) == s
-  except ValueError:
-    return False
+def replace_all_ids_with_fresh_sequence(root_dir):
+  current_id = 1
+  yaml_file_paths = []
 
-def replace_id_with_uuid(root_dir):
-  seen_uuids = set()
-
+  # Zbieramy ścieżki do wszystkich .yaml
   for dirpath, _, filenames in os.walk(root_dir):
     for filename in filenames:
       if filename.endswith(".yaml"):
-        filepath = os.path.join(dirpath, filename)
-        with open(filepath, "r", encoding="utf-8") as file:
-          lines = file.readlines()
+        yaml_file_paths.append(os.path.join(dirpath, filename))
 
-        modified = False
-        new_lines = []
+  # Iterujemy po plikach w stabilnej kolejności (dla powtarzalności)
+  for filepath in sorted(yaml_file_paths):
+    with open(filepath, "r", encoding="utf-8") as file:
+      lines = file.readlines()
 
-        for line in lines:
-          match = re.match(r'^(\s*)id:\s*(.+)', line)
-          if match:
-            indent, value = match.groups()
-            value = value.strip()
-            if not is_uuid(value) or value in seen_uuids:
-              new_uuid = str(uuid.uuid4())
-              while new_uuid in seen_uuids:
-                new_uuid = str(uuid.uuid4())
-              seen_uuids.add(new_uuid)
-              new_line = f"{indent}id: {new_uuid}\n"
-              new_lines.append(new_line)
-              modified = True
-            else:
-              seen_uuids.add(value)
-              new_lines.append(line)
-          else:
-            new_lines.append(line)
+    new_lines = []
+    modified = False
 
-        if modified:
-          with open(filepath, "w", encoding="utf-8") as file:
-            file.writelines(new_lines)
-          print(f"Zmieniono ID w pliku: {filepath}")
+    for line in lines:
+      match = re.match(r'^(\s*)id:\s*.*', line)
+      if match:
+        indent = match.group(1)
+        new_lines.append(f"{indent}id: {current_id}\n")
+        current_id += 1
+        modified = True
+      else:
+        new_lines.append(line)
 
-replace_id_with_uuid("changelog")
+    if modified:
+      with open(filepath, "w", encoding="utf-8") as file:
+        file.writelines(new_lines)
+      print(f"ID-y zaktualizowane w: {filepath}")
+
+replace_all_ids_with_fresh_sequence("changelog")

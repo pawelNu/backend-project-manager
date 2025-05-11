@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: 87f429ef-4986-4593-ac30-ef29cbface4f
+      id: 5
       author: pawelNu
       changes:
         - loadUpdateData:
