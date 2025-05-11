@@ -342,13 +342,13 @@ class CompanyControllerTest {
 
   @Test
   void shouldReturn_403_getCompanyList() throws Exception {
-    MvcResult response = mockMvc.perform(get("/" + Path.API_COMPANIES).with(withBadJwt())).andReturn();
+    MvcResult response =
+        mockMvc.perform(get("/" + Path.API_COMPANIES).with(withBadJwt())).andReturn();
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
     ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
     assertEquals(HttpStatus.FORBIDDEN.value(), status);
-    ReactAdminError expectedResponse =
-        new ReactAdminError("Access denied");
+    ReactAdminError expectedResponse = new ReactAdminError("Access denied");
     assertEquals(expectedResponse, responseBody);
   }
 
