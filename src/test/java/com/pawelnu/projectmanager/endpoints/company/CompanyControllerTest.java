@@ -12,6 +12,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pawelnu.projectmanager.config.security.jwt.JwtUtils;
 import com.pawelnu.projectmanager.utils.Path;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
@@ -246,6 +247,25 @@ class CompanyControllerTest {
     assertEquals(HttpStatus.OK.value(), status);
     assertEquals("items 0-24/30", headerContentRange);
     assertEquals(25, responseBody.size());
+  }
+
+  @Test
+  void shouldReturn_200_getCompanyListWithFilters() throws Exception {
+    Map<String, String> filter = Map.of("name", "berg");
+    String filterStrig = objectMapper.writeValueAsString(filter);
+    MvcResult response =
+        mockMvc
+            .perform(get("/" + Path.API_COMPANIES).with(withJwt()).param("filter", filterStrig))
+            .andReturn();
+    int status = response.getResponse().getStatus();
+    String headerContentRange = response.getResponse().getHeader("Content-Range");
+    String contentAsString = response.getResponse().getContentAsString();
+    List<CompanySimpleDTO> responseBody =
+        objectMapper.readValue(contentAsString, new TypeReference<>() {});
+    assertEquals(HttpStatus.OK.value(), status);
+    assertEquals("items 0-0/1", headerContentRange);
+    assertEquals(1, responseBody.size());
+    assertEquals("Padberg Inc", responseBody.getFirst().getName());
   }
 
   @Test
