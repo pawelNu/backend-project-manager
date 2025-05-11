@@ -55,8 +55,9 @@ public class CompanyQueryRepository {
     BooleanBuilder allConditions = new BooleanBuilder();
 
     if (filters.containsKey(company.name.getMetadata().getName())) {
-      allConditions.and(company.name.likeIgnoreCase(
-          "%" + filters.get(company.name.getMetadata().getName()) + "%"));
+      allConditions.and(
+          company.name.likeIgnoreCase(
+              "%" + filters.get(company.name.getMetadata().getName()) + "%"));
     }
     if (filters.containsKey(company.nip.getMetadata().getName())) {
       allConditions.and(company.nip.eq(filters.get(company.nip.getMetadata().getName())));
@@ -65,8 +66,11 @@ public class CompanyQueryRepository {
       allConditions.and(company.regon.eq(filters.get(company.regon.getMetadata().getName())));
     }
     if (filters.containsKey(company.status.getMetadata().getName())) {
-      allConditions.and(company.status.stringValue().likeIgnoreCase(
-          (filters.get(company.status.getMetadata().getName()))));
+      allConditions.and(
+          company
+              .status
+              .stringValue()
+              .likeIgnoreCase((filters.get(company.status.getMetadata().getName()))));
     }
     if (sortDir == null || sortDir.isEmpty()) {
       sortDir = "ASC";
