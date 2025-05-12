@@ -41,6 +41,9 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 @Slf4j
 class CompanyControllerTest {
 
+  public static final String INVALID_UUID =
+      "Method parameter 'id': Failed to convert value of type 'java.lang.String' to required type"
+          + " 'java.util.UUID'; Invalid UUID string: invalid-uuid";
   @Autowired private JwtUtils jwtUtils;
   @Autowired private MockMvc mockMvc;
   @Autowired private CompanyRepository companyRepository;
@@ -106,15 +109,16 @@ class CompanyControllerTest {
 
   @Test
   void shouldReturn_400_getCompanyById() throws Exception {
-    mockMvc
-        .perform(get("/" + Path.API_COMPANIES + "/invalid-uuid").with(withJwt()))
-        .andExpect(status().isBadRequest())
-        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-        .andExpect(
-            jsonPath("$.message")
-                .value(
-                    "Method parameter 'id': Failed to convert value of type 'java.lang.String' to"
-                        + " required type 'java.util.UUID'; Invalid UUID string: invalid-uuid"));
+    MvcResult response =
+        mockMvc
+            .perform(get("/" + Path.API_COMPANIES + "/invalid-uuid").with(withJwt()))
+            .andReturn();
+    int status = response.getResponse().getStatus();
+    String contentAsString = response.getResponse().getContentAsString();
+    Map<String, String> responseBody =
+        objectMapper.readValue(contentAsString, new TypeReference<>() {});
+    assertEquals(HttpStatus.BAD_REQUEST.value(), status);
+    assertEquals(INVALID_UUID, responseBody.get("message"));
   }
 
   @Test
@@ -394,33 +398,34 @@ class CompanyControllerTest {
 
   @Test
   void shouldReturn_400_editCompanyById() throws Exception {
-    CompanyCreateRequestDTO request =
-        CompanyCreateRequestDTO.builder()
-            .name("Co")
-            .nip("test")
-            .regon("test")
-            .website("http://company-test.com")
+    String companyId = "invalid-uuid";
+    CompanyEditRequestDTO request =
+        CompanyEditRequestDTO.builder()
+            .name("Updated company")
+            .nip("9999999999")
+            .regon("111111111")
+            .website("https://updated-company.com")
             .build();
     String requestBody = objectMapper.writeValueAsString(request);
-    mockMvc
-        .perform(
-            post("/" + Path.API_COMPANIES)
-                .with(withJwt())
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(requestBody))
-        .andExpect(status().isBadRequest())
-        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-        .andExpect(jsonPath("$.errors.website").value("URL must start with https://"))
-        .andExpect(jsonPath("$.errors.nip").value("NIP must contain exactly 10 digits"))
-        .andExpect(jsonPath("$.errors.regon").value("REGON must contain exactly 9 digits"))
-        .andExpect(jsonPath("$.errors.name").value("Name must be 3-255 characters"))
-        .andExpect(
-            jsonPath("$.errors.root.serverError")
-                .value("Some of the provided values are not valid. Please fix them and retry."));
+    MvcResult response =
+        mockMvc
+            .perform(
+                put("/" + Path.API_COMPANIES + "/" + companyId)
+                    .with(withJwt())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(requestBody))
+            .andReturn();
+    int status = response.getResponse().getStatus();
+    String contentAsString = response.getResponse().getContentAsString();
+    Map<String, String> responseBody =
+        objectMapper.readValue(contentAsString, new TypeReference<>() {});
+    assertEquals(HttpStatus.BAD_REQUEST.value(), status);
+    assertEquals(INVALID_UUID, responseBody.get("message"));
   }
 
   @Test
   void shouldReturn_401_editCompanyById() throws Exception {
+//    TODO
     CompanyCreateRequestDTO request =
         CompanyCreateRequestDTO.builder()
             .name("Co")
@@ -442,6 +447,7 @@ class CompanyControllerTest {
 
   @Test
   void shouldReturn_403_editCompanyById() throws Exception {
+    //    TODO
     CompanyCreateRequestDTO request =
         CompanyCreateRequestDTO.builder()
             .name("Company test")
