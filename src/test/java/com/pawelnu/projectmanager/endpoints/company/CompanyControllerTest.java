@@ -11,12 +11,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pawelnu.projectmanager.config.security.jwt.JwtUtils;
+import com.pawelnu.projectmanager.exception.NotFoundException;
 import com.pawelnu.projectmanager.exception.model.ReactAdminError;
 import com.pawelnu.projectmanager.utils.Path;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +49,7 @@ class CompanyControllerTest {
   public static final String FULL_AUTH_IS_REQUIRED =
       "Full authentication is required to access this resource";
   public static final String ACCESS_DENIED = "Access denied";
+  public static final String COMPANY_NOT_FOUND_WITH_ID = "Company not found with id: ";
   @Autowired private JwtUtils jwtUtils;
   @Autowired private MockMvc mockMvc;
   @Autowired private CompanyRepository companyRepository;
@@ -138,23 +141,30 @@ class CompanyControllerTest {
 
   @Test
   void shouldReturn_403_getCompanyById() throws Exception {
-    mockMvc
-        .perform(get("/" + Path.API_COMPANIES + "/" + companyId).with(withBadJwt()))
-        .andExpect(status().isForbidden())
-        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-        .andExpect(jsonPath("$.message").value("Access denied"));
+    MvcResult response =
+        mockMvc
+            .perform(get("/" + Path.API_COMPANIES + "/" + companyId).with(withBadJwt()))
+            .andReturn();
+    int status = response.getResponse().getStatus();
+    String contentAsString = response.getResponse().getContentAsString();
+    ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
+    assertEquals(HttpStatus.FORBIDDEN.value(), status);
+    assertEquals(accessDeniedError(), responseBody);
   }
 
   @Test
   void shouldReturn_404_getCompanyById() throws Exception {
-    mockMvc
-        .perform(
-            get("/" + Path.API_COMPANIES + "/cf578fec-006b-4604-a5e8-5ad1b2ea2be5").with(withJwt()))
-        .andExpect(status().isNotFound())
-        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-        .andExpect(
-            jsonPath("$.message")
-                .value("Company not found with id: cf578fec-006b-4604-a5e8-5ad1b2ea2be5"));
+    String companyId = "cf578fec-006b-4604-a5e8-5ad1b2ea2be5";
+    MvcResult response =
+        mockMvc
+            .perform(get("/" + Path.API_COMPANIES + "/" + companyId).with(withJwt()))
+            .andReturn();
+    int status = response.getResponse().getStatus();
+    String contentAsString = response.getResponse().getContentAsString();
+    NotFoundException responseBody =
+        objectMapper.readValue(contentAsString, NotFoundException.class);
+    assertEquals(HttpStatus.NOT_FOUND.value(), status);
+    assertEquals(COMPANY_NOT_FOUND_WITH_ID + companyId, responseBody.getMessage());
   }
 
   @Test
@@ -244,15 +254,24 @@ class CompanyControllerTest {
             .website("https://company-test.com")
             .build();
     String requestBody = objectMapper.writeValueAsString(request);
-    mockMvc
-        .perform(
-            post("/" + Path.API_COMPANIES)
-                .with(withBadJwt())
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(requestBody))
-        .andExpect(status().isForbidden())
-        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-        .andExpect(jsonPath("$.message").value("Access denied"));
+    MvcResult response =
+        mockMvc
+            .perform(
+                post("/" + Path.API_COMPANIES)
+                    .with(withBadJwt())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(requestBody))
+            .andReturn();
+    int status = response.getResponse().getStatus();
+    String contentAsString = response.getResponse().getContentAsString();
+    ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
+    assertEquals(HttpStatus.FORBIDDEN.value(), status);
+    assertEquals(accessDeniedError(), responseBody);
+  }
+
+  @NotNull
+  private static ReactAdminError accessDeniedError() {
+    return new ReactAdminError("Access denied");
   }
 
   @Test
@@ -370,8 +389,7 @@ class CompanyControllerTest {
     String contentAsString = response.getResponse().getContentAsString();
     ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
     assertEquals(HttpStatus.FORBIDDEN.value(), status);
-    ReactAdminError expectedResponse = new ReactAdminError("Access denied");
-    assertEquals(expectedResponse, responseBody);
+    assertEquals(accessDeniedError(), responseBody);
   }
 
   @Test
@@ -434,6 +452,7 @@ class CompanyControllerTest {
 
   @Test
   void shouldReturn_401_editCompanyById() throws Exception {
+    String companyId = "ac1da9e4-7e4b-42ab-b9a5-b87cc4f30c2c";
     CompanyCreateRequestDTO request =
         CompanyCreateRequestDTO.builder()
             .name("Co")
@@ -445,7 +464,7 @@ class CompanyControllerTest {
     MvcResult response =
         mockMvc
             .perform(
-                post("/" + Path.API_COMPANIES)
+                put("/" + Path.API_COMPANIES + "/" + companyId)
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(requestBody))
             .andReturn();
@@ -459,7 +478,7 @@ class CompanyControllerTest {
 
   @Test
   void shouldReturn_403_editCompanyById() throws Exception {
-    //    TODO
+    String companyId = "ac1da9e4-7e4b-42ab-b9a5-b87cc4f30c2c";
     CompanyCreateRequestDTO request =
         CompanyCreateRequestDTO.builder()
             .name("Company test")
@@ -468,20 +487,49 @@ class CompanyControllerTest {
             .website("https://company-test.com")
             .build();
     String requestBody = objectMapper.writeValueAsString(request);
-    MvcResult response = mockMvc
-        .perform(
-            post("/" + Path.API_COMPANIES)
-                .with(withBadJwt())
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(requestBody)).andReturn();
+    MvcResult response =
+        mockMvc
+            .perform(
+                put("/" + Path.API_COMPANIES + "/" + companyId)
+                    .with(withBadJwt())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(requestBody))
+            .andReturn();
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
-    Map<String, String> responseBody =
-        objectMapper.readValue(contentAsString, new TypeReference<>() {});
+    ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
     assertEquals(HttpStatus.FORBIDDEN.value(), status);
-    assertEquals(ACCESS_DENIED, responseBody.get("message"));
+    assertEquals(accessDeniedError(), responseBody);
   }
 
   @Test
-  void deleteById() {}
+  void shouldReturn_404_editCompanyById() throws Exception {
+    String companyId = "ac1da9e4-7e4b-42ab-b7a5-b87cc4f30c2c";
+    CompanyEditRequestDTO request =
+        CompanyEditRequestDTO.builder()
+            .name("Updated company")
+            .nip("9999999999")
+            .regon("111111111")
+            .website("https://updated-company.com")
+            .build();
+    String requestBody = objectMapper.writeValueAsString(request);
+    MvcResult response =
+        mockMvc
+            .perform(
+                put("/" + Path.API_COMPANIES + "/" + companyId)
+                    .with(withJwt())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(requestBody))
+            .andReturn();
+    int status = response.getResponse().getStatus();
+    String contentAsString = response.getResponse().getContentAsString();
+    ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
+    assertEquals(HttpStatus.NOT_FOUND.value(), status);
+    assertEquals(COMPANY_NOT_FOUND_WITH_ID + companyId, responseBody.getMessage());
+  }
+
+  @Test
+  void deleteById() {
+//    TODO
+  }
 }
