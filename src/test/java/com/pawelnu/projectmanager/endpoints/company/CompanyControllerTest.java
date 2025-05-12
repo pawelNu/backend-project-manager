@@ -530,7 +530,12 @@ class CompanyControllerTest {
 
   @Test
   void shouldReturn_200_deleteCompanyById() throws Exception {
-    //    TODO fix Body = {"message":"could not execute statement [ERROR: update or delete on table \"companies\" violates foreign key constraint \"fk_company_addresses_and_companies\" on table \"company_addresses\"\n  Detail: Key (id)=(4c7a2cc5-1e03-4337-8901-93c0b46585af) is still referenced from table \"company_addresses\".] [delete from companies where id=? and version=?]; SQL [delete from companies where id=? and version=?]; constraint [fk_company_addresses_and_companies]"}
+    //    TODO fix Body = {"message":"could not execute statement [ERROR: update or delete on table
+    // \"companies\" violates foreign key constraint \"fk_company_addresses_and_companies\" on table
+    // \"company_addresses\"\n  Detail: Key (id)=(4c7a2cc5-1e03-4337-8901-93c0b46585af) is still
+    // referenced from table \"company_addresses\".] [delete from companies where id=? and
+    // version=?]; SQL [delete from companies where id=? and version=?]; constraint
+    // [fk_company_addresses_and_companies]"}
     String companyId = "4c7a2cc5-1e03-4337-8901-93c0b46585af";
     MvcResult response =
         mockMvc
