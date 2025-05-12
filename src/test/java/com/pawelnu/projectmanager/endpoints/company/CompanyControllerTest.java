@@ -1,7 +1,6 @@
 package com.pawelnu.projectmanager.endpoints.company;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -531,7 +530,7 @@ class CompanyControllerTest {
 
   @Test
   void shouldReturn_200_deleteCompanyById() throws Exception {
-//    TODO 
+    //    TODO fix Body = {"message":"could not execute statement [ERROR: update or delete on table \"companies\" violates foreign key constraint \"fk_company_addresses_and_companies\" on table \"company_addresses\"\n  Detail: Key (id)=(4c7a2cc5-1e03-4337-8901-93c0b46585af) is still referenced from table \"company_addresses\".] [delete from companies where id=? and version=?]; SQL [delete from companies where id=? and version=?]; constraint [fk_company_addresses_and_companies]"}
     String companyId = "4c7a2cc5-1e03-4337-8901-93c0b46585af";
     MvcResult response =
         mockMvc
@@ -546,6 +545,7 @@ class CompanyControllerTest {
     assertEquals(HttpStatus.OK.value(), status);
     assertEquals("", responseBody.getMessage());
   }
+
   @Test
   void shouldReturn_400_deleteCompanyById() throws Exception {
     String companyId = "4c7a2cc5-1e03-4337-8901-93c0b46585af";
@@ -562,6 +562,7 @@ class CompanyControllerTest {
     assertEquals(HttpStatus.OK.value(), status);
     assertEquals("", responseBody.getMessage());
   }
+
   @Test
   void shouldReturn_401_deleteCompanyById() throws Exception {
     String companyId = "4c7a2cc5-1e03-4337-8901-93c0b46585af";
@@ -577,6 +578,7 @@ class CompanyControllerTest {
     assertEquals(HttpStatus.UNAUTHORIZED.value(), status);
     assertEquals(FULL_AUTH_IS_REQUIRED, responseBody.getMessage());
   }
+
   @Test
   void shouldReturn_403_deleteCompanyById() throws Exception {
     String companyId = "4c7a2cc5-1e03-4337-8901-93c0b46585af";
@@ -593,6 +595,7 @@ class CompanyControllerTest {
     assertEquals(HttpStatus.FORBIDDEN.value(), status);
     assertEquals(accessDeniedError(), responseBody);
   }
+
   @Test
   void shouldReturn_404_deleteCompanyById() throws Exception {
     String companyId = "4c7a6cc5-1e03-4337-8901-93c0b46585af";
