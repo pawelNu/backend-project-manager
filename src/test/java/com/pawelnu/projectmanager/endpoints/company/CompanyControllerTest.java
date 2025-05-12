@@ -1,6 +1,7 @@
 package com.pawelnu.projectmanager.endpoints.company;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -133,10 +134,9 @@ class CompanyControllerTest {
         mockMvc.perform(get("/" + Path.API_COMPANIES + "/" + companyId)).andReturn();
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
-    Map<String, String> responseBody =
-        objectMapper.readValue(contentAsString, new TypeReference<>() {});
-    assertEquals(HttpStatus.CREATED.value(), status);
-    assertEquals(FULL_AUTH_IS_REQUIRED, responseBody.get("message"));
+    ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
+    assertEquals(HttpStatus.UNAUTHORIZED.value(), status);
+    assertEquals(FULL_AUTH_IS_REQUIRED, responseBody.getMessage());
   }
 
   @Test
@@ -238,10 +238,9 @@ class CompanyControllerTest {
             .andReturn();
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
-    Map<String, String> responseBody =
-        objectMapper.readValue(contentAsString, new TypeReference<>() {});
-    assertEquals(HttpStatus.CREATED.value(), status);
-    assertEquals(FULL_AUTH_IS_REQUIRED, responseBody.get("message"));
+    ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
+    assertEquals(HttpStatus.UNAUTHORIZED.value(), status);
+    assertEquals(FULL_AUTH_IS_REQUIRED, responseBody.getMessage());
   }
 
   @Test
@@ -531,5 +530,6 @@ class CompanyControllerTest {
   @Test
   void deleteById() {
     //    TODO
+    fail();
   }
 }
