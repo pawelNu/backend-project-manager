@@ -46,6 +46,7 @@ class CompanyControllerTest {
           + " 'java.util.UUID'; Invalid UUID string: invalid-uuid";
   public static final String FULL_AUTH_IS_REQUIRED =
       "Full authentication is required to access this resource";
+  public static final String ACCESS_DENIED = "Access denied";
   @Autowired private JwtUtils jwtUtils;
   @Autowired private MockMvc mockMvc;
   @Autowired private CompanyRepository companyRepository;
@@ -433,7 +434,6 @@ class CompanyControllerTest {
 
   @Test
   void shouldReturn_401_editCompanyById() throws Exception {
-    //    TODO
     CompanyCreateRequestDTO request =
         CompanyCreateRequestDTO.builder()
             .name("Co")
@@ -453,7 +453,7 @@ class CompanyControllerTest {
     String contentAsString = response.getResponse().getContentAsString();
     Map<String, String> responseBody =
         objectMapper.readValue(contentAsString, new TypeReference<>() {});
-    assertEquals(HttpStatus.CREATED.value(), status);
+    assertEquals(HttpStatus.UNAUTHORIZED.value(), status);
     assertEquals(FULL_AUTH_IS_REQUIRED, responseBody.get("message"));
   }
 
@@ -468,15 +468,18 @@ class CompanyControllerTest {
             .website("https://company-test.com")
             .build();
     String requestBody = objectMapper.writeValueAsString(request);
-    mockMvc
+    MvcResult response = mockMvc
         .perform(
             post("/" + Path.API_COMPANIES)
                 .with(withBadJwt())
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(requestBody))
-        .andExpect(status().isForbidden())
-        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-        .andExpect(jsonPath("$.message").value("Access denied"));
+                .content(requestBody)).andReturn();
+    int status = response.getResponse().getStatus();
+    String contentAsString = response.getResponse().getContentAsString();
+    Map<String, String> responseBody =
+        objectMapper.readValue(contentAsString, new TypeReference<>() {});
+    assertEquals(HttpStatus.FORBIDDEN.value(), status);
+    assertEquals(ACCESS_DENIED, responseBody.get("message"));
   }
 
   @Test
