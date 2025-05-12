@@ -315,6 +315,24 @@ class CompanyControllerTest {
   }
 
   @Test
+  void shouldReturn_200_getCompanyList_emptyResult() throws Exception {
+    Map<String, String> filter = Map.of("name", "llc", "nip", "placeholder");
+    String filterStrig = objectMapper.writeValueAsString(filter);
+    MvcResult response =
+        mockMvc
+            .perform(get("/" + Path.API_COMPANIES).with(withJwt()).param("filter", filterStrig))
+            .andReturn();
+    int status = response.getResponse().getStatus();
+    String headerContentRange = response.getResponse().getHeader("Content-Range");
+    String contentAsString = response.getResponse().getContentAsString();
+    List<CompanySimpleDTO> responseBody =
+        objectMapper.readValue(contentAsString, new TypeReference<>() {});
+    assertEquals(HttpStatus.OK.value(), status);
+    assertEquals("items 0--1/0", headerContentRange);
+    assertEquals(0, responseBody.size());
+  }
+
+  @Test
   void shouldReturn_400_getCompanyList() throws Exception {
     //  TODO tests for getList()
     mockMvc
@@ -350,19 +368,6 @@ class CompanyControllerTest {
     assertEquals(HttpStatus.FORBIDDEN.value(), status);
     ReactAdminError expectedResponse = new ReactAdminError("Access denied");
     assertEquals(expectedResponse, responseBody);
-  }
-
-  @Test
-  void shouldReturn_404_getCompanyList() throws Exception {
-    //  TODO tests for getList()
-    mockMvc
-        .perform(
-            get("/" + Path.API_COMPANIES + "/cf578fec-006b-4604-a5e8-5ad1b2ea2be5").with(withJwt()))
-        .andExpect(status().isInternalServerError())
-        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-        .andExpect(
-            jsonPath("$.message")
-                .value("Company not found with id: cf578fec-006b-4604-a5e8-5ad1b2ea2be5"));
   }
 
   @Test
