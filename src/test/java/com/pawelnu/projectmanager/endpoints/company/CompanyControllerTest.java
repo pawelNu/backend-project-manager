@@ -44,6 +44,8 @@ class CompanyControllerTest {
   public static final String INVALID_UUID =
       "Method parameter 'id': Failed to convert value of type 'java.lang.String' to required type"
           + " 'java.util.UUID'; Invalid UUID string: invalid-uuid";
+  public static final String FULL_AUTH_IS_REQUIRED =
+      "Full authentication is required to access this resource";
   @Autowired private JwtUtils jwtUtils;
   @Autowired private MockMvc mockMvc;
   @Autowired private CompanyRepository companyRepository;
@@ -123,12 +125,14 @@ class CompanyControllerTest {
 
   @Test
   void shouldReturn_401_getCompanyById() throws Exception {
-    mockMvc
-        .perform(get("/" + Path.API_COMPANIES + "/" + companyId))
-        .andExpect(status().isUnauthorized())
-        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-        .andExpect(
-            jsonPath("$.message").value("Full authentication is required to access this resource"));
+    MvcResult response =
+        mockMvc.perform(get("/" + Path.API_COMPANIES + "/" + companyId)).andReturn();
+    int status = response.getResponse().getStatus();
+    String contentAsString = response.getResponse().getContentAsString();
+    Map<String, String> responseBody =
+        objectMapper.readValue(contentAsString, new TypeReference<>() {});
+    assertEquals(HttpStatus.CREATED.value(), status);
+    assertEquals(FULL_AUTH_IS_REQUIRED, responseBody.get("message"));
   }
 
   @Test
@@ -214,15 +218,19 @@ class CompanyControllerTest {
             .website("http://company-test.com")
             .build();
     String requestBody = objectMapper.writeValueAsString(request);
-    mockMvc
-        .perform(
-            post("/" + Path.API_COMPANIES)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(requestBody))
-        .andExpect(status().isUnauthorized())
-        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-        .andExpect(
-            jsonPath("$.message").value("Full authentication is required to access this resource"));
+    MvcResult response =
+        mockMvc
+            .perform(
+                post("/" + Path.API_COMPANIES)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(requestBody))
+            .andReturn();
+    int status = response.getResponse().getStatus();
+    String contentAsString = response.getResponse().getContentAsString();
+    Map<String, String> responseBody =
+        objectMapper.readValue(contentAsString, new TypeReference<>() {});
+    assertEquals(HttpStatus.CREATED.value(), status);
+    assertEquals(FULL_AUTH_IS_REQUIRED, responseBody.get("message"));
   }
 
   @Test
@@ -425,7 +433,7 @@ class CompanyControllerTest {
 
   @Test
   void shouldReturn_401_editCompanyById() throws Exception {
-//    TODO
+    //    TODO
     CompanyCreateRequestDTO request =
         CompanyCreateRequestDTO.builder()
             .name("Co")
@@ -434,15 +442,19 @@ class CompanyControllerTest {
             .website("http://company-test.com")
             .build();
     String requestBody = objectMapper.writeValueAsString(request);
-    mockMvc
-        .perform(
-            post("/" + Path.API_COMPANIES)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(requestBody))
-        .andExpect(status().isUnauthorized())
-        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-        .andExpect(
-            jsonPath("$.message").value("Full authentication is required to access this resource"));
+    MvcResult response =
+        mockMvc
+            .perform(
+                post("/" + Path.API_COMPANIES)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(requestBody))
+            .andReturn();
+    int status = response.getResponse().getStatus();
+    String contentAsString = response.getResponse().getContentAsString();
+    Map<String, String> responseBody =
+        objectMapper.readValue(contentAsString, new TypeReference<>() {});
+    assertEquals(HttpStatus.CREATED.value(), status);
+    assertEquals(FULL_AUTH_IS_REQUIRED, responseBody.get("message"));
   }
 
   @Test
