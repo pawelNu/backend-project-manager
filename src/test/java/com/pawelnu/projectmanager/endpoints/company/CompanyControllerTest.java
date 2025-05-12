@@ -2,6 +2,7 @@ package com.pawelnu.projectmanager.endpoints.company;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -14,6 +15,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pawelnu.projectmanager.config.security.jwt.JwtUtils;
 import com.pawelnu.projectmanager.exception.NotFoundException;
 import com.pawelnu.projectmanager.exception.model.ReactAdminError;
+import com.pawelnu.projectmanager.exception.model.SimpleResponse;
 import com.pawelnu.projectmanager.utils.Path;
 import java.util.List;
 import java.util.Map;
@@ -528,8 +530,83 @@ class CompanyControllerTest {
   }
 
   @Test
-  void deleteById() {
-    //    TODO
-    fail();
+  void shouldReturn_200_deleteCompanyById() throws Exception {
+//    TODO 
+    String companyId = "4c7a2cc5-1e03-4337-8901-93c0b46585af";
+    MvcResult response =
+        mockMvc
+            .perform(
+                delete("/" + Path.API_COMPANIES + "/" + companyId)
+                    .with(withJwt())
+                    .contentType(MediaType.APPLICATION_JSON))
+            .andReturn();
+    int status = response.getResponse().getStatus();
+    String contentAsString = response.getResponse().getContentAsString();
+    SimpleResponse responseBody = objectMapper.readValue(contentAsString, SimpleResponse.class);
+    assertEquals(HttpStatus.OK.value(), status);
+    assertEquals("", responseBody.getMessage());
+  }
+  @Test
+  void shouldReturn_400_deleteCompanyById() throws Exception {
+    String companyId = "4c7a2cc5-1e03-4337-8901-93c0b46585af";
+    MvcResult response =
+        mockMvc
+            .perform(
+                delete("/" + Path.API_COMPANIES + "/" + companyId)
+                    .with(withJwt())
+                    .contentType(MediaType.APPLICATION_JSON))
+            .andReturn();
+    int status = response.getResponse().getStatus();
+    String contentAsString = response.getResponse().getContentAsString();
+    SimpleResponse responseBody = objectMapper.readValue(contentAsString, SimpleResponse.class);
+    assertEquals(HttpStatus.OK.value(), status);
+    assertEquals("", responseBody.getMessage());
+  }
+  @Test
+  void shouldReturn_401_deleteCompanyById() throws Exception {
+    String companyId = "4c7a2cc5-1e03-4337-8901-93c0b46585af";
+    MvcResult response =
+        mockMvc
+            .perform(
+                delete("/" + Path.API_COMPANIES + "/" + companyId)
+                    .contentType(MediaType.APPLICATION_JSON))
+            .andReturn();
+    int status = response.getResponse().getStatus();
+    String contentAsString = response.getResponse().getContentAsString();
+    ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
+    assertEquals(HttpStatus.UNAUTHORIZED.value(), status);
+    assertEquals(FULL_AUTH_IS_REQUIRED, responseBody.getMessage());
+  }
+  @Test
+  void shouldReturn_403_deleteCompanyById() throws Exception {
+    String companyId = "4c7a2cc5-1e03-4337-8901-93c0b46585af";
+    MvcResult response =
+        mockMvc
+            .perform(
+                delete("/" + Path.API_COMPANIES + "/" + companyId)
+                    .with(withBadJwt())
+                    .contentType(MediaType.APPLICATION_JSON))
+            .andReturn();
+    int status = response.getResponse().getStatus();
+    String contentAsString = response.getResponse().getContentAsString();
+    ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
+    assertEquals(HttpStatus.FORBIDDEN.value(), status);
+    assertEquals(accessDeniedError(), responseBody);
+  }
+  @Test
+  void shouldReturn_404_deleteCompanyById() throws Exception {
+    String companyId = "4c7a6cc5-1e03-4337-8901-93c0b46585af";
+    MvcResult response =
+        mockMvc
+            .perform(
+                delete("/" + Path.API_COMPANIES + "/" + companyId)
+                    .with(withJwt())
+                    .contentType(MediaType.APPLICATION_JSON))
+            .andReturn();
+    int status = response.getResponse().getStatus();
+    String contentAsString = response.getResponse().getContentAsString();
+    ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
+    assertEquals(HttpStatus.NOT_FOUND.value(), status);
+    assertEquals(COMPANY_NOT_FOUND_WITH_ID + companyId, responseBody.getMessage());
   }
 }
