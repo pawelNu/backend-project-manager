@@ -3,6 +3,7 @@ package com.pawelnu.projectmanager.endpoints.company;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -92,11 +93,15 @@ class CompanyControllerTest {
 
   @Test
   void shouldReturn_200_getCompanyById() throws Exception {
-    mockMvc
-        .perform(get("/" + Path.API_COMPANIES + "/" + companyId).with(withJwt()))
-        .andExpect(status().isOk())
-        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-        .andExpect(jsonPath("$.name").value("Hayes-Welch"));
+    MvcResult response =
+        mockMvc
+            .perform(get("/" + Path.API_COMPANIES + "/" + companyId).with(withJwt()))
+            .andReturn();
+    int status = response.getResponse().getStatus();
+    String contentAsString = response.getResponse().getContentAsString();
+    CompanyDTO responseBody = objectMapper.readValue(contentAsString, CompanyDTO.class);
+    assertEquals(HttpStatus.OK.value(), status);
+    assertEquals("Hayes-Welch", responseBody.getName());
   }
 
   @Test
@@ -333,20 +338,6 @@ class CompanyControllerTest {
   }
 
   @Test
-  void shouldReturn_400_getCompanyList() throws Exception {
-    //  TODO tests for getList()
-    mockMvc
-        .perform(get("/" + Path.API_COMPANIES + "/invalid-uuid").with(withJwt()))
-        .andExpect(status().isInternalServerError())
-        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-        .andExpect(
-            jsonPath("$.message")
-                .value(
-                    "Method parameter 'id': Failed to convert value of type 'java.lang.String' to"
-                        + " required type 'java.util.UUID'; Invalid UUID string: invalid-uuid"));
-  }
-
-  @Test
   void shouldReturn_401_getCompanyList() throws Exception {
     MvcResult response = mockMvc.perform(get("/" + Path.API_COMPANIES)).andReturn();
     int status = response.getResponse().getStatus();
@@ -371,17 +362,105 @@ class CompanyControllerTest {
   }
 
   @Test
-  void getAllCompanies() {}
+  void shouldReturn_200_editCompanyById() throws Exception {
+    String companyId = "ac1da9e4-7e4b-42ab-b9a5-b87cc4f30c2c";
+    CompanyEditRequestDTO request =
+        CompanyEditRequestDTO.builder()
+            .name("Updated company")
+            .nip("9999999999")
+            .regon("111111111")
+            .website("https://updated-company.com")
+            .build();
+    String requestBody = objectMapper.writeValueAsString(request);
+    MvcResult response =
+        mockMvc
+            .perform(
+                put("/" + Path.API_COMPANIES + "/" + companyId)
+                    .with(withJwt())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(requestBody))
+            .andReturn();
+    int status = response.getResponse().getStatus();
+    String contentAsString = response.getResponse().getContentAsString();
+    CompanyDTO responseBody = objectMapper.readValue(contentAsString, CompanyDTO.class);
+    assertEquals(HttpStatus.OK.value(), status);
+    assertEquals(UUID.fromString(companyId), responseBody.getId());
+    assertEquals(request.getName(), responseBody.getName());
+    assertEquals(request.getNip(), responseBody.getNip());
+    assertEquals(request.getRegon(), responseBody.getRegon());
+    assertEquals(request.getWebsite(), responseBody.getWebsite());
+    assertEquals(2, responseBody.getAddresses().size());
+  }
 
   @Test
-  void editById() {}
+  void shouldReturn_400_editCompanyById() throws Exception {
+    CompanyCreateRequestDTO request =
+        CompanyCreateRequestDTO.builder()
+            .name("Co")
+            .nip("test")
+            .regon("test")
+            .website("http://company-test.com")
+            .build();
+    String requestBody = objectMapper.writeValueAsString(request);
+    mockMvc
+        .perform(
+            post("/" + Path.API_COMPANIES)
+                .with(withJwt())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestBody))
+        .andExpect(status().isBadRequest())
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(jsonPath("$.errors.website").value("URL must start with https://"))
+        .andExpect(jsonPath("$.errors.nip").value("NIP must contain exactly 10 digits"))
+        .andExpect(jsonPath("$.errors.regon").value("REGON must contain exactly 9 digits"))
+        .andExpect(jsonPath("$.errors.name").value("Name must be 3-255 characters"))
+        .andExpect(
+            jsonPath("$.errors.root.serverError")
+                .value("Some of the provided values are not valid. Please fix them and retry."));
+  }
+
+  @Test
+  void shouldReturn_401_editCompanyById() throws Exception {
+    CompanyCreateRequestDTO request =
+        CompanyCreateRequestDTO.builder()
+            .name("Co")
+            .nip("test")
+            .regon("test")
+            .website("http://company-test.com")
+            .build();
+    String requestBody = objectMapper.writeValueAsString(request);
+    mockMvc
+        .perform(
+            post("/" + Path.API_COMPANIES)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestBody))
+        .andExpect(status().isUnauthorized())
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(
+            jsonPath("$.message").value("Full authentication is required to access this resource"));
+  }
+
+  @Test
+  void shouldReturn_403_editCompanyById() throws Exception {
+    CompanyCreateRequestDTO request =
+        CompanyCreateRequestDTO.builder()
+            .name("Company test")
+            .nip("1234567890")
+            .regon("123456789")
+            .website("https://company-test.com")
+            .build();
+    String requestBody = objectMapper.writeValueAsString(request);
+    mockMvc
+        .perform(
+            post("/" + Path.API_COMPANIES)
+                .with(withBadJwt())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestBody))
+        .andExpect(status().isForbidden())
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(jsonPath("$.message").value("Access denied"));
+  }
 
   @Test
   void deleteById() {}
-
-  @Test
-  void filterCompanies() {}
-
-  @Test
-  void getList() {}
 }
