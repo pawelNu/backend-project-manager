@@ -529,13 +529,7 @@ class CompanyControllerTest {
   }
 
   @Test
-  void shouldReturn_200_deleteCompanyById() throws Exception {
-    //    TODO fix Body = {"message":"could not execute statement [ERROR: update or delete on table
-    // \"companies\" violates foreign key constraint \"fk_company_addresses_and_companies\" on table
-    // \"company_addresses\"\n  Detail: Key (id)=(4c7a2cc5-1e03-4337-8901-93c0b46585af) is still
-    // referenced from table \"company_addresses\".] [delete from companies where id=? and
-    // version=?]; SQL [delete from companies where id=? and version=?]; constraint
-    // [fk_company_addresses_and_companies]"}
+  void shouldReturn_200_deleteCompanyById_isDeletedFalse() throws Exception {
     String companyId = "4c7a2cc5-1e03-4337-8901-93c0b46585af";
     MvcResult response =
         mockMvc
@@ -548,12 +542,13 @@ class CompanyControllerTest {
     String contentAsString = response.getResponse().getContentAsString();
     SimpleResponse responseBody = objectMapper.readValue(contentAsString, SimpleResponse.class);
     assertEquals(HttpStatus.OK.value(), status);
-    assertEquals("", responseBody.getMessage());
+    assertEquals(
+        "Deleted company with id: 4c7a2cc5-1e03-4337-8901-93c0b46585af", responseBody.getMessage());
   }
 
   @Test
-  void shouldReturn_400_deleteCompanyById() throws Exception {
-    String companyId = "4c7a2cc5-1e03-4337-8901-93c0b46585af";
+  void shouldReturn_400_deleteCompanyById_isDeletedFalse() throws Exception {
+    String companyId = "invalid-uuid";
     MvcResult response =
         mockMvc
             .perform(
@@ -564,12 +559,12 @@ class CompanyControllerTest {
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
     SimpleResponse responseBody = objectMapper.readValue(contentAsString, SimpleResponse.class);
-    assertEquals(HttpStatus.OK.value(), status);
-    assertEquals("", responseBody.getMessage());
+    assertEquals(HttpStatus.BAD_REQUEST.value(), status);
+    assertEquals(INVALID_UUID, responseBody.getMessage());
   }
 
   @Test
-  void shouldReturn_401_deleteCompanyById() throws Exception {
+  void shouldReturn_401_deleteCompanyById_isDeletedFalse() throws Exception {
     String companyId = "4c7a2cc5-1e03-4337-8901-93c0b46585af";
     MvcResult response =
         mockMvc
@@ -585,7 +580,7 @@ class CompanyControllerTest {
   }
 
   @Test
-  void shouldReturn_403_deleteCompanyById() throws Exception {
+  void shouldReturn_403_deleteCompanyById_isDeletedFalse() throws Exception {
     String companyId = "4c7a2cc5-1e03-4337-8901-93c0b46585af";
     MvcResult response =
         mockMvc
@@ -602,7 +597,7 @@ class CompanyControllerTest {
   }
 
   @Test
-  void shouldReturn_404_deleteCompanyById() throws Exception {
+  void shouldReturn_404_deleteCompanyById_isDeletedFalse() throws Exception {
     String companyId = "4c7a6cc5-1e03-4337-8901-93c0b46585af";
     MvcResult response =
         mockMvc
@@ -616,5 +611,24 @@ class CompanyControllerTest {
     ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
     assertEquals(HttpStatus.NOT_FOUND.value(), status);
     assertEquals(COMPANY_NOT_FOUND_WITH_ID + companyId, responseBody.getMessage());
+  }
+
+  @Test
+  void shouldReturn_404_deleteCompanyById_isDeletedTrue() throws Exception {
+    String companyId = "84198896-de25-4d17-b47d-11a0c80fc396";
+    MvcResult response =
+        mockMvc
+            .perform(
+                delete("/" + Path.API_COMPANIES + "/" + companyId)
+                    .with(withJwt())
+                    .contentType(MediaType.APPLICATION_JSON))
+            .andReturn();
+    int status = response.getResponse().getStatus();
+    String contentAsString = response.getResponse().getContentAsString();
+    SimpleResponse responseBody = objectMapper.readValue(contentAsString, SimpleResponse.class);
+    assertEquals(HttpStatus.NOT_FOUND.value(), status);
+    assertEquals(
+        "Company not found with id: 84198896-de25-4d17-b47d-11a0c80fc396",
+        responseBody.getMessage());
   }
 }

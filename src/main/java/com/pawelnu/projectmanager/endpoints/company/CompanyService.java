@@ -3,7 +3,6 @@ package com.pawelnu.projectmanager.endpoints.company;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pawelnu.projectmanager.dto.PagingAndSortingMetadataDTO;
 import com.pawelnu.projectmanager.enums.CompanyStatus;
-import com.pawelnu.projectmanager.exception.CannotDeleteException;
 import com.pawelnu.projectmanager.exception.NotFoundException;
 import com.pawelnu.projectmanager.exception.model.SimpleResponse;
 import com.pawelnu.projectmanager.mapper.PagingAndSortingMapper;
@@ -81,7 +80,7 @@ public class CompanyService {
       if (updatedCompany.getIsDeleted()) {
         return SimpleResponse.builder().message("Deleted company with id: " + id).build();
       } else {
-        throw new CannotDeleteException("Cannot delete company with id: " + id);
+        return SimpleResponse.builder().message("Cannot delete company with id: " + id).build();
       }
     } else {
       throw new NotFoundException(COMPANY_NOT_FOUND_MSG + id);
