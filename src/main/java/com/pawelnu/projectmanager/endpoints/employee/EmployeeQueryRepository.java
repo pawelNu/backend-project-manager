@@ -64,6 +64,7 @@ public class EmployeeQueryRepository {
           employee.phoneNumber.likeIgnoreCase(
               "%" + filters.get(employee.phoneNumber.getMetadata().getName()) + "%"));
     }
+    allConditions.and(employee.isDeleted.isFalse());
 
     JPAQuery<EmployeeEntity> query =
         queryFactory
