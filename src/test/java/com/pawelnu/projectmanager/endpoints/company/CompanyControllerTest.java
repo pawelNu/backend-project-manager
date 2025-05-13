@@ -50,17 +50,12 @@ class CompanyControllerTest {
           + " 'java.util.UUID'; Invalid UUID string: invalid-uuid";
   public static final String FULL_AUTH_IS_REQUIRED =
       "Full authentication is required to access this resource";
-  public static final String ACCESS_DENIED = "Access denied";
   public static final String COMPANY_NOT_FOUND_WITH_ID = "Company not found with id: ";
   @Autowired private JwtUtils jwtUtils;
   @Autowired private MockMvc mockMvc;
-  @Autowired private CompanyRepository companyRepository;
-  @Autowired private CompanyService companyService;
-  @Autowired private CompanyQueryRepository companyQueryRepository;
   @Autowired private ObjectMapper objectMapper;
   private String jwtTokenWithAuthorities;
   private String jwtTokenWithoutAuthorities;
-  private UUID companyId = UUID.fromString("cf578fec-006b-4604-a5e8-5ad1b3ea2be5");
 
   @Container
   static PostgreSQLContainer<?> postgres =
@@ -104,6 +99,7 @@ class CompanyControllerTest {
 
   @Test
   void shouldReturn_200_getCompanyById() throws Exception {
+    String companyId = "cf578fec-006b-4604-a5e8-5ad1b3ea2be5";
     MvcResult response =
         mockMvc
             .perform(get("/" + Path.API_COMPANIES + "/" + companyId).with(withJwt()))
@@ -131,6 +127,7 @@ class CompanyControllerTest {
 
   @Test
   void shouldReturn_401_getCompanyById() throws Exception {
+    String companyId = "cf578fec-006b-4604-a5e8-5ad1b3ea2be5";
     MvcResult response =
         mockMvc.perform(get("/" + Path.API_COMPANIES + "/" + companyId)).andReturn();
     int status = response.getResponse().getStatus();
@@ -142,6 +139,7 @@ class CompanyControllerTest {
 
   @Test
   void shouldReturn_403_getCompanyById() throws Exception {
+    String companyId = "cf578fec-006b-4604-a5e8-5ad1b3ea2be5";
     MvcResult response =
         mockMvc
             .perform(get("/" + Path.API_COMPANIES + "/" + companyId).with(withBadJwt()))
