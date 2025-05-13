@@ -72,10 +72,10 @@ public class CompanyQueryRepository {
               .stringValue()
               .likeIgnoreCase((filters.get(company.status.getMetadata().getName()))));
     }
+    allConditions.and(company.isDeleted.isFalse());
     if (sortDir == null || sortDir.isEmpty()) {
       sortDir = "ASC";
     }
-    allConditions.and(company.isDeleted.isFalse());
 
     Pageable pageable =
         PageRequest.of(
