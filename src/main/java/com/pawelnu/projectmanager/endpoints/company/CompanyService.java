@@ -3,6 +3,7 @@ package com.pawelnu.projectmanager.endpoints.company;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pawelnu.projectmanager.dto.PagingAndSortingMetadataDTO;
 import com.pawelnu.projectmanager.enums.CompanyStatus;
+import com.pawelnu.projectmanager.exception.CannotDeleteException;
 import com.pawelnu.projectmanager.exception.NotFoundException;
 import com.pawelnu.projectmanager.exception.model.SimpleResponse;
 import com.pawelnu.projectmanager.mapper.PagingAndSortingMapper;
@@ -72,10 +73,16 @@ public class CompanyService {
   }
 
   public SimpleResponse deleteCompanyById(UUID id) {
-    Optional<CompanyEntity> companyToDelete = companyRepository.findById(id);
+    Optional<CompanyEntity> companyToDelete = companyRepository.findByIdAndIsDeletedFalse(id);
     if (companyToDelete.isPresent()) {
-      companyRepository.delete(companyToDelete.get());
-      return SimpleResponse.builder().message("Deleted company with id: " + id).build();
+      CompanyEntity existingCompany = companyToDelete.get();
+      existingCompany.setIsDeleted(true);
+      CompanyEntity updatedCompany = companyRepository.save(existingCompany);
+      if (updatedCompany.getIsDeleted()) {
+        return SimpleResponse.builder().message("Deleted company with id: " + id).build();
+      } else {
+        throw new CannotDeleteException("Cannot delete company with id: " + id);
+      }
     } else {
       throw new NotFoundException(COMPANY_NOT_FOUND_MSG + id);
     }
