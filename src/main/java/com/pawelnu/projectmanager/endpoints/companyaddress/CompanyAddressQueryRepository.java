@@ -70,6 +70,7 @@ public class CompanyAddressQueryRepository {
       allConditions.and(
           address.addressType.eq(filters.get(address.addressType.getMetadata().getName())));
     }
+    allConditions.and(address.isDeleted.isFalse());
 
     JPAQuery<CompanyAddressEntity> query =
         queryFactory
