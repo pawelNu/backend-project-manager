@@ -14,6 +14,7 @@ public class CrossOriginConfig implements WebMvcConfigurer {
         .allowedOrigins("http://localhost:5173")
         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
         .allowedHeaders("*")
-        .exposedHeaders("Content-Range");
+        .exposedHeaders("Content-Range")
+        .allowCredentials(true);
   }
 }
