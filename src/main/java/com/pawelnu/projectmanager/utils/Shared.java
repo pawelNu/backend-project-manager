@@ -38,7 +38,12 @@ public class Shared {
 
   public static List<String> parseJsonList(ObjectMapper o, String json) {
     try {
-      return o.readValue(json, new TypeReference<>() {});
+      List<String> result = o.readValue(json, new TypeReference<>() {});
+      if (result.getLast().equalsIgnoreCase("asc") || result.getLast().equalsIgnoreCase("desc")) {
+        return result;
+      } else {
+        return List.of();
+      }
     } catch (Exception e) {
       return List.of();
     }

@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: 6a3d450f-b028-4cca-ab4f-8c7709a5f550
+      id: 6
       author: pawelNu
       changes:
         - sqlFile:

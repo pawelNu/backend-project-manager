@@ -2,6 +2,7 @@ create table employee_authorities (
 id uuid not null,
 authority_id uuid,
 employee_id uuid,
+is_deleted boolean not null,
 primary key (id)
 )
 ;

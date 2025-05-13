@@ -10,5 +10,6 @@ public class CompanySimpleDTO {
   private String name;
   private String nip;
   private String regon;
+  private String status;
   private String website;
 }

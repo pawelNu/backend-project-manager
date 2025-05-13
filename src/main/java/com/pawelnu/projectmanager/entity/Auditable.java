@@ -1,9 +1,10 @@
 package com.pawelnu.projectmanager.entity;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;
 import jakarta.persistence.Version;
 import java.time.Instant;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -12,11 +13,9 @@ public abstract class Auditable {
 
   @Version private Integer version;
 
-  @CreationTimestamp
-  @Column(updatable = false, columnDefinition = "timestamp(6) without time zone")
-  private Instant created;
+  @CreationTimestamp private Instant created;
 
-  @UpdateTimestamp
-  @Column(columnDefinition = "timestamp(6) without time zone")
-  private Instant lastModified;
+  @UpdateTimestamp private Instant lastModified;
+
+  @Getter @Setter private Boolean isDeleted = false;
 }

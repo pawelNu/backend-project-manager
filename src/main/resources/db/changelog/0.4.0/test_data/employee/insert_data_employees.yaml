@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: 8a12d929-c8ca-4117-a868-60e3f44fdbc3
+      id: 7
       author: pawelNu
       changes:
         - loadUpdateData:

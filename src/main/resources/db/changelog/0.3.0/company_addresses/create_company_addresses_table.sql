@@ -12,6 +12,7 @@ street varchar(255) not null,
 street_number varchar(255) not null,
 zip_code varchar(255) not null,
 company_id uuid not null,
+is_deleted boolean not null,
 primary key (id)
 )
 ;

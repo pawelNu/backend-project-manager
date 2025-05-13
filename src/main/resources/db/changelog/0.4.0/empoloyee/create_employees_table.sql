@@ -10,6 +10,7 @@ password varchar(255) not null,
 phone_number varchar(255) not null,
 username varchar(255) not null,
 company_id uuid not null,
+is_deleted boolean not null,
 primary key (id)
 )
 ;

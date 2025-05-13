@@ -2,6 +2,7 @@ package com.pawelnu.projectmanager.endpoints.company;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pawelnu.projectmanager.dto.PagingAndSortingMetadataDTO;
+import com.pawelnu.projectmanager.enums.CompanyStatus;
 import com.pawelnu.projectmanager.exception.NotFoundException;
 import com.pawelnu.projectmanager.exception.model.SimpleResponse;
 import com.pawelnu.projectmanager.mapper.PagingAndSortingMapper;
@@ -16,10 +17,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Order;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@Transactional
 public class CompanyService {
 
   private final CompanyRepository companyRepository;
@@ -51,6 +54,7 @@ public class CompanyService {
 
   public CompanyDTO createCompany(CompanyCreateRequestDTO companyCreateRequestDTO) {
     CompanyEntity companyEntity = companyMapper.toEntity(companyCreateRequestDTO);
+    companyEntity.setStatus(CompanyStatus.ACTIVE);
     CompanyEntity savedCompany = companyRepository.save(companyEntity);
     return companyMapper.toDTO(savedCompany);
   }
@@ -68,10 +72,16 @@ public class CompanyService {
   }
 
   public SimpleResponse deleteCompanyById(UUID id) {
-    Optional<CompanyEntity> companyToDelete = companyRepository.findById(id);
+    Optional<CompanyEntity> companyToDelete = companyRepository.findByIdAndIsDeletedFalse(id);
     if (companyToDelete.isPresent()) {
-      companyRepository.delete(companyToDelete.get());
-      return SimpleResponse.builder().message("Deleted company with id: " + id).build();
+      CompanyEntity existingCompany = companyToDelete.get();
+      existingCompany.setIsDeleted(true);
+      CompanyEntity updatedCompany = companyRepository.save(existingCompany);
+      if (updatedCompany.getIsDeleted()) {
+        return SimpleResponse.builder().message("Deleted company with id: " + id).build();
+      } else {
+        return SimpleResponse.builder().message("Cannot delete company with id: " + id).build();
+      }
     } else {
       throw new NotFoundException(COMPANY_NOT_FOUND_MSG + id);
     }
