@@ -75,6 +75,7 @@ public class CompanyQueryRepository {
     if (sortDir == null || sortDir.isEmpty()) {
       sortDir = "ASC";
     }
+    allConditions.and(company.isDeleted.isFalse());
 
     Pageable pageable =
         PageRequest.of(

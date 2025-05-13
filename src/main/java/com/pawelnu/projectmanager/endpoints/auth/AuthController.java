@@ -6,6 +6,7 @@ import com.pawelnu.projectmanager.endpoints.employee.EmployeeEntity;
 import com.pawelnu.projectmanager.endpoints.employee.EmployeeRepository;
 import com.pawelnu.projectmanager.exception.model.SimpleResponse;
 import com.pawelnu.projectmanager.utils.Path;
+import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -39,6 +40,7 @@ public class AuthController {
   //  PasswordEncoder encoder;
 
   @PostMapping("/login")
+  @SecurityRequirements
   public ResponseEntity<UserInfoResponse> login(@RequestBody LoginRequest loginRequest) {
     Authentication authentication;
     log.info("Login attempt for: " + loginRequest.getUsername());

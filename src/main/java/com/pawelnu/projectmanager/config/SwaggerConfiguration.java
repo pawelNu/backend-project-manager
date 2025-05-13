@@ -26,6 +26,8 @@ public class SwaggerConfiguration {
   @Value("${server.ssl.enabled:false}")
   private Boolean ssl;
 
+  private static final String SECURITY_SCHEME_NAME = "Authorization";
+
   @Bean
   public GroupedOpenApi publicApi() {
     return GroupedOpenApi.builder().group("API").pathsToMatch("/**").build();
@@ -43,7 +45,6 @@ public class SwaggerConfiguration {
             + "<b>"
             + databaseSID
             + "</b>";
-    String securitySchemeName = "Authorization";
     String protocol = "http";
     if (ssl) {
       protocol += "s";
@@ -58,13 +59,13 @@ public class SwaggerConfiguration {
             new ExternalDocumentation()
                 .url("/project-manager.yaml")
                 .description("Download YAML docs"))
-        .addSecurityItem(new SecurityRequirement().addList(securitySchemeName))
+        .addSecurityItem(new SecurityRequirement().addList(SECURITY_SCHEME_NAME))
         .components(
             new Components()
                 .addSecuritySchemes(
-                    securitySchemeName,
+                    SECURITY_SCHEME_NAME,
                     new SecurityScheme()
-                        .name(securitySchemeName)
+                        .name(SECURITY_SCHEME_NAME)
                         .type(SecurityScheme.Type.HTTP)
                         .scheme("bearer")
                         .bearerFormat("JWT")

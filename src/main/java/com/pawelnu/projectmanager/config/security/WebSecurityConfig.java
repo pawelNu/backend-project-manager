@@ -1,5 +1,7 @@
 package com.pawelnu.projectmanager.config.security;
 
+import static org.springframework.http.HttpMethod.OPTIONS;
+
 import com.pawelnu.projectmanager.config.security.jwt.AuthEntryPointJwt;
 import com.pawelnu.projectmanager.config.security.jwt.AuthTokenFilter;
 import com.pawelnu.projectmanager.config.security.jwt.JwtUtils;
@@ -64,7 +66,9 @@ public class WebSecurityConfig {
             session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .authorizeHttpRequests(
             auth ->
-                auth.requestMatchers("/")
+                auth.requestMatchers(OPTIONS, "/**")
+                    .permitAll()
+                    .requestMatchers("/")
                     .permitAll()
                     .requestMatchers("/api/auth/**")
                     .permitAll()
@@ -95,17 +99,4 @@ public class WebSecurityConfig {
 
     return http.build();
   }
-
-  //  @Bean
-  //  public WebSecurityCustomizer webSecurityCustomizer() {
-  //    return (web ->
-  //        web.ignoring()
-  //            .requestMatchers(
-  //                "/v2/api-docs",
-  //                "/configuration/ui",
-  //                "/swagger-resources/**",
-  //                "/configuration/security",
-  //                "/swagger-ui.html",
-  //                "/webjars/**"));
-  //  }
 }
