@@ -1,11 +1,10 @@
 package com.pawelnu.projectmanager.endpoints.employee;
 
-import com.pawelnu.projectmanager.entity.Auditable;
 import java.util.UUID;
 import lombok.Data;
 
 @Data
-public class EmployeeDTO extends Auditable {
+public class EmployeeDTO {
 
   private UUID id;
   private String firstName;

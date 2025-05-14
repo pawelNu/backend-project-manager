@@ -6,6 +6,7 @@ import com.pawelnu.projectmanager.enums.CompanyStatus;
 import com.pawelnu.projectmanager.exception.NotFoundException;
 import com.pawelnu.projectmanager.exception.model.SimpleResponse;
 import com.pawelnu.projectmanager.mapper.PagingAndSortingMapper;
+import com.pawelnu.projectmanager.utils.Consts.MSG;
 import com.pawelnu.projectmanager.utils.Shared;
 import java.util.List;
 import java.util.Map;
@@ -31,8 +32,6 @@ public class CompanyService {
   private final PagingAndSortingMapper pageMapper;
   private final ObjectMapper objectMapper;
 
-  private static final String COMPANY_NOT_FOUND_MSG = "Company not found with id: ";
-
   public CompanyListResponseDTO getAllCompanies(
       Integer pageNumber, Integer pageSize, String sortedBy, String direction) {
     Pageable pageable = Shared.preparePageable(pageNumber, pageSize, sortedBy, direction);
@@ -49,7 +48,7 @@ public class CompanyService {
     return companyQueryRepository
         .findById(id)
         .map(companyMapper::toDTO)
-        .orElseThrow(() -> new NotFoundException(COMPANY_NOT_FOUND_MSG + id));
+        .orElseThrow(() -> new NotFoundException(MSG.COMPANY_NOT_FOUND + id));
   }
 
   public CompanyDTO createCompany(CompanyCreateRequestDTO companyCreateRequestDTO) {
@@ -67,7 +66,7 @@ public class CompanyService {
       CompanyEntity updatedCompany = companyRepository.save(existingCompany);
       return companyMapper.toDTO(updatedCompany);
     } else {
-      throw new NotFoundException(COMPANY_NOT_FOUND_MSG + id);
+      throw new NotFoundException(MSG.COMPANY_NOT_FOUND + id);
     }
   }
 
@@ -83,7 +82,7 @@ public class CompanyService {
         return SimpleResponse.builder().message("Cannot delete company with id: " + id).build();
       }
     } else {
-      throw new NotFoundException(COMPANY_NOT_FOUND_MSG + id);
+      throw new NotFoundException(MSG.COMPANY_NOT_FOUND + id);
     }
   }
 

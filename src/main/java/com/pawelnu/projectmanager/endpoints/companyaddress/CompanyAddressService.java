@@ -1,10 +1,13 @@
 package com.pawelnu.projectmanager.endpoints.companyaddress;
 
+import static com.pawelnu.projectmanager.utils.Consts.MSG.COMPANY_NOT_FOUND;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pawelnu.projectmanager.endpoints.company.CompanyEntity;
 import com.pawelnu.projectmanager.endpoints.company.CompanyRepository;
 import com.pawelnu.projectmanager.exception.NotFoundException;
 import com.pawelnu.projectmanager.exception.model.SimpleResponse;
+import com.pawelnu.projectmanager.utils.Consts.MSG;
 import com.pawelnu.projectmanager.utils.Shared;
 import java.util.List;
 import java.util.Map;
@@ -26,21 +29,24 @@ public class CompanyAddressService {
   private final CompanyAddressMapper companyAddressMapper;
   private final ObjectMapper objectMapper;
 
-  private static final String COMPANY_ADDRESS_NOT_FOUND_MSG = "Company address not found with id: ";
-
   public CompanyAddressDTO getCompanyById(UUID id) {
     return companyAddressRepository
         .findById(id)
         .map(companyAddressMapper::toDTO)
-        .orElseThrow(() -> new NotFoundException(COMPANY_ADDRESS_NOT_FOUND_MSG + id));
+        .orElseThrow(() -> new NotFoundException(COMPANY_NOT_FOUND + id));
   }
 
   public CompanyAddressDTO createCompany(CompanyAddressCreateRequestDTO body) {
-    CompanyEntity companyRef = companyRepository.getReferenceById(body.getCompanyId());
-    CompanyAddressEntity addressEntity = companyAddressMapper.toEntity(body);
-    addressEntity.setCompany(companyRef);
-    CompanyAddressEntity savedCompany = companyAddressRepository.save(addressEntity);
-    return companyAddressMapper.toDTO(savedCompany);
+    Optional<CompanyEntity> company =
+        companyRepository.findByIdAndIsDeletedFalse(body.getCompanyId());
+    if (company.isPresent()) {
+      CompanyAddressEntity addressEntity = companyAddressMapper.toEntity(body);
+      addressEntity.setCompany(company.get());
+      CompanyAddressEntity savedAddress = companyAddressRepository.save(addressEntity);
+      return companyAddressMapper.toDTO(savedAddress);
+    } else {
+      throw new NotFoundException(MSG.COMPANY_ADDRESS_NOT_FOUND + body.getCompanyId());
+    }
   }
 
   public CompanyAddressDTO editCompanyById(UUID id, CompanyAddressEditRequestDTO body) {
@@ -51,7 +57,7 @@ public class CompanyAddressService {
       CompanyAddressEntity updatedCompany = companyAddressRepository.save(existingCompany);
       return companyAddressMapper.toDTO(updatedCompany);
     } else {
-      throw new NotFoundException(COMPANY_ADDRESS_NOT_FOUND_MSG + id);
+      throw new NotFoundException(MSG.COMPANY_ADDRESS_NOT_FOUND + id);
     }
   }
 
@@ -61,7 +67,7 @@ public class CompanyAddressService {
       companyAddressRepository.delete(companyToDelete.get());
       return SimpleResponse.builder().message("Deleted company address with id: " + id).build();
     } else {
-      throw new NotFoundException(COMPANY_ADDRESS_NOT_FOUND_MSG + id);
+      throw new NotFoundException(MSG.COMPANY_ADDRESS_NOT_FOUND + id);
     }
   }
 
