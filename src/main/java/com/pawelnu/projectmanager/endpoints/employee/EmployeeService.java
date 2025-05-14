@@ -14,6 +14,7 @@ import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -26,11 +27,13 @@ public class EmployeeService {
   private final EmployeeQueryRepository employeeQueryRepository;
   private final EmployeeMapper employeeMapper;
   private final ObjectMapper objectMapper;
+  private final PasswordEncoder passwordEncoder;
 
   public EmployeeDTO createEmployee(EmployeeCreateRequestDTO body) {
     Optional<CompanyEntity> company =
         companyRepository.findByIdAndIsDeletedFalse(body.getCompanyId());
     if (company.isPresent()) {
+      body.setPassword(passwordEncoder.encode(body.getPassword()));
       EmployeeEntity entity = employeeMapper.toEntity(body);
       entity.setCompany(company.get());
       EmployeeEntity save = employeeRepository.save(entity);
