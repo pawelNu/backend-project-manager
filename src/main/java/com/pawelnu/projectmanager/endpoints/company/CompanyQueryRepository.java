@@ -92,7 +92,7 @@ public class CompanyQueryRepository {
             .selectFrom(company)
             .leftJoin(company.addresses, address)
             .fetchJoin()
-            .where(company.id.eq(id))
+            .where(company.id.eq(id).and(company.isDeleted.isFalse()))
             .fetch();
 
     if (fetch != null && !fetch.isEmpty()) {

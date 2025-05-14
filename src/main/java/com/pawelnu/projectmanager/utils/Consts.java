@@ -18,4 +18,12 @@ public final class Consts {
 
     public static final String AUTH_HEADER = "authorization";
   }
+
+  @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
+  public static final class MSG {
+
+    public static final String COMPANY_ADDRESS_NOT_FOUND = "Company address not found with id: ";
+    public static final String COMPANY_NOT_FOUND = "Company not found with id: ";
+    public static final String EMPLOYEE_NOT_FOUND = "Employee not found with id: ";
+  }
 }

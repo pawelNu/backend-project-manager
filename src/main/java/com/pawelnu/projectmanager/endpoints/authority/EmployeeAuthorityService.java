@@ -1,7 +1,7 @@
 package com.pawelnu.projectmanager.endpoints.authority;
 
 import static com.pawelnu.projectmanager.endpoints.authority.AuthorityService.AUTHORITY_NOT_FOUND_MSG;
-import static com.pawelnu.projectmanager.endpoints.employee.EmployeeService.EMPLOYEE_NOT_FOUND_MSG;
+import static com.pawelnu.projectmanager.utils.Consts.MSG.EMPLOYEE_NOT_FOUND;
 
 import com.pawelnu.projectmanager.endpoints.employee.EmployeeEntity;
 import com.pawelnu.projectmanager.endpoints.employee.EmployeeRepository;
@@ -27,7 +27,7 @@ public class EmployeeAuthorityService {
     EmployeeEntity employee =
         employeeRepository
             .findById(body.getUserId())
-            .orElseThrow(() -> new NotFoundException(EMPLOYEE_NOT_FOUND_MSG + body.getUserId()));
+            .orElseThrow(() -> new NotFoundException(EMPLOYEE_NOT_FOUND + body.getUserId()));
     EmployeeAuthorityEntity entity =
         EmployeeAuthorityEntity.builder().authority(authority).employee(employee).build();
     EmployeeAuthorityEntity save = employeeAuthorityRepository.save(entity);
