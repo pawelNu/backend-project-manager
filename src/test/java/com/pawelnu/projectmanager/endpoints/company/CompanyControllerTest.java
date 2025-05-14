@@ -167,6 +167,21 @@ class CompanyControllerTest {
   }
 
   @Test
+  void shouldReturn_404_getCompanyById_isDeletedTrue() throws Exception {
+    String companyId = "84198896-de25-4d17-b47d-11a0c80fc396";
+    MvcResult response =
+        mockMvc
+            .perform(get("/" + Path.API_COMPANIES + "/" + companyId).with(withJwt()))
+            .andReturn();
+    int status = response.getResponse().getStatus();
+    String contentAsString = response.getResponse().getContentAsString();
+    NotFoundException responseBody =
+        objectMapper.readValue(contentAsString, NotFoundException.class);
+    assertEquals(HttpStatus.NOT_FOUND.value(), status);
+    assertEquals(COMPANY_NOT_FOUND_WITH_ID + companyId, responseBody.getMessage());
+  }
+
+  @Test
   void shouldReturn_201_createCompany() throws Exception {
     CompanyCreateRequestDTO request =
         CompanyCreateRequestDTO.builder()
