@@ -117,9 +117,6 @@ public class CompanyService {
     long end = Math.min(offset + limit - 1, totalElements - 1);
 
     String contentRange = Shared.prepareContentRange(offset, end, totalElements);
-    return CompanyListResponseDTO2.builder()
-        .data(companyDTOs)
-        .contentRange(contentRange)
-        .build();
+    return CompanyListResponseDTO2.builder().data(companyDTOs).contentRange(contentRange).build();
   }
 }

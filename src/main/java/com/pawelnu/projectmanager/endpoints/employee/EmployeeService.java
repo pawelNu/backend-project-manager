@@ -62,10 +62,7 @@ public class EmployeeService {
     long totalElements = page.getTotalElements();
     long end = Math.min(offset + limit - 1, totalElements - 1);
     String contentRange = Shared.prepareContentRange(offset, end, totalElements);
-    return EmployeesListResponseDTO.builder()
-        .data(companyDTOs)
-        .contentRange(contentRange)
-        .build();
+    return EmployeesListResponseDTO.builder().data(companyDTOs).contentRange(contentRange).build();
   }
 
   public EmployeeDTO getEmployeeById(UUID id) {

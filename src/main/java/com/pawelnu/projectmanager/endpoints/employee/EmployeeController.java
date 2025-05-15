@@ -24,7 +24,9 @@ public class EmployeeController implements EmployeeApi {
   @Override
   public ResponseEntity<List<EmployeeDTO>> getList(String sort, String range, String filter) {
     EmployeesListResponseDTO result = employeeService.getEmployeeList(sort, range, filter);
-    return ResponseEntity.ok().header("Content-Range", result.getContentRange()).body(result.getData());
+    return ResponseEntity.ok()
+        .header("Content-Range", result.getContentRange())
+        .body(result.getData());
   }
 
   @Override

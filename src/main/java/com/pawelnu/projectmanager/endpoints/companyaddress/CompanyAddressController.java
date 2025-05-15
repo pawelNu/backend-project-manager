@@ -23,7 +23,9 @@ public class CompanyAddressController implements CompanyAddressApi {
   @Override
   public ResponseEntity<List<CompanyAddressDTO>> getList(String sort, String range, String filter) {
     CompanyAddressesListResponseDTO result = service.filterCompanies(sort, range, filter);
-    return ResponseEntity.ok().header("Content-Range", result.getContentRange()).body(result.getData());
+    return ResponseEntity.ok()
+        .header("Content-Range", result.getContentRange())
+        .body(result.getData());
   }
 
   @Override
