@@ -116,11 +116,10 @@ public class CompanyService {
     long totalElements = page.getTotalElements();
     long end = Math.min(offset + limit - 1, totalElements - 1);
 
+    String contentRange = Shared.prepareContentRange(offset, end, totalElements);
     return CompanyListResponseDTO2.builder()
         .data(companyDTOs)
-        .totalElements(totalElements)
-        .start(offset)
-        .end(end)
+        .contentRange(contentRange)
         .build();
   }
 }

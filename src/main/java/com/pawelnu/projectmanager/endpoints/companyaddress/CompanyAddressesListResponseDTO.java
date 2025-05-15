@@ -9,7 +9,5 @@ import lombok.Data;
 public class CompanyAddressesListResponseDTO {
 
   private List<CompanyAddressDTO> data;
-  private long totalElements;
-  private int start;
-  private long end;
+  public String contentRange;
 }
