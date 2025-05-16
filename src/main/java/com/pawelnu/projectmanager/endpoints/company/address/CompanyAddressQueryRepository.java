@@ -1,4 +1,4 @@
-package com.pawelnu.projectmanager.endpoints.companyaddress;
+package com.pawelnu.projectmanager.endpoints.company.address;
 
 import com.pawelnu.projectmanager.endpoints.company.QCompanyEntity;
 import com.querydsl.core.BooleanBuilder;

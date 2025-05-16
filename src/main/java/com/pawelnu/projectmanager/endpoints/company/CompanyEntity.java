@@ -1,6 +1,6 @@
 package com.pawelnu.projectmanager.endpoints.company;
 
-import com.pawelnu.projectmanager.endpoints.companyaddress.CompanyAddressEntity;
+import com.pawelnu.projectmanager.endpoints.company.address.CompanyAddressEntity;
 import com.pawelnu.projectmanager.entity.Auditable;
 import com.pawelnu.projectmanager.enums.CompanyStatus;
 import jakarta.persistence.Entity;

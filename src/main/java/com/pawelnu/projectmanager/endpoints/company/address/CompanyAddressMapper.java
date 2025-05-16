@@ -1,4 +1,4 @@
-package com.pawelnu.projectmanager.endpoints.companyaddress;
+package com.pawelnu.projectmanager.endpoints.company.address;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

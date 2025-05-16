@@ -1,6 +1,6 @@
 package com.pawelnu.projectmanager.endpoints.company;
 
-import com.pawelnu.projectmanager.endpoints.companyaddress.QCompanyAddressEntity;
+import com.pawelnu.projectmanager.endpoints.company.address.QCompanyAddressEntity;
 import com.pawelnu.projectmanager.utils.Shared;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;

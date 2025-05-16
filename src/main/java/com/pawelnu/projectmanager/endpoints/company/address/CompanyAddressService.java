@@ -1,4 +1,4 @@
-package com.pawelnu.projectmanager.endpoints.companyaddress;
+package com.pawelnu.projectmanager.endpoints.company.address;
 
 import static com.pawelnu.projectmanager.utils.Consts.MSG.COMPANY_NOT_FOUND;
 

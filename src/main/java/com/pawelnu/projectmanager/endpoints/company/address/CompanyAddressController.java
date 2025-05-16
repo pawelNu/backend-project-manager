@@ -1,4 +1,4 @@
-package com.pawelnu.projectmanager.endpoints.companyaddress;
+package com.pawelnu.projectmanager.endpoints.company.address;
 
 import com.pawelnu.projectmanager.exception.model.SimpleResponse;
 import java.util.List;
