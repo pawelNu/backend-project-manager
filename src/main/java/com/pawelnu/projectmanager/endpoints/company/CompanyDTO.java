@@ -1,6 +1,6 @@
 package com.pawelnu.projectmanager.endpoints.company;
 
-import com.pawelnu.projectmanager.endpoints.companyaddress.CompanyAddressDTO;
+import com.pawelnu.projectmanager.endpoints.company.address.CompanyAddressDTO;
 import java.util.List;
 import java.util.UUID;
 import lombok.Builder;

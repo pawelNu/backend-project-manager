@@ -1,6 +1,7 @@
 package com.pawelnu.projectmanager.endpoints.authority;
 
-import com.pawelnu.projectmanager.endpoints.employee.EmployeeEntity;
+import com.pawelnu.projectmanager.endpoints.company.employee.EmployeeEntity;
+import com.pawelnu.projectmanager.entity.Auditable;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -19,7 +20,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class EmployeeAuthorityEntity {
+public class EmployeeAuthorityEntity extends Auditable {
 
   @Id @GeneratedValue private UUID id;
 
