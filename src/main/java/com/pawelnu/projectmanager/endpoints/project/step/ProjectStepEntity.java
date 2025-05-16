@@ -1,6 +1,6 @@
 package com.pawelnu.projectmanager.endpoints.project.step;
 
-import com.pawelnu.projectmanager.endpoints.project.stepcomment.ProjectStepCommentEntity;
+import com.pawelnu.projectmanager.endpoints.project.step.comment.ProjectStepCommentEntity;
 import com.pawelnu.projectmanager.endpoints.ticket.TicketEntity;
 import com.pawelnu.projectmanager.endpoints.ticket.priority.PriorityEntity;
 import com.pawelnu.projectmanager.entity.Auditable;

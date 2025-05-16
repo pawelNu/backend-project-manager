@@ -1,6 +1,5 @@
 package com.pawelnu.projectmanager.endpoints.ticket;
 
-import com.pawelnu.projectmanager.endpoints.ticket.status.TicketStatusEntity;
 import com.pawelnu.projectmanager.entity.Auditable;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -21,5 +20,6 @@ import lombok.NoArgsConstructor;
 public class TicketEntity extends Auditable {
   @Id @GeneratedValue UUID id;
   private String ticketNumber;
-  private TicketStatusEntity status;
+  private String title;
+  private String description;
 }
