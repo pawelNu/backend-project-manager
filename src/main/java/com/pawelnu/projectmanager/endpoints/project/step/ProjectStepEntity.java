@@ -2,7 +2,7 @@ package com.pawelnu.projectmanager.endpoints.project.step;
 
 import com.pawelnu.projectmanager.endpoints.project.step.comment.ProjectStepCommentEntity;
 import com.pawelnu.projectmanager.endpoints.ticket.TicketEntity;
-import com.pawelnu.projectmanager.endpoints.ticket.priority.PriorityEntity;
+import com.pawelnu.projectmanager.endpoints.ticket.priority.TicketPriorityEntity;
 import com.pawelnu.projectmanager.entity.Auditable;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -30,7 +30,7 @@ public class ProjectStepEntity extends Auditable {
 
   @ManyToOne
   @JoinColumn(name = "priority_id")
-  private PriorityEntity priority;
+  private TicketPriorityEntity priority;
 
   private List<ProjectStepCommentEntity> comments;
   private List<TicketEntity> tickets;

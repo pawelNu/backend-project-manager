@@ -15,12 +15,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "priorities")
+@Table(name = "ticket_priorities")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class PriorityEntity extends Auditable {
+public class TicketPriorityEntity extends Auditable {
   @Id @GeneratedValue UUID id;
   private String name;
   private List<TicketEntity> tickets;
