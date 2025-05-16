@@ -3,8 +3,8 @@ package com.pawelnu.projectmanager.endpoints.authority;
 import static com.pawelnu.projectmanager.endpoints.authority.AuthorityService.AUTHORITY_NOT_FOUND_MSG;
 import static com.pawelnu.projectmanager.utils.Consts.MSG.EMPLOYEE_NOT_FOUND;
 
-import com.pawelnu.projectmanager.endpoints.employee.EmployeeEntity;
-import com.pawelnu.projectmanager.endpoints.employee.EmployeeRepository;
+import com.pawelnu.projectmanager.endpoints.company.employee.EmployeeEntity;
+import com.pawelnu.projectmanager.endpoints.company.employee.EmployeeRepository;
 import com.pawelnu.projectmanager.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

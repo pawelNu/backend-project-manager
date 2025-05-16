@@ -1,4 +1,4 @@
-package com.pawelnu.projectmanager.endpoints.employee;
+package com.pawelnu.projectmanager.endpoints.company.employee;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;

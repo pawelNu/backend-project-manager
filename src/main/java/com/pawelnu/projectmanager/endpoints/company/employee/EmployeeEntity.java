@@ -1,4 +1,4 @@
-package com.pawelnu.projectmanager.endpoints.employee;
+package com.pawelnu.projectmanager.endpoints.company.employee;
 
 import com.pawelnu.projectmanager.endpoints.authority.EmployeeAuthorityEntity;
 import com.pawelnu.projectmanager.endpoints.company.CompanyEntity;

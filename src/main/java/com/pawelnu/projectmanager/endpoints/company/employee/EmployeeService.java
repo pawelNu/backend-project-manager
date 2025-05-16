@@ -1,4 +1,4 @@
-package com.pawelnu.projectmanager.endpoints.employee;
+package com.pawelnu.projectmanager.endpoints.company.employee;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pawelnu.projectmanager.endpoints.company.CompanyEntity;

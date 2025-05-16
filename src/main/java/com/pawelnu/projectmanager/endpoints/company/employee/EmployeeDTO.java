@@ -1,10 +1,10 @@
-package com.pawelnu.projectmanager.endpoints.employee;
+package com.pawelnu.projectmanager.endpoints.company.employee;
 
 import java.util.UUID;
 import lombok.Data;
 
 @Data
-public class EmployeeEditRequestDTO {
+public class EmployeeDTO {
 
   private UUID id;
   private String firstName;
@@ -12,4 +12,5 @@ public class EmployeeEditRequestDTO {
   private String username;
   private String email;
   private String phoneNumber;
+  private String companyName;
 }

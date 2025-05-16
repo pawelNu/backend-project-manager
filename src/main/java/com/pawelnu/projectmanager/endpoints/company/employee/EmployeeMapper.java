@@ -1,4 +1,4 @@
-package com.pawelnu.projectmanager.endpoints.employee;
+package com.pawelnu.projectmanager.endpoints.company.employee;
 
 import com.pawelnu.projectmanager.config.security.services.UserDetailsDTO;
 import java.util.Collection;

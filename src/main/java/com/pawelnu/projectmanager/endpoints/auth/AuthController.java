@@ -2,8 +2,8 @@ package com.pawelnu.projectmanager.endpoints.auth;
 
 import com.pawelnu.projectmanager.config.security.jwt.JwtUtils;
 import com.pawelnu.projectmanager.config.security.services.UserDetailsImpl;
-import com.pawelnu.projectmanager.endpoints.employee.EmployeeEntity;
-import com.pawelnu.projectmanager.endpoints.employee.EmployeeRepository;
+import com.pawelnu.projectmanager.endpoints.company.employee.EmployeeEntity;
+import com.pawelnu.projectmanager.endpoints.company.employee.EmployeeRepository;
 import com.pawelnu.projectmanager.exception.model.SimpleResponse;
 import com.pawelnu.projectmanager.utils.Path;
 import io.swagger.v3.oas.annotations.security.SecurityRequirements;

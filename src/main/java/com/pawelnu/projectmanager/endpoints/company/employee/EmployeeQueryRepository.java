@@ -1,8 +1,9 @@
-package com.pawelnu.projectmanager.endpoints.employee;
+package com.pawelnu.projectmanager.endpoints.company.employee;
 
 import com.pawelnu.projectmanager.endpoints.authority.QAuthorityEntity;
 import com.pawelnu.projectmanager.endpoints.authority.QEmployeeAuthorityEntity;
 import com.pawelnu.projectmanager.endpoints.company.QCompanyEntity;
+import com.pawelnu.projectmanager.endpoints.employee.QEmployeeEntity;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
@@ -27,7 +28,6 @@ import org.springframework.stereotype.Repository;
 public class EmployeeQueryRepository {
 
   private final JPAQueryFactory queryFactory;
-  private final EmployeeMapper employeeMapper;
 
   public Page<EmployeeEntity> getEmployeeList(
       Map<String, String> filters, int offset, int limit, String sortDir, String sortField) {

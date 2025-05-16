@@ -23,7 +23,6 @@ import org.springframework.stereotype.Repository;
 @Slf4j
 public class CompanyAddressQueryRepository {
 
-  private final CompanyAddressRepository companyAddressRepository;
   private final JPAQueryFactory queryFactory;
 
   public Page<CompanyAddressEntity> filterCompanies(
