@@ -1,6 +1,6 @@
-package com.pawelnu.projectmanager.endpoints.authority;
+package com.pawelnu.projectmanager.endpoints.project.stepcomment;
 
-import com.pawelnu.projectmanager.endpoints.employee.EmployeeEntity;
+import com.pawelnu.projectmanager.endpoints.ticket.TicketEntity;
 import com.pawelnu.projectmanager.entity.Auditable;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -15,21 +15,16 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "employee_authorities")
+@Table(name = "project_step_comments")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class EmployeeAuthorityEntity extends Auditable {
-
-  @Id @GeneratedValue private UUID id;
-
-  //  @NotNull private String authority;
-  @ManyToOne
-  @JoinColumn(name = "employee_id")
-  private EmployeeEntity employee;
+public class ProjectStepCommentEntity extends Auditable {
+  @Id @GeneratedValue UUID id;
+  private String comment;
 
   @ManyToOne
-  @JoinColumn(name = "authority_id")
-  private AuthorityEntity authority;
+  @JoinColumn(name = "ticket_id")
+  private TicketEntity ticket;
 }

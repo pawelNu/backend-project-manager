@@ -1,13 +1,16 @@
-package com.pawelnu.projectmanager.endpoints.authority;
+package com.pawelnu.projectmanager.endpoints.project;
 
-import com.pawelnu.projectmanager.endpoints.employee.EmployeeEntity;
+import com.pawelnu.projectmanager.endpoints.project.step.ProjectStepEntity;
+import com.pawelnu.projectmanager.endpoints.project.type.ProjectTypeEntity;
 import com.pawelnu.projectmanager.entity.Auditable;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import java.util.List;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,21 +18,19 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "employee_authorities")
+@Table(name = "projects")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class EmployeeAuthorityEntity extends Auditable {
-
+public class ProjectEntity extends Auditable {
   @Id @GeneratedValue private UUID id;
 
-  //  @NotNull private String authority;
-  @ManyToOne
-  @JoinColumn(name = "employee_id")
-  private EmployeeEntity employee;
+  private String name;
 
   @ManyToOne
-  @JoinColumn(name = "authority_id")
-  private AuthorityEntity authority;
+  @JoinColumn(name = "project_type_id")
+  private ProjectTypeEntity projectType;
+
+  @OneToMany private List<ProjectStepEntity> projectSteps;
 }
