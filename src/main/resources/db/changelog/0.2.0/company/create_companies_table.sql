@@ -1,7 +1,7 @@
 create table companies (
-version integer,
-created timestamp(6) without time zone,
-last_modified timestamp(6) without time zone,
+version integer not null,
+created timestamp(6) without time zone not null,
+last_modified timestamp(6) without time zone not null,
 regon varchar(9) not null,
 nip varchar(10) not null,
 id uuid not null,
