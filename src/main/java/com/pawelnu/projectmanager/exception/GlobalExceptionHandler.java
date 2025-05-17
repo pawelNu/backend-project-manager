@@ -45,20 +45,6 @@ public class GlobalExceptionHandler {
     return new ResponseEntity<>(new ReactAdminError(e.getMessage()), HttpStatus.NOT_FOUND);
   }
 
-  //  TODO probably to be removed
-  @ExceptionHandler(NotNullOrEmptyException.class)
-  public ResponseEntity<String> handleNotNullOrEmptyException(NotNullOrEmptyException e) {
-    log.error("Stacktrace:", e);
-    return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-  }
-
-  //  TODO probably to be removed
-  @ExceptionHandler(NotFoundSortingFieldException.class)
-  public ResponseEntity<String> handleNotFoundPropertyException(NotFoundSortingFieldException e) {
-    log.error("Stacktrace:", e);
-    return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-  }
-
   @ExceptionHandler(MethodArgumentNotValidException.class)
   public ResponseEntity<ReactAdminBadRequestError> handleMethodArgumentNotValidException(
       MethodArgumentNotValidException e) {

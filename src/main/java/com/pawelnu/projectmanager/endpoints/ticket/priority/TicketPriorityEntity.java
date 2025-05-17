@@ -5,6 +5,7 @@ import com.pawelnu.projectmanager.entity.Auditable;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.time.Instant;
 import java.util.List;
@@ -23,6 +24,9 @@ import lombok.NoArgsConstructor;
 public class TicketPriorityEntity extends Auditable {
   @Id @GeneratedValue UUID id;
   private String name;
+
+  @OneToMany(mappedBy = "priority")
   private List<TicketEntity> tickets;
+
   private Instant deadline;
 }
