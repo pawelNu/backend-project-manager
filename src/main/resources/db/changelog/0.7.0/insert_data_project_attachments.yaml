@@ -1,0 +1,11 @@
+databaseChangeLog:
+  - changeSet:
+      id: 11
+      author: pawelNu
+      changes:
+        - loadUpdateData:
+            file: project_attachments.csv
+            relativeToChangelogFile: true
+            separator: ','
+            tableName: project_attachments
+            primaryKey: id

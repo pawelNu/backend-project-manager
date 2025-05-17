@@ -2,6 +2,7 @@ package com.pawelnu.projectmanager.endpoints.project;
 
 import com.pawelnu.projectmanager.endpoints.company.CompanyEntity;
 import com.pawelnu.projectmanager.endpoints.company.employee.EmployeeEntity;
+import com.pawelnu.projectmanager.endpoints.project.attachment.ProjectAttachmentEntity;
 import com.pawelnu.projectmanager.endpoints.project.step.ProjectStepEntity;
 import com.pawelnu.projectmanager.endpoints.project.type.ProjectTypeEntity;
 import com.pawelnu.projectmanager.entity.Auditable;
@@ -43,4 +44,7 @@ public class ProjectEntity extends Auditable {
   @ManyToOne
   @JoinColumn(name = "assigned_employee_id")
   private EmployeeEntity assignedEmployee;
+
+  @OneToMany(mappedBy = "project")
+  private List<ProjectAttachmentEntity> attachments;
 }
