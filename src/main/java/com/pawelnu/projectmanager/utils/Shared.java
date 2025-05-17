@@ -64,4 +64,8 @@ public class Shared {
       return Map.of();
     }
   }
+
+  public static String prepareContentRange(int start, long end, long totalElements) {
+    return String.format("items %d-%d/%d", start, end, totalElements);
+  }
 }
