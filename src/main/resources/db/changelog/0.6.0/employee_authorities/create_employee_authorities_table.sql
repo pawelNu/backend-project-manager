@@ -1,8 +1,8 @@
 create table employee_authorities (
 id uuid not null,
-created timestamp(6) without time zone,
-last_modified timestamp(6) without time zone,
-version integer,
+created timestamp(6) without time zone not null,
+last_modified timestamp(6) without time zone not null,
+version integer not null,
 authority_id uuid,
 employee_id uuid,
 is_deleted boolean not null,

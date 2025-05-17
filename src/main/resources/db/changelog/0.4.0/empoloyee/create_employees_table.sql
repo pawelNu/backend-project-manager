@@ -1,8 +1,8 @@
 create table employees (
 id uuid not null,
-created timestamp(6) without time zone,
-last_modified timestamp(6) without time zone,
-version integer,
+created timestamp(6) without time zone not null,
+last_modified timestamp(6) without time zone not null,
+version integer not null,
 email varchar(255) not null,
 first_name varchar(255) not null,
 last_name varchar(255) not null,

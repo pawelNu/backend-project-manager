@@ -1,0 +1,8 @@
+databaseChangeLog:
+  - changeSet:
+      id: 10
+      author: pawelNu
+      changes:
+        - sqlFile:
+            path: "create_project_attachments_table.sql"
+            relativeToChangelogFile: true

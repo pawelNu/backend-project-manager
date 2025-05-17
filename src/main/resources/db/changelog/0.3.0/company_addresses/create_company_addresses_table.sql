@@ -1,8 +1,8 @@
 create table company_addresses (
 id uuid not null,
-created timestamp(6) without time zone,
-last_modified timestamp(6) without time zone,
-version integer,
+created timestamp(6) without time zone not null,
+last_modified timestamp(6) without time zone not null,
+version integer not null,
 address_type varchar(255) not null,
 city varchar(255) not null,
 country varchar(255) not null,

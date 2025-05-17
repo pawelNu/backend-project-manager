@@ -1,0 +1,7 @@
+databaseChangeLog:
+  - include:
+      file: "create_project_attachments_table.yaml"
+      relativeToChangelogFile: true
+  - include:
+      file: "insert_data_project_attachments.yaml"
+      relativeToChangelogFile: true
