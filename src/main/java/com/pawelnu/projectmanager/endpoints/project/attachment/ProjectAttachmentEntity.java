@@ -25,6 +25,7 @@ public class ProjectAttachmentEntity extends Auditable {
   private String name;
   //  TODO store file in database or only link to file?
   private String pathToFile;
+
   @ManyToOne
   @JoinColumn(name = "project_id")
   private ProjectEntity project;
