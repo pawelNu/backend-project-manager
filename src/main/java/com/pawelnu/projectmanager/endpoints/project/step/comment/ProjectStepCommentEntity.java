@@ -26,7 +26,7 @@ public class ProjectStepCommentEntity extends Auditable {
   private String comment;
 
   @ManyToOne
-  @JoinColumn(name = "step_id")
+  @JoinColumn(name = "project_step_id")
   private ProjectStepEntity step;
 
   @ManyToOne
