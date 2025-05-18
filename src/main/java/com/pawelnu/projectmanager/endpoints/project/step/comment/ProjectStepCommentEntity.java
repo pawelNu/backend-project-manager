@@ -1,5 +1,6 @@
 package com.pawelnu.projectmanager.endpoints.project.step.comment;
 
+import com.pawelnu.projectmanager.endpoints.company.employee.EmployeeEntity;
 import com.pawelnu.projectmanager.endpoints.project.step.ProjectStepEntity;
 import com.pawelnu.projectmanager.entity.Auditable;
 import jakarta.persistence.Entity;
@@ -27,4 +28,8 @@ public class ProjectStepCommentEntity extends Auditable {
   @ManyToOne
   @JoinColumn(name = "step_id")
   private ProjectStepEntity step;
+
+  @ManyToOne
+  @JoinColumn(name = "employee_id")
+  private EmployeeEntity employee;
 }
