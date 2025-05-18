@@ -2,6 +2,7 @@ package com.pawelnu.projectmanager.endpoints.company.employee;
 
 import com.pawelnu.projectmanager.endpoints.authority.EmployeeAuthorityEntity;
 import com.pawelnu.projectmanager.endpoints.company.CompanyEntity;
+import com.pawelnu.projectmanager.endpoints.project.step.comment.ProjectStepCommentEntity;
 import com.pawelnu.projectmanager.entity.Auditable;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -12,6 +13,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
@@ -53,6 +55,9 @@ public class EmployeeEntity extends Auditable {
 
   @OneToMany(mappedBy = "employee")
   private Set<EmployeeAuthorityEntity> authorities = new HashSet<>();
+
+  @OneToMany(mappedBy = "employee")
+  private List<ProjectStepCommentEntity> stepComments;
 
   //  @ManyToMany(fetch = FetchType.EAGER)
   //  @JoinTable(
