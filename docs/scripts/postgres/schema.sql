@@ -2,7 +2,7 @@
  v0.1.0
  */
 /*
- execute with postgres user
+ execute with user: postgres
  */
 DROP SCHEMA IF EXISTS public CASCADE;
 CREATE SCHEMA IF NOT EXISTS public;
@@ -24,6 +24,33 @@ GRANT REFERENCES,
 /*
  v0.2.0
  */
+create table category_types (
+    id uuid not null,
+    created timestamp(6) without time zone not null,
+    last_modified timestamp(6) without time zone not null,
+    version integer not null,
+    name varchar(255) not null,
+    primary key (id)
+);
+/*
+ v0.3.0
+ */
+create table type_values (
+    id uuid not null,
+    created timestamp(6) without time zone not null,
+    last_modified timestamp(6) without time zone not null,
+    version integer not null,
+    category_type_id uuid not null,
+    numeric_value numeric(10, 2),
+    string_value varchar(255),
+    date_value timestamp(6) without time zone,
+    primary key (id)
+);
+alter table if exists type_values
+add constraint fk_type_values_and_category_types foreign key (category_type_id) references category_types;
+/*
+ v0.4.0
+ */
 create table companies (
     id uuid not null,
     created timestamp(6) without time zone not null,
@@ -32,13 +59,15 @@ create table companies (
     regon varchar(9) not null,
     nip varchar(10) not null,
     name varchar(255) not null,
-    status varchar(255) not null check (status in ('ACTIVE', 'TERMINATED')),
+    type_value_id uuid,
     website varchar(255) not null,
     is_deleted boolean not null,
     primary key (id)
 );
+alter table if exists companies
+add constraint fk_companies_and_type_values foreign key (type_value_id) references type_values;
 /*
- v0.3.0
+ v0.5.0
  */
 create table company_addresses (
     id uuid not null,
@@ -60,7 +89,7 @@ create table company_addresses (
 alter table if exists company_addresses
 add constraint fk_company_addresses_and_companies foreign key (company_id) references companies;
 /*
- v0.4.0
+ v0.6.0
  */
 create table employees (
     id uuid not null,
@@ -80,7 +109,7 @@ create table employees (
 alter table if exists employees
 add constraint fk_employees_and_companies foreign key (company_id) references companies;
 /*
- v0.5.0
+ v0.7.0
  */
 create table authorities (
     id uuid not null,
@@ -92,7 +121,7 @@ create table authorities (
     primary key (id)
 );
 /*
- v0.6.0
+ v0.8.0
  */
 create table employee_authorities (
     id uuid not null,
@@ -108,33 +137,6 @@ alter table if exists employee_authorities
 add constraint fk_employee_authorities_and_authorities foreign key (authority_id) references authorities;
 alter table if exists employee_authorities
 add constraint fk_employee_authorities_and_employees foreign key (employee_id) references employees;
-/*
- v0.7.0
- */
-create table category_types (
-    id uuid not null,
-    created timestamp(6) without time zone not null,
-    last_modified timestamp(6) without time zone not null,
-    version integer not null,
-    name varchar(255) not null,
-    primary key (id)
-);
-/*
- v0.8.0
- */
-create table type_values (
-    id uuid not null,
-    created timestamp(6) without time zone not null,
-    last_modified timestamp(6) without time zone not null,
-    version integer not null,
-    category_type_id uuid not null,
-    numeric_value numeric(10, 2),
-    string_value varchar(255),
-    date_value timestamp(6) without time zone,
-    primary key (id)
-);
-alter table if exists type_values
-add constraint fk_type_values_and_category_types foreign key (category_type_id) references category_types;
 /*
  v0.9.0
  */

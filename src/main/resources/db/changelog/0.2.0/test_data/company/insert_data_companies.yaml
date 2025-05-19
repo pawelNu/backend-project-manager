@@ -1,11 +1,11 @@
-databaseChangeLog:
-  - changeSet:
-      id: 3
-      author: pawelNu
-      changes:
-        - loadUpdateData:
-            file: companies.csv
-            relativeToChangelogFile: true
-            separator: ','
-            tableName: companies
-            primaryKey: id
+#databaseChangeLog:
+#  - changeSet:
+#      id: 3
+#      author: pawelNu
+#      changes:
+#        - loadUpdateData:
+#            file: companies.csv
+#            relativeToChangelogFile: true
+#            separator: ','
+#            tableName: companies
+#            primaryKey: id
