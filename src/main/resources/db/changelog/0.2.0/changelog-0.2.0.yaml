@@ -1,7 +1,4 @@
 databaseChangeLog:
   - include:
-      file: "company/create_companies_table.yaml"
-      relativeToChangelogFile: true
-  - include:
-      file: "test_data/company/insert_data_companies.yaml"
+      file: "create_table_category_types.yaml"
       relativeToChangelogFile: true
