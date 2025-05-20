@@ -1,7 +1,0 @@
-databaseChangeLog:
-  - include:
-      file: "employee_authorities/create_employee_authorities_table.yaml"
-      relativeToChangelogFile: true
-  - include:
-      file: "test_data/employee_authorities/insert_data_employee_authorities.yaml"
-      relativeToChangelogFile: true

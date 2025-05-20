@@ -1,8 +1,0 @@
-databaseChangeLog:
-  - changeSet:
-      id: 8
-      author: pawelNu
-      changes:
-        - sqlFile:
-            path: "create_authorities_table.sql"
-            relativeToChangelogFile: true

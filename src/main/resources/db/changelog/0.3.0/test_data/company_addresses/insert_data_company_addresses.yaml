@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: 5
+      id: 22
       author: pawelNu
       changes:
         - loadUpdateData:

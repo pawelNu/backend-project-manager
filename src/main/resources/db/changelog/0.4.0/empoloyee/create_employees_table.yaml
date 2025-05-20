@@ -1,8 +1,0 @@
-databaseChangeLog:
-  - changeSet:
-      id: 6
-      author: pawelNu
-      changes:
-        - sqlFile:
-            path: "create_employees_table.sql"
-            relativeToChangelogFile: true
