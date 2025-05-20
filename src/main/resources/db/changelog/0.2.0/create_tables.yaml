@@ -46,5 +46,5 @@ databaseChangeLog:
       author: pawelNu
       changes:
         - sqlFile:
-            path: "create_table_employee_authorities.sql"
+            path: "create_table_priorities.sql"
             relativeToChangelogFile: true
