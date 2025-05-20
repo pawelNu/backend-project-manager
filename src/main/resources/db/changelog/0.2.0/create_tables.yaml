@@ -27,3 +27,10 @@ databaseChangeLog:
         - sqlFile:
             path: "create_table_company_addresses.sql"
             relativeToChangelogFile: true
+  - changeSet:
+      id: 2
+      author: pawelNu
+      changes:
+        - sqlFile:
+            path: "create_table_employees.sql"
+            relativeToChangelogFile: true
