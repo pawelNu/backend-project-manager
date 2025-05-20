@@ -7,79 +7,86 @@ databaseChangeLog:
             path: "create_table_categories.sql"
             relativeToChangelogFile: true
   - changeSet:
-      id: 2
+      id: 3
       author: pawelNu
       changes:
         - sqlFile:
             path: "create_table_category_values.sql"
             relativeToChangelogFile: true
   - changeSet:
-      id: 2
+      id: 4
       author: pawelNu
       changes:
         - sqlFile:
             path: "create_table_companies.sql"
             relativeToChangelogFile: true
   - changeSet:
-      id: 2
+      id: 5
       author: pawelNu
       changes:
         - sqlFile:
             path: "create_table_company_addresses.sql"
             relativeToChangelogFile: true
   - changeSet:
-      id: 2
+      id: 6
       author: pawelNu
       changes:
         - sqlFile:
             path: "create_table_employees.sql"
             relativeToChangelogFile: true
   - changeSet:
-      id: 2
+      id: 7
       author: pawelNu
       changes:
         - sqlFile:
             path: "create_table_authorities.sql"
             relativeToChangelogFile: true
   - changeSet:
-      id: 2
+      id: 8
       author: pawelNu
       changes:
         - sqlFile:
             path: "create_table_priorities.sql"
             relativeToChangelogFile: true
   - changeSet:
-      id: 2
+      id: 9
       author: pawelNu
       changes:
         - sqlFile:
             path: "create_table_project_steps.sql"
             relativeToChangelogFile: true
   - changeSet:
-      id: 2
+      id: 10
       author: pawelNu
       changes:
         - sqlFile:
             path: "create_table_project_step_comments.sql"
             relativeToChangelogFile: true
   - changeSet:
-      id: 2
+      id: 11
       author: pawelNu
       changes:
         - sqlFile:
             path: "create_table_projects.sql"
             relativeToChangelogFile: true
   - changeSet:
-      id: 2
+      id: 12
       author: pawelNu
       changes:
         - sqlFile:
             path: "create_table_tickets.sql"
             relativeToChangelogFile: true
   - changeSet:
-      id: 2
+      id: 13
       author: pawelNu
       changes:
         - sqlFile:
             path: "create_table_attachments.sql"
+            relativeToChangelogFile: true
+  - changeSet:
+      id: 14
+      author: pawelNu
+      changes:
+        - sqlFile:
+            path: "create_table_ticket_histories.sql"
             relativeToChangelogFile: true
