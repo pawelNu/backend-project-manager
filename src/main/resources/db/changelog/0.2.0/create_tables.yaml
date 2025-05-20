@@ -41,3 +41,10 @@ databaseChangeLog:
         - sqlFile:
             path: "create_table_authorities.sql"
             relativeToChangelogFile: true
+  - changeSet:
+      id: 2
+      author: pawelNu
+      changes:
+        - sqlFile:
+            path: "create_table_employee_authorities.sql"
+            relativeToChangelogFile: true
