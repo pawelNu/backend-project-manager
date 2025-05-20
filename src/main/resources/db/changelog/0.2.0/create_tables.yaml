@@ -55,3 +55,10 @@ databaseChangeLog:
         - sqlFile:
             path: "create_table_project_steps.sql"
             relativeToChangelogFile: true
+  - changeSet:
+      id: 2
+      author: pawelNu
+      changes:
+        - sqlFile:
+            path: "create_table_project_step_comments.sql"
+            relativeToChangelogFile: true
