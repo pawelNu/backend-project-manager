@@ -24,7 +24,7 @@ GRANT REFERENCES,
 /*
  v0.2.0
  */
-create table category_types (
+create table categories (
     id uuid not null,
     created timestamp(6) without time zone not null,
     last_modified timestamp(6) without time zone not null,
@@ -35,19 +35,19 @@ create table category_types (
 /*
  v0.3.0
  */
-create table type_values (
+create table category_values (
     id uuid not null,
     created timestamp(6) without time zone not null,
     last_modified timestamp(6) without time zone not null,
     version integer not null,
-    category_type_id uuid not null,
+    category_id uuid not null,
     numeric_value numeric(10, 2),
     string_value varchar(255),
     date_value timestamp(6) without time zone,
     primary key (id)
 );
-alter table if exists type_values
-add constraint fk_type_values_and_category_types foreign key (category_type_id) references category_types;
+alter table if exists category_values
+add constraint fk_category_values_and_categories foreign key (category_id) references categories;
 /*
  v0.4.0
  */
@@ -59,13 +59,13 @@ create table companies (
     regon varchar(9) not null,
     nip varchar(10) not null,
     name varchar(255) not null,
-    type_value_id uuid,
+    category_value_id uuid,
     website varchar(255) not null,
     is_deleted boolean not null,
     primary key (id)
 );
 alter table if exists companies
-add constraint fk_companies_and_type_values foreign key (type_value_id) references type_values;
+add constraint fk_companies_and_category_values foreign key (category_value_id) references category_values;
 /*
  v0.5.0
  */
@@ -146,11 +146,11 @@ create table priorities (
     last_modified timestamp(6) without time zone not null,
     version integer not null,
     name varchar(255) not null,
-    type_value_id uuid not null,
+    category_value_id uuid not null,
     primary key (id)
 );
 alter table if exists priorities
-add constraint fk_priorities_and_type_values foreign key (type_value_id) references type_values;
+add constraint fk_priorities_and_category_values foreign key (category_value_id) references category_values;
 /*
  v0.10.0
  */
@@ -192,14 +192,14 @@ create table projects (
     last_modified timestamp(6) without time zone not null,
     version integer not null,
     name varchar(255) not null,
-    type_value_id uuid,
+    category_value_id uuid,
     company_id uuid,
     assigned_employee_id uuid,
     priority_id uuid,
     primary key (id)
 );
 alter table if exists projects
-add constraint fk_projects_and_type_values foreign key (type_value_id) references type_values;
+add constraint fk_projects_and_category_values foreign key (category_value_id) references category_values;
 alter table if exists projects
 add constraint fk_projects_and_companies foreign key (company_id) references companies;
 alter table if exists projects
@@ -216,7 +216,7 @@ create table tickets (
     version integer not null,
     ticket_number varchar(255) not null,
     title varchar(255) not null,
-    type_value_id uuid,
+    category_value_id uuid,
     deadline timestamp(6) without time zone,
     priority_id uuid,
     additionalDetails varchar(1000) not null,
@@ -225,7 +225,7 @@ create table tickets (
     primary key (id)
 );
 alter table if exists tickets
-add constraint fk_tickets_and_type_values foreign key (type_value_id) references type_values;
+add constraint fk_tickets_and_category_values foreign key (category_value_id) references category_values;
 alter table if exists tickets
 add constraint fk_tickets_and_priorities foreign key (priority_id) references priorities;
 alter table if exists tickets
@@ -270,9 +270,9 @@ create table ticket_histories (
 alter table if exists ticket_histories
 add constraint fk_ticket_histories_and_tickets foreign key (ticket_id) references tickets;
 alter table if exists ticket_histories
-add constraint fk_ticket_histories_and_type_values_from_status foreign key (from_status_id) references type_values;
+add constraint fk_ticket_histories_and_category_values_from_status foreign key (from_status_id) references category_values;
 alter table if exists ticket_histories
-add constraint fk_ticket_histories_and_type_values_to_status foreign key (to_status_id) references type_values;
+add constraint fk_ticket_histories_and_category_values_to_status foreign key (to_status_id) references category_values;
 alter table if exists ticket_histories
 add constraint fk_ticket_histories_and_employees_from_employee foreign key (from_employee_id) references employees;
 alter table if exists ticket_histories

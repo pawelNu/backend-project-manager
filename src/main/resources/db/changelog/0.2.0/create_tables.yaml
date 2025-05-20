@@ -1,0 +1,22 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2
+      author: pawelNu
+      changes:
+        - sqlFile:
+            path: "create_table_categories.sql"
+            relativeToChangelogFile: true
+  - changeSet:
+      id: 2
+      author: pawelNu
+      changes:
+        - sqlFile:
+            path: "create_table_category_values.sql"
+            relativeToChangelogFile: true
+  - changeSet:
+      id: 2
+      author: pawelNu
+      changes:
+        - sqlFile:
+            path: "create_table_companies.sql"
+            relativeToChangelogFile: true

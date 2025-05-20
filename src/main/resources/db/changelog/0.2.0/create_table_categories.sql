@@ -1,4 +1,4 @@
-create table category_types (
+create table categories (
     id uuid not null,
     created timestamp(6) without time zone not null,
     last_modified timestamp(6) without time zone not null,
