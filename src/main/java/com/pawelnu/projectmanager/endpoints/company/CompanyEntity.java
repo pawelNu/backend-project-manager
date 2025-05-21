@@ -1,14 +1,14 @@
 package com.pawelnu.projectmanager.endpoints.company;
 
+import com.pawelnu.projectmanager.endpoints.category.value.CategoryValueEntity;
 import com.pawelnu.projectmanager.endpoints.company.address.CompanyAddressEntity;
 import com.pawelnu.projectmanager.entity.Auditable;
-import com.pawelnu.projectmanager.enums.CompanyStatus;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.util.ArrayList;
@@ -25,7 +25,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CompanyEntity extends Auditable { // TODO adjust entity to db schema
+public class CompanyEntity extends Auditable {
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
@@ -36,15 +36,10 @@ public class CompanyEntity extends Auditable { // TODO adjust entity to db schem
   private String regon;
   private String website;
 
-  @Enumerated(value = EnumType.STRING)
-  private CompanyStatus status;
+  @ManyToOne
+  @JoinColumn(name = "status_id")
+  private CategoryValueEntity status;
 
   @OneToMany(mappedBy = "company")
   private List<CompanyAddressEntity> addresses = new ArrayList<>();
-
-  //  @OneToMany(mappedBy = "company", cascade = CascadeType.ALL)
-  //  private List<ProjectEntity> projects;
-  //
-  //  @OneToMany(mappedBy = "company", cascade = CascadeType.ALL)
-  //  private List<PersonEntity> companyEmployees;
 }
