@@ -21,15 +21,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CompanyAddressEntity extends Auditable { // TODO adjust entity to db schema
+public class CompanyAddressEntity extends Auditable {
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   private UUID id;
-
-  @ManyToOne
-  @JoinColumn(name = "company_id")
-  private CompanyEntity company;
 
   private String street;
   private String streetNumber;
@@ -39,4 +35,8 @@ public class CompanyAddressEntity extends Auditable { // TODO adjust entity to d
   private String phoneNumber;
   private String emailAddress;
   private String addressType;
+
+  @ManyToOne
+  @JoinColumn(name = "company_id")
+  private CompanyEntity company;
 }
