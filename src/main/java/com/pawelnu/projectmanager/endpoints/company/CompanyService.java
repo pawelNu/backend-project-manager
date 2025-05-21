@@ -53,6 +53,8 @@ public class CompanyService {
 
   public CompanyDTO createCompany(CompanyCreateRequestDTO companyCreateRequestDTO) {
     CompanyEntity companyEntity = companyMapper.toEntity(companyCreateRequestDTO);
+    //    FIXME incompatible types: com.pawelnu.projectmanager.enums.CompanyStatus cannot be
+    // converted to com.pawelnu.projectmanager.endpoints.category.value.CategoryValueEntity
     companyEntity.setStatus(CompanyStatus.ACTIVE);
     CompanyEntity savedCompany = companyRepository.save(companyEntity);
     return companyMapper.toDTO(savedCompany);

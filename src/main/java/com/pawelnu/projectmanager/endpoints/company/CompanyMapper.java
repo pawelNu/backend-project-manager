@@ -9,10 +9,10 @@ import org.mapstruct.MappingTarget;
 public interface CompanyMapper {
 
   @Mapping(source = "addresses", target = "addresses")
-  @Mapping(source = "status", target = "status")
+  @Mapping(source = "status.stringValue", target = "status")
   CompanyDTO toDTO(CompanyEntity companyEntity);
 
-  @Mapping(source = "status", target = "status")
+  @Mapping(source = "status.stringValue", target = "status")
   CompanySimpleDTO toSimpleDTO(CompanyEntity companyEntity);
 
   @Mapping(target = "id", ignore = true)

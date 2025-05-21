@@ -72,6 +72,7 @@ public class DataInit {
             .nip(String.valueOf(faker.number().randomNumber(10, true)))
             .regon(String.valueOf(faker.number().randomNumber(9, true)))
             .website("https://" + faker.internet().domainName())
+            // FIXME incompatible types: bad type in conditional expression
             .status(i % 2 == 0 ? CompanyStatus.ACTIVE : CompanyStatus.TERMINATED)
             .build();
     return c;
@@ -84,6 +85,7 @@ public class DataInit {
         .nip(String.valueOf(faker.number().randomNumber(10, true)))
         .regon(String.valueOf(faker.number().randomNumber(9, true)))
         .website("https://" + faker.internet().domainName())
+        // FIXME incompatible types: bad type in conditional expression
         .status(i % 2 == 0 ? CompanyStatus.ACTIVE : CompanyStatus.TERMINATED)
         .build();
   }
