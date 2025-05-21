@@ -1,8 +1,8 @@
 package com.pawelnu.projectmanager.endpoints.project;
 
+import com.pawelnu.projectmanager.endpoints.attachment.AttachmentEntity;
 import com.pawelnu.projectmanager.endpoints.company.CompanyEntity;
 import com.pawelnu.projectmanager.endpoints.company.employee.EmployeeEntity;
-import com.pawelnu.projectmanager.endpoints.project.attachment.ProjectAttachmentEntity;
 import com.pawelnu.projectmanager.endpoints.project.step.ProjectStepEntity;
 import com.pawelnu.projectmanager.endpoints.project.type.ProjectTypeEntity;
 import com.pawelnu.projectmanager.entity.Auditable;
@@ -46,5 +46,5 @@ public class ProjectEntity extends Auditable { // TODO adjust entity to db schem
   private EmployeeEntity assignedEmployee;
 
   @OneToMany(mappedBy = "project")
-  private List<ProjectAttachmentEntity> attachments;
+  private List<AttachmentEntity> attachments;
 }

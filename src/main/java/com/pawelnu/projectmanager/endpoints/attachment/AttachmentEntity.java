@@ -1,6 +1,7 @@
-package com.pawelnu.projectmanager.endpoints.project.attachment;
+package com.pawelnu.projectmanager.endpoints.attachment;
 
 import com.pawelnu.projectmanager.endpoints.project.ProjectEntity;
+import com.pawelnu.projectmanager.endpoints.ticket.TicketEntity;
 import com.pawelnu.projectmanager.entity.Auditable;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -15,12 +16,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "project_attachments")
+@Table(name = "attachments")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ProjectAttachmentEntity extends Auditable { // TODO adjust entity to db schema
+public class AttachmentEntity extends Auditable {
   @Id @GeneratedValue UUID id;
   private String name;
   //  TODO store file in database or only link to file?
@@ -29,4 +30,8 @@ public class ProjectAttachmentEntity extends Auditable { // TODO adjust entity t
   @ManyToOne
   @JoinColumn(name = "project_id")
   private ProjectEntity project;
+
+  @ManyToOne
+  @JoinColumn(name = "ticket_id")
+  private TicketEntity ticket;
 }
