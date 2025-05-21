@@ -68,19 +68,22 @@ add constraint fk_company_addresses_and_companies foreign key (company_id) refer
 --
 create table employees (
     id uuid not null,
+    first_name varchar(255) not null,
+    last_name varchar(255) not null,
+    email varchar(255) not null,
+    username varchar(255) not null,
+    password varchar(255) not null,
+    phone_number varchar(255) not null,
+    role_id uuid,
+    company_id uuid not null,
     created timestamp(6) without time zone not null,
     last_modified timestamp(6) without time zone not null,
     version integer not null,
-    email varchar(255) not null,
-    first_name varchar(255) not null,
-    last_name varchar(255) not null,
-    password varchar(255) not null,
-    phone_number varchar(255) not null,
-    username varchar(255) not null,
-    company_id uuid not null,
     is_deleted boolean not null,
     primary key (id)
 );
+alter table if exists employees
+add constraint fk_employees_and_category_values foreign key (role_id) references category_values;
 alter table if exists employees
 add constraint fk_employees_and_companies foreign key (company_id) references companies;
 --
