@@ -1,8 +1,9 @@
 package com.pawelnu.projectmanager.endpoints.project.step;
 
+import com.pawelnu.projectmanager.endpoints.category.value.CategoryValueEntity;
+import com.pawelnu.projectmanager.endpoints.project.ProjectEntity;
 import com.pawelnu.projectmanager.endpoints.project.step.comment.ProjectStepCommentEntity;
 import com.pawelnu.projectmanager.endpoints.ticket.TicketEntity;
-import com.pawelnu.projectmanager.endpoints.ticket.priority.TicketPriorityEntity;
 import com.pawelnu.projectmanager.entity.Auditable;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -25,13 +26,17 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ProjectStepEntity extends Auditable { // TODO adjust entity to db schema
+public class ProjectStepEntity extends Auditable {
   @Id @GeneratedValue private UUID id;
   private String name;
 
   @ManyToOne
+  @JoinColumn(name = "project_id")
+  private ProjectEntity project;
+
+  @ManyToOne
   @JoinColumn(name = "priority_id")
-  private TicketPriorityEntity priority;
+  private CategoryValueEntity priority;
 
   @OneToMany(mappedBy = "step")
   private List<ProjectStepCommentEntity> comments;
