@@ -217,7 +217,6 @@ create table ticket_histories (
     created timestamp(6) without time zone not null,
     last_modified timestamp(6) without time zone not null,
     version integer not null,
-    name varchar(255) not null,
     ticket_id uuid,
     from_status_id uuid,
     to_status_id uuid,
