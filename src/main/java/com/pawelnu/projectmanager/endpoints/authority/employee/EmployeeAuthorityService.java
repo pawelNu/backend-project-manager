@@ -1,8 +1,12 @@
-package com.pawelnu.projectmanager.endpoints.authority;
+package com.pawelnu.projectmanager.endpoints.authority.employee;
 
 import static com.pawelnu.projectmanager.endpoints.authority.AuthorityService.AUTHORITY_NOT_FOUND_MSG;
 import static com.pawelnu.projectmanager.utils.Consts.MSG.EMPLOYEE_NOT_FOUND;
 
+import com.pawelnu.projectmanager.endpoints.authority.AddAuthorityToUserRequestDTO;
+import com.pawelnu.projectmanager.endpoints.authority.AddAuthorityToUserResponseDTO;
+import com.pawelnu.projectmanager.endpoints.authority.AuthorityEntity;
+import com.pawelnu.projectmanager.endpoints.authority.AuthorityRepository;
 import com.pawelnu.projectmanager.endpoints.company.employee.EmployeeEntity;
 import com.pawelnu.projectmanager.endpoints.company.employee.EmployeeRepository;
 import com.pawelnu.projectmanager.exception.NotFoundException;
