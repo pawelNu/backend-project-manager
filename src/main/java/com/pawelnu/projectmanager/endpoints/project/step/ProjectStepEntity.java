@@ -38,11 +38,11 @@ public class ProjectStepEntity extends Auditable {
   @JoinColumn(name = "priority_id")
   private CategoryValueEntity priority;
 
+  private Instant deadline;
+
   @OneToMany(mappedBy = "step")
   private List<ProjectStepCommentEntity> comments;
 
   @OneToMany(mappedBy = "step")
   private List<TicketEntity> tickets;
-
-  private Instant deadline;
 }
