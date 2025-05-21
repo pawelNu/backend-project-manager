@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class TicketStatusEntity extends Auditable {
+public class TicketStatusEntity extends Auditable { // TODO adjust entity to db schema
   @Id @GeneratedValue UUID id;
   private String name;
 }

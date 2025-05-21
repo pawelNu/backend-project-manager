@@ -20,7 +20,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ProjectAttachmentEntity extends Auditable {
+public class ProjectAttachmentEntity extends Auditable { // TODO adjust entity to db schema
   @Id @GeneratedValue UUID id;
   private String name;
   //  TODO store file in database or only link to file?

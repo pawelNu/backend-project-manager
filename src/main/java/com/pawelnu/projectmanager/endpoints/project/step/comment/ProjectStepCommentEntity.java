@@ -21,7 +21,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ProjectStepCommentEntity extends Auditable {
+public class ProjectStepCommentEntity extends Auditable { // TODO adjust entity to db schema
   @Id @GeneratedValue UUID id;
   private String comment;
 

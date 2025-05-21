@@ -20,7 +20,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class EmployeeAuthorityEntity extends Auditable {
+public class EmployeeAuthorityEntity extends Auditable { // TODO adjust entity to db schema
 
   @Id @GeneratedValue private UUID id;
 

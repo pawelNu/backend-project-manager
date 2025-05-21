@@ -28,4 +28,3 @@ public class AuthorityEntity extends Auditable {
   @ManyToMany(mappedBy = "authority")
   private Set<EmployeeAuthorityEntity> employees = new HashSet<>();
 }
-// TODO adjust entities to db schema

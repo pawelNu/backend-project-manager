@@ -25,7 +25,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CompanyEntity extends Auditable {
+public class CompanyEntity extends Auditable { // TODO adjust entity to db schema
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
