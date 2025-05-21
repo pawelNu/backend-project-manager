@@ -1,10 +1,10 @@
 package com.pawelnu.projectmanager.endpoints.project;
 
 import com.pawelnu.projectmanager.endpoints.attachment.AttachmentEntity;
+import com.pawelnu.projectmanager.endpoints.category.value.CategoryValueEntity;
 import com.pawelnu.projectmanager.endpoints.company.CompanyEntity;
 import com.pawelnu.projectmanager.endpoints.company.employee.EmployeeEntity;
 import com.pawelnu.projectmanager.endpoints.project.step.ProjectStepEntity;
-import com.pawelnu.projectmanager.endpoints.project.type.ProjectTypeEntity;
 import com.pawelnu.projectmanager.entity.Auditable;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -32,10 +32,8 @@ public class ProjectEntity extends Auditable { // TODO adjust entity to db schem
   private String name;
 
   @ManyToOne
-  @JoinColumn(name = "project_type_id")
-  private ProjectTypeEntity projectType;
-
-  @OneToMany private List<ProjectStepEntity> projectSteps;
+  @JoinColumn(name = "category_id")
+  private CategoryValueEntity category;
 
   @ManyToOne
   @JoinColumn(name = "company_id")
@@ -44,6 +42,12 @@ public class ProjectEntity extends Auditable { // TODO adjust entity to db schem
   @ManyToOne
   @JoinColumn(name = "assigned_employee_id")
   private EmployeeEntity assignedEmployee;
+
+  @ManyToOne
+  @JoinColumn(name = "priority_id")
+  private CategoryValueEntity priority;
+
+  @OneToMany private List<ProjectStepEntity> projectSteps;
 
   @OneToMany(mappedBy = "project")
   private List<AttachmentEntity> attachments;
