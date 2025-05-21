@@ -20,16 +20,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class EmployeeAuthorityEntity extends Auditable { // TODO adjust entity to db schema
+public class EmployeeAuthorityEntity extends Auditable {
 
   @Id @GeneratedValue private UUID id;
-
-  //  @NotNull private String authority;
-  @ManyToOne
-  @JoinColumn(name = "employee_id")
-  private EmployeeEntity employee;
 
   @ManyToOne
   @JoinColumn(name = "authority_id")
   private AuthorityEntity authority;
+
+  @ManyToOne
+  @JoinColumn(name = "employee_id")
+  private EmployeeEntity employee;
 }
