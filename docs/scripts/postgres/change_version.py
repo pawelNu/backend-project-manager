@@ -21,4 +21,4 @@ def renumerate_versions(filename):
     print(f"Zaktualizowano {counter - 1} wersji w pliku {filename}")
 
 # Użycie:
-renumerate_versions('schema.sql')
+renumerate_versions('schema_plan.sql')

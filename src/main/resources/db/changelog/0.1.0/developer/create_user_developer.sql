@@ -1,3 +1,9 @@
+/*
+ v0.1.0
+ */
+ /*
+  execute with user: postgres
+  */
 DROP SCHEMA IF EXISTS public CASCADE;
 CREATE SCHEMA IF NOT EXISTS public;
 
