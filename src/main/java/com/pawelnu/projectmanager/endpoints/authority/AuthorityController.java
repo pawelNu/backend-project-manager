@@ -23,8 +23,7 @@ public class AuthorityController implements AuthorityApi {
   }
 
   @Override
-  public ResponseEntity<List<AuthorityDTO>> getList(
-      String sort, String range, String filter) {
+  public ResponseEntity<List<AuthorityDTO>> getList(String sort, String range, String filter) {
     return null;
   }
 
