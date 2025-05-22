@@ -1,8 +1,0 @@
-databaseChangeLog:
-  - changeSet:
-      id: 16
-      author: pawelNu
-      changes:
-        - sqlFile:
-            path: "create_company_addresses_table.sql"
-            relativeToChangelogFile: true

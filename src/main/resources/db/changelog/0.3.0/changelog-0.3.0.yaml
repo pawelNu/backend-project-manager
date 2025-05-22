@@ -1,7 +1,4 @@
 databaseChangeLog:
   - include:
-      file: "company_addresses/create_company_addresses_table.yaml"
-      relativeToChangelogFile: true
-  - include:
-      file: "test_data/company_addresses/insert_data_company_addresses.yaml"
+      file: "insert_data.yaml"
       relativeToChangelogFile: true

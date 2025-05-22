@@ -68,7 +68,7 @@ public class CompanyQueryRepository {
       allConditions.and(company.regon.eq(filters.get(company.regon.getMetadata().getName())));
     }
     if (filters.containsKey(company.status.getMetadata().getName())) {
-      //      FIXME add join on category_values
+      //     TODO write test to find if query builds properly
       allConditions.and(
           status.stringValue.likeIgnoreCase((filters.get(company.status.getMetadata().getName()))));
     }
