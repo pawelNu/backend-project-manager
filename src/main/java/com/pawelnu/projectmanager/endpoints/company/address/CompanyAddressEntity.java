@@ -27,10 +27,6 @@ public class CompanyAddressEntity extends Auditable {
   @GeneratedValue(strategy = GenerationType.AUTO)
   private UUID id;
 
-  @ManyToOne
-  @JoinColumn(name = "company_id")
-  private CompanyEntity company;
-
   private String street;
   private String streetNumber;
   private String city;
@@ -39,4 +35,8 @@ public class CompanyAddressEntity extends Auditable {
   private String phoneNumber;
   private String emailAddress;
   private String addressType;
+
+  @ManyToOne
+  @JoinColumn(name = "company_id")
+  private CompanyEntity company;
 }

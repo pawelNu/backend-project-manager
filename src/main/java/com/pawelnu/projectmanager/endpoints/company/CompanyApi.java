@@ -53,7 +53,7 @@ public interface CompanyApi {
   @ResponseErrors
   @GetMapping("/pagination")
   @Operation(description = "Get list of companies.")
-  ResponseEntity<CompanyListResponseDTO> getAllCompanies(
+  ResponseEntity<CompanyListResponseDTO> getList(
       @Parameter(description = "Page number from 0")
           @RequestParam(
               required = false,

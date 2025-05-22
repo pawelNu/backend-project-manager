@@ -1,4 +1,4 @@
 databaseChangeLog:
   - include:
-      file: "create_table_category_types.yaml"
+      file: "create_tables.yaml"
       relativeToChangelogFile: true

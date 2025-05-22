@@ -12,17 +12,17 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class CompanyAddressController implements CompanyAddressApi {
 
-  private final CompanyAddressService service;
+  private final CompanyAddressService companyAddressService;
 
   @Override
   public ResponseEntity<CompanyAddressDTO> create(CompanyAddressCreateRequestDTO body) {
-    CompanyAddressDTO result = service.createCompany(body);
+    CompanyAddressDTO result = companyAddressService.create(body);
     return ResponseEntity.status(HttpStatus.CREATED).body(result);
   }
 
   @Override
   public ResponseEntity<List<CompanyAddressDTO>> getList(String sort, String range, String filter) {
-    CompanyAddressesListResponseDTO result = service.filterCompanies(sort, range, filter);
+    CompanyAddressesListResponseDTO result = companyAddressService.filter(sort, range, filter);
     return ResponseEntity.ok()
         .header("Content-Range", result.getContentRange())
         .body(result.getData());
@@ -30,19 +30,19 @@ public class CompanyAddressController implements CompanyAddressApi {
 
   @Override
   public ResponseEntity<CompanyAddressDTO> getById(UUID id) {
-    CompanyAddressDTO result = service.getCompanyById(id);
+    CompanyAddressDTO result = companyAddressService.getById(id);
     return ResponseEntity.ok(result);
   }
 
   @Override
   public ResponseEntity<CompanyAddressDTO> editById(UUID id, CompanyAddressEditRequestDTO body) {
-    CompanyAddressDTO result = service.editCompanyById(id, body);
+    CompanyAddressDTO result = companyAddressService.editById(id, body);
     return ResponseEntity.ok(result);
   }
 
   @Override
   public ResponseEntity<SimpleResponse> deleteById(UUID id) {
-    SimpleResponse result = service.deleteCompanyById(id);
+    SimpleResponse result = companyAddressService.deleteById(id);
     return ResponseEntity.ok(result);
   }
 }

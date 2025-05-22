@@ -2,7 +2,6 @@ package com.pawelnu.projectmanager.endpoints.company;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pawelnu.projectmanager.dto.PagingAndSortingMetadataDTO;
-import com.pawelnu.projectmanager.enums.CompanyStatus;
 import com.pawelnu.projectmanager.exception.NotFoundException;
 import com.pawelnu.projectmanager.exception.model.SimpleResponse;
 import com.pawelnu.projectmanager.mapper.PagingAndSortingMapper;
@@ -32,7 +31,7 @@ public class CompanyService {
   private final PagingAndSortingMapper pageMapper;
   private final ObjectMapper objectMapper;
 
-  public CompanyListResponseDTO getAllCompanies(
+  public CompanyListResponseDTO filter(
       Integer pageNumber, Integer pageSize, String sortedBy, String direction) {
     Pageable pageable = Shared.preparePageable(pageNumber, pageSize, sortedBy, direction);
     Page<CompanyEntity> companiesPage = companyRepository.findAll(pageable);
@@ -44,21 +43,23 @@ public class CompanyService {
     return CompanyListResponseDTO.builder().data(companyDTOs).page(paging).build();
   }
 
-  public CompanyDTO getCompanyById(UUID id) {
+  public CompanyDTO getById(UUID id) {
     return companyQueryRepository
         .findById(id)
         .map(companyMapper::toDTO)
         .orElseThrow(() -> new NotFoundException(MSG.COMPANY_NOT_FOUND + id));
   }
 
-  public CompanyDTO createCompany(CompanyCreateRequestDTO companyCreateRequestDTO) {
+  public CompanyDTO create(CompanyCreateRequestDTO companyCreateRequestDTO) {
     CompanyEntity companyEntity = companyMapper.toEntity(companyCreateRequestDTO);
-    companyEntity.setStatus(CompanyStatus.ACTIVE);
+    //    FIXME incompatible types: com.pawelnu.projectmanager.enums.CompanyStatus cannot be
+    // converted to com.pawelnu.projectmanager.endpoints.category.value.CategoryValueEntity
+    //    companyEntity.setStatus(CompanyStatus.ACTIVE);
     CompanyEntity savedCompany = companyRepository.save(companyEntity);
     return companyMapper.toDTO(savedCompany);
   }
 
-  public CompanyDTO editCompanyById(UUID id, CompanyEditRequestDTO body) {
+  public CompanyDTO editById(UUID id, CompanyEditRequestDTO body) {
     Optional<CompanyEntity> companyToEdit = companyRepository.findById(id);
     if (companyToEdit.isPresent()) {
       CompanyEntity existingCompany = companyToEdit.get();
@@ -70,7 +71,7 @@ public class CompanyService {
     }
   }
 
-  public SimpleResponse deleteCompanyById(UUID id) {
+  public SimpleResponse deleteById(UUID id) {
     Optional<CompanyEntity> companyToDelete = companyRepository.findByIdAndIsDeletedFalse(id);
     if (companyToDelete.isPresent()) {
       CompanyEntity existingCompany = companyToDelete.get();
@@ -86,8 +87,8 @@ public class CompanyService {
     }
   }
 
-  public CompanyListResponseDTO filterCompanies(CompanyFilterRequestDTO body) {
-    Page<CompanyEntity> filteredCompanies = companyQueryRepository.filterCompanies(body);
+  public CompanyListResponseDTO filter(CompanyFilterRequestDTO body) {
+    Page<CompanyEntity> filteredCompanies = companyQueryRepository.filter(body);
     List<CompanyDTO> companyDTOs =
         filteredCompanies.getContent().stream().map(companyMapper::toDTO).toList();
     Order pageSort = filteredCompanies.getSort().stream().findFirst().orElse(null);
@@ -96,7 +97,7 @@ public class CompanyService {
     return CompanyListResponseDTO.builder().data(companyDTOs).page(paging).build();
   }
 
-  public CompanyListResponseDTO2 filterCompanies(String sort, String range, String filter) {
+  public CompanyListResponseDTO2 filter(String sort, String range, String filter) {
 
     List<String> sortList = Shared.parseJsonList(objectMapper, sort);
     String sortField = sortList.isEmpty() ? "name" : sortList.get(0);
@@ -108,10 +109,9 @@ public class CompanyService {
 
     Map<String, String> filters = Shared.parseJsonMap(objectMapper, filter);
 
-    Page<CompanyEntity> page =
-        companyQueryRepository.filterCompanies(filters, offset, limit, sortDir, sortField);
-    List<CompanySimpleDTO> companyDTOs =
-        page.getContent().stream().map(companyMapper::toSimpleDTO).toList();
+    Page<CompanySimpleDTO> page =
+        companyQueryRepository.filter(filters, offset, limit, sortDir, sortField);
+    List<CompanySimpleDTO> companyDTOs = page.getContent();
 
     long totalElements = page.getTotalElements();
     long end = Math.min(offset + limit - 1, totalElements - 1);

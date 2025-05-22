@@ -1,8 +1,14 @@
 package com.pawelnu.projectmanager.endpoints.company;
 
+import com.pawelnu.projectmanager.endpoints.category.value.QCategoryValueEntity;
 import com.pawelnu.projectmanager.endpoints.company.address.QCompanyAddressEntity;
 import com.pawelnu.projectmanager.utils.Shared;
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.Order;
+import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.PathBuilder;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +17,7 @@ import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -24,7 +31,7 @@ public class CompanyQueryRepository {
   private final CompanyRepository companyRepository;
   private final JPAQueryFactory queryFactory;
 
-  public Page<CompanyEntity> filterCompanies(CompanyFilterRequestDTO body) {
+  public Page<CompanyEntity> filter(CompanyFilterRequestDTO body) {
     QCompanyEntity company = QCompanyEntity.companyEntity;
     BooleanBuilder allConditions = new BooleanBuilder();
     if (body.getFilters().getNames() != null && !body.getFilters().getNames().isEmpty()) {
@@ -49,9 +56,10 @@ public class CompanyQueryRepository {
     return companyRepository.findAll(allConditions, pageable);
   }
 
-  public Page<CompanyEntity> filterCompanies(
+  public Page<CompanySimpleDTO> filter(
       Map<String, String> filters, int offset, int limit, String sortDir, String sortField) {
     QCompanyEntity company = QCompanyEntity.companyEntity;
+    QCategoryValueEntity status = QCategoryValueEntity.categoryValueEntity;
     BooleanBuilder allConditions = new BooleanBuilder();
 
     if (filters.containsKey(company.name.getMetadata().getName())) {
@@ -67,20 +75,58 @@ public class CompanyQueryRepository {
     }
     if (filters.containsKey(company.status.getMetadata().getName())) {
       allConditions.and(
-          company
-              .status
-              .stringValue()
-              .likeIgnoreCase((filters.get(company.status.getMetadata().getName()))));
+          status.stringValue.likeIgnoreCase((filters.get(company.status.getMetadata().getName()))));
     }
     allConditions.and(company.isDeleted.isFalse());
     if (sortDir == null || sortDir.isEmpty()) {
       sortDir = "ASC";
     }
 
-    Pageable pageable =
-        PageRequest.of(
-            offset / limit, limit, Sort.by(Sort.Direction.fromString(sortDir), sortField));
-    return companyRepository.findAll(allConditions, pageable);
+    JPAQuery<CompanySimpleDTO> query =
+        queryFactory
+            .select(
+                Projections.constructor(
+                    CompanySimpleDTO.class,
+                    company.id,
+                    company.name,
+                    company.nip,
+                    company.regon,
+                    status.stringValue,
+                    company.website))
+            .from(company)
+            .leftJoin(company.status, status)
+            .where(allConditions)
+            .offset(offset)
+            .limit(limit);
+
+    if (!sortField.isEmpty()) {
+      if (sortField.equals(company.status.getMetadata().getName())) {
+        query.orderBy(
+            sortDir.equalsIgnoreCase("DESC")
+                ? status.stringValue.desc()
+                : status.stringValue.asc());
+      } else {
+        PathBuilder<CompanyEntity> entityPath =
+            new PathBuilder<>(CompanyEntity.class, "companyEntity");
+        query.orderBy(
+            new OrderSpecifier<>(
+                Sort.Direction.fromString(sortDir) == Sort.Direction.ASC ? Order.ASC : Order.DESC,
+                entityPath.getString(sortField)));
+      }
+    }
+
+    List<CompanySimpleDTO> results = query.fetch();
+    long total =
+        Optional.ofNullable(
+                queryFactory
+                    .select(company.count())
+                    .from(company)
+                    .leftJoin(company.status, status)
+                    .where(allConditions)
+                    .fetchOne())
+            .orElse(0L);
+
+    return new PageImpl<>(results, PageRequest.of(offset / limit, limit), total);
   }
 
   public Optional<CompanyEntity> findById(UUID id) {

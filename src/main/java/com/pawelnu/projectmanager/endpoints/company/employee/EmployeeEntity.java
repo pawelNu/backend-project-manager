@@ -1,8 +1,8 @@
 package com.pawelnu.projectmanager.endpoints.company.employee;
 
-import com.pawelnu.projectmanager.endpoints.authority.EmployeeAuthorityEntity;
+import com.pawelnu.projectmanager.endpoints.authority.employee.EmployeeAuthorityEntity;
+import com.pawelnu.projectmanager.endpoints.category.value.CategoryValueEntity;
 import com.pawelnu.projectmanager.endpoints.company.CompanyEntity;
-import com.pawelnu.projectmanager.endpoints.project.step.comment.ProjectStepCommentEntity;
 import com.pawelnu.projectmanager.entity.Auditable;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -13,7 +13,6 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
@@ -40,14 +39,9 @@ public class EmployeeEntity extends Auditable {
   private String email;
   private String phoneNumber;
 
-  //  @Enumerated(EnumType.STRING)
-  //  private PersonRole role;
-
-  //  @OneToMany(mappedBy = "registeringPerson")
-  //  private List<TicketEntity> registeringTickets;
-  //
-  //  @OneToMany(mappedBy = "assignedPerson")
-  //  private List<TicketEntity> assignedTickets;
+  @ManyToOne
+  @JoinColumn(name = "role_id")
+  private CategoryValueEntity role;
 
   @ManyToOne
   @JoinColumn(name = "company_id")
@@ -55,14 +49,4 @@ public class EmployeeEntity extends Auditable {
 
   @OneToMany(mappedBy = "employee")
   private Set<EmployeeAuthorityEntity> authorities = new HashSet<>();
-
-  @OneToMany(mappedBy = "employee")
-  private List<ProjectStepCommentEntity> stepComments;
-
-  //  @ManyToMany(fetch = FetchType.EAGER)
-  //  @JoinTable(
-  //      name = "employee_authorities",
-  //      joinColumns = @JoinColumn(name = "employee_id"),
-  //      inverseJoinColumns = @JoinColumn(name = "authority_id"))
-  //  private Set<AuthorityEntity> authorities = new HashSet<>();
 }

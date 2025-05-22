@@ -1,8 +1,8 @@
 package com.pawelnu.projectmanager.endpoints.ticket.history;
 
+import com.pawelnu.projectmanager.endpoints.category.value.CategoryValueEntity;
 import com.pawelnu.projectmanager.endpoints.company.employee.EmployeeEntity;
 import com.pawelnu.projectmanager.endpoints.ticket.TicketEntity;
-import com.pawelnu.projectmanager.endpoints.ticket.status.TicketStatusEntity;
 import com.pawelnu.projectmanager.entity.Auditable;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -31,11 +31,11 @@ public class TicketHistoryEntity extends Auditable {
 
   @ManyToOne
   @JoinColumn(name = "from_status_id")
-  private TicketStatusEntity fromStatus;
+  private CategoryValueEntity fromStatus;
 
   @ManyToOne
   @JoinColumn(name = "to_status_id")
-  private TicketStatusEntity toStatus;
+  private CategoryValueEntity toStatus;
 
   @ManyToOne
   @JoinColumn(name = "from_employee_id")

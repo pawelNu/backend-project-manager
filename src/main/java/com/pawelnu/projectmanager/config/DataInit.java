@@ -3,15 +3,14 @@ package com.pawelnu.projectmanager.config;
 import com.github.javafaker.Faker;
 import com.pawelnu.projectmanager.endpoints.authority.AuthorityEntity;
 import com.pawelnu.projectmanager.endpoints.authority.AuthorityRepository;
-import com.pawelnu.projectmanager.endpoints.authority.EmployeeAuthorityEntity;
-import com.pawelnu.projectmanager.endpoints.authority.EmployeeAuthorityRepository;
+import com.pawelnu.projectmanager.endpoints.authority.employee.EmployeeAuthorityEntity;
+import com.pawelnu.projectmanager.endpoints.authority.employee.EmployeeAuthorityRepository;
 import com.pawelnu.projectmanager.endpoints.company.CompanyEntity;
 import com.pawelnu.projectmanager.endpoints.company.CompanyRepository;
 import com.pawelnu.projectmanager.endpoints.company.address.CompanyAddressEntity;
 import com.pawelnu.projectmanager.endpoints.company.address.CompanyAddressRepository;
 import com.pawelnu.projectmanager.endpoints.company.employee.EmployeeEntity;
 import com.pawelnu.projectmanager.endpoints.company.employee.EmployeeRepository;
-import com.pawelnu.projectmanager.enums.CompanyStatus;
 import jakarta.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
@@ -72,7 +71,8 @@ public class DataInit {
             .nip(String.valueOf(faker.number().randomNumber(10, true)))
             .regon(String.valueOf(faker.number().randomNumber(9, true)))
             .website("https://" + faker.internet().domainName())
-            .status(i % 2 == 0 ? CompanyStatus.ACTIVE : CompanyStatus.TERMINATED)
+            // incompatible types: bad type in conditional expression
+            //            .status(i % 2 == 0 ? CompanyStatus.ACTIVE : CompanyStatus.TERMINATED)
             .build();
     return c;
   }
@@ -84,7 +84,8 @@ public class DataInit {
         .nip(String.valueOf(faker.number().randomNumber(10, true)))
         .regon(String.valueOf(faker.number().randomNumber(9, true)))
         .website("https://" + faker.internet().domainName())
-        .status(i % 2 == 0 ? CompanyStatus.ACTIVE : CompanyStatus.TERMINATED)
+        // incompatible types: bad type in conditional expression
+        //        .status(i % 2 == 0 ? CompanyStatus.ACTIVE : CompanyStatus.TERMINATED)
         .build();
   }
 

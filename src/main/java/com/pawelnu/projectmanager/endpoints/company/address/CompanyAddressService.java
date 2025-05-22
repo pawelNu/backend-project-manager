@@ -29,14 +29,14 @@ public class CompanyAddressService {
   private final CompanyAddressMapper companyAddressMapper;
   private final ObjectMapper objectMapper;
 
-  public CompanyAddressDTO getCompanyById(UUID id) {
+  public CompanyAddressDTO getById(UUID id) {
     return companyAddressRepository
         .findById(id)
         .map(companyAddressMapper::toDTO)
         .orElseThrow(() -> new NotFoundException(COMPANY_NOT_FOUND + id));
   }
 
-  public CompanyAddressDTO createCompany(CompanyAddressCreateRequestDTO body) {
+  public CompanyAddressDTO create(CompanyAddressCreateRequestDTO body) {
     Optional<CompanyEntity> company =
         companyRepository.findByIdAndIsDeletedFalse(body.getCompanyId());
     if (company.isPresent()) {
@@ -49,7 +49,7 @@ public class CompanyAddressService {
     }
   }
 
-  public CompanyAddressDTO editCompanyById(UUID id, CompanyAddressEditRequestDTO body) {
+  public CompanyAddressDTO editById(UUID id, CompanyAddressEditRequestDTO body) {
     Optional<CompanyAddressEntity> companyToEdit = companyAddressRepository.findById(id);
     if (companyToEdit.isPresent()) {
       CompanyAddressEntity existingCompany = companyToEdit.get();
@@ -61,7 +61,7 @@ public class CompanyAddressService {
     }
   }
 
-  public SimpleResponse deleteCompanyById(UUID id) {
+  public SimpleResponse deleteById(UUID id) {
     Optional<CompanyAddressEntity> companyToDelete = companyAddressRepository.findById(id);
     if (companyToDelete.isPresent()) {
       companyAddressRepository.delete(companyToDelete.get());
@@ -71,7 +71,7 @@ public class CompanyAddressService {
     }
   }
 
-  public CompanyAddressesListResponseDTO filterCompanies(String sort, String range, String filter) {
+  public CompanyAddressesListResponseDTO filter(String sort, String range, String filter) {
 
     List<String> sortList = Shared.parseJsonList(objectMapper, sort);
     String sortField = !sortList.isEmpty() ? sortList.get(0) : "city";
@@ -84,7 +84,7 @@ public class CompanyAddressService {
     Map<String, String> filters = Shared.parseJsonMap(objectMapper, filter);
 
     Page<CompanyAddressEntity> page =
-        companyAddressQueryRepository.filterCompanies(filters, offset, limit, sortDir, sortField);
+        companyAddressQueryRepository.filter(filters, offset, limit, sortDir, sortField);
     List<CompanyAddressDTO> companyDTOs =
         page.getContent().stream().map(companyAddressMapper::toDTO).toList();
 

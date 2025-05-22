@@ -1,5 +1,6 @@
 package com.pawelnu.projectmanager.endpoints.authority;
 
+import com.pawelnu.projectmanager.endpoints.authority.employee.EmployeeAuthorityService;
 import com.pawelnu.projectmanager.exception.model.SimpleResponse;
 import java.util.List;
 import java.util.UUID;

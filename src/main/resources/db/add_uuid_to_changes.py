@@ -30,6 +30,6 @@ def replace_all_ids_with_fresh_sequence(root_dir):
     if modified:
       with open(filepath, "w", encoding="utf-8") as file:
         file.writelines(new_lines)
-      print(f"ID-y zaktualizowane w: {filepath}")
+      print(f"ID zaktualizowane w: {filepath}")
 
 replace_all_ids_with_fresh_sequence("changelog")
