@@ -12,43 +12,43 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class CompanyController implements CompanyApi {
 
-  private final CompanyService service;
+  private final CompanyService companyService;
 
   @Override
   public ResponseEntity<CompanyDTO> create(CompanyCreateRequestDTO companyCreateRequestDTO) {
-    CompanyDTO company = service.createCompany(companyCreateRequestDTO);
+    CompanyDTO company = companyService.create(companyCreateRequestDTO);
     return ResponseEntity.status(HttpStatus.CREATED).body(company);
   }
 
   @Override
-  public ResponseEntity<CompanyListResponseDTO> getAllCompanies(
+  public ResponseEntity<CompanyListResponseDTO> getList(
       Integer pageNumber, Integer pageSize, String sortedBy, String direction) {
-    return ResponseEntity.ok(service.getAllCompanies(pageNumber, pageSize, sortedBy, direction));
+    return ResponseEntity.ok(companyService.filter(pageNumber, pageSize, sortedBy, direction));
   }
 
   @Override
   public ResponseEntity<CompanyDTO> getById(UUID id) {
-    return ResponseEntity.ok(service.getCompanyById(id));
+    return ResponseEntity.ok(companyService.getById(id));
   }
 
   @Override
   public ResponseEntity<CompanyDTO> editById(UUID id, CompanyEditRequestDTO body) {
-    return ResponseEntity.ok(service.editCompanyById(id, body));
+    return ResponseEntity.ok(companyService.editById(id, body));
   }
 
   @Override
   public ResponseEntity<SimpleResponse> deleteById(UUID id) {
-    return ResponseEntity.ok(service.deleteCompanyById(id));
+    return ResponseEntity.ok(companyService.deleteById(id));
   }
 
   @Override
   public ResponseEntity<CompanyListResponseDTO> filterCompanies(CompanyFilterRequestDTO body) {
-    return ResponseEntity.ok(service.filterCompanies(body));
+    return ResponseEntity.ok(companyService.filter(body));
   }
 
   @Override
   public ResponseEntity<List<CompanySimpleDTO>> getList(String sort, String range, String filter) {
-    CompanyListResponseDTO2 result = service.filterCompanies(sort, range, filter);
+    CompanyListResponseDTO2 result = companyService.filter(sort, range, filter);
     return ResponseEntity.ok()
         .header("Content-Range", result.getContentRange())
         .body(result.getData());
