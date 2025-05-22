@@ -39,7 +39,7 @@ public interface AuthorityApi {
   @ResponseErrors
   @PostMapping("")
   @Operation(description = "Add new authority.")
-  ResponseEntity<AuthorityDTO> createAuthority(@Valid @RequestBody AuthorityCreateRequestDTO body);
+  ResponseEntity<AuthorityDTO> create(@Valid @RequestBody AuthorityCreateRequestDTO body);
 
   @Operation(
       description = "List authorities with filtering, sorting and pagination (react-admin format)")
@@ -52,7 +52,7 @@ public interface AuthorityApi {
               array = @ArraySchema(schema = @Schema(implementation = AuthorityDTO.class))))
   @ResponseErrors
   @GetMapping("")
-  ResponseEntity<List<AuthorityDTO>> getAuthorityList(
+  ResponseEntity<List<AuthorityDTO>> getList(
       @Parameter(description = "Sort as JSON string, e.g. [\"title\",\"ASC\"]")
           @RequestParam(required = false)
           String sort,
@@ -73,7 +73,7 @@ public interface AuthorityApi {
   @ResponseErrors
   @GetMapping("/{id}")
   @Operation(description = "Get authority by id.")
-  ResponseEntity<AuthorityDTO> getAuthorityById(@Parameter() @PathVariable() UUID id);
+  ResponseEntity<AuthorityDTO> getById(@Parameter() @PathVariable() UUID id);
 
   @ApiResponse(
       responseCode = "200",
@@ -86,7 +86,7 @@ public interface AuthorityApi {
   @ResponseErrors
   @PutMapping("/{id}")
   @Operation(description = "Edit authority by id.")
-  ResponseEntity<AuthorityDTO> editAuthorityById(
+  ResponseEntity<AuthorityDTO> editById(
       @Parameter() @PathVariable() UUID id, @Valid @RequestBody AuthorityEditRequestDTO body);
 
   @ApiResponse(
@@ -100,7 +100,7 @@ public interface AuthorityApi {
   @ResponseErrors
   @DeleteMapping("/{id}")
   @Operation(description = "Delete authority by id.")
-  ResponseEntity<SimpleResponse> deleteAuthorityById(@Parameter() @PathVariable() UUID id);
+  ResponseEntity<SimpleResponse> deleteById(@Parameter() @PathVariable() UUID id);
 
   @ApiResponse(
       responseCode = "201",

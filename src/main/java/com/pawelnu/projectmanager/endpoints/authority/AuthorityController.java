@@ -17,29 +17,29 @@ public class AuthorityController implements AuthorityApi {
   private final EmployeeAuthorityService employeeAuthorityService;
 
   @Override
-  public ResponseEntity<AuthorityDTO> createAuthority(AuthorityCreateRequestDTO body) {
+  public ResponseEntity<AuthorityDTO> create(AuthorityCreateRequestDTO body) {
     AuthorityDTO authorityDTO = authorityService.createAuthority(body);
     return ResponseEntity.status(HttpStatus.CREATED).body(authorityDTO);
   }
 
   @Override
-  public ResponseEntity<List<AuthorityDTO>> getAuthorityList(
+  public ResponseEntity<List<AuthorityDTO>> getList(
       String sort, String range, String filter) {
     return null;
   }
 
   @Override
-  public ResponseEntity<AuthorityDTO> getAuthorityById(UUID id) {
+  public ResponseEntity<AuthorityDTO> getById(UUID id) {
     return null;
   }
 
   @Override
-  public ResponseEntity<AuthorityDTO> editAuthorityById(UUID id, AuthorityEditRequestDTO body) {
+  public ResponseEntity<AuthorityDTO> editById(UUID id, AuthorityEditRequestDTO body) {
     return null;
   }
 
   @Override
-  public ResponseEntity<SimpleResponse> deleteAuthorityById(UUID id) {
+  public ResponseEntity<SimpleResponse> deleteById(UUID id) {
     return null;
   }
 
