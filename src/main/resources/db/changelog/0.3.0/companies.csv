@@ -1,4 +1,4 @@
-id,name,nip,regon,website,status,version,created,last_modified,is_deleted
+id,name,nip,regon,website,status_id,version,created,last_modified,is_deleted
 cf578fec-006b-4604-a5e8-5ad1b3ea2be5,Hayes-Welch,6623095182,913659775,https://cremin.biz,d35f40aa-ddbe-4ed8-846e-c744f56f8184,0,2025-05-09 14:11:02.190,2025-05-09 14:11:02.190,FALSE
 489da321-243c-44fa-a14f-509ebfbad683,Pouros Group,8575953197,488283360,https://heidenreich.co,0a4e538f-c40c-41b3-b090-dafdf8efd0b8,0,2025-05-09 14:11:02.191,2025-05-09 14:11:02.191,FALSE
 08cd2530-227e-4ee7-aa7f-7efe37eb607c,"Hintz, Parisian and Sanford",6222860200,617650427,https://becker.org,d35f40aa-ddbe-4ed8-846e-c744f56f8184,0,2025-05-09 14:11:02.192,2025-05-09 14:11:02.192,FALSE

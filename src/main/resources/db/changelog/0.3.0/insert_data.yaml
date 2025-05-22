@@ -20,7 +20,7 @@ databaseChangeLog:
             tableName: category_values
             primaryKey: id
   - changeSet:
-      id: 6
+      id: 5
       author: pawelNu
       changes:
         - loadUpdateData:
@@ -30,7 +30,7 @@ databaseChangeLog:
             tableName: authorities
             primaryKey: id
   - changeSet:
-      id: 5
+      id: 6
       author: pawelNu
       changes:
         - loadUpdateData:
@@ -51,7 +51,7 @@ databaseChangeLog:
             tableName: company_addresses
             primaryKey: id
   - changeSet:
-      id: 9
+      id: 8
       author: pawelNu
       changes:
         - loadUpdateData:
@@ -61,7 +61,7 @@ databaseChangeLog:
             tableName: employees
             primaryKey: id
   - changeSet:
-      id: 8
+      id: 9
       author: pawelNu
       changes:
         - loadUpdateData:
