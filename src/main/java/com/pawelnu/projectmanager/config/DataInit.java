@@ -11,7 +11,6 @@ import com.pawelnu.projectmanager.endpoints.company.address.CompanyAddressEntity
 import com.pawelnu.projectmanager.endpoints.company.address.CompanyAddressRepository;
 import com.pawelnu.projectmanager.endpoints.company.employee.EmployeeEntity;
 import com.pawelnu.projectmanager.endpoints.company.employee.EmployeeRepository;
-import com.pawelnu.projectmanager.enums.CompanyStatus;
 import jakarta.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
@@ -72,8 +71,8 @@ public class DataInit {
             .nip(String.valueOf(faker.number().randomNumber(10, true)))
             .regon(String.valueOf(faker.number().randomNumber(9, true)))
             .website("https://" + faker.internet().domainName())
-            // FIXME incompatible types: bad type in conditional expression
-            .status(i % 2 == 0 ? CompanyStatus.ACTIVE : CompanyStatus.TERMINATED)
+            // incompatible types: bad type in conditional expression
+            //            .status(i % 2 == 0 ? CompanyStatus.ACTIVE : CompanyStatus.TERMINATED)
             .build();
     return c;
   }
@@ -85,8 +84,8 @@ public class DataInit {
         .nip(String.valueOf(faker.number().randomNumber(10, true)))
         .regon(String.valueOf(faker.number().randomNumber(9, true)))
         .website("https://" + faker.internet().domainName())
-        // FIXME incompatible types: bad type in conditional expression
-        .status(i % 2 == 0 ? CompanyStatus.ACTIVE : CompanyStatus.TERMINATED)
+        // incompatible types: bad type in conditional expression
+        //        .status(i % 2 == 0 ? CompanyStatus.ACTIVE : CompanyStatus.TERMINATED)
         .build();
   }
 

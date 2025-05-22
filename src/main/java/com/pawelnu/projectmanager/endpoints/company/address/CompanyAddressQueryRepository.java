@@ -25,7 +25,7 @@ public class CompanyAddressQueryRepository {
 
   private final JPAQueryFactory queryFactory;
 
-  public Page<CompanyAddressEntity> filterCompanies(
+  public Page<CompanyAddressEntity> filter(
       Map<String, String> filters, int offset, int limit, String sortDir, String sortField) {
     log.info(filters.toString());
     QCompanyAddressEntity address = QCompanyAddressEntity.companyAddressEntity;

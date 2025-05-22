@@ -1,5 +1,6 @@
 package com.pawelnu.projectmanager.endpoints.company;
 
+import com.pawelnu.projectmanager.endpoints.category.value.QCategoryValueEntity;
 import com.pawelnu.projectmanager.endpoints.company.address.QCompanyAddressEntity;
 import com.pawelnu.projectmanager.utils.Shared;
 import com.querydsl.core.BooleanBuilder;
@@ -24,7 +25,7 @@ public class CompanyQueryRepository {
   private final CompanyRepository companyRepository;
   private final JPAQueryFactory queryFactory;
 
-  public Page<CompanyEntity> filterCompanies(CompanyFilterRequestDTO body) {
+  public Page<CompanyEntity> filter(CompanyFilterRequestDTO body) {
     QCompanyEntity company = QCompanyEntity.companyEntity;
     BooleanBuilder allConditions = new BooleanBuilder();
     if (body.getFilters().getNames() != null && !body.getFilters().getNames().isEmpty()) {
@@ -49,9 +50,10 @@ public class CompanyQueryRepository {
     return companyRepository.findAll(allConditions, pageable);
   }
 
-  public Page<CompanyEntity> filterCompanies(
+  public Page<CompanyEntity> filter(
       Map<String, String> filters, int offset, int limit, String sortDir, String sortField) {
     QCompanyEntity company = QCompanyEntity.companyEntity;
+    QCategoryValueEntity status = QCategoryValueEntity.categoryValueEntity;
     BooleanBuilder allConditions = new BooleanBuilder();
 
     if (filters.containsKey(company.name.getMetadata().getName())) {
@@ -68,10 +70,7 @@ public class CompanyQueryRepository {
     if (filters.containsKey(company.status.getMetadata().getName())) {
       //      FIXME add join on category_values
       allConditions.and(
-          company
-              .status
-              .stringValue()
-              .likeIgnoreCase((filters.get(company.status.getMetadata().getName()))));
+          status.stringValue.likeIgnoreCase((filters.get(company.status.getMetadata().getName()))));
     }
     allConditions.and(company.isDeleted.isFalse());
     if (sortDir == null || sortDir.isEmpty()) {

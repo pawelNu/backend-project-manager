@@ -2,7 +2,6 @@ package com.pawelnu.projectmanager.endpoints.company;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pawelnu.projectmanager.dto.PagingAndSortingMetadataDTO;
-import com.pawelnu.projectmanager.enums.CompanyStatus;
 import com.pawelnu.projectmanager.exception.NotFoundException;
 import com.pawelnu.projectmanager.exception.model.SimpleResponse;
 import com.pawelnu.projectmanager.mapper.PagingAndSortingMapper;
@@ -55,7 +54,7 @@ public class CompanyService {
     CompanyEntity companyEntity = companyMapper.toEntity(companyCreateRequestDTO);
     //    FIXME incompatible types: com.pawelnu.projectmanager.enums.CompanyStatus cannot be
     // converted to com.pawelnu.projectmanager.endpoints.category.value.CategoryValueEntity
-    companyEntity.setStatus(CompanyStatus.ACTIVE);
+    //    companyEntity.setStatus(CompanyStatus.ACTIVE);
     CompanyEntity savedCompany = companyRepository.save(companyEntity);
     return companyMapper.toDTO(savedCompany);
   }
@@ -89,7 +88,7 @@ public class CompanyService {
   }
 
   public CompanyListResponseDTO filterCompanies(CompanyFilterRequestDTO body) {
-    Page<CompanyEntity> filteredCompanies = companyQueryRepository.filterCompanies(body);
+    Page<CompanyEntity> filteredCompanies = companyQueryRepository.filter(body);
     List<CompanyDTO> companyDTOs =
         filteredCompanies.getContent().stream().map(companyMapper::toDTO).toList();
     Order pageSort = filteredCompanies.getSort().stream().findFirst().orElse(null);
@@ -111,7 +110,7 @@ public class CompanyService {
     Map<String, String> filters = Shared.parseJsonMap(objectMapper, filter);
 
     Page<CompanyEntity> page =
-        companyQueryRepository.filterCompanies(filters, offset, limit, sortDir, sortField);
+        companyQueryRepository.filter(filters, offset, limit, sortDir, sortField);
     List<CompanySimpleDTO> companyDTOs =
         page.getContent().stream().map(companyMapper::toSimpleDTO).toList();
 

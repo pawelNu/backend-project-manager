@@ -47,7 +47,8 @@ public class ProjectEntity extends Auditable {
   @JoinColumn(name = "priority_id")
   private CategoryValueEntity priority;
 
-  @OneToMany private List<ProjectStepEntity> projectSteps;
+  @OneToMany(mappedBy = "project")
+  private List<ProjectStepEntity> projectSteps;
 
   @OneToMany(mappedBy = "project")
   private List<AttachmentEntity> attachments;
