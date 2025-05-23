@@ -2,11 +2,11 @@ package com.pawelnu.projectmanager.config.security;
 
 import static org.springframework.http.HttpMethod.OPTIONS;
 
-import com.pawelnu.projectmanager.config.security.jwt.AuthEntryPointJwt;
+import com.pawelnu.projectmanager.config.security.jwt.AccessDeniedHandlerImpl;
 import com.pawelnu.projectmanager.config.security.jwt.AuthTokenFilter;
 import com.pawelnu.projectmanager.config.security.jwt.JwtUtils;
+import com.pawelnu.projectmanager.config.security.jwt.UnauthorizedHandler;
 import com.pawelnu.projectmanager.config.security.services.UserDetailsServiceImpl;
-import com.pawelnu.projectmanager.exception.AccessDeniedHandlerImpl;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -32,7 +32,7 @@ import org.springframework.web.servlet.HandlerMapping;
 public class WebSecurityConfig {
 
   private final UserDetailsServiceImpl userDetailsService;
-  private final AuthEntryPointJwt unauthorizedHandler;
+  private final UnauthorizedHandler unauthorizedHandler;
   private final AccessDeniedHandlerImpl accessDeniedHandler;
   private final JwtUtils jwtUtils;
   private final PasswordEncoder passwordEncoder;

@@ -138,9 +138,6 @@ class AuthorityControllerTest {
   }
 
   @Test
-  void create() {}
-
-  @Test
   void getList() {}
 
   @Test

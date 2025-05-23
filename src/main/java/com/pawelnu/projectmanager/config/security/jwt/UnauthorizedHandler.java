@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Slf4j
-public class AuthEntryPointJwt implements AuthenticationEntryPoint {
+public class UnauthorizedHandler implements AuthenticationEntryPoint {
   private final ObjectMapper mapper = new ObjectMapper();
 
   @Override

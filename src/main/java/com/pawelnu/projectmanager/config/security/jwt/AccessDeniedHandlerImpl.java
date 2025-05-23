@@ -1,4 +1,4 @@
-package com.pawelnu.projectmanager.exception;
+package com.pawelnu.projectmanager.config.security.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
