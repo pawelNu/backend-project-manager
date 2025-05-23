@@ -16,11 +16,11 @@ import com.pawelnu.projectmanager.exception.NotFoundException;
 import com.pawelnu.projectmanager.exception.model.ReactAdminError;
 import com.pawelnu.projectmanager.exception.model.SimpleResponse;
 import com.pawelnu.projectmanager.utils.Path;
+import com.pawelnu.projectmanager.utils.Utils;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,8 +48,6 @@ class CompanyControllerTest {
   public static final String INVALID_UUID =
       "Method parameter 'id': Failed to convert value of type 'java.lang.String' to required type"
           + " 'java.util.UUID'; Invalid UUID string: invalid-uuid";
-  public static final String FULL_AUTH_IS_REQUIRED =
-      "Full authentication is required to access this resource";
   public static final String COMPANY_NOT_FOUND_WITH_ID = "Company not found with id: ";
   @Autowired private JwtUtils jwtUtils;
   @Autowired private MockMvc mockMvc;
@@ -134,7 +132,7 @@ class CompanyControllerTest {
     String contentAsString = response.getResponse().getContentAsString();
     ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
     assertEquals(HttpStatus.UNAUTHORIZED.value(), status);
-    assertEquals(FULL_AUTH_IS_REQUIRED, responseBody.getMessage());
+    assertEquals(Utils.FULL_AUTH_IS_REQUIRED, responseBody.getMessage());
   }
 
   @Test
@@ -148,7 +146,7 @@ class CompanyControllerTest {
     String contentAsString = response.getResponse().getContentAsString();
     ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
     assertEquals(HttpStatus.FORBIDDEN.value(), status);
-    assertEquals(accessDeniedError(), responseBody);
+    assertEquals(Utils.accessDeniedError(), responseBody);
   }
 
   @Test
@@ -254,7 +252,7 @@ class CompanyControllerTest {
     String contentAsString = response.getResponse().getContentAsString();
     ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
     assertEquals(HttpStatus.UNAUTHORIZED.value(), status);
-    assertEquals(FULL_AUTH_IS_REQUIRED, responseBody.getMessage());
+    assertEquals(Utils.FULL_AUTH_IS_REQUIRED, responseBody.getMessage());
   }
 
   @Test
@@ -279,12 +277,7 @@ class CompanyControllerTest {
     String contentAsString = response.getResponse().getContentAsString();
     ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
     assertEquals(HttpStatus.FORBIDDEN.value(), status);
-    assertEquals(accessDeniedError(), responseBody);
-  }
-
-  @NotNull
-  private static ReactAdminError accessDeniedError() {
-    return new ReactAdminError("Access denied");
+    assertEquals(Utils.accessDeniedError(), responseBody);
   }
 
   @Test
@@ -402,7 +395,7 @@ class CompanyControllerTest {
     String contentAsString = response.getResponse().getContentAsString();
     ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
     assertEquals(HttpStatus.FORBIDDEN.value(), status);
-    assertEquals(accessDeniedError(), responseBody);
+    assertEquals(Utils.accessDeniedError(), responseBody);
   }
 
   @Test
@@ -486,7 +479,7 @@ class CompanyControllerTest {
     Map<String, String> responseBody =
         objectMapper.readValue(contentAsString, new TypeReference<>() {});
     assertEquals(HttpStatus.UNAUTHORIZED.value(), status);
-    assertEquals(FULL_AUTH_IS_REQUIRED, responseBody.get("message"));
+    assertEquals(Utils.FULL_AUTH_IS_REQUIRED, responseBody.get("message"));
   }
 
   @Test
@@ -512,7 +505,7 @@ class CompanyControllerTest {
     String contentAsString = response.getResponse().getContentAsString();
     ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
     assertEquals(HttpStatus.FORBIDDEN.value(), status);
-    assertEquals(accessDeniedError(), responseBody);
+    assertEquals(Utils.accessDeniedError(), responseBody);
   }
 
   @Test
@@ -589,7 +582,7 @@ class CompanyControllerTest {
     String contentAsString = response.getResponse().getContentAsString();
     ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
     assertEquals(HttpStatus.UNAUTHORIZED.value(), status);
-    assertEquals(FULL_AUTH_IS_REQUIRED, responseBody.getMessage());
+    assertEquals(Utils.FULL_AUTH_IS_REQUIRED, responseBody.getMessage());
   }
 
   @Test
@@ -606,7 +599,7 @@ class CompanyControllerTest {
     String contentAsString = response.getResponse().getContentAsString();
     ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
     assertEquals(HttpStatus.FORBIDDEN.value(), status);
-    assertEquals(accessDeniedError(), responseBody);
+    assertEquals(Utils.accessDeniedError(), responseBody);
   }
 
   @Test
