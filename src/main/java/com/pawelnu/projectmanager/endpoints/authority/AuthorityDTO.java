@@ -9,5 +9,4 @@ public class AuthorityDTO {
 
   private UUID id;
   @NotNull private String name;
-  //  private Set<EmployeeEntity> employees = new HashSet<>();
 }

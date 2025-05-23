@@ -18,7 +18,7 @@ public class AuthorityController implements AuthorityApi {
 
   @Override
   public ResponseEntity<AuthorityDTO> create(AuthorityCreateRequestDTO body) {
-    AuthorityDTO authorityDTO = authorityService.createAuthority(body);
+    AuthorityDTO authorityDTO = authorityService.create(body);
     return ResponseEntity.status(HttpStatus.CREATED).body(authorityDTO);
   }
 

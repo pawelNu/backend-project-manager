@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 @Component
 @Slf4j
 public class AuthEntryPointJwt implements AuthenticationEntryPoint {
+  private final ObjectMapper mapper = new ObjectMapper();
 
   @Override
   public void commence(
@@ -29,8 +30,6 @@ public class AuthEntryPointJwt implements AuthenticationEntryPoint {
 
     final Map<String, Object> body = new HashMap<>();
     body.put("message", authException.getMessage());
-
-    final ObjectMapper mapper = new ObjectMapper();
     mapper.writeValue(response.getOutputStream(), body);
   }
 }
