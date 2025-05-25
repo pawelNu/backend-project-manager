@@ -59,14 +59,14 @@ public class AuthorityService {
   }
 
   public AuthorityDTO editById(UUID id, AuthorityEditRequestDTO body) {
-    Optional<AuthorityEntity> companyToEdit = authorityRepository.findById(id);
+    Optional<AuthorityEntity> companyToEdit = authorityQueryRepository.findById(id);
     if (companyToEdit.isPresent()) {
       AuthorityEntity existingAuthority = companyToEdit.get();
       authorityMapper.toEntity(body, existingAuthority);
       AuthorityEntity updatedCompany = authorityRepository.save(existingAuthority);
       return authorityMapper.toDTO(updatedCompany);
     } else {
-      throw new NotFoundException(MSG.COMPANY_NOT_FOUND + id);
+      throw new NotFoundException(MSG.AUTHORITY_NOT_FOUND_MSG + id);
     }
   }
 }

@@ -84,8 +84,8 @@ public class AuthorityQueryRepository {
             .fetch();
 
     if (fetch != null && !fetch.isEmpty()) {
-      AuthorityEntity companyEntity = fetch.getFirst();
-      return Optional.of(companyEntity);
+      AuthorityEntity authorityEntity = fetch.getFirst();
+      return Optional.of(authorityEntity);
     }
     return Optional.empty();
   }
