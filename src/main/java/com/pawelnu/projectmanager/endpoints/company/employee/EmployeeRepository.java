@@ -13,4 +13,6 @@ public interface EmployeeRepository
   Boolean existsByUsername(String username);
 
   Boolean existsByEmail(String email);
+
+  Optional<EmployeeEntity> findByIdAndIsDeletedFalse(UUID id);
 }

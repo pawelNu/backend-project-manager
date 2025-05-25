@@ -111,8 +111,8 @@ public interface AuthorityApi {
             schema = @Schema(implementation = AddAuthorityToUserResponseDTO.class))
       })
   @ResponseErrors
-  @PostMapping("/add-authority-to-user")
+  @PostMapping("/add-authority-to-employee")
   @Operation(description = "Add authority to user.")
-  ResponseEntity<AddAuthorityToUserResponseDTO> addAuthorityToUser(
+  ResponseEntity<AddAuthorityToUserResponseDTO> addAuthorityToEmployee(
       @Valid @RequestBody AddAuthorityToUserRequestDTO body);
 }
