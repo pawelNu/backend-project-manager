@@ -2,6 +2,7 @@ package com.pawelnu.projectmanager.endpoints.authority;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pawelnu.projectmanager.exception.NotFoundException;
+import com.pawelnu.projectmanager.exception.model.SimpleResponse;
 import com.pawelnu.projectmanager.utils.Consts.MSG;
 import com.pawelnu.projectmanager.utils.Shared;
 import java.util.List;
@@ -65,6 +66,22 @@ public class AuthorityService {
       authorityMapper.toEntity(body, existingAuthority);
       AuthorityEntity updatedCompany = authorityRepository.save(existingAuthority);
       return authorityMapper.toDTO(updatedCompany);
+    } else {
+      throw new NotFoundException(MSG.AUTHORITY_NOT_FOUND_MSG + id);
+    }
+  }
+
+  public SimpleResponse deleteById(UUID id) {
+    Optional<AuthorityEntity> authorityToDelete = authorityRepository.findByIdAndIsDeletedFalse(id);
+    if (authorityToDelete.isPresent()) {
+      AuthorityEntity existingAuthority = authorityToDelete.get();
+      existingAuthority.setIsDeleted(true);
+      AuthorityEntity updatedAuthority = authorityRepository.save(existingAuthority);
+      if (updatedAuthority.getIsDeleted()) {
+        return SimpleResponse.builder().message("Deleted authority with id: " + id).build();
+      } else {
+        return SimpleResponse.builder().message("Cannot delete authority with id: " + id).build();
+      }
     } else {
       throw new NotFoundException(MSG.AUTHORITY_NOT_FOUND_MSG + id);
     }

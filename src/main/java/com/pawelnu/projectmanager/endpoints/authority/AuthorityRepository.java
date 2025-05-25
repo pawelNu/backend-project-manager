@@ -7,4 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface AuthorityRepository extends JpaRepository<AuthorityEntity, UUID> {
 
   Optional<AuthorityEntity> findByName(String name);
+
+  Optional<AuthorityEntity> findByIdAndIsDeletedFalse(UUID id);
 }

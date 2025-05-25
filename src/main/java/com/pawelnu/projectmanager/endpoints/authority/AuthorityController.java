@@ -42,7 +42,7 @@ public class AuthorityController implements AuthorityApi {
 
   @Override
   public ResponseEntity<SimpleResponse> deleteById(UUID id) {
-    return null;
+    return ResponseEntity.ok(authorityService.deleteById(id));
   }
 
   @Override
