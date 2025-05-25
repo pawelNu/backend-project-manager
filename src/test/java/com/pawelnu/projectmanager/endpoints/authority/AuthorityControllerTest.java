@@ -5,6 +5,7 @@ import static com.pawelnu.projectmanager.utils.Utils.accessDeniedError;
 import static com.pawelnu.projectmanager.utils.Utils.withBadJwt;
 import static com.pawelnu.projectmanager.utils.Utils.withJwt;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -16,6 +17,7 @@ import com.pawelnu.projectmanager.config.security.jwt.JwtUtils;
 import com.pawelnu.projectmanager.exception.NotFoundException;
 import com.pawelnu.projectmanager.exception.model.ReactAdminBadRequestError;
 import com.pawelnu.projectmanager.exception.model.ReactAdminError;
+import com.pawelnu.projectmanager.exception.model.SimpleResponse;
 import com.pawelnu.projectmanager.utils.Consts.MSG;
 import com.pawelnu.projectmanager.utils.Path;
 import com.pawelnu.projectmanager.utils.Utils;
@@ -437,7 +439,92 @@ class AuthorityControllerTest {
   }
 
   @Test
-  void deleteById() {}
+  void shouldReturn_200_deleteAuthorityById_isDeletedFalse() throws Exception {
+    String authorityId = "651762db-fff0-47ba-8c2b-3770f4c4a2fe";
+    String url = BASE_URL + "/" + authorityId;
+    MvcResult response =
+        mockMvc
+            .perform(delete(url).with(withJwt()).contentType(MediaType.APPLICATION_JSON))
+            .andReturn();
+    int status = response.getResponse().getStatus();
+    String contentAsString = response.getResponse().getContentAsString();
+    SimpleResponse responseBody = objectMapper.readValue(contentAsString, SimpleResponse.class);
+    assertEquals(HttpStatus.OK.value(), status);
+    assertEquals("Deleted authority with id: " + authorityId, responseBody.getMessage());
+  }
+
+  @Test
+  void shouldReturn_400_deleteAuthorityById_isDeletedFalse() throws Exception {
+    String authorityId = "invalid-uuid";
+    String url = BASE_URL + "/" + authorityId;
+    MvcResult response =
+        mockMvc
+            .perform(delete(url).with(withJwt()).contentType(MediaType.APPLICATION_JSON))
+            .andReturn();
+    int status = response.getResponse().getStatus();
+    String contentAsString = response.getResponse().getContentAsString();
+    SimpleResponse responseBody = objectMapper.readValue(contentAsString, SimpleResponse.class);
+    assertEquals(HttpStatus.BAD_REQUEST.value(), status);
+    assertEquals(MSG.INVALID_UUID, responseBody.getMessage());
+  }
+
+  @Test
+  void shouldReturn_401_deleteAuthorityById_isDeletedFalse() throws Exception {
+    String authorityId = "4c7a2cc5-1e03-4337-8901-93c0b46585af";
+    String url = BASE_URL + "/" + authorityId;
+    MvcResult response =
+        mockMvc.perform(delete(url).contentType(MediaType.APPLICATION_JSON)).andReturn();
+    int status = response.getResponse().getStatus();
+    String contentAsString = response.getResponse().getContentAsString();
+    ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
+    assertEquals(HttpStatus.UNAUTHORIZED.value(), status);
+    assertEquals(Utils.FULL_AUTH_IS_REQUIRED, responseBody.getMessage());
+  }
+
+  @Test
+  void shouldReturn_403_deleteAuthorityById_isDeletedFalse() throws Exception {
+    String authorityId = "4c7a2cc5-1e03-4337-8901-93c0b46585af";
+    String url = BASE_URL + "/" + authorityId;
+    MvcResult response =
+        mockMvc
+            .perform(delete(url).with(withBadJwt()).contentType(MediaType.APPLICATION_JSON))
+            .andReturn();
+    int status = response.getResponse().getStatus();
+    String contentAsString = response.getResponse().getContentAsString();
+    ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
+    assertEquals(HttpStatus.FORBIDDEN.value(), status);
+    assertEquals(Utils.accessDeniedError(), responseBody);
+  }
+
+  @Test
+  void shouldReturn_404_deleteAuthorityById_isDeletedFalse() throws Exception {
+    String authorityId = "4c7a6cc5-1e03-4337-8901-93c0b46585af";
+    String url = BASE_URL + "/" + authorityId;
+    MvcResult response =
+        mockMvc
+            .perform(delete(url).with(withJwt()).contentType(MediaType.APPLICATION_JSON))
+            .andReturn();
+    int status = response.getResponse().getStatus();
+    String contentAsString = response.getResponse().getContentAsString();
+    ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
+    assertEquals(HttpStatus.NOT_FOUND.value(), status);
+    assertEquals(MSG.AUTHORITY_NOT_FOUND_MSG + authorityId, responseBody.getMessage());
+  }
+
+  @Test
+  void shouldReturn_404_deleteAuthorityById_isDeletedTrue() throws Exception {
+    String authorityId = "84ad8217-9bc4-4244-8d23-d0354ddb9100";
+    String url = BASE_URL + "/" + authorityId;
+    MvcResult response =
+        mockMvc
+            .perform(delete(url).with(withJwt()).contentType(MediaType.APPLICATION_JSON))
+            .andReturn();
+    int status = response.getResponse().getStatus();
+    String contentAsString = response.getResponse().getContentAsString();
+    SimpleResponse responseBody = objectMapper.readValue(contentAsString, SimpleResponse.class);
+    assertEquals(HttpStatus.NOT_FOUND.value(), status);
+    assertEquals(MSG.AUTHORITY_NOT_FOUND_MSG + authorityId, responseBody.getMessage());
+  }
 
   @Test
   void addAuthorityToUser() {}
