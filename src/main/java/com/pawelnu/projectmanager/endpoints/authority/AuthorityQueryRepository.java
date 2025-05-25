@@ -1,8 +1,5 @@
 package com.pawelnu.projectmanager.endpoints.authority;
 
-import com.pawelnu.projectmanager.endpoints.company.CompanyEntity;
-import com.pawelnu.projectmanager.endpoints.company.CompanyRepository;
-import com.pawelnu.projectmanager.endpoints.company.CompanySimpleDTO;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
@@ -19,7 +16,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -53,7 +49,8 @@ public class AuthorityQueryRepository {
             .limit(limit);
 
     if (sortField != null && !sortField.isEmpty()) {
-      PathBuilder<AuthorityEntity> entityPath = new PathBuilder<>(AuthorityEntity.class, "authorityEntity");
+      PathBuilder<AuthorityEntity> entityPath =
+          new PathBuilder<>(AuthorityEntity.class, "authorityEntity");
 
       Order order = sortDir.equalsIgnoreCase("DESC") ? Order.DESC : Order.ASC;
 

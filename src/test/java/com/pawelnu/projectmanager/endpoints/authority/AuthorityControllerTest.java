@@ -5,15 +5,20 @@ import static com.pawelnu.projectmanager.utils.Utils.accessDeniedError;
 import static com.pawelnu.projectmanager.utils.Utils.withBadJwt;
 import static com.pawelnu.projectmanager.utils.Utils.withJwt;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pawelnu.projectmanager.config.security.jwt.JwtUtils;
+import com.pawelnu.projectmanager.endpoints.company.CompanySimpleDTO;
 import com.pawelnu.projectmanager.exception.model.ReactAdminBadRequestError;
 import com.pawelnu.projectmanager.exception.model.ReactAdminError;
 import com.pawelnu.projectmanager.utils.Path;
 import com.pawelnu.projectmanager.utils.Utils;
+import java.util.List;
+import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -138,7 +143,122 @@ class AuthorityControllerTest {
   }
 
   @Test
-  void getList() {}
+  void shouldReturn_200_getAuthorityList() throws Exception {
+    MvcResult response =
+        mockMvc.perform(get("/" + Path.API_AUTHORITIES).with(withJwt())).andReturn();
+    int status = response.getResponse().getStatus();
+    String headerContentRange = response.getResponse().getHeader("Content-Range");
+    String contentAsString = response.getResponse().getContentAsString();
+    List<AuthorityDTO> responseBody =
+        objectMapper.readValue(contentAsString, new TypeReference<>() {});
+    assertEquals(HttpStatus.OK.value(), status);
+    assertEquals("items 0-19/20", headerContentRange);
+    assertEquals(20, responseBody.size());
+  }
+
+  @Test
+  void shouldReturn_200_getAuthorityList_withFilters() throws Exception {
+    Map<String, String> filter = Map.of("name", "authority_delete");
+    String filterStrig = objectMapper.writeValueAsString(filter);
+    MvcResult response =
+        mockMvc
+            .perform(get("/" + Path.API_AUTHORITIES).with(withJwt()).param("filter", filterStrig))
+            .andReturn();
+    int status = response.getResponse().getStatus();
+    String headerContentRange = response.getResponse().getHeader("Content-Range");
+    String contentAsString = response.getResponse().getContentAsString();
+    List<CompanySimpleDTO> responseBody =
+        objectMapper.readValue(contentAsString, new TypeReference<>() {});
+    assertEquals(HttpStatus.OK.value(), status);
+    assertEquals("items 0-0/1", headerContentRange);
+    assertEquals(1, responseBody.size());
+    assertEquals("AUTHORITY_DELETE_BY_ID", responseBody.getFirst().getName());
+  }
+
+  @Test
+  void shouldReturn_200_getAuthorityList_withFiltersAndSort() throws Exception {
+    List<String> sort = List.of("name", "DESC");
+    Map<String, String> filter = Map.of("name", "authority");
+    String sortString = objectMapper.writeValueAsString(sort);
+    String filterStrig = objectMapper.writeValueAsString(filter);
+    MvcResult response =
+        mockMvc
+            .perform(
+                get("/" + Path.API_AUTHORITIES)
+                    .with(withJwt())
+                    .param("sort", sortString)
+                    .param("filter", filterStrig))
+            .andReturn();
+    int status = response.getResponse().getStatus();
+    String headerContentRange = response.getResponse().getHeader("Content-Range");
+    String contentAsString = response.getResponse().getContentAsString();
+    List<CompanySimpleDTO> responseBody =
+        objectMapper.readValue(contentAsString, new TypeReference<>() {});
+    assertEquals(HttpStatus.OK.value(), status);
+    assertEquals("items 0-4/5", headerContentRange);
+    assertEquals(5, responseBody.size());
+    assertEquals("AUTHORITY_GET_LIST", responseBody.getFirst().getName());
+  }
+
+  @Test
+  void shouldReturn_200_getAuthorityList_withRange() throws Exception {
+    List<String> range = List.of("0", "0");
+    String rangeString = objectMapper.writeValueAsString(range);
+    MvcResult response =
+        mockMvc
+            .perform(get("/" + Path.API_AUTHORITIES).with(withJwt()).param("range", rangeString))
+            .andReturn();
+    int status = response.getResponse().getStatus();
+    String headerContentRange = response.getResponse().getHeader("Content-Range");
+    String contentAsString = response.getResponse().getContentAsString();
+    List<CompanySimpleDTO> responseBody =
+        objectMapper.readValue(contentAsString, new TypeReference<>() {});
+    assertEquals(HttpStatus.OK.value(), status);
+    assertEquals("items 0-0/30", headerContentRange);
+    assertEquals(1, responseBody.size());
+    assertEquals("Abernathy LLC", responseBody.getFirst().getName());
+  }
+
+  @Test
+  void shouldReturn_200_getAuthorityList_emptyResult() throws Exception {
+    Map<String, String> filter = Map.of("name", "llc", "nip", "placeholder");
+    String filterStrig = objectMapper.writeValueAsString(filter);
+    MvcResult response =
+        mockMvc
+            .perform(get("/" + Path.API_AUTHORITIES).with(withJwt()).param("filter", filterStrig))
+            .andReturn();
+    int status = response.getResponse().getStatus();
+    String headerContentRange = response.getResponse().getHeader("Content-Range");
+    String contentAsString = response.getResponse().getContentAsString();
+    List<CompanySimpleDTO> responseBody =
+        objectMapper.readValue(contentAsString, new TypeReference<>() {});
+    assertEquals(HttpStatus.OK.value(), status);
+    assertEquals("items 0--1/0", headerContentRange);
+    assertEquals(0, responseBody.size());
+  }
+
+  @Test
+  void shouldReturn_401_getAuthorityList() throws Exception {
+    MvcResult response = mockMvc.perform(get("/" + Path.API_AUTHORITIES)).andReturn();
+    int status = response.getResponse().getStatus();
+    String contentAsString = response.getResponse().getContentAsString();
+    ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
+    assertEquals(HttpStatus.UNAUTHORIZED.value(), status);
+    ReactAdminError expectedResponse =
+        new ReactAdminError("Full authentication is required to access this resource");
+    assertEquals(expectedResponse, responseBody);
+  }
+
+  @Test
+  void shouldReturn_403_getAuthorityList() throws Exception {
+    MvcResult response =
+        mockMvc.perform(get("/" + Path.API_AUTHORITIES).with(withBadJwt())).andReturn();
+    int status = response.getResponse().getStatus();
+    String contentAsString = response.getResponse().getContentAsString();
+    ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
+    assertEquals(HttpStatus.FORBIDDEN.value(), status);
+    assertEquals(Utils.accessDeniedError(), responseBody);
+  }
 
   @Test
   void getById() {}
