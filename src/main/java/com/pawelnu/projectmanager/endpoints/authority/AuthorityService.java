@@ -1,9 +1,12 @@
 package com.pawelnu.projectmanager.endpoints.authority;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.pawelnu.projectmanager.exception.NotFoundException;
+import com.pawelnu.projectmanager.utils.Consts.MSG;
 import com.pawelnu.projectmanager.utils.Shared;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -18,7 +21,6 @@ public class AuthorityService {
   private final AuthorityQueryRepository authorityQueryRepository;
   private final AuthorityMapper authorityMapper;
   private final ObjectMapper objectMapper;
-  public static final String AUTHORITY_NOT_FOUND_MSG = "Authority not found with id: ";
 
   public AuthorityDTO create(AuthorityCreateRequestDTO body) {
     AuthorityEntity entity = authorityMapper.toEntity(body);
@@ -46,5 +48,12 @@ public class AuthorityService {
 
     String contentRange = Shared.prepareContentRange(offset, end, totalElements);
     return AuthorityListResponseDTO.builder().data(companyDTOs).contentRange(contentRange).build();
+  }
+
+  public AuthorityDTO getById(UUID id) {
+    return authorityQueryRepository
+        .findById(id)
+        .map(authorityMapper::toDTO)
+        .orElseThrow(() -> new NotFoundException(MSG.AUTHORITY_NOT_FOUND_MSG + id));
   }
 }

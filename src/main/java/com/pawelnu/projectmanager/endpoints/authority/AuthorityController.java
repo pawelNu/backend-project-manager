@@ -32,7 +32,7 @@ public class AuthorityController implements AuthorityApi {
 
   @Override
   public ResponseEntity<AuthorityDTO> getById(UUID id) {
-    return null;
+    return ResponseEntity.ok(authorityService.getById(id));
   }
 
   @Override

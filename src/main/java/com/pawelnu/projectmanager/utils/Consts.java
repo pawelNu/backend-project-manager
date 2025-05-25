@@ -25,5 +25,9 @@ public final class Consts {
     public static final String COMPANY_ADDRESS_NOT_FOUND = "Company address not found with id: ";
     public static final String COMPANY_NOT_FOUND = "Company not found with id: ";
     public static final String EMPLOYEE_NOT_FOUND = "Employee not found with id: ";
+    public static final String AUTHORITY_NOT_FOUND_MSG = "Authority not found with id: ";
+    public static final String INVALID_UUID =
+        "Method parameter 'id': Failed to convert value of type 'java.lang.String' to required type"
+            + " 'java.util.UUID'; Invalid UUID string: invalid-uuid";
   }
 }
