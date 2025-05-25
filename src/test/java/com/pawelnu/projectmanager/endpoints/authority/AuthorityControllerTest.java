@@ -12,8 +12,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pawelnu.projectmanager.config.security.jwt.JwtUtils;
+import com.pawelnu.projectmanager.exception.NotFoundException;
 import com.pawelnu.projectmanager.exception.model.ReactAdminBadRequestError;
 import com.pawelnu.projectmanager.exception.model.ReactAdminError;
+import com.pawelnu.projectmanager.utils.Consts.MSG;
 import com.pawelnu.projectmanager.utils.Path;
 import com.pawelnu.projectmanager.utils.Utils;
 import java.util.List;
@@ -44,6 +46,7 @@ class AuthorityControllerTest {
   @Autowired private JwtUtils jwtUtils;
   @Autowired private MockMvc mockMvc;
   @Autowired private ObjectMapper objectMapper;
+  private static final String BASE_URL = "/" + Path.API_AUTHORITIES;
 
   @Container
   static PostgreSQLContainer<?> postgres =
@@ -72,7 +75,7 @@ class AuthorityControllerTest {
     MvcResult response =
         mockMvc
             .perform(
-                post("/" + Path.API_AUTHORITIES)
+                post(BASE_URL)
                     .with(withJwt())
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(requestBody))
@@ -91,7 +94,7 @@ class AuthorityControllerTest {
     MvcResult response =
         mockMvc
             .perform(
-                post("/" + Path.API_AUTHORITIES)
+                post(BASE_URL)
                     .with(withJwt())
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(requestBody))
@@ -110,10 +113,7 @@ class AuthorityControllerTest {
     String requestBody = objectMapper.writeValueAsString(request);
     MvcResult response =
         mockMvc
-            .perform(
-                post("/" + Path.API_AUTHORITIES)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(requestBody))
+            .perform(post(BASE_URL).contentType(MediaType.APPLICATION_JSON).content(requestBody))
             .andReturn();
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
@@ -129,7 +129,7 @@ class AuthorityControllerTest {
     MvcResult response =
         mockMvc
             .perform(
-                post("/" + Path.API_AUTHORITIES)
+                post(BASE_URL)
                     .with(withBadJwt())
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(requestBody))
@@ -146,9 +146,7 @@ class AuthorityControllerTest {
     List<String> range = List.of("0", "19");
     String rangeString = objectMapper.writeValueAsString(range);
     MvcResult response =
-        mockMvc
-            .perform(get("/" + Path.API_AUTHORITIES).with(withJwt()).param("range", rangeString))
-            .andReturn();
+        mockMvc.perform(get(BASE_URL).with(withJwt()).param("range", rangeString)).andReturn();
     int status = response.getResponse().getStatus();
     String headerContentRange = response.getResponse().getHeader("Content-Range");
     String contentAsString = response.getResponse().getContentAsString();
@@ -164,9 +162,7 @@ class AuthorityControllerTest {
     Map<String, String> filter = Map.of("name", "autho%delete");
     String filterStrig = objectMapper.writeValueAsString(filter);
     MvcResult response =
-        mockMvc
-            .perform(get("/" + Path.API_AUTHORITIES).with(withJwt()).param("filter", filterStrig))
-            .andReturn();
+        mockMvc.perform(get(BASE_URL).with(withJwt()).param("filter", filterStrig)).andReturn();
     int status = response.getResponse().getStatus();
     String headerContentRange = response.getResponse().getHeader("Content-Range");
     String contentAsString = response.getResponse().getContentAsString();
@@ -187,7 +183,7 @@ class AuthorityControllerTest {
     MvcResult response =
         mockMvc
             .perform(
-                get("/" + Path.API_AUTHORITIES)
+                get(BASE_URL)
                     .with(withJwt())
                     .param("sort", sortString)
                     .param("filter", filterStrig))
@@ -208,9 +204,7 @@ class AuthorityControllerTest {
     List<String> range = List.of("0", "0");
     String rangeString = objectMapper.writeValueAsString(range);
     MvcResult response =
-        mockMvc
-            .perform(get("/" + Path.API_AUTHORITIES).with(withJwt()).param("range", rangeString))
-            .andReturn();
+        mockMvc.perform(get(BASE_URL).with(withJwt()).param("range", rangeString)).andReturn();
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
     List<AuthorityDTO> responseBody =
@@ -225,9 +219,7 @@ class AuthorityControllerTest {
     Map<String, String> filter = Map.of("name", "user");
     String filterStrig = objectMapper.writeValueAsString(filter);
     MvcResult response =
-        mockMvc
-            .perform(get("/" + Path.API_AUTHORITIES).with(withJwt()).param("filter", filterStrig))
-            .andReturn();
+        mockMvc.perform(get(BASE_URL).with(withJwt()).param("filter", filterStrig)).andReturn();
     int status = response.getResponse().getStatus();
     String headerContentRange = response.getResponse().getHeader("Content-Range");
     String contentAsString = response.getResponse().getContentAsString();
@@ -240,7 +232,7 @@ class AuthorityControllerTest {
 
   @Test
   void shouldReturn_401_getAuthorityList() throws Exception {
-    MvcResult response = mockMvc.perform(get("/" + Path.API_AUTHORITIES)).andReturn();
+    MvcResult response = mockMvc.perform(get(BASE_URL)).andReturn();
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
     ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
@@ -252,8 +244,7 @@ class AuthorityControllerTest {
 
   @Test
   void shouldReturn_403_getAuthorityList() throws Exception {
-    MvcResult response =
-        mockMvc.perform(get("/" + Path.API_AUTHORITIES).with(withBadJwt())).andReturn();
+    MvcResult response = mockMvc.perform(get(BASE_URL).with(withBadJwt())).andReturn();
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
     ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
@@ -262,7 +253,78 @@ class AuthorityControllerTest {
   }
 
   @Test
-  void getById() {}
+  void shouldReturn_200_getAuthorityById() throws Exception {
+    String authorityId = "06020f1c-f876-42f6-9dba-e3f0d1e9cd31";
+    String url = BASE_URL + "/" + authorityId;
+    MvcResult response = mockMvc.perform(get(url).with(withJwt())).andReturn();
+    int status = response.getResponse().getStatus();
+    String contentAsString = response.getResponse().getContentAsString();
+    AuthorityDTO responseBody = objectMapper.readValue(contentAsString, AuthorityDTO.class);
+    assertEquals(HttpStatus.OK.value(), status);
+    assertEquals("AUTHORITY_EDIT_BY_ID", responseBody.getName());
+  }
+
+  @Test
+  void shouldReturn_400_getAuthorityById() throws Exception {
+    String authorityId = "invalid-uuid";
+    String url = BASE_URL + "/" + authorityId;
+    MvcResult response = mockMvc.perform(get(url).with(withJwt())).andReturn();
+    int status = response.getResponse().getStatus();
+    String contentAsString = response.getResponse().getContentAsString();
+    ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
+    assertEquals(HttpStatus.BAD_REQUEST.value(), status);
+    assertEquals(MSG.INVALID_UUID, responseBody.getMessage());
+  }
+
+  @Test
+  void shouldReturn_401_getAuthorityById() throws Exception {
+    String authorityId = "cf578fec-006b-4604-a5e8-5ad1b3ea2be5";
+    String url = BASE_URL + "/" + authorityId;
+    MvcResult response = mockMvc.perform(get(url)).andReturn();
+    int status = response.getResponse().getStatus();
+    String contentAsString = response.getResponse().getContentAsString();
+    ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
+    assertEquals(HttpStatus.UNAUTHORIZED.value(), status);
+    assertEquals(Utils.FULL_AUTH_IS_REQUIRED, responseBody.getMessage());
+  }
+
+  @Test
+  void shouldReturn_403_getAuthorityById() throws Exception {
+    String authorityId = "cf578fec-006b-4604-a5e8-5ad1b3ea2be5";
+    String url = BASE_URL + "/" + authorityId;
+    MvcResult response = mockMvc.perform(get(url).with(withBadJwt())).andReturn();
+    int status = response.getResponse().getStatus();
+    String contentAsString = response.getResponse().getContentAsString();
+    ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
+    assertEquals(HttpStatus.FORBIDDEN.value(), status);
+    assertEquals(Utils.accessDeniedError(), responseBody);
+  }
+
+  @Test
+  void shouldReturn_404_getAuthorityById() throws Exception {
+    String authorityId = "cf578fec-006b-4604-a5e8-5ad1b3ea2be5";
+    String url = BASE_URL + "/" + authorityId;
+    MvcResult response = mockMvc.perform(get(url).with(withJwt())).andReturn();
+    int status = response.getResponse().getStatus();
+    String contentAsString = response.getResponse().getContentAsString();
+    NotFoundException responseBody =
+        objectMapper.readValue(contentAsString, NotFoundException.class);
+    assertEquals(HttpStatus.NOT_FOUND.value(), status);
+    assertEquals(MSG.AUTHORITY_NOT_FOUND_MSG + authorityId, responseBody.getMessage());
+  }
+
+  @Test
+  void shouldReturn_404_getAuthorityById_isDeletedTrue() throws Exception {
+    String authorityId = "84ad8217-9bc4-4244-8d23-d0354ddb9100";
+    String url = BASE_URL + "/" + authorityId;
+    MvcResult response = mockMvc.perform(get(url).with(withJwt())).andReturn();
+    int status = response.getResponse().getStatus();
+    String contentAsString = response.getResponse().getContentAsString();
+    NotFoundException responseBody =
+        objectMapper.readValue(contentAsString, NotFoundException.class);
+    assertEquals(HttpStatus.NOT_FOUND.value(), status);
+    assertEquals(MSG.AUTHORITY_NOT_FOUND_MSG + authorityId, responseBody.getMessage());
+  }
 
   @Test
   void editById() {}

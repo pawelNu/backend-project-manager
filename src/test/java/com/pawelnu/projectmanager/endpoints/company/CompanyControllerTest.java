@@ -15,6 +15,7 @@ import com.pawelnu.projectmanager.config.security.jwt.JwtUtils;
 import com.pawelnu.projectmanager.exception.NotFoundException;
 import com.pawelnu.projectmanager.exception.model.ReactAdminError;
 import com.pawelnu.projectmanager.exception.model.SimpleResponse;
+import com.pawelnu.projectmanager.utils.Consts.MSG;
 import com.pawelnu.projectmanager.utils.Path;
 import com.pawelnu.projectmanager.utils.Utils;
 import java.util.List;
@@ -45,9 +46,6 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 @Slf4j
 class CompanyControllerTest {
 
-  public static final String INVALID_UUID =
-      "Method parameter 'id': Failed to convert value of type 'java.lang.String' to required type"
-          + " 'java.util.UUID'; Invalid UUID string: invalid-uuid";
   public static final String COMPANY_NOT_FOUND_WITH_ID = "Company not found with id: ";
   @Autowired private JwtUtils jwtUtils;
   @Autowired private MockMvc mockMvc;
@@ -120,7 +118,7 @@ class CompanyControllerTest {
     Map<String, String> responseBody =
         objectMapper.readValue(contentAsString, new TypeReference<>() {});
     assertEquals(HttpStatus.BAD_REQUEST.value(), status);
-    assertEquals(INVALID_UUID, responseBody.get("message"));
+    assertEquals(MSG.INVALID_UUID, responseBody.get("message"));
   }
 
   @Test
@@ -453,7 +451,7 @@ class CompanyControllerTest {
     Map<String, String> responseBody =
         objectMapper.readValue(contentAsString, new TypeReference<>() {});
     assertEquals(HttpStatus.BAD_REQUEST.value(), status);
-    assertEquals(INVALID_UUID, responseBody.get("message"));
+    assertEquals(MSG.INVALID_UUID, responseBody.get("message"));
   }
 
   @Test
@@ -566,7 +564,7 @@ class CompanyControllerTest {
     String contentAsString = response.getResponse().getContentAsString();
     SimpleResponse responseBody = objectMapper.readValue(contentAsString, SimpleResponse.class);
     assertEquals(HttpStatus.BAD_REQUEST.value(), status);
-    assertEquals(INVALID_UUID, responseBody.getMessage());
+    assertEquals(MSG.INVALID_UUID, responseBody.getMessage());
   }
 
   @Test
