@@ -6,6 +6,7 @@ import com.pawelnu.projectmanager.utils.Consts.MSG;
 import com.pawelnu.projectmanager.utils.Shared;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -55,5 +56,17 @@ public class AuthorityService {
         .findById(id)
         .map(authorityMapper::toDTO)
         .orElseThrow(() -> new NotFoundException(MSG.AUTHORITY_NOT_FOUND_MSG + id));
+  }
+
+  public AuthorityDTO editById(UUID id, AuthorityEditRequestDTO body) {
+    Optional<AuthorityEntity> companyToEdit = authorityRepository.findById(id);
+    if (companyToEdit.isPresent()) {
+      AuthorityEntity existingAuthority = companyToEdit.get();
+      authorityMapper.toEntity(body, existingAuthority);
+      AuthorityEntity updatedCompany = authorityRepository.save(existingAuthority);
+      return authorityMapper.toDTO(updatedCompany);
+    } else {
+      throw new NotFoundException(MSG.COMPANY_NOT_FOUND + id);
+    }
   }
 }

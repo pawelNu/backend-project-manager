@@ -37,7 +37,7 @@ public class AuthorityController implements AuthorityApi {
 
   @Override
   public ResponseEntity<AuthorityDTO> editById(UUID id, AuthorityEditRequestDTO body) {
-    return null;
+    return ResponseEntity.ok(authorityService.editById(id, body));
   }
 
   @Override
