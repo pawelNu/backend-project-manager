@@ -1,8 +1,10 @@
 package com.pawelnu.projectmanager.endpoints.authority;
 
+import lombok.Builder;
 import lombok.Data;
 
 @Data
+@Builder
 public class AddAuthorityToUserResponseDTO {
 
   private String username;

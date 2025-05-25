@@ -15,6 +15,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 @RestControllerAdvice
@@ -47,7 +48,7 @@ public class GlobalExceptionHandler {
 
   @ExceptionHandler(MethodArgumentNotValidException.class)
   public ResponseEntity<ReactAdminBadRequestError> handleMethodArgumentNotValidException(
-      MethodArgumentNotValidException e) {
+      MethodArgumentNotValidException e, WebRequest request) {
     log.error("Stacktrace:", e);
 
     List<FieldError> fieldErrors = e.getBindingResult().getFieldErrors();

@@ -17,36 +17,38 @@ public class AuthorityController implements AuthorityApi {
   private final EmployeeAuthorityService employeeAuthorityService;
 
   @Override
-  public ResponseEntity<AuthorityDTO> createAuthority(AuthorityCreateRequestDTO body) {
-    AuthorityDTO authorityDTO = authorityService.createAuthority(body);
+  public ResponseEntity<AuthorityDTO> create(AuthorityCreateRequestDTO body) {
+    AuthorityDTO authorityDTO = authorityService.create(body);
     return ResponseEntity.status(HttpStatus.CREATED).body(authorityDTO);
   }
 
   @Override
-  public ResponseEntity<List<AuthorityDTO>> getAuthorityList(
-      String sort, String range, String filter) {
-    return null;
+  public ResponseEntity<List<AuthorityDTO>> getList(String sort, String range, String filter) {
+    AuthorityListResponseDTO result = authorityService.filter(sort, range, filter);
+    return ResponseEntity.ok()
+        .header("Content-Range", result.getContentRange())
+        .body(result.getData());
   }
 
   @Override
-  public ResponseEntity<AuthorityDTO> getAuthorityById(UUID id) {
-    return null;
+  public ResponseEntity<AuthorityDTO> getById(UUID id) {
+    return ResponseEntity.ok(authorityService.getById(id));
   }
 
   @Override
-  public ResponseEntity<AuthorityDTO> editAuthorityById(UUID id, AuthorityEditRequestDTO body) {
-    return null;
+  public ResponseEntity<AuthorityDTO> editById(UUID id, AuthorityEditRequestDTO body) {
+    return ResponseEntity.ok(authorityService.editById(id, body));
   }
 
   @Override
-  public ResponseEntity<SimpleResponse> deleteAuthorityById(UUID id) {
-    return null;
+  public ResponseEntity<SimpleResponse> deleteById(UUID id) {
+    return ResponseEntity.ok(authorityService.deleteById(id));
   }
 
   @Override
-  public ResponseEntity<AddAuthorityToUserResponseDTO> addAuthorityToUser(
+  public ResponseEntity<AddAuthorityToUserResponseDTO> addAuthorityToEmployee(
       AddAuthorityToUserRequestDTO body) {
-    AddAuthorityToUserResponseDTO response = employeeAuthorityService.addAuthorityToUser(body);
+    AddAuthorityToUserResponseDTO response = employeeAuthorityService.addAuthorityToEmployee(body);
     return ResponseEntity.status(HttpStatus.CREATED).body(response);
   }
 }

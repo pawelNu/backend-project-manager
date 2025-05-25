@@ -1,6 +1,6 @@
 package com.pawelnu.projectmanager.endpoints.authority.employee;
 
-import static com.pawelnu.projectmanager.endpoints.authority.AuthorityService.AUTHORITY_NOT_FOUND_MSG;
+import static com.pawelnu.projectmanager.utils.Consts.MSG.AUTHORITY_NOT_FOUND_MSG;
 import static com.pawelnu.projectmanager.utils.Consts.MSG.EMPLOYEE_NOT_FOUND;
 
 import com.pawelnu.projectmanager.endpoints.authority.AddAuthorityToUserRequestDTO;
@@ -22,16 +22,16 @@ public class EmployeeAuthorityService {
   private final EmployeeRepository employeeRepository;
   private final EmployeeAuthorityMapper employeeAuthorityMapper;
 
-  public AddAuthorityToUserResponseDTO addAuthorityToUser(AddAuthorityToUserRequestDTO body) {
+  public AddAuthorityToUserResponseDTO addAuthorityToEmployee(AddAuthorityToUserRequestDTO body) {
     AuthorityEntity authority =
         authorityRepository
-            .findById(body.getAuthorityId())
+            .findByIdAndIsDeletedFalse(body.getAuthorityId())
             .orElseThrow(
                 () -> new NotFoundException(AUTHORITY_NOT_FOUND_MSG + body.getAuthorityId()));
     EmployeeEntity employee =
         employeeRepository
-            .findById(body.getUserId())
-            .orElseThrow(() -> new NotFoundException(EMPLOYEE_NOT_FOUND + body.getUserId()));
+            .findByIdAndIsDeletedFalse(body.getEmployeeId())
+            .orElseThrow(() -> new NotFoundException(EMPLOYEE_NOT_FOUND + body.getEmployeeId()));
     EmployeeAuthorityEntity entity =
         EmployeeAuthorityEntity.builder().authority(authority).employee(employee).build();
     EmployeeAuthorityEntity save = employeeAuthorityRepository.save(entity);
