@@ -1,6 +1,7 @@
 package com.pawelnu.projectmanager.endpoints.authority;
 
 import com.pawelnu.projectmanager.endpoints.authority.employee.EmployeeAuthorityService;
+import com.pawelnu.projectmanager.endpoints.company.CompanyListResponseDTO2;
 import com.pawelnu.projectmanager.exception.model.SimpleResponse;
 import java.util.List;
 import java.util.UUID;
@@ -24,7 +25,10 @@ public class AuthorityController implements AuthorityApi {
 
   @Override
   public ResponseEntity<List<AuthorityDTO>> getList(String sort, String range, String filter) {
-    return null;
+    AuthorityListResponseDTO result = authorityService.filter(sort, range, filter);
+    return ResponseEntity.ok()
+        .header("Content-Range", result.getContentRange())
+        .body(result.getData());
   }
 
   @Override

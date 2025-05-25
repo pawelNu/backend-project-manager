@@ -1,12 +1,13 @@
 package com.pawelnu.projectmanager.endpoints.authority;
 
-import jakarta.validation.constraints.NotNull;
 import java.util.UUID;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
+@AllArgsConstructor
 public class AuthorityDTO {
 
   private UUID id;
-  @NotNull private String name;
+  private String name;
 }
