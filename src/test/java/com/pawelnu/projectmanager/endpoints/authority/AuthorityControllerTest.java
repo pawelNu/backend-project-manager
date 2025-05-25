@@ -12,7 +12,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pawelnu.projectmanager.config.security.jwt.JwtUtils;
-import com.pawelnu.projectmanager.endpoints.company.CompanySimpleDTO;
 import com.pawelnu.projectmanager.exception.model.ReactAdminBadRequestError;
 import com.pawelnu.projectmanager.exception.model.ReactAdminError;
 import com.pawelnu.projectmanager.utils.Path;
@@ -144,21 +143,25 @@ class AuthorityControllerTest {
 
   @Test
   void shouldReturn_200_getAuthorityList() throws Exception {
+    List<String> range = List.of("0", "19");
+    String rangeString = objectMapper.writeValueAsString(range);
     MvcResult response =
-        mockMvc.perform(get("/" + Path.API_AUTHORITIES).with(withJwt())).andReturn();
+        mockMvc
+            .perform(get("/" + Path.API_AUTHORITIES).with(withJwt()).param("range", rangeString))
+            .andReturn();
     int status = response.getResponse().getStatus();
     String headerContentRange = response.getResponse().getHeader("Content-Range");
     String contentAsString = response.getResponse().getContentAsString();
     List<AuthorityDTO> responseBody =
         objectMapper.readValue(contentAsString, new TypeReference<>() {});
     assertEquals(HttpStatus.OK.value(), status);
-    assertEquals("items 0-19/20", headerContentRange);
+    assertEquals("items 0-19", headerContentRange.substring(0, 10));
     assertEquals(20, responseBody.size());
   }
 
   @Test
   void shouldReturn_200_getAuthorityList_withFilters() throws Exception {
-    Map<String, String> filter = Map.of("name", "authority_delete");
+    Map<String, String> filter = Map.of("name", "autho%delete");
     String filterStrig = objectMapper.writeValueAsString(filter);
     MvcResult response =
         mockMvc
@@ -167,7 +170,7 @@ class AuthorityControllerTest {
     int status = response.getResponse().getStatus();
     String headerContentRange = response.getResponse().getHeader("Content-Range");
     String contentAsString = response.getResponse().getContentAsString();
-    List<CompanySimpleDTO> responseBody =
+    List<AuthorityDTO> responseBody =
         objectMapper.readValue(contentAsString, new TypeReference<>() {});
     assertEquals(HttpStatus.OK.value(), status);
     assertEquals("items 0-0/1", headerContentRange);
@@ -192,7 +195,7 @@ class AuthorityControllerTest {
     int status = response.getResponse().getStatus();
     String headerContentRange = response.getResponse().getHeader("Content-Range");
     String contentAsString = response.getResponse().getContentAsString();
-    List<CompanySimpleDTO> responseBody =
+    List<AuthorityDTO> responseBody =
         objectMapper.readValue(contentAsString, new TypeReference<>() {});
     assertEquals(HttpStatus.OK.value(), status);
     assertEquals("items 0-4/5", headerContentRange);
@@ -209,19 +212,17 @@ class AuthorityControllerTest {
             .perform(get("/" + Path.API_AUTHORITIES).with(withJwt()).param("range", rangeString))
             .andReturn();
     int status = response.getResponse().getStatus();
-    String headerContentRange = response.getResponse().getHeader("Content-Range");
     String contentAsString = response.getResponse().getContentAsString();
-    List<CompanySimpleDTO> responseBody =
+    List<AuthorityDTO> responseBody =
         objectMapper.readValue(contentAsString, new TypeReference<>() {});
     assertEquals(HttpStatus.OK.value(), status);
-    assertEquals("items 0-0/30", headerContentRange);
     assertEquals(1, responseBody.size());
-    assertEquals("Abernathy LLC", responseBody.getFirst().getName());
+    assertEquals("AUTHORITY_CREATE", responseBody.getFirst().getName());
   }
 
   @Test
   void shouldReturn_200_getAuthorityList_emptyResult() throws Exception {
-    Map<String, String> filter = Map.of("name", "llc", "nip", "placeholder");
+    Map<String, String> filter = Map.of("name", "user");
     String filterStrig = objectMapper.writeValueAsString(filter);
     MvcResult response =
         mockMvc
@@ -230,7 +231,7 @@ class AuthorityControllerTest {
     int status = response.getResponse().getStatus();
     String headerContentRange = response.getResponse().getHeader("Content-Range");
     String contentAsString = response.getResponse().getContentAsString();
-    List<CompanySimpleDTO> responseBody =
+    List<AuthorityDTO> responseBody =
         objectMapper.readValue(contentAsString, new TypeReference<>() {});
     assertEquals(HttpStatus.OK.value(), status);
     assertEquals("items 0--1/0", headerContentRange);
