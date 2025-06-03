@@ -34,7 +34,6 @@ public class AuthTokenFilter extends OncePerRequestFilter {
       @NonNull FilterChain filterChain)
       throws ServletException, IOException {
     log.debug("AuthTokenFilter called for URI: {}", request.getRequestURI());
-    //    try {
     String jwt = parseJwt(request);
     if (jwt != null && jwtUtils.validateJwtToken(jwt)) {
       String username = jwtUtils.getUserNameFromJwtHeaderToken(jwt);
@@ -57,11 +56,6 @@ public class AuthTokenFilter extends OncePerRequestFilter {
         log.warn("HandlerMethod not found for request URI: {}", request.getRequestURI());
       }
     }
-
-    //    } catch (Exception e) {
-    //      log.error("Cannot set user authentication:", e);
-    //    }
-
     filterChain.doFilter(request, response);
   }
 
