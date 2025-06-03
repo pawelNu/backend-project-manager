@@ -13,3 +13,16 @@ public class ProjectManagerMain {
     PomProperties.logAppVersion();
   }
 }
+
+// TODO api for categories
+// TODO api for category_values
+// TODO api for companies
+// TODO api for company_addresses
+// TODO api for employees
+// TODO api for employee_authorities
+// TODO api for projects
+// TODO api for project_steps
+// TODO api for project_step_comments
+// TODO api for tickets
+// TODO api for attachments
+// TODO api for ticket_histories
