@@ -76,10 +76,7 @@ public class WebSecurityConfig {
                     .requestMatchers("/api/auth/**")
                     .permitAll()
                     .requestMatchers(
-                        "/",
-                        "/swagger-ui/**",
-                        "/v3/api-docs/**",
-                        "/project-manager/**")
+                        "/", "/swagger-ui/**", "/v3/api-docs/**", "/project-manager/**")
                     .permitAll()
                     .requestMatchers("/h2-console/**")
                     .permitAll()
