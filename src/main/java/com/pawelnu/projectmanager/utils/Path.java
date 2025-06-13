@@ -11,12 +11,14 @@ public final class Path {
   private static final String AUTH = "/auth";
   private static final String AUTHORITIES = "/authorities";
   private static final String CATEGORIES = "/categories";
+  private static final String CATEGORY_VALUES = "/category-values";
   private static final String COMPANY_ADDRESSES = "/company-addresses";
   private static final String EMPLOYEES = "/employees";
 
   public static final String API_AUTH = API_PREFIX + AUTH;
   public static final String API_AUTHORITIES = API_PREFIX + AUTHORITIES;
   public static final String API_CATEGORIES = API_PREFIX + CATEGORIES;
+  public static final String API_CATEGORY_VALUES = API_PREFIX + CATEGORY_VALUES;
   public static final String API_COMPANIES = API_PREFIX + COMPANIES;
   public static final String API_COMPANY_ADDRESSES = API_PREFIX + COMPANY_ADDRESSES;
   public static final String API_EMPLOYEES = API_PREFIX + EMPLOYEES;
