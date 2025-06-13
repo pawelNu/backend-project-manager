@@ -22,28 +22,24 @@ public class CategoryValueController implements CategoryValueApi {
 
   @Override
   public ResponseEntity<List<CategoryValueDTO>> getList(String sort, String range, String filter) {
-    //    CategoryListResponseDTO result = categoryValueService.filter(sort, range, filter);
-    //    return ResponseEntity.ok()
-    //        .header("Content-Range", result.getContentRange())
-    //        .body(result.getData());
-    throw new UnsupportedOperationException("Not implemented yet");
+    CategoryValueListResponseDTO result = categoryValueService.filter(sort, range, filter);
+    return ResponseEntity.ok()
+        .header("Content-Range", result.getContentRange())
+        .body(result.getData());
   }
 
   @Override
   public ResponseEntity<CategoryValueDTO> getById(UUID id) {
-    //    return ResponseEntity.ok(categoryValueService.getById(id));
-    throw new UnsupportedOperationException("Not implemented yet");
+    return ResponseEntity.ok(categoryValueService.getById(id));
   }
 
   @Override
   public ResponseEntity<CategoryValueDTO> editById(UUID id, CategoryValueEditRequestDTO body) {
-    //    return ResponseEntity.ok(categoryValueService.editById(id, body));
-    throw new UnsupportedOperationException("Not implemented yet");
+    return ResponseEntity.ok(categoryValueService.editById(id, body));
   }
 
   @Override
   public ResponseEntity<SimpleResponse> deleteById(UUID id) {
-    //    return ResponseEntity.ok(categoryValueService.deleteById(id));
-    throw new UnsupportedOperationException("Not implemented yet");
+    return ResponseEntity.ok(categoryValueService.deleteById(id));
   }
 }
