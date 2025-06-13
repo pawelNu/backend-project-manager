@@ -53,8 +53,7 @@ class CategoryControllerTest {
   @Autowired private JwtUtils jwtUtils;
   @Autowired private MockMvc mockMvc;
   @Autowired private ObjectMapper objectMapper;
-  private static final String BASE_URL = "/" + Path.API_AUTHORITIES;
-  public static final String ADD_AUTHORITY_TO_EMPLOYEE = BASE_URL + "/add-authority-to-employee";
+  private static final String BASE_URL = "/" + Path.API_CATEGORIES;
 
   @Container
   static PostgreSQLContainer<?> postgres =
@@ -76,9 +75,9 @@ class CategoryControllerTest {
   }
 
   @Test
-  void shouldReturn_201_createAuthority() throws Exception {
-    AuthorityCreateRequestDTO request =
-        AuthorityCreateRequestDTO.builder().name("FOR_TEST_AUTHORITY").build();
+  void shouldReturn_201_createCategory() throws Exception {
+    CategoryCreateRequestDTO request =
+        CategoryCreateRequestDTO.builder().name("CATEGORY_NAME_FOR_TEST").build();
     String requestBody = objectMapper.writeValueAsString(request);
     MvcResult response =
         mockMvc
@@ -92,11 +91,11 @@ class CategoryControllerTest {
     String contentAsString = response.getResponse().getContentAsString();
     AuthorityDTO responseBody = objectMapper.readValue(contentAsString, AuthorityDTO.class);
     assertEquals(HttpStatus.CREATED.value(), status);
-    assertEquals("FOR_TEST_AUTHORITY", responseBody.getName());
+    assertEquals("CATEGORY_NAME_FOR_TEST", responseBody.getName());
   }
 
   @Test
-  void shouldReturn_400_createAuthority() throws Exception {
+  void shouldReturn_400_createCategory() throws Exception {
     AuthorityCreateRequestDTO request = AuthorityCreateRequestDTO.builder().name("TEST").build();
     String requestBody = objectMapper.writeValueAsString(request);
     MvcResult response =
@@ -116,7 +115,7 @@ class CategoryControllerTest {
   }
 
   @Test
-  void shouldReturn_401_createAuthority() throws Exception {
+  void shouldReturn_401_createCategory() throws Exception {
     AuthorityCreateRequestDTO request = AuthorityCreateRequestDTO.builder().name("TEST").build();
     String requestBody = objectMapper.writeValueAsString(request);
     MvcResult response =
@@ -131,7 +130,7 @@ class CategoryControllerTest {
   }
 
   @Test
-  void shouldReturn_403_createAuthority() throws Exception {
+  void shouldReturn_403_createCategory() throws Exception {
     AuthorityCreateRequestDTO request = AuthorityCreateRequestDTO.builder().name("TEST").build();
     String requestBody = objectMapper.writeValueAsString(request);
     MvcResult response =
@@ -150,7 +149,7 @@ class CategoryControllerTest {
   }
 
   @Test
-  void shouldReturn_200_getAuthorityList() throws Exception {
+  void shouldReturn_200_getCategoryList() throws Exception {
     List<String> range = List.of("0", "19");
     String rangeString = objectMapper.writeValueAsString(range);
     MvcResult response =
@@ -166,7 +165,7 @@ class CategoryControllerTest {
   }
 
   @Test
-  void shouldReturn_200_getAuthorityList_withFilters() throws Exception {
+  void shouldReturn_200_getCategoryList_withFilters() throws Exception {
     Map<String, String> filter = Map.of("name", "autho%delete");
     String filterStrig = objectMapper.writeValueAsString(filter);
     MvcResult response =
@@ -183,7 +182,7 @@ class CategoryControllerTest {
   }
 
   @Test
-  void shouldReturn_200_getAuthorityList_withFiltersAndSort() throws Exception {
+  void shouldReturn_200_getCategoryList_withFiltersAndSort() throws Exception {
     List<String> sort = List.of("name", "DESC");
     Map<String, String> filter = Map.of("name", "authority");
     String sortString = objectMapper.writeValueAsString(sort);
@@ -208,7 +207,7 @@ class CategoryControllerTest {
   }
 
   @Test
-  void shouldReturn_200_getAuthorityList_withRange() throws Exception {
+  void shouldReturn_200_getCategoryList_withRange() throws Exception {
     List<String> range = List.of("0", "0");
     String rangeString = objectMapper.writeValueAsString(range);
     MvcResult response =
@@ -223,7 +222,7 @@ class CategoryControllerTest {
   }
 
   @Test
-  void shouldReturn_200_getAuthorityList_emptyResult() throws Exception {
+  void shouldReturn_200_getCategoryList_emptyResult() throws Exception {
     Map<String, String> filter = Map.of("name", "user");
     String filterStrig = objectMapper.writeValueAsString(filter);
     MvcResult response =
@@ -239,7 +238,7 @@ class CategoryControllerTest {
   }
 
   @Test
-  void shouldReturn_401_getAuthorityList() throws Exception {
+  void shouldReturn_401_getCategoryList() throws Exception {
     MvcResult response = mockMvc.perform(get(BASE_URL)).andReturn();
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
@@ -251,7 +250,7 @@ class CategoryControllerTest {
   }
 
   @Test
-  void shouldReturn_403_getAuthorityList() throws Exception {
+  void shouldReturn_403_getCategoryList() throws Exception {
     MvcResult response = mockMvc.perform(get(BASE_URL).with(withBadJwt())).andReturn();
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
@@ -261,7 +260,7 @@ class CategoryControllerTest {
   }
 
   @Test
-  void shouldReturn_200_getAuthorityById() throws Exception {
+  void shouldReturn_200_getCategoryById() throws Exception {
     String authorityId = "06020f1c-f876-42f6-9dba-e3f0d1e9cd31";
     String url = BASE_URL + "/" + authorityId;
     MvcResult response = mockMvc.perform(get(url).with(withJwt())).andReturn();
@@ -273,7 +272,7 @@ class CategoryControllerTest {
   }
 
   @Test
-  void shouldReturn_400_getAuthorityById() throws Exception {
+  void shouldReturn_400_getCategoryById() throws Exception {
     String authorityId = "invalid-uuid";
     String url = BASE_URL + "/" + authorityId;
     MvcResult response = mockMvc.perform(get(url).with(withJwt())).andReturn();
@@ -285,7 +284,7 @@ class CategoryControllerTest {
   }
 
   @Test
-  void shouldReturn_401_getAuthorityById() throws Exception {
+  void shouldReturn_401_getCategoryById() throws Exception {
     String authorityId = "cf578fec-006b-4604-a5e8-5ad1b3ea2be5";
     String url = BASE_URL + "/" + authorityId;
     MvcResult response = mockMvc.perform(get(url)).andReturn();
@@ -297,7 +296,7 @@ class CategoryControllerTest {
   }
 
   @Test
-  void shouldReturn_403_getAuthorityById() throws Exception {
+  void shouldReturn_403_getCategoryById() throws Exception {
     String authorityId = "cf578fec-006b-4604-a5e8-5ad1b3ea2be5";
     String url = BASE_URL + "/" + authorityId;
     MvcResult response = mockMvc.perform(get(url).with(withBadJwt())).andReturn();
@@ -309,7 +308,7 @@ class CategoryControllerTest {
   }
 
   @Test
-  void shouldReturn_404_getAuthorityById() throws Exception {
+  void shouldReturn_404_getCategoryById() throws Exception {
     String authorityId = "cf578fec-006b-4604-a5e8-5ad1b3ea2be5";
     String url = BASE_URL + "/" + authorityId;
     MvcResult response = mockMvc.perform(get(url).with(withJwt())).andReturn();
@@ -322,7 +321,7 @@ class CategoryControllerTest {
   }
 
   @Test
-  void shouldReturn_404_getAuthorityById_isDeletedTrue() throws Exception {
+  void shouldReturn_404_getCategoryById_isDeletedTrue() throws Exception {
     String authorityId = "84ad8217-9bc4-4244-8d23-d0354ddb9100";
     String url = BASE_URL + "/" + authorityId;
     MvcResult response = mockMvc.perform(get(url).with(withJwt())).andReturn();
@@ -335,7 +334,7 @@ class CategoryControllerTest {
   }
 
   @Test
-  void shouldReturn_200_editAuthorityById() throws Exception {
+  void shouldReturn_200_editCategoryById() throws Exception {
     String authorityId = "79700b85-7a8e-4c13-aae6-b2b9955d73ab";
     String url = BASE_URL + "/" + authorityId;
     AuthorityEditRequestDTO request =
@@ -358,7 +357,7 @@ class CategoryControllerTest {
   }
 
   @Test
-  void shouldReturn_400_editAuthorityById() throws Exception {
+  void shouldReturn_400_editCategoryById() throws Exception {
     String authorityId = "invalid-uuid";
     String url = BASE_URL + "/" + authorityId;
     AuthorityEditRequestDTO request =
@@ -380,7 +379,7 @@ class CategoryControllerTest {
   }
 
   @Test
-  void shouldReturn_401_editAuthorityById() throws Exception {
+  void shouldReturn_401_editCategoryById() throws Exception {
     String authorityId = "ac1da9e4-7e4b-42ab-b9a5-b87cc4f30c2c";
     String url = BASE_URL + "/" + authorityId;
     AuthorityEditRequestDTO request =
@@ -399,7 +398,7 @@ class CategoryControllerTest {
   }
 
   @Test
-  void shouldReturn_403_editAuthorityById() throws Exception {
+  void shouldReturn_403_editCategoryById() throws Exception {
     String authorityId = "ac1da9e4-7e4b-42ab-b9a5-b87cc4f30c2c";
     String url = BASE_URL + "/" + authorityId;
     AuthorityEditRequestDTO request =
@@ -421,7 +420,7 @@ class CategoryControllerTest {
   }
 
   @Test
-  void shouldReturn_404_editAuthorityById() throws Exception {
+  void shouldReturn_404_editCategoryById() throws Exception {
     String authorityId = "84ad8217-9bc4-4244-8d23-d0354ddb9100";
     String url = BASE_URL + "/" + authorityId;
     AuthorityEditRequestDTO request =
@@ -443,7 +442,7 @@ class CategoryControllerTest {
   }
 
   @Test
-  void shouldReturn_200_deleteAuthorityById_isDeletedFalse() throws Exception {
+  void shouldReturn_200_deleteCategoryById_isDeletedFalse() throws Exception {
     String authorityId = "651762db-fff0-47ba-8c2b-3770f4c4a2fe";
     String url = BASE_URL + "/" + authorityId;
     MvcResult response =
@@ -458,7 +457,7 @@ class CategoryControllerTest {
   }
 
   @Test
-  void shouldReturn_400_deleteAuthorityById_isDeletedFalse() throws Exception {
+  void shouldReturn_400_deleteCategoryById_isDeletedFalse() throws Exception {
     String authorityId = "invalid-uuid";
     String url = BASE_URL + "/" + authorityId;
     MvcResult response =
@@ -473,7 +472,7 @@ class CategoryControllerTest {
   }
 
   @Test
-  void shouldReturn_401_deleteAuthorityById_isDeletedFalse() throws Exception {
+  void shouldReturn_401_deleteCategoryById_isDeletedFalse() throws Exception {
     String authorityId = "4c7a2cc5-1e03-4337-8901-93c0b46585af";
     String url = BASE_URL + "/" + authorityId;
     MvcResult response =
@@ -486,7 +485,7 @@ class CategoryControllerTest {
   }
 
   @Test
-  void shouldReturn_403_deleteAuthorityById_isDeletedFalse() throws Exception {
+  void shouldReturn_403_deleteCategoryById_isDeletedFalse() throws Exception {
     String authorityId = "4c7a2cc5-1e03-4337-8901-93c0b46585af";
     String url = BASE_URL + "/" + authorityId;
     MvcResult response =
@@ -501,7 +500,7 @@ class CategoryControllerTest {
   }
 
   @Test
-  void shouldReturn_404_deleteAuthorityById_isDeletedFalse() throws Exception {
+  void shouldReturn_404_deleteCategoryById_isDeletedFalse() throws Exception {
     String authorityId = "4c7a6cc5-1e03-4337-8901-93c0b46585af";
     String url = BASE_URL + "/" + authorityId;
     MvcResult response =
@@ -516,7 +515,7 @@ class CategoryControllerTest {
   }
 
   @Test
-  void shouldReturn_404_deleteAuthorityById_isDeletedTrue() throws Exception {
+  void shouldReturn_404_deleteCategoryById_isDeletedTrue() throws Exception {
     String authorityId = "84ad8217-9bc4-4244-8d23-d0354ddb9100";
     String url = BASE_URL + "/" + authorityId;
     MvcResult response =

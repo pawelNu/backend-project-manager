@@ -1,6 +1,5 @@
 package com.pawelnu.projectmanager.endpoints.category;
 
-import com.pawelnu.projectmanager.endpoints.authority.employee.EmployeeAuthorityService;
 import com.pawelnu.projectmanager.exception.model.SimpleResponse;
 import java.util.List;
 import java.util.UUID;
@@ -14,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class CategoryController implements CategoryApi {
 
   private final CategoryService categoryService;
-  private final EmployeeAuthorityService employeeAuthorityService;
 
   @Override
   public ResponseEntity<CategoryDTO> create(CategoryCreateRequestDTO body) {

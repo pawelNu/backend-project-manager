@@ -24,8 +24,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@Tag(name = "Authorities")
-@RequestMapping(Path.API_AUTHORITIES)
+@Tag(name = "Categories")
+@RequestMapping(Path.API_CATEGORIES)
 public interface CategoryApi {
 
   @ApiResponse(
