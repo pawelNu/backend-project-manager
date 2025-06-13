@@ -266,20 +266,20 @@ class CategoryControllerTest {
 
   @Test
   void shouldReturn_200_getCategoryById() throws Exception {
-    String authorityId = "06020f1c-f876-42f6-9dba-e3f0d1e9cd31";
-    String url = BASE_URL + "/" + authorityId;
+    String categoryId = "6dd61a9c-fe06-4380-9ea3-a53b1b99fe0e";
+    String url = BASE_URL + "/" + categoryId;
     MvcResult response = mockMvc.perform(get(url).with(withJwt())).andReturn();
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
     AuthorityDTO responseBody = objectMapper.readValue(contentAsString, AuthorityDTO.class);
     assertEquals(HttpStatus.OK.value(), status);
-    assertEquals("AUTHORITY_EDIT_BY_ID", responseBody.getName());
+    assertEquals("employee role", responseBody.getName());
   }
 
   @Test
   void shouldReturn_400_getCategoryById() throws Exception {
-    String authorityId = "invalid-uuid";
-    String url = BASE_URL + "/" + authorityId;
+    String categoryId = "invalid-uuid";
+    String url = BASE_URL + "/" + categoryId;
     MvcResult response = mockMvc.perform(get(url).with(withJwt())).andReturn();
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
@@ -290,8 +290,8 @@ class CategoryControllerTest {
 
   @Test
   void shouldReturn_401_getCategoryById() throws Exception {
-    String authorityId = "cf578fec-006b-4604-a5e8-5ad1b3ea2be5";
-    String url = BASE_URL + "/" + authorityId;
+    String categoryId = "cf578fec-006b-4604-a5e8-5ad1b3ea2be5";
+    String url = BASE_URL + "/" + categoryId;
     MvcResult response = mockMvc.perform(get(url)).andReturn();
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
@@ -302,8 +302,8 @@ class CategoryControllerTest {
 
   @Test
   void shouldReturn_403_getCategoryById() throws Exception {
-    String authorityId = "cf578fec-006b-4604-a5e8-5ad1b3ea2be5";
-    String url = BASE_URL + "/" + authorityId;
+    String categoryId = "cf578fec-006b-4604-a5e8-5ad1b3ea2be5";
+    String url = BASE_URL + "/" + categoryId;
     MvcResult response = mockMvc.perform(get(url).with(withBadJwt())).andReturn();
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
@@ -314,34 +314,34 @@ class CategoryControllerTest {
 
   @Test
   void shouldReturn_404_getCategoryById() throws Exception {
-    String authorityId = "cf578fec-006b-4604-a5e8-5ad1b3ea2be5";
-    String url = BASE_URL + "/" + authorityId;
+    String categoryId = "cf578fec-006b-4604-a5e8-5ad1b3ea2be5";
+    String url = BASE_URL + "/" + categoryId;
     MvcResult response = mockMvc.perform(get(url).with(withJwt())).andReturn();
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
     NotFoundException responseBody =
         objectMapper.readValue(contentAsString, NotFoundException.class);
     assertEquals(HttpStatus.NOT_FOUND.value(), status);
-    assertEquals(MSG.AUTHORITY_NOT_FOUND_MSG + authorityId, responseBody.getMessage());
+    assertEquals(MSG.AUTHORITY_NOT_FOUND_MSG + categoryId, responseBody.getMessage());
   }
 
   @Test
   void shouldReturn_404_getCategoryById_isDeletedTrue() throws Exception {
-    String authorityId = "84ad8217-9bc4-4244-8d23-d0354ddb9100";
-    String url = BASE_URL + "/" + authorityId;
+    String categoryId = "acf847a2-1b20-4a31-8872-93fcbbe7934f";
+    String url = BASE_URL + "/" + categoryId;
     MvcResult response = mockMvc.perform(get(url).with(withJwt())).andReturn();
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
     NotFoundException responseBody =
         objectMapper.readValue(contentAsString, NotFoundException.class);
     assertEquals(HttpStatus.NOT_FOUND.value(), status);
-    assertEquals(MSG.AUTHORITY_NOT_FOUND_MSG + authorityId, responseBody.getMessage());
+    assertEquals(MSG.AUTHORITY_NOT_FOUND_MSG + categoryId, responseBody.getMessage());
   }
 
   @Test
   void shouldReturn_200_editCategoryById() throws Exception {
-    String authorityId = "79700b85-7a8e-4c13-aae6-b2b9955d73ab";
-    String url = BASE_URL + "/" + authorityId;
+    String categoryId = "79700b85-7a8e-4c13-aae6-b2b9955d73ab";
+    String url = BASE_URL + "/" + categoryId;
     AuthorityEditRequestDTO request =
         AuthorityEditRequestDTO.builder().name("ITEM_UPDATED").build();
     String requestBody = objectMapper.writeValueAsString(request);
@@ -357,14 +357,14 @@ class CategoryControllerTest {
     String contentAsString = response.getResponse().getContentAsString();
     AuthorityDTO responseBody = objectMapper.readValue(contentAsString, AuthorityDTO.class);
     assertEquals(HttpStatus.OK.value(), status);
-    assertEquals(UUID.fromString(authorityId), responseBody.getId());
+    assertEquals(UUID.fromString(categoryId), responseBody.getId());
     assertEquals(request.getName(), responseBody.getName());
   }
 
   @Test
   void shouldReturn_400_editCategoryById() throws Exception {
-    String authorityId = "invalid-uuid";
-    String url = BASE_URL + "/" + authorityId;
+    String categoryId = "invalid-uuid";
+    String url = BASE_URL + "/" + categoryId;
     AuthorityEditRequestDTO request =
         AuthorityEditRequestDTO.builder().name("ITEM_UPDATED").build();
     String requestBody = objectMapper.writeValueAsString(request);
@@ -385,8 +385,8 @@ class CategoryControllerTest {
 
   @Test
   void shouldReturn_401_editCategoryById() throws Exception {
-    String authorityId = "ac1da9e4-7e4b-42ab-b9a5-b87cc4f30c2c";
-    String url = BASE_URL + "/" + authorityId;
+    String categoryId = "ac1da9e4-7e4b-42ab-b9a5-b87cc4f30c2c";
+    String url = BASE_URL + "/" + categoryId;
     AuthorityEditRequestDTO request =
         AuthorityEditRequestDTO.builder().name("ITEM_UPDATED").build();
     String requestBody = objectMapper.writeValueAsString(request);
@@ -404,8 +404,8 @@ class CategoryControllerTest {
 
   @Test
   void shouldReturn_403_editCategoryById() throws Exception {
-    String authorityId = "ac1da9e4-7e4b-42ab-b9a5-b87cc4f30c2c";
-    String url = BASE_URL + "/" + authorityId;
+    String categoryId = "ac1da9e4-7e4b-42ab-b9a5-b87cc4f30c2c";
+    String url = BASE_URL + "/" + categoryId;
     AuthorityEditRequestDTO request =
         AuthorityEditRequestDTO.builder().name("ITEM_UPDATED").build();
     String requestBody = objectMapper.writeValueAsString(request);
@@ -426,8 +426,8 @@ class CategoryControllerTest {
 
   @Test
   void shouldReturn_404_editCategoryById() throws Exception {
-    String authorityId = "84ad8217-9bc4-4244-8d23-d0354ddb9100";
-    String url = BASE_URL + "/" + authorityId;
+    String categoryId = "84ad8217-9bc4-4244-8d23-d0354ddb9100";
+    String url = BASE_URL + "/" + categoryId;
     AuthorityEditRequestDTO request =
         AuthorityEditRequestDTO.builder().name("ITEM_UPDATED").build();
     String requestBody = objectMapper.writeValueAsString(request);
@@ -443,13 +443,13 @@ class CategoryControllerTest {
     String contentAsString = response.getResponse().getContentAsString();
     ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
     assertEquals(HttpStatus.NOT_FOUND.value(), status);
-    assertEquals(MSG.AUTHORITY_NOT_FOUND_MSG + authorityId, responseBody.getMessage());
+    assertEquals(MSG.AUTHORITY_NOT_FOUND_MSG + categoryId, responseBody.getMessage());
   }
 
   @Test
   void shouldReturn_200_deleteCategoryById_isDeletedFalse() throws Exception {
-    String authorityId = "651762db-fff0-47ba-8c2b-3770f4c4a2fe";
-    String url = BASE_URL + "/" + authorityId;
+    String categoryId = "651762db-fff0-47ba-8c2b-3770f4c4a2fe";
+    String url = BASE_URL + "/" + categoryId;
     MvcResult response =
         mockMvc
             .perform(delete(url).with(withJwt()).contentType(MediaType.APPLICATION_JSON))
@@ -458,13 +458,13 @@ class CategoryControllerTest {
     String contentAsString = response.getResponse().getContentAsString();
     SimpleResponse responseBody = objectMapper.readValue(contentAsString, SimpleResponse.class);
     assertEquals(HttpStatus.OK.value(), status);
-    assertEquals("Deleted authority with id: " + authorityId, responseBody.getMessage());
+    assertEquals("Deleted authority with id: " + categoryId, responseBody.getMessage());
   }
 
   @Test
   void shouldReturn_400_deleteCategoryById_isDeletedFalse() throws Exception {
-    String authorityId = "invalid-uuid";
-    String url = BASE_URL + "/" + authorityId;
+    String categoryId = "invalid-uuid";
+    String url = BASE_URL + "/" + categoryId;
     MvcResult response =
         mockMvc
             .perform(delete(url).with(withJwt()).contentType(MediaType.APPLICATION_JSON))
@@ -478,8 +478,8 @@ class CategoryControllerTest {
 
   @Test
   void shouldReturn_401_deleteCategoryById_isDeletedFalse() throws Exception {
-    String authorityId = "4c7a2cc5-1e03-4337-8901-93c0b46585af";
-    String url = BASE_URL + "/" + authorityId;
+    String categoryId = "4c7a2cc5-1e03-4337-8901-93c0b46585af";
+    String url = BASE_URL + "/" + categoryId;
     MvcResult response =
         mockMvc.perform(delete(url).contentType(MediaType.APPLICATION_JSON)).andReturn();
     int status = response.getResponse().getStatus();
@@ -491,8 +491,8 @@ class CategoryControllerTest {
 
   @Test
   void shouldReturn_403_deleteCategoryById_isDeletedFalse() throws Exception {
-    String authorityId = "4c7a2cc5-1e03-4337-8901-93c0b46585af";
-    String url = BASE_URL + "/" + authorityId;
+    String categoryId = "4c7a2cc5-1e03-4337-8901-93c0b46585af";
+    String url = BASE_URL + "/" + categoryId;
     MvcResult response =
         mockMvc
             .perform(delete(url).with(withBadJwt()).contentType(MediaType.APPLICATION_JSON))
@@ -506,8 +506,8 @@ class CategoryControllerTest {
 
   @Test
   void shouldReturn_404_deleteCategoryById_isDeletedFalse() throws Exception {
-    String authorityId = "4c7a6cc5-1e03-4337-8901-93c0b46585af";
-    String url = BASE_URL + "/" + authorityId;
+    String categoryId = "4c7a6cc5-1e03-4337-8901-93c0b46585af";
+    String url = BASE_URL + "/" + categoryId;
     MvcResult response =
         mockMvc
             .perform(delete(url).with(withJwt()).contentType(MediaType.APPLICATION_JSON))
@@ -516,13 +516,13 @@ class CategoryControllerTest {
     String contentAsString = response.getResponse().getContentAsString();
     ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
     assertEquals(HttpStatus.NOT_FOUND.value(), status);
-    assertEquals(MSG.AUTHORITY_NOT_FOUND_MSG + authorityId, responseBody.getMessage());
+    assertEquals(MSG.AUTHORITY_NOT_FOUND_MSG + categoryId, responseBody.getMessage());
   }
 
   @Test
   void shouldReturn_404_deleteCategoryById_isDeletedTrue() throws Exception {
-    String authorityId = "84ad8217-9bc4-4244-8d23-d0354ddb9100";
-    String url = BASE_URL + "/" + authorityId;
+    String categoryId = "84ad8217-9bc4-4244-8d23-d0354ddb9100";
+    String url = BASE_URL + "/" + categoryId;
     MvcResult response =
         mockMvc
             .perform(delete(url).with(withJwt()).contentType(MediaType.APPLICATION_JSON))
@@ -531,24 +531,9 @@ class CategoryControllerTest {
     String contentAsString = response.getResponse().getContentAsString();
     SimpleResponse responseBody = objectMapper.readValue(contentAsString, SimpleResponse.class);
     assertEquals(HttpStatus.NOT_FOUND.value(), status);
-    assertEquals(MSG.AUTHORITY_NOT_FOUND_MSG + authorityId, responseBody.getMessage());
+    assertEquals(MSG.AUTHORITY_NOT_FOUND_MSG + categoryId, responseBody.getMessage());
   }
-
-  @Test
-  void create() {
-    // TODO create test
-  }
-
-  @Test
-  void getList() {
-    // TODO getList test
-  }
-
-  @Test
-  void getById() {
-    // TODO getById test
-  }
-
+  
   @Test
   void editById() {
     // TODO editById test
