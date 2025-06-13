@@ -42,7 +42,8 @@ public interface CategoryValueApi {
   ResponseEntity<CategoryValueDTO> create(@Valid @RequestBody CategoryValueCreateRequestDTO body);
 
   @Operation(
-      description = "List category values with filtering, sorting and pagination (react-admin format)")
+      description =
+          "List category values with filtering, sorting and pagination (react-admin format)")
   @ApiResponse(
       responseCode = "200",
       description = "OK",
