@@ -96,7 +96,7 @@ class CategoryControllerTest {
 
   @Test
   void shouldReturn_400_createCategory() throws Exception {
-    AuthorityCreateRequestDTO request = AuthorityCreateRequestDTO.builder().name("TEST").build();
+    CategoryCreateRequestDTO request = CategoryCreateRequestDTO.builder().name("TEST").build();
     String requestBody = objectMapper.writeValueAsString(request);
     MvcResult response =
         mockMvc
