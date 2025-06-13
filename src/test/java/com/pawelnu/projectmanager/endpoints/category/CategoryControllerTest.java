@@ -222,7 +222,7 @@ class CategoryControllerTest {
         objectMapper.readValue(contentAsString, new TypeReference<>() {});
     assertEquals(HttpStatus.OK.value(), status);
     assertEquals(1, responseBody.size());
-    assertEquals("company status", responseBody.getFirst().getName());
+    assertEquals("category a", responseBody.getFirst().getName());
   }
 
   @Test
@@ -364,8 +364,7 @@ class CategoryControllerTest {
   void shouldReturn_400_editCategoryById() throws Exception {
     String categoryId = "invalid-uuid";
     String url = BASE_URL + "/" + categoryId;
-    CategoryEditRequestDTO request =
-        CategoryEditRequestDTO.builder().name("ITEM_UPDATED").build();
+    CategoryEditRequestDTO request = CategoryEditRequestDTO.builder().name("ITEM_UPDATED").build();
     String requestBody = objectMapper.writeValueAsString(request);
     MvcResult response =
         mockMvc
@@ -386,8 +385,7 @@ class CategoryControllerTest {
   void shouldReturn_401_editCategoryById() throws Exception {
     String categoryId = "ac1da9e4-7e4b-42ab-b9a5-b87cc4f30c2c";
     String url = BASE_URL + "/" + categoryId;
-    CategoryEditRequestDTO request =
-        CategoryEditRequestDTO.builder().name("ITEM_UPDATED").build();
+    CategoryEditRequestDTO request = CategoryEditRequestDTO.builder().name("ITEM_UPDATED").build();
     String requestBody = objectMapper.writeValueAsString(request);
     MvcResult response =
         mockMvc
@@ -405,8 +403,7 @@ class CategoryControllerTest {
   void shouldReturn_403_editCategoryById() throws Exception {
     String categoryId = "ac1da9e4-7e4b-42ab-b9a5-b87cc4f30c2c";
     String url = BASE_URL + "/" + categoryId;
-    CategoryEditRequestDTO request =
-        CategoryEditRequestDTO.builder().name("ITEM_UPDATED").build();
+    CategoryEditRequestDTO request = CategoryEditRequestDTO.builder().name("ITEM_UPDATED").build();
     String requestBody = objectMapper.writeValueAsString(request);
     MvcResult response =
         mockMvc
@@ -427,8 +424,7 @@ class CategoryControllerTest {
   void shouldReturn_404_editCategoryById() throws Exception {
     String categoryId = "84ad8217-9bc4-4244-8d23-d0354ddb9100";
     String url = BASE_URL + "/" + categoryId;
-    CategoryEditRequestDTO request =
-        CategoryEditRequestDTO.builder().name("ITEM_UPDATED").build();
+    CategoryEditRequestDTO request = CategoryEditRequestDTO.builder().name("ITEM_UPDATED").build();
     String requestBody = objectMapper.writeValueAsString(request);
     MvcResult response =
         mockMvc
@@ -520,7 +516,7 @@ class CategoryControllerTest {
 
   @Test
   void shouldReturn_404_deleteCategoryById_isDeletedTrue() throws Exception {
-    String categoryId = "84ad8217-9bc4-4244-8d23-d0354ddb9100";
+    String categoryId = "ca042f70-a2b9-435b-bb76-3c29fca2e505";
     String url = BASE_URL + "/" + categoryId;
     MvcResult response =
         mockMvc
@@ -531,15 +527,5 @@ class CategoryControllerTest {
     SimpleResponse responseBody = objectMapper.readValue(contentAsString, SimpleResponse.class);
     assertEquals(HttpStatus.NOT_FOUND.value(), status);
     assertEquals(MSG.AUTHORITY_NOT_FOUND_MSG + categoryId, responseBody.getMessage());
-  }
-
-  @Test
-  void editById() {
-    // TODO editById test
-  }
-
-  @Test
-  void deleteById() {
-    // TODO deleteById test
   }
 }
