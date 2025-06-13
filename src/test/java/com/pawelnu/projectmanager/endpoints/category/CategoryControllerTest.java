@@ -533,7 +533,7 @@ class CategoryControllerTest {
     assertEquals(HttpStatus.NOT_FOUND.value(), status);
     assertEquals(MSG.AUTHORITY_NOT_FOUND_MSG + categoryId, responseBody.getMessage());
   }
-  
+
   @Test
   void editById() {
     // TODO editById test
