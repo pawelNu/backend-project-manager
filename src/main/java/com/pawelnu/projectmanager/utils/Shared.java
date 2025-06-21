@@ -6,6 +6,7 @@ import com.pawelnu.projectmanager.utils.Consts.Request;
 import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -36,7 +37,7 @@ public class Shared {
     return Sort.unsorted();
   }
 
-  public static List<String> parseJsonList(ObjectMapper o, String json) {
+  private static List<String> parseJsonList(ObjectMapper o, String json) {
     try {
       List<String> result = o.readValue(json, new TypeReference<>() {});
       if (result.getLast().equalsIgnoreCase("asc") || result.getLast().equalsIgnoreCase("desc")) {
@@ -49,7 +50,7 @@ public class Shared {
     }
   }
 
-  public static List<Integer> parseJsonListInt(ObjectMapper o, String json) {
+  private static List<Integer> parseJsonListInt(ObjectMapper o, String json) {
     try {
       return o.readValue(json, new TypeReference<>() {});
     } catch (Exception e) {
@@ -57,7 +58,7 @@ public class Shared {
     }
   }
 
-  public static Map<String, String> parseJsonMap(ObjectMapper o, String json) {
+  private static Map<String, String> parseJsonMap(ObjectMapper o, String json) {
     try {
       return o.readValue(json, new TypeReference<>() {});
     } catch (Exception e) {
@@ -65,8 +66,9 @@ public class Shared {
     }
   }
 
-  public static String prepareContentRange(int start, long end, long totalElements) {
-    return String.format("items %d-%d/%d", start, end, totalElements);
+  public static String prepareContentRange(Page page, int offset, int limit) {
+    PageableResponse pageInfo = preparePageInfo(page, offset, limit);
+    return String.format("items %d-%d/%d", offset, pageInfo.getEnd(), pageInfo.getTotalElements());
   }
 
   public static PageableParams preparePageableParams(
@@ -96,5 +98,11 @@ public class Shared {
         .limit(limit)
         .filters(filters)
         .build();
+  }
+
+  private static PageableResponse preparePageInfo(Page page, int offset, int limit) {
+    long totalElements = page.getTotalElements();
+    long end = Math.min(offset + limit - 1, totalElements - 1);
+    return PageableResponse.builder().totalElements(totalElements).end(end).build();
   }
 }

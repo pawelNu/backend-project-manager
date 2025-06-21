@@ -55,10 +55,7 @@ public class EmployeeService {
             params.getSortDir(),
             params.getSortField());
     List<EmployeeDTO> companyDTOs = page.getContent().stream().map(employeeMapper::toDTO).toList();
-
-    long totalElements = page.getTotalElements();
-    long end = Math.min(params.getOffset() + params.getLimit() - 1, totalElements - 1);
-    String contentRange = Shared.prepareContentRange(params.getOffset(), end, totalElements);
+    String contentRange = Shared.prepareContentRange(page, params.getOffset(), params.getLimit());
     return EmployeesListResponseDTO.builder().data(companyDTOs).contentRange(contentRange).build();
   }
 
