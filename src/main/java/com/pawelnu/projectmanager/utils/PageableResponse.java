@@ -7,5 +7,5 @@ import lombok.Getter;
 @Getter
 public class PageableResponse {
   private long totalElements;
-  private int end;
+  private long end;
 }
