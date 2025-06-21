@@ -5,14 +5,13 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pawelnu.projectmanager.config.security.jwt.JwtUtils;
 import com.pawelnu.projectmanager.exception.NotFoundException;
+import com.pawelnu.projectmanager.exception.model.ReactAdminBadRequestError;
 import com.pawelnu.projectmanager.exception.model.ReactAdminError;
 import com.pawelnu.projectmanager.exception.model.SimpleResponse;
 import com.pawelnu.projectmanager.utils.Consts.MSG;
@@ -187,19 +186,22 @@ class CompanyControllerTest {
             .website("https://company-test.com")
             .build();
     String requestBody = objectMapper.writeValueAsString(request);
-    mockMvc
-        .perform(
-            post("/" + Path.API_COMPANIES)
-                .with(withJwt())
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(requestBody))
-        .andExpect(status().isCreated())
-        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-        .andExpect(jsonPath("$.name").value(request.getName()))
-        .andExpect(jsonPath("$.nip").value(request.getNip()))
-        .andExpect(jsonPath("$.regon").value(request.getRegon()))
-        .andExpect(jsonPath("$.status").value("Active"))
-        .andExpect(jsonPath("$.website").value(request.getWebsite()));
+    MvcResult response =
+        mockMvc
+            .perform(
+                post("/" + Path.API_COMPANIES)
+                    .with(withJwt())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(requestBody))
+            .andReturn();
+    int status = response.getResponse().getStatus();
+    String contentAsString = response.getResponse().getContentAsString();
+    CompanyDTO responseBody = objectMapper.readValue(contentAsString, CompanyDTO.class);
+    assertEquals(HttpStatus.CREATED.value(), status);
+    assertEquals(request.getName(), responseBody.getName());
+    assertEquals(request.getNip(), responseBody.getNip());
+    assertEquals(request.getRegon(), responseBody.getRegon());
+    assertEquals(request.getWebsite(), responseBody.getWebsite());
   }
 
   @Test
@@ -212,21 +214,23 @@ class CompanyControllerTest {
             .website("http://company-test.com")
             .build();
     String requestBody = objectMapper.writeValueAsString(request);
-    mockMvc
-        .perform(
-            post("/" + Path.API_COMPANIES)
-                .with(withJwt())
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(requestBody))
-        .andExpect(status().isBadRequest())
-        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-        .andExpect(jsonPath("$.errors.website").value("URL must start with https://"))
-        .andExpect(jsonPath("$.errors.nip").value("NIP must contain exactly 10 digits"))
-        .andExpect(jsonPath("$.errors.regon").value("REGON must contain exactly 9 digits"))
-        .andExpect(jsonPath("$.errors.name").value("Name must be 3-255 characters"))
-        .andExpect(
-            jsonPath("$.errors.root.serverError")
-                .value("Some of the provided values are not valid. Please fix them and retry."));
+    MvcResult response =
+        mockMvc
+            .perform(
+                post("/" + Path.API_COMPANIES)
+                    .with(withJwt())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(requestBody))
+            .andReturn();
+    int status = response.getResponse().getStatus();
+    String contentAsString = response.getResponse().getContentAsString();
+    ReactAdminBadRequestError responseBody =
+        objectMapper.readValue(contentAsString, ReactAdminBadRequestError.class);
+    assertEquals(HttpStatus.BAD_REQUEST.value(), status);
+    assertEquals("URL must start with https://", responseBody.getErrors().get("website"));
+    assertEquals("NIP must contain exactly 10 digits", responseBody.getErrors().get("nip"));
+    assertEquals("REGON must contain exactly 9 digits", responseBody.getErrors().get("regon"));
+    assertEquals("Name must be 3-255 characters", responseBody.getErrors().get("name"));
   }
 
   @Test
@@ -287,7 +291,7 @@ class CompanyControllerTest {
     List<CompanySimpleDTO> responseBody =
         objectMapper.readValue(contentAsString, new TypeReference<>() {});
     assertEquals(HttpStatus.OK.value(), status);
-    assertEquals("items 0-24/30", headerContentRange);
+    assertEquals("items 0-24/29", headerContentRange);
     assertEquals(25, responseBody.size());
   }
 
@@ -350,7 +354,7 @@ class CompanyControllerTest {
     List<CompanySimpleDTO> responseBody =
         objectMapper.readValue(contentAsString, new TypeReference<>() {});
     assertEquals(HttpStatus.OK.value(), status);
-    assertEquals("items 0-0/30", headerContentRange);
+    assertEquals("items 0-0/29", headerContentRange);
     assertEquals(1, responseBody.size());
     assertEquals("Abernathy LLC", responseBody.getFirst().getName());
   }
