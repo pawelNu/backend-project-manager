@@ -10,6 +10,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -80,5 +81,21 @@ public class CategoryValueQueryRepository {
             .orElse(0L);
 
     return new PageImpl<>(results, PageRequest.of(offset / limit, limit), total);
+  }
+
+  public Optional<CategoryValueEntity> findById(UUID id) {
+    QCategoryValueEntity categoryValue = QCategoryValueEntity.categoryValueEntity;
+
+    List<CategoryValueEntity> fetch =
+        queryFactory
+            .selectFrom(categoryValue)
+            .where(categoryValue.id.eq(id).and(categoryValue.isDeleted.isFalse()))
+            .fetch();
+
+    if (fetch != null && !fetch.isEmpty()) {
+      CategoryValueEntity categoryValueEntity = fetch.getFirst();
+      return Optional.of(categoryValueEntity);
+    }
+    return Optional.empty();
   }
 }

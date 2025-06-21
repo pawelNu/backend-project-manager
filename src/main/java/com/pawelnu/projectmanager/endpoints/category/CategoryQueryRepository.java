@@ -75,17 +75,17 @@ public class CategoryQueryRepository {
   }
 
   public Optional<CategoryEntity> findById(UUID id) {
-    QCategoryEntity authority = QCategoryEntity.categoryEntity;
+    QCategoryEntity category = QCategoryEntity.categoryEntity;
 
     List<CategoryEntity> fetch =
         queryFactory
-            .selectFrom(authority)
-            .where(authority.id.eq(id).and(authority.isDeleted.isFalse()))
+            .selectFrom(category)
+            .where(category.id.eq(id).and(category.isDeleted.isFalse()))
             .fetch();
 
     if (fetch != null && !fetch.isEmpty()) {
-      CategoryEntity authorityEntity = fetch.getFirst();
-      return Optional.of(authorityEntity);
+      CategoryEntity categoryEntity = fetch.getFirst();
+      return Optional.of(categoryEntity);
     }
     return Optional.empty();
   }

@@ -7,6 +7,7 @@ import com.pawelnu.projectmanager.utils.Consts.MSG;
 import com.pawelnu.projectmanager.utils.PageableParams;
 import com.pawelnu.projectmanager.utils.Shared;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -48,14 +49,22 @@ public class CategoryValueService {
   }
 
   public CategoryValueDTO getById(UUID id) {
-    return categoryValueRepository
+    return categoryValueQueryRepository
         .findById(id)
         .map(categoryValueMapper::toDTO)
         .orElseThrow(() -> new NotFoundException(MSG.CATEGORY_VALUE_NOT_FOUND_MSG + id));
   }
 
   public CategoryValueDTO editById(UUID id, CategoryValueEditRequestDTO body) {
-    throw new UnsupportedOperationException("Not implemented yet");
+    Optional<CategoryValueEntity> categoryValueToEdit = categoryValueQueryRepository.findById(id);
+    if (categoryValueToEdit.isPresent()) {
+      CategoryValueEntity existingCategoryValue = categoryValueToEdit.get();
+      categoryValueMapper.toEntity(body, existingCategoryValue);
+      CategoryValueEntity updatedCompany = categoryValueRepository.save(existingCategoryValue);
+      return categoryValueMapper.toDTO(updatedCompany);
+    } else {
+      throw new NotFoundException(MSG.CATEGORY_VALUE_NOT_FOUND_MSG + id);
+    }
   }
 
   public SimpleResponse deleteById(UUID id) {
