@@ -6,9 +6,9 @@ import com.pawelnu.projectmanager.endpoints.company.CompanyRepository;
 import com.pawelnu.projectmanager.exception.NotFoundException;
 import com.pawelnu.projectmanager.exception.model.SimpleResponse;
 import com.pawelnu.projectmanager.utils.Consts.MSG;
+import com.pawelnu.projectmanager.utils.PageableParams;
 import com.pawelnu.projectmanager.utils.Shared;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -44,24 +44,21 @@ public class EmployeeService {
   }
 
   public EmployeesListResponseDTO getEmployeeList(String sort, String range, String filter) {
-
-    List<String> sortList = Shared.parseJsonList(objectMapper, sort);
-    String sortField = !sortList.isEmpty() ? sortList.get(0) : "lastName";
-    String sortDir = sortList.size() > 1 ? sortList.get(1) : "ASC";
-
-    List<Integer> rangeList = Shared.parseJsonListInt(objectMapper, range);
-    int offset = !rangeList.isEmpty() ? rangeList.get(0) : 0;
-    int limit = rangeList.size() > 1 ? rangeList.get(1) - rangeList.get(0) + 1 : 25;
-
-    Map<String, String> filters = Shared.parseJsonMap(objectMapper, filter);
+    PageableParams params =
+        Shared.preparePageableParams(objectMapper, "lastName", sort, range, filter);
 
     Page<EmployeeEntity> page =
-        employeeQueryRepository.getEmployeeList(filters, offset, limit, sortDir, sortField);
+        employeeQueryRepository.getEmployeeList(
+            params.getFilters(),
+            params.getOffset(),
+            params.getLimit(),
+            params.getSortDir(),
+            params.getSortField());
     List<EmployeeDTO> companyDTOs = page.getContent().stream().map(employeeMapper::toDTO).toList();
 
     long totalElements = page.getTotalElements();
-    long end = Math.min(offset + limit - 1, totalElements - 1);
-    String contentRange = Shared.prepareContentRange(offset, end, totalElements);
+    long end = Math.min(params.getOffset() + params.getLimit() - 1, totalElements - 1);
+    String contentRange = Shared.prepareContentRange(params.getOffset(), end, totalElements);
     return EmployeesListResponseDTO.builder().data(companyDTOs).contentRange(contentRange).build();
   }
 

@@ -68,4 +68,33 @@ public class Shared {
   public static String prepareContentRange(int start, long end, long totalElements) {
     return String.format("items %d-%d/%d", start, end, totalElements);
   }
+
+  public static PageableParams preparePageableParams(
+      ObjectMapper objectMapper, String sort, String range, String filter) {
+    return preparePageableParams(objectMapper, "name", sort, range, filter);
+  }
+
+  public static PageableParams preparePageableParams(
+      ObjectMapper objectMapper,
+      String defaultSortField,
+      String sort,
+      String range,
+      String filter) {
+    List<String> sortList = Shared.parseJsonList(objectMapper, sort);
+    String sortField = sortList.isEmpty() ? defaultSortField : sortList.get(0);
+    String sortDir = sortList.size() > 1 ? sortList.get(1) : "ASC";
+
+    List<Integer> rangeList = Shared.parseJsonListInt(objectMapper, range);
+    int offset = !rangeList.isEmpty() ? rangeList.get(0) : 0;
+    int limit = rangeList.size() > 1 ? rangeList.get(1) - rangeList.get(0) + 1 : 25;
+
+    Map<String, String> filters = Shared.parseJsonMap(objectMapper, filter);
+    return PageableParams.builder()
+        .sortField(sortField)
+        .sortDir(sortDir)
+        .offset(offset)
+        .limit(limit)
+        .filters(filters)
+        .build();
+  }
 }
