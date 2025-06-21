@@ -1,7 +1,9 @@
 package com.pawelnu.projectmanager.endpoints.category.value;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.pawelnu.projectmanager.exception.NotFoundException;
 import com.pawelnu.projectmanager.exception.model.SimpleResponse;
+import com.pawelnu.projectmanager.utils.Consts.MSG;
 import com.pawelnu.projectmanager.utils.PageableParams;
 import com.pawelnu.projectmanager.utils.Shared;
 import java.util.List;
@@ -46,7 +48,10 @@ public class CategoryValueService {
   }
 
   public CategoryValueDTO getById(UUID id) {
-    throw new UnsupportedOperationException("Not implemented yet");
+    return categoryValueRepository
+        .findById(id)
+        .map(categoryValueMapper::toDTO)
+        .orElseThrow(() -> new NotFoundException(MSG.CATEGORY_VALUE_NOT_FOUND_MSG + id));
   }
 
   public CategoryValueDTO editById(UUID id, CategoryValueEditRequestDTO body) {

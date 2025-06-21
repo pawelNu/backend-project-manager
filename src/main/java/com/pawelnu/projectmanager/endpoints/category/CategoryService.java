@@ -49,7 +49,7 @@ public class CategoryService {
     return categoryQueryRepository
         .findById(id)
         .map(categoryMapper::toDTO)
-        .orElseThrow(() -> new NotFoundException(MSG.AUTHORITY_NOT_FOUND_MSG + id));
+        .orElseThrow(() -> new NotFoundException(MSG.CATEGORY_NOT_FOUND_MSG + id));
   }
 
   public CategoryDTO editById(UUID id, CategoryEditRequestDTO body) {
@@ -60,7 +60,7 @@ public class CategoryService {
       CategoryEntity updatedCompany = categoryRepository.save(existingAuthority);
       return categoryMapper.toDTO(updatedCompany);
     } else {
-      throw new NotFoundException(MSG.AUTHORITY_NOT_FOUND_MSG + id);
+      throw new NotFoundException(MSG.CATEGORY_NOT_FOUND_MSG + id);
     }
   }
 
@@ -76,7 +76,7 @@ public class CategoryService {
         return SimpleResponse.builder().message("Cannot delete authority with id: " + id).build();
       }
     } else {
-      throw new NotFoundException(MSG.AUTHORITY_NOT_FOUND_MSG + id);
+      throw new NotFoundException(MSG.CATEGORY_NOT_FOUND_MSG + id);
     }
   }
 }
