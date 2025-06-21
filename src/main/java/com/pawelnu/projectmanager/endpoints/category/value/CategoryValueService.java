@@ -68,6 +68,22 @@ public class CategoryValueService {
   }
 
   public SimpleResponse deleteById(UUID id) {
-    throw new UnsupportedOperationException("Not implemented yet");
+    Optional<CategoryValueEntity> categoryToDelete =
+        categoryValueRepository.findByIdAndIsDeletedFalse(id);
+    if (categoryToDelete.isPresent()) {
+      CategoryValueEntity existingCategoryValue = categoryToDelete.get();
+      existingCategoryValue.setIsDeleted(true);
+      CategoryValueEntity updatedCategoryValue =
+          categoryValueRepository.save(existingCategoryValue);
+      if (updatedCategoryValue.getIsDeleted()) {
+        return SimpleResponse.builder().message("Deleted category value with id: " + id).build();
+      } else {
+        return SimpleResponse.builder()
+            .message("Cannot delete category value with id: " + id)
+            .build();
+      }
+    } else {
+      throw new NotFoundException(MSG.CATEGORY_VALUE_NOT_FOUND_MSG + id);
+    }
   }
 }
