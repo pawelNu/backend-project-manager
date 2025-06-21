@@ -14,7 +14,6 @@ public class ProjectManagerMain {
   }
 }
 
-// TODO api for category_values
 // TODO api for companies
 // TODO api for company_addresses
 // TODO api for employees
