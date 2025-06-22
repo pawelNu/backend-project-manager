@@ -384,7 +384,7 @@ class CompanyAddressControllerTest {
 
   @Test
   void shouldReturn_404_getCompanyAddressById_isDeletedTrue() throws Exception {
-    String companyAddressId = "acf847a2-1b20-4a31-8872-93fcbbe7934f";
+    String companyAddressId = "07d8d780-9646-4389-a73a-0010b72bb89c";
     String url = BASE_URL + "/" + companyAddressId;
     MvcResult response = mockMvc.perform(get(url).with(withJwt())).andReturn();
     int status = response.getResponse().getStatus();
@@ -392,7 +392,7 @@ class CompanyAddressControllerTest {
     NotFoundException responseBody =
         objectMapper.readValue(contentAsString, NotFoundException.class);
     assertEquals(HttpStatus.NOT_FOUND.value(), status);
-    assertEquals(MSG.AUTHORITY_NOT_FOUND_MSG + companyAddressId, responseBody.getMessage());
+    assertEquals(MSG.COMPANY_ADDRESS_NOT_FOUND + companyAddressId, responseBody.getMessage());
   }
 
   // TODO Test editById() {}

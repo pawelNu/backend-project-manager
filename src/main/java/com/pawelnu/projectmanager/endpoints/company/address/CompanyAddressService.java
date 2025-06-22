@@ -30,7 +30,7 @@ public class CompanyAddressService {
   private final ObjectMapper objectMapper;
 
   public CompanyAddressDTO getById(UUID id) {
-    return companyAddressRepository
+    return companyAddressQueryRepository
         .findById(id)
         .map(companyAddressMapper::toDTO)
         .orElseThrow(() -> new NotFoundException(COMPANY_ADDRESS_NOT_FOUND + id));
