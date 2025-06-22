@@ -30,10 +30,8 @@ public class CategoryValueQueryRepository {
     QCategoryEntity category = QCategoryEntity.categoryEntity;
     BooleanBuilder allConditions = new BooleanBuilder();
 
-    if (filters.containsKey(category.name.getMetadata().getName())) {
-      allConditions.and(
-          category.name.likeIgnoreCase(
-              "%" + filters.get(category.name.getMetadata().getName()) + "%"));
+    if (filters.containsKey("categoryName")) {
+      allConditions.and(category.name.likeIgnoreCase("%" + filters.get("categoryName") + "%"));
     }
     allConditions.and(categoryValue.isDeleted.isFalse());
     if (sortDir == null || sortDir.isEmpty()) {
