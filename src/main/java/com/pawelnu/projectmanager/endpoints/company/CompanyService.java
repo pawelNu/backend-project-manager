@@ -2,6 +2,8 @@ package com.pawelnu.projectmanager.endpoints.company;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pawelnu.projectmanager.dto.PagingAndSortingMetadataDTO;
+import com.pawelnu.projectmanager.endpoints.category.value.CategoryValueEntity;
+import com.pawelnu.projectmanager.endpoints.category.value.CategoryValueQueryRepository;
 import com.pawelnu.projectmanager.exception.NotFoundException;
 import com.pawelnu.projectmanager.exception.model.SimpleResponse;
 import com.pawelnu.projectmanager.mapper.PagingAndSortingMapper;
@@ -27,6 +29,7 @@ public class CompanyService {
 
   private final CompanyRepository companyRepository;
   private final CompanyQueryRepository companyQueryRepository;
+  private final CategoryValueQueryRepository categoryValueQueryRepository;
   private final CompanyMapper companyMapper;
   private final PagingAndSortingMapper pageMapper;
   private final ObjectMapper objectMapper;
@@ -51,12 +54,19 @@ public class CompanyService {
   }
 
   public CompanyDTO create(CompanyCreateRequestDTO companyCreateRequestDTO) {
-    CompanyEntity companyEntity = companyMapper.toEntity(companyCreateRequestDTO);
-    //    FIXME incompatible types: com.pawelnu.projectmanager.enums.CompanyStatus cannot be
-    // converted to com.pawelnu.projectmanager.endpoints.category.value.CategoryValueEntity
-    //    companyEntity.setStatus(CompanyStatus.ACTIVE);
-    CompanyEntity savedCompany = companyRepository.save(companyEntity);
-    return companyMapper.toDTO(savedCompany);
+    String categoryString = "company status";
+    String valueString = "active";
+    Optional<CategoryValueEntity> companyStatusActive =
+        categoryValueQueryRepository.findCompanyStatusActive(categoryString, valueString);
+    if (companyStatusActive.isPresent()) {
+      CompanyEntity companyEntity = companyMapper.toEntity(companyCreateRequestDTO);
+      companyEntity.setStatus(companyStatusActive.get());
+      CompanyEntity savedCompany = companyRepository.save(companyEntity);
+      return companyMapper.toDTO(savedCompany);
+    } else {
+      throw new NotFoundException(
+          "For category: %s, category value: %s not found".formatted(categoryString, valueString));
+    }
   }
 
   public CompanyDTO editById(UUID id, CompanyEditRequestDTO body) {

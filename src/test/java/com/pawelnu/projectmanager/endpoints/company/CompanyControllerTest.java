@@ -169,6 +169,7 @@ class CompanyControllerTest {
     assertEquals(request.getName(), responseBody.getName());
     assertEquals(request.getNip(), responseBody.getNip());
     assertEquals(request.getRegon(), responseBody.getRegon());
+    assertEquals("ACTIVE", responseBody.getStatus());
     assertEquals(request.getWebsite(), responseBody.getWebsite());
   }
 
