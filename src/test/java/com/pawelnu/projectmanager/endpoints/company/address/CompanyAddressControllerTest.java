@@ -128,7 +128,8 @@ class CompanyAddressControllerTest {
     ReactAdminBadRequestError responseBody =
         objectMapper.readValue(contentAsString, ReactAdminBadRequestError.class);
     assertEquals(HttpStatus.BAD_REQUEST.value(), status);
-    assertEquals("must be a well-formed email address", responseBody.getErrors().get("emailAddress"));
+    assertEquals(
+        "must be a well-formed email address", responseBody.getErrors().get("emailAddress"));
   }
 
   @Test
