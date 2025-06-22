@@ -7,7 +7,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -46,12 +45,9 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 @Slf4j
 class CompanyControllerTest {
 
-  public static final String COMPANY_NOT_FOUND_WITH_ID = "Company not found with id: ";
   @Autowired private JwtUtils jwtUtils;
   @Autowired private MockMvc mockMvc;
   @Autowired private ObjectMapper objectMapper;
-  private String jwtTokenWithAuthorities;
-  private String jwtTokenWithoutAuthorities;
   private static final String BASE_URL = "/" + Path.API_COMPANIES;
 
   @Container
@@ -87,10 +83,9 @@ class CompanyControllerTest {
 
   @Test
   void shouldReturn_400_getCompanyById() throws Exception {
-    MvcResult response =
-        mockMvc
-            .perform(get("/" + Path.API_COMPANIES + "/invalid-uuid").with(withJwt()))
-            .andReturn();
+    String companyId = "/invalid-uuid";
+    String url = BASE_URL + companyId;
+    MvcResult response = mockMvc.perform(get(url).with(withJwt())).andReturn();
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
     Map<String, String> responseBody =
@@ -133,7 +128,7 @@ class CompanyControllerTest {
     NotFoundException responseBody =
         objectMapper.readValue(contentAsString, NotFoundException.class);
     assertEquals(HttpStatus.NOT_FOUND.value(), status);
-    assertEquals(COMPANY_NOT_FOUND_WITH_ID + companyId, responseBody.getMessage());
+    assertEquals(MSG.COMPANY_NOT_FOUND + companyId, responseBody.getMessage());
   }
 
   @Test
@@ -146,7 +141,7 @@ class CompanyControllerTest {
     NotFoundException responseBody =
         objectMapper.readValue(contentAsString, NotFoundException.class);
     assertEquals(HttpStatus.NOT_FOUND.value(), status);
-    assertEquals(COMPANY_NOT_FOUND_WITH_ID + companyId, responseBody.getMessage());
+    assertEquals(MSG.COMPANY_NOT_FOUND + companyId, responseBody.getMessage());
   }
 
   @Test
@@ -162,7 +157,7 @@ class CompanyControllerTest {
     MvcResult response =
         mockMvc
             .perform(
-                post("/" + Path.API_COMPANIES)
+                post(BASE_URL)
                     .with(withJwt())
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(requestBody))
@@ -190,7 +185,7 @@ class CompanyControllerTest {
     MvcResult response =
         mockMvc
             .perform(
-                post("/" + Path.API_COMPANIES)
+                post(BASE_URL)
                     .with(withJwt())
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(requestBody))
@@ -218,10 +213,7 @@ class CompanyControllerTest {
     String requestBody = objectMapper.writeValueAsString(request);
     MvcResult response =
         mockMvc
-            .perform(
-                post("/" + Path.API_COMPANIES)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(requestBody))
+            .perform(post(BASE_URL).contentType(MediaType.APPLICATION_JSON).content(requestBody))
             .andReturn();
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
@@ -243,7 +235,7 @@ class CompanyControllerTest {
     MvcResult response =
         mockMvc
             .perform(
-                post("/" + Path.API_COMPANIES)
+                post(BASE_URL)
                     .with(withBadJwt())
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(requestBody))
@@ -369,6 +361,7 @@ class CompanyControllerTest {
   @Test
   void shouldReturn_200_editCompanyById() throws Exception {
     String companyId = "ac1da9e4-7e4b-42ab-b9a5-b87cc4f30c2c";
+    String url = BASE_URL + companyId;
     CompanyEditRequestDTO request =
         CompanyEditRequestDTO.builder()
             .name("Updated company")
@@ -380,7 +373,7 @@ class CompanyControllerTest {
     MvcResult response =
         mockMvc
             .perform(
-                put("/" + Path.API_COMPANIES + "/" + companyId)
+                put(url)
                     .with(withJwt())
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(requestBody))
@@ -400,6 +393,7 @@ class CompanyControllerTest {
   @Test
   void shouldReturn_400_editCompanyById() throws Exception {
     String companyId = "invalid-uuid";
+    String url = BASE_URL + companyId;
     CompanyEditRequestDTO request =
         CompanyEditRequestDTO.builder()
             .name("Updated company")
@@ -411,7 +405,7 @@ class CompanyControllerTest {
     MvcResult response =
         mockMvc
             .perform(
-                put("/" + Path.API_COMPANIES + "/" + companyId)
+                put(url)
                     .with(withJwt())
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(requestBody))
@@ -427,6 +421,7 @@ class CompanyControllerTest {
   @Test
   void shouldReturn_401_editCompanyById() throws Exception {
     String companyId = "ac1da9e4-7e4b-42ab-b9a5-b87cc4f30c2c";
+    String url = BASE_URL + companyId;
     CompanyCreateRequestDTO request =
         CompanyCreateRequestDTO.builder()
             .name("Co")
@@ -437,10 +432,7 @@ class CompanyControllerTest {
     String requestBody = objectMapper.writeValueAsString(request);
     MvcResult response =
         mockMvc
-            .perform(
-                put("/" + Path.API_COMPANIES + "/" + companyId)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(requestBody))
+            .perform(put(url).contentType(MediaType.APPLICATION_JSON).content(requestBody))
             .andReturn();
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
@@ -453,6 +445,7 @@ class CompanyControllerTest {
   @Test
   void shouldReturn_403_editCompanyById() throws Exception {
     String companyId = "ac1da9e4-7e4b-42ab-b9a5-b87cc4f30c2c";
+    String url = BASE_URL + companyId;
     CompanyCreateRequestDTO request =
         CompanyCreateRequestDTO.builder()
             .name("Company test")
@@ -464,7 +457,7 @@ class CompanyControllerTest {
     MvcResult response =
         mockMvc
             .perform(
-                put("/" + Path.API_COMPANIES + "/" + companyId)
+                put(url)
                     .with(withBadJwt())
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(requestBody))
@@ -479,6 +472,7 @@ class CompanyControllerTest {
   @Test
   void shouldReturn_404_editCompanyById() throws Exception {
     String companyId = "ac1da9e4-7e4b-42ab-b7a5-b87cc4f30c2c";
+    String url = BASE_URL + companyId;
     CompanyEditRequestDTO request =
         CompanyEditRequestDTO.builder()
             .name("Updated company")
@@ -490,7 +484,7 @@ class CompanyControllerTest {
     MvcResult response =
         mockMvc
             .perform(
-                put("/" + Path.API_COMPANIES + "/" + companyId)
+                put(url)
                     .with(withJwt())
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(requestBody))
@@ -499,18 +493,16 @@ class CompanyControllerTest {
     String contentAsString = response.getResponse().getContentAsString();
     ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
     assertEquals(HttpStatus.NOT_FOUND.value(), status);
-    assertEquals(COMPANY_NOT_FOUND_WITH_ID + companyId, responseBody.getMessage());
+    assertEquals(MSG.COMPANY_NOT_FOUND + companyId, responseBody.getMessage());
   }
 
   @Test
   void shouldReturn_200_deleteCompanyById_isDeletedFalse() throws Exception {
     String companyId = "4c7a2cc5-1e03-4337-8901-93c0b46585af";
+    String url = BASE_URL + companyId;
     MvcResult response =
         mockMvc
-            .perform(
-                delete("/" + Path.API_COMPANIES + "/" + companyId)
-                    .with(withJwt())
-                    .contentType(MediaType.APPLICATION_JSON))
+            .perform(delete(url).with(withJwt()).contentType(MediaType.APPLICATION_JSON))
             .andReturn();
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
@@ -523,12 +515,10 @@ class CompanyControllerTest {
   @Test
   void shouldReturn_400_deleteCompanyById_isDeletedFalse() throws Exception {
     String companyId = "invalid-uuid";
+    String url = BASE_URL + companyId;
     MvcResult response =
         mockMvc
-            .perform(
-                delete("/" + Path.API_COMPANIES + "/" + companyId)
-                    .with(withJwt())
-                    .contentType(MediaType.APPLICATION_JSON))
+            .perform(delete(url).with(withJwt()).contentType(MediaType.APPLICATION_JSON))
             .andReturn();
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
@@ -540,12 +530,9 @@ class CompanyControllerTest {
   @Test
   void shouldReturn_401_deleteCompanyById_isDeletedFalse() throws Exception {
     String companyId = "4c7a2cc5-1e03-4337-8901-93c0b46585af";
+    String url = BASE_URL + companyId;
     MvcResult response =
-        mockMvc
-            .perform(
-                delete("/" + Path.API_COMPANIES + "/" + companyId)
-                    .contentType(MediaType.APPLICATION_JSON))
-            .andReturn();
+        mockMvc.perform(delete(url).contentType(MediaType.APPLICATION_JSON)).andReturn();
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
     ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
@@ -556,12 +543,10 @@ class CompanyControllerTest {
   @Test
   void shouldReturn_403_deleteCompanyById_isDeletedFalse() throws Exception {
     String companyId = "4c7a2cc5-1e03-4337-8901-93c0b46585af";
+    String url = BASE_URL + companyId;
     MvcResult response =
         mockMvc
-            .perform(
-                delete("/" + Path.API_COMPANIES + "/" + companyId)
-                    .with(withBadJwt())
-                    .contentType(MediaType.APPLICATION_JSON))
+            .perform(delete(url).with(withBadJwt()).contentType(MediaType.APPLICATION_JSON))
             .andReturn();
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
@@ -573,29 +558,25 @@ class CompanyControllerTest {
   @Test
   void shouldReturn_404_deleteCompanyById_isDeletedFalse() throws Exception {
     String companyId = "4c7a6cc5-1e03-4337-8901-93c0b46585af";
+    String url = BASE_URL + companyId;
     MvcResult response =
         mockMvc
-            .perform(
-                delete("/" + Path.API_COMPANIES + "/" + companyId)
-                    .with(withJwt())
-                    .contentType(MediaType.APPLICATION_JSON))
+            .perform(delete(url).with(withJwt()).contentType(MediaType.APPLICATION_JSON))
             .andReturn();
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
     ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
     assertEquals(HttpStatus.NOT_FOUND.value(), status);
-    assertEquals(COMPANY_NOT_FOUND_WITH_ID + companyId, responseBody.getMessage());
+    assertEquals(MSG.COMPANY_NOT_FOUND + companyId, responseBody.getMessage());
   }
 
   @Test
   void shouldReturn_404_deleteCompanyById_isDeletedTrue() throws Exception {
     String companyId = "84198896-de25-4d17-b47d-11a0c80fc396";
+    String url = BASE_URL + companyId;
     MvcResult response =
         mockMvc
-            .perform(
-                delete("/" + Path.API_COMPANIES + "/" + companyId)
-                    .with(withJwt())
-                    .contentType(MediaType.APPLICATION_JSON))
+            .perform(delete(url).with(withJwt()).contentType(MediaType.APPLICATION_JSON))
             .andReturn();
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
