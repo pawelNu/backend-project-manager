@@ -1,6 +1,8 @@
 package com.pawelnu.projectmanager.endpoints.category.value;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.pawelnu.projectmanager.endpoints.category.CategoryEntity;
+import com.pawelnu.projectmanager.endpoints.category.CategoryRepository;
 import com.pawelnu.projectmanager.exception.NotFoundException;
 import com.pawelnu.projectmanager.exception.model.SimpleResponse;
 import com.pawelnu.projectmanager.utils.Consts.MSG;
@@ -20,14 +22,23 @@ import org.springframework.stereotype.Service;
 public class CategoryValueService {
 
   private final CategoryValueRepository categoryValueRepository;
+  private final CategoryRepository categoryRepository;
   private final CategoryValueQueryRepository categoryValueQueryRepository;
   private final CategoryValueMapper categoryValueMapper;
   private final ObjectMapper objectMapper;
 
   public CategoryValueDTO create(CategoryValueCreateRequestDTO body) {
-    CategoryValueEntity entity = categoryValueMapper.toEntity(body);
-    CategoryValueEntity save = categoryValueRepository.save(entity);
-    return categoryValueMapper.toDTO(save);
+
+    Optional<CategoryEntity> category =
+        categoryRepository.findByIdAndIsDeletedFalse(body.getCategoryId());
+    if (category.isPresent()) {
+      CategoryValueEntity categoryValueEntity = categoryValueMapper.toEntity(body);
+      categoryValueEntity.setCategory(category.get());
+      CategoryValueEntity savedAddress = categoryValueRepository.save(categoryValueEntity);
+      return categoryValueMapper.toDTO(savedAddress);
+    } else {
+      throw new NotFoundException(MSG.CATEGORY_NOT_FOUND_MSG + body.getCategoryId());
+    }
   }
 
   public CategoryValueListResponseDTO filter(String sort, String range, String filter) {

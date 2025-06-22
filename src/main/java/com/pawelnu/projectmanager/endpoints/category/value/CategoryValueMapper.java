@@ -7,6 +7,7 @@ import org.mapstruct.MappingTarget;
 @Mapper(componentModel = "spring")
 public interface CategoryValueMapper {
 
+  @Mapping(source = "category.name", target = "categoryName")
   CategoryValueDTO toDTO(CategoryValueEntity companyValueEntity);
 
   @Mapping(target = "id", ignore = true)
