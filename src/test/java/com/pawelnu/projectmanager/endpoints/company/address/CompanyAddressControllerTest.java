@@ -229,8 +229,8 @@ class CompanyAddressControllerTest {
 
   @Test
   void shouldReturn_200_getCompanyAddressList_withFiltersAndSort() throws Exception {
-    List<String> sort = List.of("name", "DESC");
-    Map<String, String> filter = Map.of("name", "status");
+    List<String> sort = List.of("city", "DESC");
+    Map<String, String> filter = Map.of("companyName", "hayes");
     String sortString = objectMapper.writeValueAsString(sort);
     String filterStrig = objectMapper.writeValueAsString(filter);
     MvcResult response =
@@ -244,12 +244,12 @@ class CompanyAddressControllerTest {
     int status = response.getResponse().getStatus();
     String headerContentRange = response.getResponse().getHeader("Content-Range");
     String contentAsString = response.getResponse().getContentAsString();
-    List<CategoryDTO> responseBody =
+    List<CompanyAddressDTO> responseBody =
         objectMapper.readValue(contentAsString, new TypeReference<>() {});
     assertEquals(HttpStatus.OK.value(), status);
-    assertEquals("items 0-1/2", headerContentRange);
-    assertEquals(2, responseBody.size());
-    assertEquals("company status 1", responseBody.getFirst().getName());
+    assertEquals("items 0-2/3", headerContentRange);
+    assertEquals(3, responseBody.size());
+    assertEquals("West Aleasestad", responseBody.getFirst().getCity());
   }
 
   @Test
