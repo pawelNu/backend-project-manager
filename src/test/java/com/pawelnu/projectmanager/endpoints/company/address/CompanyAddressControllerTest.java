@@ -62,7 +62,7 @@ class CompanyAddressControllerTest {
   }
 
   @Test
-  void shouldReturn_201_createCategory() throws Exception {
+  void shouldReturn_201_createCompanyAddress() throws Exception {
     CompanyAddressCreateRequestDTO request =
         CompanyAddressCreateRequestDTO.builder()
             .companyId(UUID.fromString("489da321-243c-44fa-a14f-509ebfbad683"))
@@ -101,7 +101,7 @@ class CompanyAddressControllerTest {
   }
 
   @Test
-  void shouldReturn_400_createCategory() throws Exception {
+  void shouldReturn_400_createCompanyAddress() throws Exception {
     CompanyAddressCreateRequestDTO request =
         CompanyAddressCreateRequestDTO.builder()
             .companyId(UUID.fromString("489da321-243c-44fa-a14f-509ebfbad683"))
@@ -133,7 +133,7 @@ class CompanyAddressControllerTest {
   }
 
   @Test
-  void shouldReturn_401_createCategory() throws Exception {
+  void shouldReturn_401_createCompanyAddress() throws Exception {
     CompanyAddressCreateRequestDTO request =
         CompanyAddressCreateRequestDTO.builder()
             .companyId(UUID.fromString("489da321-243c-44fa-a14f-509ebfbad683"))
@@ -159,7 +159,7 @@ class CompanyAddressControllerTest {
   }
 
   @Test
-  void shouldReturn_403_createCategory() throws Exception {
+  void shouldReturn_403_createCompanyAddress() throws Exception {
     CompanyAddressCreateRequestDTO request =
         CompanyAddressCreateRequestDTO.builder()
             .companyId(UUID.fromString("489da321-243c-44fa-a14f-509ebfbad683"))
