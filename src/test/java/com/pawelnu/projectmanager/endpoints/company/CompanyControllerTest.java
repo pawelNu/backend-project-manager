@@ -72,7 +72,7 @@ class CompanyControllerTest {
   @Test
   void shouldReturn_200_getCompanyById() throws Exception {
     String companyId = "cf578fec-006b-4604-a5e8-5ad1b3ea2be5";
-    String url = BASE_URL + companyId;
+    String url = BASE_URL + "/" + companyId;
     MvcResult response = mockMvc.perform(get(url).with(withJwt())).andReturn();
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
@@ -84,7 +84,7 @@ class CompanyControllerTest {
   @Test
   void shouldReturn_400_getCompanyById() throws Exception {
     String companyId = "/invalid-uuid";
-    String url = BASE_URL + companyId;
+    String url = BASE_URL + "/" + companyId;
     MvcResult response = mockMvc.perform(get(url).with(withJwt())).andReturn();
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
@@ -97,7 +97,7 @@ class CompanyControllerTest {
   @Test
   void shouldReturn_401_getCompanyById() throws Exception {
     String companyId = "cf578fec-006b-4604-a5e8-5ad1b3ea2be5";
-    String url = BASE_URL + companyId;
+    String url = BASE_URL + "/" + companyId;
     MvcResult response = mockMvc.perform(get(url)).andReturn();
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
@@ -109,7 +109,7 @@ class CompanyControllerTest {
   @Test
   void shouldReturn_403_getCompanyById() throws Exception {
     String companyId = "cf578fec-006b-4604-a5e8-5ad1b3ea2be5";
-    String url = BASE_URL + companyId;
+    String url = BASE_URL + "/" + companyId;
     MvcResult response = mockMvc.perform(get(url).with(withBadJwt())).andReturn();
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
@@ -121,7 +121,7 @@ class CompanyControllerTest {
   @Test
   void shouldReturn_404_getCompanyById() throws Exception {
     String companyId = "cf578fec-006b-4604-a5e8-5ad1b2ea2be5";
-    String url = BASE_URL + companyId;
+    String url = BASE_URL + "/" + companyId;
     MvcResult response = mockMvc.perform(get(url).with(withJwt())).andReturn();
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
@@ -134,7 +134,7 @@ class CompanyControllerTest {
   @Test
   void shouldReturn_404_getCompanyById_isDeletedTrue() throws Exception {
     String companyId = "84198896-de25-4d17-b47d-11a0c80fc396";
-    String url = BASE_URL + companyId;
+    String url = BASE_URL + "/" + companyId;
     MvcResult response = mockMvc.perform(get(url).with(withJwt())).andReturn();
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
@@ -361,7 +361,7 @@ class CompanyControllerTest {
   @Test
   void shouldReturn_200_editCompanyById() throws Exception {
     String companyId = "ac1da9e4-7e4b-42ab-b9a5-b87cc4f30c2c";
-    String url = BASE_URL + companyId;
+    String url = BASE_URL + "/" + companyId;
     CompanyEditRequestDTO request =
         CompanyEditRequestDTO.builder()
             .name("Updated company")
@@ -393,7 +393,7 @@ class CompanyControllerTest {
   @Test
   void shouldReturn_400_editCompanyById() throws Exception {
     String companyId = "invalid-uuid";
-    String url = BASE_URL + companyId;
+    String url = BASE_URL + "/" + companyId;
     CompanyEditRequestDTO request =
         CompanyEditRequestDTO.builder()
             .name("Updated company")
@@ -421,7 +421,7 @@ class CompanyControllerTest {
   @Test
   void shouldReturn_401_editCompanyById() throws Exception {
     String companyId = "ac1da9e4-7e4b-42ab-b9a5-b87cc4f30c2c";
-    String url = BASE_URL + companyId;
+    String url = BASE_URL + "/" + companyId;
     CompanyCreateRequestDTO request =
         CompanyCreateRequestDTO.builder()
             .name("Co")
@@ -445,7 +445,7 @@ class CompanyControllerTest {
   @Test
   void shouldReturn_403_editCompanyById() throws Exception {
     String companyId = "ac1da9e4-7e4b-42ab-b9a5-b87cc4f30c2c";
-    String url = BASE_URL + companyId;
+    String url = BASE_URL + "/" + companyId;
     CompanyCreateRequestDTO request =
         CompanyCreateRequestDTO.builder()
             .name("Company test")
@@ -472,7 +472,7 @@ class CompanyControllerTest {
   @Test
   void shouldReturn_404_editCompanyById() throws Exception {
     String companyId = "ac1da9e4-7e4b-42ab-b7a5-b87cc4f30c2c";
-    String url = BASE_URL + companyId;
+    String url = BASE_URL + "/" + companyId;
     CompanyEditRequestDTO request =
         CompanyEditRequestDTO.builder()
             .name("Updated company")
@@ -499,7 +499,7 @@ class CompanyControllerTest {
   @Test
   void shouldReturn_200_deleteCompanyById_isDeletedFalse() throws Exception {
     String companyId = "4c7a2cc5-1e03-4337-8901-93c0b46585af";
-    String url = BASE_URL + companyId;
+    String url = BASE_URL + "/" + companyId;
     MvcResult response =
         mockMvc
             .perform(delete(url).with(withJwt()).contentType(MediaType.APPLICATION_JSON))
@@ -515,7 +515,7 @@ class CompanyControllerTest {
   @Test
   void shouldReturn_400_deleteCompanyById_isDeletedFalse() throws Exception {
     String companyId = "invalid-uuid";
-    String url = BASE_URL + companyId;
+    String url = BASE_URL + "/" + companyId;
     MvcResult response =
         mockMvc
             .perform(delete(url).with(withJwt()).contentType(MediaType.APPLICATION_JSON))
@@ -530,7 +530,7 @@ class CompanyControllerTest {
   @Test
   void shouldReturn_401_deleteCompanyById_isDeletedFalse() throws Exception {
     String companyId = "4c7a2cc5-1e03-4337-8901-93c0b46585af";
-    String url = BASE_URL + companyId;
+    String url = BASE_URL + "/" + companyId;
     MvcResult response =
         mockMvc.perform(delete(url).contentType(MediaType.APPLICATION_JSON)).andReturn();
     int status = response.getResponse().getStatus();
@@ -543,7 +543,7 @@ class CompanyControllerTest {
   @Test
   void shouldReturn_403_deleteCompanyById_isDeletedFalse() throws Exception {
     String companyId = "4c7a2cc5-1e03-4337-8901-93c0b46585af";
-    String url = BASE_URL + companyId;
+    String url = BASE_URL + "/" + companyId;
     MvcResult response =
         mockMvc
             .perform(delete(url).with(withBadJwt()).contentType(MediaType.APPLICATION_JSON))
@@ -558,7 +558,7 @@ class CompanyControllerTest {
   @Test
   void shouldReturn_404_deleteCompanyById_isDeletedFalse() throws Exception {
     String companyId = "4c7a6cc5-1e03-4337-8901-93c0b46585af";
-    String url = BASE_URL + companyId;
+    String url = BASE_URL + "/" + companyId;
     MvcResult response =
         mockMvc
             .perform(delete(url).with(withJwt()).contentType(MediaType.APPLICATION_JSON))
@@ -573,7 +573,7 @@ class CompanyControllerTest {
   @Test
   void shouldReturn_404_deleteCompanyById_isDeletedTrue() throws Exception {
     String companyId = "84198896-de25-4d17-b47d-11a0c80fc396";
-    String url = BASE_URL + companyId;
+    String url = BASE_URL + "/" + companyId;
     MvcResult response =
         mockMvc
             .perform(delete(url).with(withJwt()).contentType(MediaType.APPLICATION_JSON))
