@@ -86,7 +86,8 @@ class CompanyAddressControllerTest {
             .andReturn();
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
-    CompanyAddressDTO responseBody = objectMapper.readValue(contentAsString, CompanyAddressDTO.class);
+    CompanyAddressDTO responseBody =
+        objectMapper.readValue(contentAsString, CompanyAddressDTO.class);
     assertEquals(HttpStatus.CREATED.value(), status);
     assertEquals("Pouros Group", responseBody.getCompanyName());
     assertEquals(request.getStreet(), responseBody.getStreet());
@@ -110,7 +111,7 @@ class CompanyAddressControllerTest {
             .zipCode("11-111")
             .country("Test Country")
             .phoneNumber("111-111-111")
-            .emailAddress("test.test@email.test")
+            .emailAddress("invalid.email")
             .addressType("K")
             .build();
     String requestBody = objectMapper.writeValueAsString(request);
@@ -127,7 +128,7 @@ class CompanyAddressControllerTest {
     ReactAdminBadRequestError responseBody =
         objectMapper.readValue(contentAsString, ReactAdminBadRequestError.class);
     assertEquals(HttpStatus.BAD_REQUEST.value(), status);
-    assertEquals("Name should has 5-255 characters", responseBody.getErrors().get("name"));
+    assertEquals("must be a well-formed email address", responseBody.getErrors().get("emailAddress"));
   }
 
   @Test
