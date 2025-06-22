@@ -379,7 +379,7 @@ class CompanyAddressControllerTest {
     NotFoundException responseBody =
         objectMapper.readValue(contentAsString, NotFoundException.class);
     assertEquals(HttpStatus.NOT_FOUND.value(), status);
-    assertEquals(MSG.AUTHORITY_NOT_FOUND_MSG + companyAddressId, responseBody.getMessage());
+    assertEquals(MSG.COMPANY_ADDRESS_NOT_FOUND + companyAddressId, responseBody.getMessage());
   }
 
   @Test

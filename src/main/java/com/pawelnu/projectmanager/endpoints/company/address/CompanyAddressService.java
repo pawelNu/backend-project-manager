@@ -1,6 +1,6 @@
 package com.pawelnu.projectmanager.endpoints.company.address;
 
-import static com.pawelnu.projectmanager.utils.Consts.MSG.COMPANY_NOT_FOUND;
+import static com.pawelnu.projectmanager.utils.Consts.MSG.COMPANY_ADDRESS_NOT_FOUND;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pawelnu.projectmanager.endpoints.company.CompanyEntity;
@@ -33,7 +33,7 @@ public class CompanyAddressService {
     return companyAddressRepository
         .findById(id)
         .map(companyAddressMapper::toDTO)
-        .orElseThrow(() -> new NotFoundException(COMPANY_NOT_FOUND + id));
+        .orElseThrow(() -> new NotFoundException(COMPANY_ADDRESS_NOT_FOUND + id));
   }
 
   public CompanyAddressDTO create(CompanyAddressCreateRequestDTO body) {
