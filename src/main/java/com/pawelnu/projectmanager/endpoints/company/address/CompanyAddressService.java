@@ -62,7 +62,7 @@ public class CompanyAddressService {
   }
 
   public SimpleResponse deleteById(UUID id) {
-    Optional<CompanyAddressEntity> companyToDelete = companyAddressRepository.findById(id);
+    Optional<CompanyAddressEntity> companyToDelete = companyAddressQueryRepository.findById(id);
     if (companyToDelete.isPresent()) {
       companyAddressRepository.delete(companyToDelete.get());
       return SimpleResponse.builder().message("Deleted company address with id: " + id).build();
