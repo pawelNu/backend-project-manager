@@ -1,5 +1,7 @@
 package com.pawelnu.projectmanager.endpoints.company;
 
+import static com.pawelnu.projectmanager.utils.Utils.withBadJwt;
+import static com.pawelnu.projectmanager.utils.Utils.withJwt;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -33,7 +35,6 @@ import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.request.RequestPostProcessor;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -51,6 +52,7 @@ class CompanyControllerTest {
   @Autowired private ObjectMapper objectMapper;
   private String jwtTokenWithAuthorities;
   private String jwtTokenWithoutAuthorities;
+  private static final String BASE_URL = "/" + Path.API_COMPANIES;
 
   @Container
   static PostgreSQLContainer<?> postgres =
@@ -66,39 +68,16 @@ class CompanyControllerTest {
     registry.add("spring.datasource.password", postgres::getPassword);
   }
 
-  private RequestPostProcessor withJwt() {
-    return request -> {
-      request.addHeader("Authorization", "Bearer " + jwtTokenWithAuthorities);
-      request.addHeader("Accept", MediaType.APPLICATION_JSON_VALUE);
-      return request;
-    };
-  }
-
-  private RequestPostProcessor withBadJwt() {
-    return request -> {
-      request.addHeader("Authorization", "Bearer " + jwtTokenWithoutAuthorities);
-      request.addHeader("Accept", MediaType.APPLICATION_JSON_VALUE);
-      return request;
-    };
-  }
-
   @BeforeEach
-  void generateJwtToken() {
-    if (jwtTokenWithAuthorities == null) {
-      jwtTokenWithAuthorities = jwtUtils.generateTokenFromUsername("test");
-    }
-    if (jwtTokenWithoutAuthorities == null) {
-      jwtTokenWithoutAuthorities = jwtUtils.generateTokenFromUsername("user_with_no_authorities");
-    }
+  void beforeEach() {
+    Utils.generateToken(jwtUtils);
   }
 
   @Test
   void shouldReturn_200_getCompanyById() throws Exception {
     String companyId = "cf578fec-006b-4604-a5e8-5ad1b3ea2be5";
-    MvcResult response =
-        mockMvc
-            .perform(get("/" + Path.API_COMPANIES + "/" + companyId).with(withJwt()))
-            .andReturn();
+    String url = BASE_URL + companyId;
+    MvcResult response = mockMvc.perform(get(url).with(withJwt())).andReturn();
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
     CompanyDTO responseBody = objectMapper.readValue(contentAsString, CompanyDTO.class);
@@ -123,8 +102,8 @@ class CompanyControllerTest {
   @Test
   void shouldReturn_401_getCompanyById() throws Exception {
     String companyId = "cf578fec-006b-4604-a5e8-5ad1b3ea2be5";
-    MvcResult response =
-        mockMvc.perform(get("/" + Path.API_COMPANIES + "/" + companyId)).andReturn();
+    String url = BASE_URL + companyId;
+    MvcResult response = mockMvc.perform(get(url)).andReturn();
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
     ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
@@ -135,10 +114,8 @@ class CompanyControllerTest {
   @Test
   void shouldReturn_403_getCompanyById() throws Exception {
     String companyId = "cf578fec-006b-4604-a5e8-5ad1b3ea2be5";
-    MvcResult response =
-        mockMvc
-            .perform(get("/" + Path.API_COMPANIES + "/" + companyId).with(withBadJwt()))
-            .andReturn();
+    String url = BASE_URL + companyId;
+    MvcResult response = mockMvc.perform(get(url).with(withBadJwt())).andReturn();
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
     ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
@@ -149,10 +126,8 @@ class CompanyControllerTest {
   @Test
   void shouldReturn_404_getCompanyById() throws Exception {
     String companyId = "cf578fec-006b-4604-a5e8-5ad1b2ea2be5";
-    MvcResult response =
-        mockMvc
-            .perform(get("/" + Path.API_COMPANIES + "/" + companyId).with(withJwt()))
-            .andReturn();
+    String url = BASE_URL + companyId;
+    MvcResult response = mockMvc.perform(get(url).with(withJwt())).andReturn();
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
     NotFoundException responseBody =
@@ -164,10 +139,8 @@ class CompanyControllerTest {
   @Test
   void shouldReturn_404_getCompanyById_isDeletedTrue() throws Exception {
     String companyId = "84198896-de25-4d17-b47d-11a0c80fc396";
-    MvcResult response =
-        mockMvc
-            .perform(get("/" + Path.API_COMPANIES + "/" + companyId).with(withJwt()))
-            .andReturn();
+    String url = BASE_URL + companyId;
+    MvcResult response = mockMvc.perform(get(url).with(withJwt())).andReturn();
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
     NotFoundException responseBody =
@@ -284,7 +257,7 @@ class CompanyControllerTest {
 
   @Test
   void shouldReturn_200_getCompanyList() throws Exception {
-    MvcResult response = mockMvc.perform(get("/" + Path.API_COMPANIES).with(withJwt())).andReturn();
+    MvcResult response = mockMvc.perform(get(BASE_URL).with(withJwt())).andReturn();
     int status = response.getResponse().getStatus();
     String headerContentRange = response.getResponse().getHeader("Content-Range");
     String contentAsString = response.getResponse().getContentAsString();
@@ -300,9 +273,7 @@ class CompanyControllerTest {
     Map<String, String> filter = Map.of("name", "berg");
     String filterStrig = objectMapper.writeValueAsString(filter);
     MvcResult response =
-        mockMvc
-            .perform(get("/" + Path.API_COMPANIES).with(withJwt()).param("filter", filterStrig))
-            .andReturn();
+        mockMvc.perform(get(BASE_URL).with(withJwt()).param("filter", filterStrig)).andReturn();
     int status = response.getResponse().getStatus();
     String headerContentRange = response.getResponse().getHeader("Content-Range");
     String contentAsString = response.getResponse().getContentAsString();
@@ -323,7 +294,7 @@ class CompanyControllerTest {
     MvcResult response =
         mockMvc
             .perform(
-                get("/" + Path.API_COMPANIES)
+                get(BASE_URL)
                     .with(withJwt())
                     .param("sort", sortString)
                     .param("filter", filterStrig))
@@ -345,9 +316,7 @@ class CompanyControllerTest {
     List<String> range = List.of("0", "0");
     String rangeString = objectMapper.writeValueAsString(range);
     MvcResult response =
-        mockMvc
-            .perform(get("/" + Path.API_COMPANIES).with(withJwt()).param("range", rangeString))
-            .andReturn();
+        mockMvc.perform(get(BASE_URL).with(withJwt()).param("range", rangeString)).andReturn();
     int status = response.getResponse().getStatus();
     String headerContentRange = response.getResponse().getHeader("Content-Range");
     String contentAsString = response.getResponse().getContentAsString();
@@ -364,9 +333,7 @@ class CompanyControllerTest {
     Map<String, String> filter = Map.of("name", "llc", "nip", "placeholder");
     String filterStrig = objectMapper.writeValueAsString(filter);
     MvcResult response =
-        mockMvc
-            .perform(get("/" + Path.API_COMPANIES).with(withJwt()).param("filter", filterStrig))
-            .andReturn();
+        mockMvc.perform(get(BASE_URL).with(withJwt()).param("filter", filterStrig)).andReturn();
     int status = response.getResponse().getStatus();
     String headerContentRange = response.getResponse().getHeader("Content-Range");
     String contentAsString = response.getResponse().getContentAsString();
@@ -379,7 +346,7 @@ class CompanyControllerTest {
 
   @Test
   void shouldReturn_401_getCompanyList() throws Exception {
-    MvcResult response = mockMvc.perform(get("/" + Path.API_COMPANIES)).andReturn();
+    MvcResult response = mockMvc.perform(get(BASE_URL)).andReturn();
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
     ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
@@ -391,8 +358,7 @@ class CompanyControllerTest {
 
   @Test
   void shouldReturn_403_getCompanyList() throws Exception {
-    MvcResult response =
-        mockMvc.perform(get("/" + Path.API_COMPANIES).with(withBadJwt())).andReturn();
+    MvcResult response = mockMvc.perform(get(BASE_URL).with(withBadJwt())).andReturn();
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
     ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
