@@ -7,6 +7,7 @@ import static com.pawelnu.projectmanager.utils.Utils.withJwt;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -395,7 +396,166 @@ class CompanyAddressControllerTest {
     assertEquals(MSG.COMPANY_ADDRESS_NOT_FOUND + companyAddressId, responseBody.getMessage());
   }
 
-  // TODO Test editById() {}
+  @Test
+  void shouldReturn_200_editCompanyAddressById() throws Exception {
+    String companyAddressId = "a1030ac1-5f47-4fa2-af89-0981bd05902a";
+    String url = BASE_URL + "/" + companyAddressId;
+    CompanyAddressEditRequestDTO request =
+        CompanyAddressEditRequestDTO.builder()
+            .street("street updated")
+            .streetNumber("999")
+            .city("city updated")
+            .zipCode("999-999")
+            .country("country updated")
+            .phoneNumber("999-999-999")
+            .emailAddress("test.test.updated@email.test")
+            .addressType("U")
+            .build();
+    String requestBody = objectMapper.writeValueAsString(request);
+    MvcResult response =
+        mockMvc
+            .perform(
+                put(url)
+                    .with(withJwt())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(requestBody))
+            .andReturn();
+    int status = response.getResponse().getStatus();
+    String contentAsString = response.getResponse().getContentAsString();
+    CompanyAddressDTO responseBody =
+        objectMapper.readValue(contentAsString, CompanyAddressDTO.class);
+    assertEquals(HttpStatus.OK.value(), status);
+    assertEquals(request.getStreet(), responseBody.getStreet());
+    assertEquals(request.getStreetNumber(), responseBody.getStreetNumber());
+    assertEquals(request.getCity(), responseBody.getCity());
+    assertEquals(request.getZipCode(), responseBody.getZipCode());
+    assertEquals(request.getCountry(), responseBody.getCountry());
+    assertEquals(request.getPhoneNumber(), responseBody.getPhoneNumber());
+    assertEquals(request.getEmailAddress(), responseBody.getEmailAddress());
+    assertEquals(request.getAddressType(), responseBody.getAddressType());
+  }
+
+  @Test
+  void shouldReturn_400_editCompanyAddressById() throws Exception {
+    String companyAddressId = "invalid-uuid";
+    String url = BASE_URL + "/" + companyAddressId;
+    CompanyAddressEditRequestDTO request =
+        CompanyAddressEditRequestDTO.builder()
+            .street("street updated")
+            .streetNumber("999")
+            .city("city updated")
+            .zipCode("999-999")
+            .country("country updated")
+            .phoneNumber("999-999-999")
+            .emailAddress("invalid.email")
+            .addressType("U")
+            .build();
+    String requestBody = objectMapper.writeValueAsString(request);
+    MvcResult response =
+        mockMvc
+            .perform(
+                put(url)
+                    .with(withJwt())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(requestBody))
+            .andReturn();
+    int status = response.getResponse().getStatus();
+    String contentAsString = response.getResponse().getContentAsString();
+    Map<String, String> responseBody =
+        objectMapper.readValue(contentAsString, new TypeReference<>() {});
+    assertEquals(HttpStatus.BAD_REQUEST.value(), status);
+    assertEquals(MSG.INVALID_UUID, responseBody.get("message"));
+  }
+
+  @Test
+  void shouldReturn_401_editCompanyAddressById() throws Exception {
+    String companyAddressId = "ac1da9e4-7e4b-42ab-b9a5-b87cc4f30c2c";
+    String url = BASE_URL + "/" + companyAddressId;
+    CompanyAddressEditRequestDTO request =
+        CompanyAddressEditRequestDTO.builder()
+            .street("street updated")
+            .streetNumber("999")
+            .city("city updated")
+            .zipCode("999-999")
+            .country("country updated")
+            .phoneNumber("999-999-999")
+            .emailAddress("invalid.email")
+            .addressType("U")
+            .build();
+    String requestBody = objectMapper.writeValueAsString(request);
+    MvcResult response =
+        mockMvc
+            .perform(put(url).contentType(MediaType.APPLICATION_JSON).content(requestBody))
+            .andReturn();
+    int status = response.getResponse().getStatus();
+    String contentAsString = response.getResponse().getContentAsString();
+    ReactAdminError responseBody =
+        objectMapper.readValue(contentAsString, new TypeReference<>() {});
+    assertEquals(HttpStatus.UNAUTHORIZED.value(), status);
+    assertEquals(Utils.FULL_AUTH_IS_REQUIRED, responseBody.getMessage());
+  }
+
+  @Test
+  void shouldReturn_403_editCompanyAddressById() throws Exception {
+    String companyAddressId = "ac1da9e4-7e4b-42ab-b9a5-b87cc4f30c2c";
+    String url = BASE_URL + "/" + companyAddressId;
+    CompanyAddressEditRequestDTO request =
+        CompanyAddressEditRequestDTO.builder()
+            .street("street updated")
+            .streetNumber("999")
+            .city("city updated")
+            .zipCode("999-999")
+            .country("country updated")
+            .phoneNumber("999-999-999")
+            .emailAddress("invalid.email")
+            .addressType("U")
+            .build();
+    String requestBody = objectMapper.writeValueAsString(request);
+    MvcResult response =
+        mockMvc
+            .perform(
+                put(url)
+                    .with(withBadJwt())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(requestBody))
+            .andReturn();
+    int status = response.getResponse().getStatus();
+    String contentAsString = response.getResponse().getContentAsString();
+    ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
+    assertEquals(HttpStatus.FORBIDDEN.value(), status);
+    assertEquals(Utils.accessDeniedError(), responseBody);
+  }
+
+  @Test
+  void shouldReturn_404_editCompanyAddressById() throws Exception {
+    String companyAddressId = "ac1da9e4-7e4b-42ab-b9a5-b87cc4f30c2c";
+    String url = BASE_URL + "/" + companyAddressId;
+    CompanyAddressEditRequestDTO request =
+        CompanyAddressEditRequestDTO.builder()
+            .street("street updated")
+            .streetNumber("999")
+            .city("city updated")
+            .zipCode("999-999")
+            .country("country updated")
+            .phoneNumber("999-999-999")
+            .emailAddress("test.test.updated@email.test")
+            .addressType("U")
+            .build();
+    String requestBody = objectMapper.writeValueAsString(request);
+    MvcResult response =
+        mockMvc
+            .perform(
+                put(url)
+                    .with(withJwt())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(requestBody))
+            .andReturn();
+    int status = response.getResponse().getStatus();
+    String contentAsString = response.getResponse().getContentAsString();
+    ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
+    assertEquals(HttpStatus.NOT_FOUND.value(), status);
+    assertEquals(MSG.COMPANY_ADDRESS_NOT_FOUND + companyAddressId, responseBody.getMessage());
+  }
 
   // TODO Test deleteById() {}
 }
