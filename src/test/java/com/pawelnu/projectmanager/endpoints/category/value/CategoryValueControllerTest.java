@@ -5,6 +5,7 @@ import static com.pawelnu.projectmanager.utils.Utils.accessDeniedError;
 import static com.pawelnu.projectmanager.utils.Utils.withBadJwt;
 import static com.pawelnu.projectmanager.utils.Utils.withJwt;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -15,6 +16,7 @@ import com.pawelnu.projectmanager.config.security.jwt.JwtUtils;
 import com.pawelnu.projectmanager.exception.NotFoundException;
 import com.pawelnu.projectmanager.exception.model.ReactAdminBadRequestError;
 import com.pawelnu.projectmanager.exception.model.ReactAdminError;
+import com.pawelnu.projectmanager.exception.model.SimpleResponse;
 import com.pawelnu.projectmanager.utils.Consts.MSG;
 import com.pawelnu.projectmanager.utils.Path;
 import com.pawelnu.projectmanager.utils.Utils;
@@ -490,5 +492,91 @@ class CategoryValueControllerTest {
     assertEquals(MSG.CATEGORY_VALUE_NOT_FOUND_MSG + categoryValueId, responseBody.getMessage());
   }
 
-  //  TODO Test void deleteById()
+  @Test
+  void shouldReturn_200_deleteCategoryValueById_isDeletedFalse() throws Exception {
+    String categoryValueId = "7cd86293-698f-4fbb-8360-af3c86a3c267";
+    String url = BASE_URL + "/" + categoryValueId;
+    MvcResult response =
+        mockMvc
+            .perform(delete(url).with(withJwt()).contentType(MediaType.APPLICATION_JSON))
+            .andReturn();
+    int status = response.getResponse().getStatus();
+    String contentAsString = response.getResponse().getContentAsString();
+    SimpleResponse responseBody = objectMapper.readValue(contentAsString, SimpleResponse.class);
+    assertEquals(HttpStatus.OK.value(), status);
+    assertEquals("Deleted category value with id: " + categoryValueId, responseBody.getMessage());
+  }
+
+  @Test
+  void shouldReturn_400_deleteCategoryValueById_isDeletedFalse() throws Exception {
+    String categoryValueId = "invalid-uuid";
+    String url = BASE_URL + "/" + categoryValueId;
+    MvcResult response =
+        mockMvc
+            .perform(delete(url).with(withJwt()).contentType(MediaType.APPLICATION_JSON))
+            .andReturn();
+    int status = response.getResponse().getStatus();
+    String contentAsString = response.getResponse().getContentAsString();
+    SimpleResponse responseBody = objectMapper.readValue(contentAsString, SimpleResponse.class);
+    assertEquals(HttpStatus.BAD_REQUEST.value(), status);
+    assertEquals(MSG.INVALID_UUID, responseBody.getMessage());
+  }
+
+  @Test
+  void shouldReturn_401_deleteCategoryValueById_isDeletedFalse() throws Exception {
+    String categoryValueId = "4c7a2cc5-1e03-4337-8901-93c0b46585af";
+    String url = BASE_URL + "/" + categoryValueId;
+    MvcResult response =
+        mockMvc.perform(delete(url).contentType(MediaType.APPLICATION_JSON)).andReturn();
+    int status = response.getResponse().getStatus();
+    String contentAsString = response.getResponse().getContentAsString();
+    ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
+    assertEquals(HttpStatus.UNAUTHORIZED.value(), status);
+    assertEquals(Utils.FULL_AUTH_IS_REQUIRED, responseBody.getMessage());
+  }
+
+  @Test
+  void shouldReturn_403_deleteCategoryValueById_isDeletedFalse() throws Exception {
+    String categoryValueId = "4c7a2cc5-1e03-4337-8901-93c0b46585af";
+    String url = BASE_URL + "/" + categoryValueId;
+    MvcResult response =
+        mockMvc
+            .perform(delete(url).with(withBadJwt()).contentType(MediaType.APPLICATION_JSON))
+            .andReturn();
+    int status = response.getResponse().getStatus();
+    String contentAsString = response.getResponse().getContentAsString();
+    ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
+    assertEquals(HttpStatus.FORBIDDEN.value(), status);
+    assertEquals(Utils.accessDeniedError(), responseBody);
+  }
+
+  @Test
+  void shouldReturn_404_deleteCategoryValueById() throws Exception {
+    String categoryValueId = "e7255097-61da-4e9b-86f6-020a92b33143";
+    String url = BASE_URL + "/" + categoryValueId;
+    MvcResult response =
+        mockMvc
+            .perform(delete(url).with(withJwt()).contentType(MediaType.APPLICATION_JSON))
+            .andReturn();
+    int status = response.getResponse().getStatus();
+    String contentAsString = response.getResponse().getContentAsString();
+    ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
+    assertEquals(HttpStatus.NOT_FOUND.value(), status);
+    assertEquals(MSG.CATEGORY_VALUE_NOT_FOUND_MSG + categoryValueId, responseBody.getMessage());
+  }
+
+  @Test
+  void shouldReturn_404_deleteCategoryValueById_isDeletedTrue() throws Exception {
+    String categoryValueId = "1967c46a-11fa-4fc7-89dd-ec08c6bb770b";
+    String url = BASE_URL + "/" + categoryValueId;
+    MvcResult response =
+        mockMvc
+            .perform(delete(url).with(withJwt()).contentType(MediaType.APPLICATION_JSON))
+            .andReturn();
+    int status = response.getResponse().getStatus();
+    String contentAsString = response.getResponse().getContentAsString();
+    SimpleResponse responseBody = objectMapper.readValue(contentAsString, SimpleResponse.class);
+    assertEquals(HttpStatus.NOT_FOUND.value(), status);
+    assertEquals(MSG.CATEGORY_VALUE_NOT_FOUND_MSG + categoryValueId, responseBody.getMessage());
+  }
 }
