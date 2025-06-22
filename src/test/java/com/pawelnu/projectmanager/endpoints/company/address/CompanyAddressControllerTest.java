@@ -211,19 +211,20 @@ class CompanyAddressControllerTest {
 
   @Test
   void shouldReturn_200_getCompanyAddressList_withFilters() throws Exception {
-    Map<String, String> filter = Map.of("name", "role");
+    Map<String, String> filter = Map.of("companyName", "hayes", "city", "west");
     String filterStrig = objectMapper.writeValueAsString(filter);
     MvcResult response =
         mockMvc.perform(get(BASE_URL).with(withJwt()).param("filter", filterStrig)).andReturn();
     int status = response.getResponse().getStatus();
     String headerContentRange = response.getResponse().getHeader("Content-Range");
     String contentAsString = response.getResponse().getContentAsString();
-    List<CategoryDTO> responseBody =
+    List<CompanyAddressDTO> responseBody =
         objectMapper.readValue(contentAsString, new TypeReference<>() {});
     assertEquals(HttpStatus.OK.value(), status);
     assertEquals("items 0-0/1", headerContentRange);
     assertEquals(1, responseBody.size());
-    assertEquals("employee role", responseBody.getFirst().getName());
+    assertEquals("Hayes-Welch", responseBody.getFirst().getCompanyName());
+    assertEquals("West Aleasestad", responseBody.getFirst().getCity());
   }
 
   @Test
