@@ -1,4 +1,4 @@
-package com.pawelnu.projectmanager.endpoints.category;
+package com.pawelnu.projectmanager.endpoints.category.value;
 
 import com.pawelnu.projectmanager.exception.model.SimpleResponse;
 import com.pawelnu.projectmanager.utils.Path;
@@ -24,9 +24,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@Tag(name = "Categories")
-@RequestMapping(Path.API_CATEGORIES)
-public interface CategoryApi {
+@Tag(name = "Category Values")
+@RequestMapping(Path.API_CATEGORY_VALUES)
+public interface CategoryValueApi {
 
   @ApiResponse(
       responseCode = "201",
@@ -34,25 +34,26 @@ public interface CategoryApi {
       content = {
         @Content(
             mediaType = MediaType.APPLICATION_JSON_VALUE,
-            schema = @Schema(implementation = CategoryDTO.class))
+            schema = @Schema(implementation = CategoryValueDTO.class))
       })
   @ResponseErrors
   @PostMapping("")
-  @Operation(description = "Add new category.")
-  ResponseEntity<CategoryDTO> create(@Valid @RequestBody CategoryCreateRequestDTO body);
+  @Operation(description = "Add new category value.")
+  ResponseEntity<CategoryValueDTO> create(@Valid @RequestBody CategoryValueCreateRequestDTO body);
 
   @Operation(
-      description = "List categories with filtering, sorting and pagination (react-admin format)")
+      description =
+          "List category values with filtering, sorting and pagination (react-admin format)")
   @ApiResponse(
       responseCode = "200",
       description = "OK",
       content =
           @Content(
               mediaType = MediaType.APPLICATION_JSON_VALUE,
-              array = @ArraySchema(schema = @Schema(implementation = CategoryDTO.class))))
+              array = @ArraySchema(schema = @Schema(implementation = CategoryValueDTO.class))))
   @ResponseErrors
   @GetMapping("")
-  ResponseEntity<List<CategoryDTO>> getList(
+  ResponseEntity<List<CategoryValueDTO>> getList(
       @Parameter(description = "Sort as JSON string, e.g. [\"title\",\"ASC\"]")
           @RequestParam(required = false)
           String sort,
@@ -68,12 +69,12 @@ public interface CategoryApi {
       content = {
         @Content(
             mediaType = MediaType.APPLICATION_JSON_VALUE,
-            schema = @Schema(implementation = CategoryDTO.class))
+            schema = @Schema(implementation = CategoryValueDTO.class))
       })
   @ResponseErrors
   @GetMapping("/{id}")
-  @Operation(description = "Get category by id.")
-  ResponseEntity<CategoryDTO> getById(@Parameter() @PathVariable() UUID id);
+  @Operation(description = "Get category value by id.")
+  ResponseEntity<CategoryValueDTO> getById(@Parameter() @PathVariable() UUID id);
 
   @ApiResponse(
       responseCode = "200",
@@ -81,13 +82,13 @@ public interface CategoryApi {
       content = {
         @Content(
             mediaType = MediaType.APPLICATION_JSON_VALUE,
-            schema = @Schema(implementation = CategoryDTO.class))
+            schema = @Schema(implementation = CategoryValueDTO.class))
       })
   @ResponseErrors
   @PutMapping("/{id}")
-  @Operation(description = "Edit category by id.")
-  ResponseEntity<CategoryDTO> editById(
-      @Parameter() @PathVariable() UUID id, @Valid @RequestBody CategoryEditRequestDTO body);
+  @Operation(description = "Edit category value by id.")
+  ResponseEntity<CategoryValueDTO> editById(
+      @Parameter() @PathVariable() UUID id, @Valid @RequestBody CategoryValueEditRequestDTO body);
 
   @ApiResponse(
       responseCode = "200",
@@ -99,6 +100,6 @@ public interface CategoryApi {
       })
   @ResponseErrors
   @DeleteMapping("/{id}")
-  @Operation(description = "Delete category by id.")
+  @Operation(description = "Delete category value by id.")
   ResponseEntity<SimpleResponse> deleteById(@Parameter() @PathVariable() UUID id);
 }

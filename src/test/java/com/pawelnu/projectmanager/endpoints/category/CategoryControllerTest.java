@@ -321,7 +321,7 @@ class CategoryControllerTest {
     NotFoundException responseBody =
         objectMapper.readValue(contentAsString, NotFoundException.class);
     assertEquals(HttpStatus.NOT_FOUND.value(), status);
-    assertEquals(MSG.AUTHORITY_NOT_FOUND_MSG + categoryId, responseBody.getMessage());
+    assertEquals(MSG.CATEGORY_NOT_FOUND_MSG + categoryId, responseBody.getMessage());
   }
 
   @Test
@@ -334,7 +334,7 @@ class CategoryControllerTest {
     NotFoundException responseBody =
         objectMapper.readValue(contentAsString, NotFoundException.class);
     assertEquals(HttpStatus.NOT_FOUND.value(), status);
-    assertEquals(MSG.AUTHORITY_NOT_FOUND_MSG + categoryId, responseBody.getMessage());
+    assertEquals(MSG.CATEGORY_NOT_FOUND_MSG + categoryId, responseBody.getMessage());
   }
 
   @Test
@@ -438,7 +438,7 @@ class CategoryControllerTest {
     String contentAsString = response.getResponse().getContentAsString();
     ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
     assertEquals(HttpStatus.NOT_FOUND.value(), status);
-    assertEquals(MSG.AUTHORITY_NOT_FOUND_MSG + categoryId, responseBody.getMessage());
+    assertEquals(MSG.CATEGORY_NOT_FOUND_MSG + categoryId, responseBody.getMessage());
   }
 
   @Test
@@ -511,7 +511,7 @@ class CategoryControllerTest {
     String contentAsString = response.getResponse().getContentAsString();
     ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
     assertEquals(HttpStatus.NOT_FOUND.value(), status);
-    assertEquals(MSG.AUTHORITY_NOT_FOUND_MSG + categoryId, responseBody.getMessage());
+    assertEquals(MSG.CATEGORY_NOT_FOUND_MSG + categoryId, responseBody.getMessage());
   }
 
   @Test
@@ -526,6 +526,6 @@ class CategoryControllerTest {
     String contentAsString = response.getResponse().getContentAsString();
     SimpleResponse responseBody = objectMapper.readValue(contentAsString, SimpleResponse.class);
     assertEquals(HttpStatus.NOT_FOUND.value(), status);
-    assertEquals(MSG.AUTHORITY_NOT_FOUND_MSG + categoryId, responseBody.getMessage());
+    assertEquals(MSG.CATEGORY_NOT_FOUND_MSG + categoryId, responseBody.getMessage());
   }
 }

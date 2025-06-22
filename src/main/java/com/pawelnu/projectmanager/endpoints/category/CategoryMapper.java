@@ -13,5 +13,5 @@ public interface CategoryMapper {
 
   @Mapping(target = "id", ignore = true)
   CategoryEntity toEntity(
-      CategoryEditRequestDTO body, @MappingTarget CategoryEntity existingAuthority);
+      CategoryEditRequestDTO body, @MappingTarget CategoryEntity existingCategory);
 }

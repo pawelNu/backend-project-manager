@@ -1,6 +1,6 @@
 package com.pawelnu.projectmanager.endpoints.company.address;
 
-import static com.pawelnu.projectmanager.utils.Consts.MSG.COMPANY_NOT_FOUND;
+import static com.pawelnu.projectmanager.utils.Consts.MSG.COMPANY_ADDRESS_NOT_FOUND;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pawelnu.projectmanager.endpoints.company.CompanyEntity;
@@ -8,9 +8,9 @@ import com.pawelnu.projectmanager.endpoints.company.CompanyRepository;
 import com.pawelnu.projectmanager.exception.NotFoundException;
 import com.pawelnu.projectmanager.exception.model.SimpleResponse;
 import com.pawelnu.projectmanager.utils.Consts.MSG;
+import com.pawelnu.projectmanager.utils.PageableParams;
 import com.pawelnu.projectmanager.utils.Shared;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -30,10 +30,10 @@ public class CompanyAddressService {
   private final ObjectMapper objectMapper;
 
   public CompanyAddressDTO getById(UUID id) {
-    return companyAddressRepository
+    return companyAddressQueryRepository
         .findById(id)
         .map(companyAddressMapper::toDTO)
-        .orElseThrow(() -> new NotFoundException(COMPANY_NOT_FOUND + id));
+        .orElseThrow(() -> new NotFoundException(COMPANY_ADDRESS_NOT_FOUND + id));
   }
 
   public CompanyAddressDTO create(CompanyAddressCreateRequestDTO body) {
@@ -62,7 +62,7 @@ public class CompanyAddressService {
   }
 
   public SimpleResponse deleteById(UUID id) {
-    Optional<CompanyAddressEntity> companyToDelete = companyAddressRepository.findById(id);
+    Optional<CompanyAddressEntity> companyToDelete = companyAddressQueryRepository.findById(id);
     if (companyToDelete.isPresent()) {
       companyAddressRepository.delete(companyToDelete.get());
       return SimpleResponse.builder().message("Deleted company address with id: " + id).build();
@@ -72,26 +72,18 @@ public class CompanyAddressService {
   }
 
   public CompanyAddressesListResponseDTO filter(String sort, String range, String filter) {
-
-    List<String> sortList = Shared.parseJsonList(objectMapper, sort);
-    String sortField = !sortList.isEmpty() ? sortList.get(0) : "city";
-    String sortDir = sortList.size() > 1 ? sortList.get(1) : "ASC";
-
-    List<Integer> rangeList = Shared.parseJsonListInt(objectMapper, range);
-    int offset = !rangeList.isEmpty() ? rangeList.get(0) : 0;
-    int limit = rangeList.size() > 1 ? rangeList.get(1) - rangeList.get(0) + 1 : 25;
-
-    Map<String, String> filters = Shared.parseJsonMap(objectMapper, filter);
+    PageableParams params = Shared.preparePageableParams(objectMapper, "city", sort, range, filter);
 
     Page<CompanyAddressEntity> page =
-        companyAddressQueryRepository.filter(filters, offset, limit, sortDir, sortField);
+        companyAddressQueryRepository.filter(
+            params.getFilters(),
+            params.getOffset(),
+            params.getLimit(),
+            params.getSortDir(),
+            params.getSortField());
     List<CompanyAddressDTO> companyDTOs =
         page.getContent().stream().map(companyAddressMapper::toDTO).toList();
-
-    long totalElements = page.getTotalElements();
-    long end = Math.min(offset + limit - 1, totalElements - 1);
-    String contentRange = Shared.prepareContentRange(offset, end, totalElements);
-
+    String contentRange = Shared.prepareContentRange(page, params.getOffset(), params.getLimit());
     return CompanyAddressesListResponseDTO.builder()
         .data(companyDTOs)
         .contentRange(contentRange)

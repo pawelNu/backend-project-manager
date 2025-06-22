@@ -6,9 +6,9 @@ import com.pawelnu.projectmanager.exception.NotFoundException;
 import com.pawelnu.projectmanager.exception.model.SimpleResponse;
 import com.pawelnu.projectmanager.mapper.PagingAndSortingMapper;
 import com.pawelnu.projectmanager.utils.Consts.MSG;
+import com.pawelnu.projectmanager.utils.PageableParams;
 import com.pawelnu.projectmanager.utils.Shared;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -98,25 +98,17 @@ public class CompanyService {
   }
 
   public CompanyListResponseDTO2 filter(String sort, String range, String filter) {
-
-    List<String> sortList = Shared.parseJsonList(objectMapper, sort);
-    String sortField = sortList.isEmpty() ? "name" : sortList.get(0);
-    String sortDir = sortList.size() > 1 ? sortList.get(1) : "ASC";
-
-    List<Integer> rangeList = Shared.parseJsonListInt(objectMapper, range);
-    int offset = !rangeList.isEmpty() ? rangeList.get(0) : 0;
-    int limit = rangeList.size() > 1 ? rangeList.get(1) - rangeList.get(0) + 1 : 25;
-
-    Map<String, String> filters = Shared.parseJsonMap(objectMapper, filter);
+    PageableParams params = Shared.preparePageableParams(objectMapper, sort, range, filter);
 
     Page<CompanySimpleDTO> page =
-        companyQueryRepository.filter(filters, offset, limit, sortDir, sortField);
+        companyQueryRepository.filter(
+            params.getFilters(),
+            params.getOffset(),
+            params.getLimit(),
+            params.getSortDir(),
+            params.getSortField());
     List<CompanySimpleDTO> companyDTOs = page.getContent();
-
-    long totalElements = page.getTotalElements();
-    long end = Math.min(offset + limit - 1, totalElements - 1);
-
-    String contentRange = Shared.prepareContentRange(offset, end, totalElements);
+    String contentRange = Shared.prepareContentRange(page, params.getOffset(), params.getLimit());
     return CompanyListResponseDTO2.builder().data(companyDTOs).contentRange(contentRange).build();
   }
 }

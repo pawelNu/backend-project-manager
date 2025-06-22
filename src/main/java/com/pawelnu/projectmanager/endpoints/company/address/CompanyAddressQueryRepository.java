@@ -10,6 +10,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -105,5 +106,24 @@ public class CompanyAddressQueryRepository {
             .orElse(0L);
 
     return new PageImpl<>(results, PageRequest.of(offset / limit, limit), total);
+  }
+
+  public Optional<CompanyAddressEntity> findById(UUID id) {
+    QCompanyEntity company = QCompanyEntity.companyEntity;
+    QCompanyAddressEntity address = QCompanyAddressEntity.companyAddressEntity;
+
+    List<CompanyAddressEntity> fetch =
+        queryFactory
+            .selectFrom(address)
+            .leftJoin(address.company, company)
+            .fetchJoin()
+            .where(address.id.eq(id).and(address.isDeleted.isFalse()))
+            .fetch();
+
+    if (fetch != null && !fetch.isEmpty()) {
+      CompanyAddressEntity companyEntity = fetch.getFirst();
+      return Optional.of(companyEntity);
+    }
+    return Optional.empty();
   }
 }

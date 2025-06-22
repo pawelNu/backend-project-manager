@@ -4,9 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pawelnu.projectmanager.exception.NotFoundException;
 import com.pawelnu.projectmanager.exception.model.SimpleResponse;
 import com.pawelnu.projectmanager.utils.Consts.MSG;
+import com.pawelnu.projectmanager.utils.PageableParams;
 import com.pawelnu.projectmanager.utils.Shared;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -31,24 +31,17 @@ public class CategoryService {
   }
 
   public CategoryListResponseDTO filter(String sort, String range, String filter) {
-    List<String> sortList = Shared.parseJsonList(objectMapper, sort);
-    String sortField = sortList.isEmpty() ? "name" : sortList.get(0);
-    String sortDir = sortList.size() > 1 ? sortList.get(1) : "ASC";
-
-    List<Integer> rangeList = Shared.parseJsonListInt(objectMapper, range);
-    int offset = !rangeList.isEmpty() ? rangeList.get(0) : 0;
-    int limit = rangeList.size() > 1 ? rangeList.get(1) - rangeList.get(0) + 1 : 25;
-
-    Map<String, String> filters = Shared.parseJsonMap(objectMapper, filter);
+    PageableParams params = Shared.preparePageableParams(objectMapper, sort, range, filter);
 
     Page<CategoryDTO> page =
-        categoryQueryRepository.filter(filters, offset, limit, sortDir, sortField);
+        categoryQueryRepository.filter(
+            params.getFilters(),
+            params.getOffset(),
+            params.getLimit(),
+            params.getSortDir(),
+            params.getSortField());
     List<CategoryDTO> companyDTOs = page.getContent();
-
-    long totalElements = page.getTotalElements();
-    long end = Math.min(offset + limit - 1, totalElements - 1);
-
-    String contentRange = Shared.prepareContentRange(offset, end, totalElements);
+    String contentRange = Shared.prepareContentRange(page, params.getOffset(), params.getLimit());
     return CategoryListResponseDTO.builder().data(companyDTOs).contentRange(contentRange).build();
   }
 
@@ -56,7 +49,7 @@ public class CategoryService {
     return categoryQueryRepository
         .findById(id)
         .map(categoryMapper::toDTO)
-        .orElseThrow(() -> new NotFoundException(MSG.AUTHORITY_NOT_FOUND_MSG + id));
+        .orElseThrow(() -> new NotFoundException(MSG.CATEGORY_NOT_FOUND_MSG + id));
   }
 
   public CategoryDTO editById(UUID id, CategoryEditRequestDTO body) {
@@ -67,7 +60,7 @@ public class CategoryService {
       CategoryEntity updatedCompany = categoryRepository.save(existingAuthority);
       return categoryMapper.toDTO(updatedCompany);
     } else {
-      throw new NotFoundException(MSG.AUTHORITY_NOT_FOUND_MSG + id);
+      throw new NotFoundException(MSG.CATEGORY_NOT_FOUND_MSG + id);
     }
   }
 
@@ -83,7 +76,7 @@ public class CategoryService {
         return SimpleResponse.builder().message("Cannot delete authority with id: " + id).build();
       }
     } else {
-      throw new NotFoundException(MSG.AUTHORITY_NOT_FOUND_MSG + id);
+      throw new NotFoundException(MSG.CATEGORY_NOT_FOUND_MSG + id);
     }
   }
 }

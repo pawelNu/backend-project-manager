@@ -1,8 +1,10 @@
-package com.pawelnu.projectmanager.endpoints.company;
+package com.pawelnu.projectmanager.endpoints.category.value;
 
+import static com.pawelnu.projectmanager.utils.Utils.FULL_AUTH_IS_REQUIRED;
+import static com.pawelnu.projectmanager.utils.Utils.accessDeniedError;
 import static com.pawelnu.projectmanager.utils.Utils.withBadJwt;
 import static com.pawelnu.projectmanager.utils.Utils.withJwt;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -18,6 +20,9 @@ import com.pawelnu.projectmanager.exception.model.SimpleResponse;
 import com.pawelnu.projectmanager.utils.Consts.MSG;
 import com.pawelnu.projectmanager.utils.Path;
 import com.pawelnu.projectmanager.utils.Utils;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -43,12 +48,11 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 @Testcontainers
 @ActiveProfiles("test")
 @Slf4j
-class CompanyControllerTest {
-
+class CategoryValueControllerTest {
   @Autowired private JwtUtils jwtUtils;
   @Autowired private MockMvc mockMvc;
   @Autowired private ObjectMapper objectMapper;
-  private static final String BASE_URL = "/" + Path.API_COMPANIES;
+  private static final String BASE_URL = "/" + Path.API_CATEGORY_VALUES;
 
   @Container
   static PostgreSQLContainer<?> postgres =
@@ -70,88 +74,13 @@ class CompanyControllerTest {
   }
 
   @Test
-  void shouldReturn_200_getCompanyById() throws Exception {
-    String companyId = "cf578fec-006b-4604-a5e8-5ad1b3ea2be5";
-    String url = BASE_URL + "/" + companyId;
-    MvcResult response = mockMvc.perform(get(url).with(withJwt())).andReturn();
-    int status = response.getResponse().getStatus();
-    String contentAsString = response.getResponse().getContentAsString();
-    CompanyDTO responseBody = objectMapper.readValue(contentAsString, CompanyDTO.class);
-    assertEquals(HttpStatus.OK.value(), status);
-    assertEquals("Hayes-Welch", responseBody.getName());
-  }
-
-  @Test
-  void shouldReturn_400_getCompanyById() throws Exception {
-    String companyId = "/invalid-uuid";
-    String url = BASE_URL + "/" + companyId;
-    MvcResult response = mockMvc.perform(get(url).with(withJwt())).andReturn();
-    int status = response.getResponse().getStatus();
-    String contentAsString = response.getResponse().getContentAsString();
-    Map<String, String> responseBody =
-        objectMapper.readValue(contentAsString, new TypeReference<>() {});
-    assertEquals(HttpStatus.BAD_REQUEST.value(), status);
-    assertEquals(MSG.INVALID_UUID, responseBody.get("message"));
-  }
-
-  @Test
-  void shouldReturn_401_getCompanyById() throws Exception {
-    String companyId = "cf578fec-006b-4604-a5e8-5ad1b3ea2be5";
-    String url = BASE_URL + "/" + companyId;
-    MvcResult response = mockMvc.perform(get(url)).andReturn();
-    int status = response.getResponse().getStatus();
-    String contentAsString = response.getResponse().getContentAsString();
-    ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
-    assertEquals(HttpStatus.UNAUTHORIZED.value(), status);
-    assertEquals(Utils.FULL_AUTH_IS_REQUIRED, responseBody.getMessage());
-  }
-
-  @Test
-  void shouldReturn_403_getCompanyById() throws Exception {
-    String companyId = "cf578fec-006b-4604-a5e8-5ad1b3ea2be5";
-    String url = BASE_URL + "/" + companyId;
-    MvcResult response = mockMvc.perform(get(url).with(withBadJwt())).andReturn();
-    int status = response.getResponse().getStatus();
-    String contentAsString = response.getResponse().getContentAsString();
-    ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
-    assertEquals(HttpStatus.FORBIDDEN.value(), status);
-    assertEquals(Utils.accessDeniedError(), responseBody);
-  }
-
-  @Test
-  void shouldReturn_404_getCompanyById() throws Exception {
-    String companyId = "cf578fec-006b-4604-a5e8-5ad1b2ea2be5";
-    String url = BASE_URL + "/" + companyId;
-    MvcResult response = mockMvc.perform(get(url).with(withJwt())).andReturn();
-    int status = response.getResponse().getStatus();
-    String contentAsString = response.getResponse().getContentAsString();
-    NotFoundException responseBody =
-        objectMapper.readValue(contentAsString, NotFoundException.class);
-    assertEquals(HttpStatus.NOT_FOUND.value(), status);
-    assertEquals(MSG.COMPANY_NOT_FOUND + companyId, responseBody.getMessage());
-  }
-
-  @Test
-  void shouldReturn_404_getCompanyById_isDeletedTrue() throws Exception {
-    String companyId = "84198896-de25-4d17-b47d-11a0c80fc396";
-    String url = BASE_URL + "/" + companyId;
-    MvcResult response = mockMvc.perform(get(url).with(withJwt())).andReturn();
-    int status = response.getResponse().getStatus();
-    String contentAsString = response.getResponse().getContentAsString();
-    NotFoundException responseBody =
-        objectMapper.readValue(contentAsString, NotFoundException.class);
-    assertEquals(HttpStatus.NOT_FOUND.value(), status);
-    assertEquals(MSG.COMPANY_NOT_FOUND + companyId, responseBody.getMessage());
-  }
-
-  @Test
-  void shouldReturn_201_createCompany() throws Exception {
-    CompanyCreateRequestDTO request =
-        CompanyCreateRequestDTO.builder()
-            .name("Company test")
-            .nip("1234567890")
-            .regon("123456789")
-            .website("https://company-test.com")
+  void shouldReturn_201_createCategoryValue() throws Exception {
+    CategoryValueCreateRequestDTO request =
+        CategoryValueCreateRequestDTO.builder()
+            .categoryId(UUID.fromString("3f9e9b4b-bd4f-4112-93ac-d4804107838c"))
+            .numericValue(BigDecimal.valueOf(1))
+            .stringValue("1")
+            .dateValue(LocalDateTime.of(2025, 6, 22, 11, 10, 0).toInstant(ZoneOffset.UTC))
             .build();
     String requestBody = objectMapper.writeValueAsString(request);
     MvcResult response =
@@ -164,22 +93,22 @@ class CompanyControllerTest {
             .andReturn();
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
-    CompanyDTO responseBody = objectMapper.readValue(contentAsString, CompanyDTO.class);
+    CategoryValueDTO responseBody = objectMapper.readValue(contentAsString, CategoryValueDTO.class);
     assertEquals(HttpStatus.CREATED.value(), status);
-    assertEquals(request.getName(), responseBody.getName());
-    assertEquals(request.getNip(), responseBody.getNip());
-    assertEquals(request.getRegon(), responseBody.getRegon());
-    assertEquals(request.getWebsite(), responseBody.getWebsite());
+    assertEquals("category a", responseBody.getCategoryName());
+    assertEquals(request.getNumericValue(), responseBody.getNumericValue());
+    assertEquals(request.getStringValue(), responseBody.getStringValue());
+    assertEquals(request.getStringValue(), responseBody.getStringValue());
   }
 
   @Test
-  void shouldReturn_400_createCompany() throws Exception {
-    CompanyCreateRequestDTO request =
-        CompanyCreateRequestDTO.builder()
-            .name("Co")
-            .nip("test")
-            .regon("test")
-            .website("http://company-test.com")
+  void shouldReturn_400_createCategoryValue() throws Exception {
+    CategoryValueCreateRequestDTO request =
+        CategoryValueCreateRequestDTO.builder()
+            .categoryId(null)
+            .numericValue(BigDecimal.valueOf(1))
+            .stringValue("1")
+            .dateValue(LocalDateTime.of(2025, 6, 22, 11, 10, 0).toInstant(ZoneOffset.UTC))
             .build();
     String requestBody = objectMapper.writeValueAsString(request);
     MvcResult response =
@@ -195,20 +124,17 @@ class CompanyControllerTest {
     ReactAdminBadRequestError responseBody =
         objectMapper.readValue(contentAsString, ReactAdminBadRequestError.class);
     assertEquals(HttpStatus.BAD_REQUEST.value(), status);
-    assertEquals("URL must start with https://", responseBody.getErrors().get("website"));
-    assertEquals("NIP must contain exactly 10 digits", responseBody.getErrors().get("nip"));
-    assertEquals("REGON must contain exactly 9 digits", responseBody.getErrors().get("regon"));
-    assertEquals("Name must be 3-255 characters", responseBody.getErrors().get("name"));
+    assertEquals("must not be null", responseBody.getErrors().get("categoryId"));
   }
 
   @Test
-  void shouldReturn_401_createCompany() throws Exception {
-    CompanyCreateRequestDTO request =
-        CompanyCreateRequestDTO.builder()
-            .name("Co")
-            .nip("test")
-            .regon("test")
-            .website("http://company-test.com")
+  void shouldReturn_401_createCategoryValue() throws Exception {
+    CategoryValueCreateRequestDTO request =
+        CategoryValueCreateRequestDTO.builder()
+            .categoryId(UUID.fromString("3f9e9b4b-bd4f-4112-93ac-d4804107838c"))
+            .numericValue(BigDecimal.valueOf(1))
+            .stringValue("1")
+            .dateValue(LocalDateTime.of(2025, 6, 22, 11, 10, 0).toInstant(ZoneOffset.UTC))
             .build();
     String requestBody = objectMapper.writeValueAsString(request);
     MvcResult response =
@@ -219,17 +145,17 @@ class CompanyControllerTest {
     String contentAsString = response.getResponse().getContentAsString();
     ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
     assertEquals(HttpStatus.UNAUTHORIZED.value(), status);
-    assertEquals(Utils.FULL_AUTH_IS_REQUIRED, responseBody.getMessage());
+    assertEquals(FULL_AUTH_IS_REQUIRED, responseBody.getMessage());
   }
 
   @Test
-  void shouldReturn_403_createCompany() throws Exception {
-    CompanyCreateRequestDTO request =
-        CompanyCreateRequestDTO.builder()
-            .name("Company test")
-            .nip("1234567890")
-            .regon("123456789")
-            .website("https://company-test.com")
+  void shouldReturn_403_createCategoryValue() throws Exception {
+    CategoryValueCreateRequestDTO request =
+        CategoryValueCreateRequestDTO.builder()
+            .categoryId(UUID.fromString("3f9e9b4b-bd4f-4112-93ac-d4804107838c"))
+            .numericValue(BigDecimal.valueOf(1))
+            .stringValue("1")
+            .dateValue(LocalDateTime.of(2025, 6, 22, 11, 10, 0).toInstant(ZoneOffset.UTC))
             .build();
     String requestBody = objectMapper.writeValueAsString(request);
     MvcResult response =
@@ -244,43 +170,46 @@ class CompanyControllerTest {
     String contentAsString = response.getResponse().getContentAsString();
     ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
     assertEquals(HttpStatus.FORBIDDEN.value(), status);
-    assertEquals(Utils.accessDeniedError(), responseBody);
+    assertEquals(accessDeniedError(), responseBody);
   }
 
   @Test
-  void shouldReturn_200_getCompanyList() throws Exception {
-    MvcResult response = mockMvc.perform(get(BASE_URL).with(withJwt())).andReturn();
+  void shouldReturn_200_getCategoryValueList() throws Exception {
+    List<String> range = List.of("0", "1");
+    String rangeString = objectMapper.writeValueAsString(range);
+    MvcResult response =
+        mockMvc.perform(get(BASE_URL).with(withJwt()).param("range", rangeString)).andReturn();
     int status = response.getResponse().getStatus();
     String headerContentRange = response.getResponse().getHeader("Content-Range");
     String contentAsString = response.getResponse().getContentAsString();
-    List<CompanySimpleDTO> responseBody =
+    List<CategoryValueDTO> responseBody =
         objectMapper.readValue(contentAsString, new TypeReference<>() {});
     assertEquals(HttpStatus.OK.value(), status);
-    assertEquals("items 0-24/29", headerContentRange);
-    assertEquals(25, responseBody.size());
+    assertEquals("items 0-1", headerContentRange.substring(0, 9));
+    assertEquals(2, responseBody.size());
   }
 
   @Test
-  void shouldReturn_200_getCompanyList_withFilters() throws Exception {
-    Map<String, String> filter = Map.of("name", "berg");
+  void shouldReturn_200_getCategoryValueList_withFilters() throws Exception {
+    Map<String, String> filter = Map.of("categoryName", "role");
     String filterStrig = objectMapper.writeValueAsString(filter);
     MvcResult response =
         mockMvc.perform(get(BASE_URL).with(withJwt()).param("filter", filterStrig)).andReturn();
     int status = response.getResponse().getStatus();
     String headerContentRange = response.getResponse().getHeader("Content-Range");
     String contentAsString = response.getResponse().getContentAsString();
-    List<CompanySimpleDTO> responseBody =
+    List<CategoryValueDTO> responseBody =
         objectMapper.readValue(contentAsString, new TypeReference<>() {});
     assertEquals(HttpStatus.OK.value(), status);
-    assertEquals("items 0-0/1", headerContentRange);
-    assertEquals(1, responseBody.size());
-    assertEquals("Padberg Inc", responseBody.getFirst().getName());
+    assertEquals("items 0-1/2", headerContentRange);
+    assertEquals(2, responseBody.size());
+    assertEquals("employee role", responseBody.getFirst().getCategoryName());
   }
 
   @Test
-  void shouldReturn_200_getCompanyList_withFiltersAndSort() throws Exception {
-    List<String> sort = List.of("name", "DESC");
-    Map<String, String> filter = Map.of("name", "llc", "status", "active");
+  void shouldReturn_200_getCategoryValueList_withFiltersAndSort() throws Exception {
+    List<String> sort = List.of("id", "DESC");
+    Map<String, String> filter = Map.of("categoryName", "role");
     String sortString = objectMapper.writeValueAsString(sort);
     String filterStrig = objectMapper.writeValueAsString(filter);
     MvcResult response =
@@ -294,42 +223,44 @@ class CompanyControllerTest {
     int status = response.getResponse().getStatus();
     String headerContentRange = response.getResponse().getHeader("Content-Range");
     String contentAsString = response.getResponse().getContentAsString();
-    List<CompanySimpleDTO> responseBody =
+    List<CategoryValueDTO> responseBody =
         objectMapper.readValue(contentAsString, new TypeReference<>() {});
     assertEquals(HttpStatus.OK.value(), status);
     assertEquals("items 0-1/2", headerContentRange);
     assertEquals(2, responseBody.size());
-    assertEquals("Skiles LLC", responseBody.getFirst().getName());
-    assertEquals("Schiller LLC", responseBody.get(1).getName());
+    assertEquals("employee role", responseBody.getFirst().getCategoryName());
   }
 
   @Test
-  void shouldReturn_200_getCompanyList_withRange() throws Exception {
+  void shouldReturn_200_getCategoryValueList_withRange() throws Exception {
     List<String> range = List.of("0", "0");
+    List<String> sort = List.of("id", "ASC");
     String rangeString = objectMapper.writeValueAsString(range);
+    String sortString = objectMapper.writeValueAsString(sort);
     MvcResult response =
-        mockMvc.perform(get(BASE_URL).with(withJwt()).param("range", rangeString)).andReturn();
+        mockMvc
+            .perform(
+                get(BASE_URL).with(withJwt()).param("sort", sortString).param("range", rangeString))
+            .andReturn();
     int status = response.getResponse().getStatus();
-    String headerContentRange = response.getResponse().getHeader("Content-Range");
     String contentAsString = response.getResponse().getContentAsString();
-    List<CompanySimpleDTO> responseBody =
+    List<CategoryValueDTO> responseBody =
         objectMapper.readValue(contentAsString, new TypeReference<>() {});
     assertEquals(HttpStatus.OK.value(), status);
-    assertEquals("items 0-0/29", headerContentRange);
     assertEquals(1, responseBody.size());
-    assertEquals("Abernathy LLC", responseBody.getFirst().getName());
+    assertEquals("company status", responseBody.getFirst().getCategoryName());
   }
 
   @Test
-  void shouldReturn_200_getCompanyList_emptyResult() throws Exception {
-    Map<String, String> filter = Map.of("name", "llc", "nip", "placeholder");
+  void shouldReturn_200_getCategoryValueList_emptyResult() throws Exception {
+    Map<String, String> filter = Map.of("categoryName", "not exists");
     String filterStrig = objectMapper.writeValueAsString(filter);
     MvcResult response =
         mockMvc.perform(get(BASE_URL).with(withJwt()).param("filter", filterStrig)).andReturn();
     int status = response.getResponse().getStatus();
     String headerContentRange = response.getResponse().getHeader("Content-Range");
     String contentAsString = response.getResponse().getContentAsString();
-    List<CompanySimpleDTO> responseBody =
+    List<CategoryValueDTO> responseBody =
         objectMapper.readValue(contentAsString, new TypeReference<>() {});
     assertEquals(HttpStatus.OK.value(), status);
     assertEquals("items 0--1/0", headerContentRange);
@@ -337,7 +268,7 @@ class CompanyControllerTest {
   }
 
   @Test
-  void shouldReturn_401_getCompanyList() throws Exception {
+  void shouldReturn_401_getCategoryValueList() throws Exception {
     MvcResult response = mockMvc.perform(get(BASE_URL)).andReturn();
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
@@ -349,7 +280,7 @@ class CompanyControllerTest {
   }
 
   @Test
-  void shouldReturn_403_getCompanyList() throws Exception {
+  void shouldReturn_403_getCategoryValueList() throws Exception {
     MvcResult response = mockMvc.perform(get(BASE_URL).with(withBadJwt())).andReturn();
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
@@ -359,47 +290,89 @@ class CompanyControllerTest {
   }
 
   @Test
-  void shouldReturn_200_editCompanyById() throws Exception {
-    String companyId = "ac1da9e4-7e4b-42ab-b9a5-b87cc4f30c2c";
-    String url = BASE_URL + "/" + companyId;
-    CompanyEditRequestDTO request =
-        CompanyEditRequestDTO.builder()
-            .name("Updated company")
-            .nip("9999999999")
-            .regon("111111111")
-            .website("https://updated-company.com")
-            .build();
-    String requestBody = objectMapper.writeValueAsString(request);
-    MvcResult response =
-        mockMvc
-            .perform(
-                put(url)
-                    .with(withJwt())
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(requestBody))
-            .andReturn();
+  void shouldReturn_200_getCategoryValueById() throws Exception {
+    String categoryValueId = "d35f40aa-ddbe-4ed8-846e-c744f56f8184";
+    String url = BASE_URL + "/" + categoryValueId;
+    MvcResult response = mockMvc.perform(get(url).with(withJwt())).andReturn();
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
-    CompanyDTO responseBody = objectMapper.readValue(contentAsString, CompanyDTO.class);
+    CategoryValueDTO responseBody = objectMapper.readValue(contentAsString, CategoryValueDTO.class);
     assertEquals(HttpStatus.OK.value(), status);
-    assertEquals(UUID.fromString(companyId), responseBody.getId());
-    assertEquals(request.getName(), responseBody.getName());
-    assertEquals(request.getNip(), responseBody.getNip());
-    assertEquals(request.getRegon(), responseBody.getRegon());
-    assertEquals(request.getWebsite(), responseBody.getWebsite());
-    assertEquals(2, responseBody.getAddresses().size());
+    assertEquals("company status", responseBody.getCategoryName());
+    assertEquals("ACTIVE", responseBody.getStringValue());
   }
 
   @Test
-  void shouldReturn_400_editCompanyById() throws Exception {
-    String companyId = "invalid-uuid";
-    String url = BASE_URL + "/" + companyId;
-    CompanyEditRequestDTO request =
-        CompanyEditRequestDTO.builder()
-            .name("Updated company")
-            .nip("9999999999")
-            .regon("111111111")
-            .website("https://updated-company.com")
+  void shouldReturn_400_getCategoryValueById() throws Exception {
+    String categoryValueId = "invalid-uuid";
+    String url = BASE_URL + "/" + categoryValueId;
+    MvcResult response = mockMvc.perform(get(url).with(withJwt())).andReturn();
+    int status = response.getResponse().getStatus();
+    String contentAsString = response.getResponse().getContentAsString();
+    ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
+    assertEquals(HttpStatus.BAD_REQUEST.value(), status);
+    assertEquals(MSG.INVALID_UUID, responseBody.getMessage());
+  }
+
+  @Test
+  void shouldReturn_401_getCategoryValueById() throws Exception {
+    String categoryValueId = "cf578fec-006b-4604-a5e8-5ad1b3ea2be5";
+    String url = BASE_URL + "/" + categoryValueId;
+    MvcResult response = mockMvc.perform(get(url)).andReturn();
+    int status = response.getResponse().getStatus();
+    String contentAsString = response.getResponse().getContentAsString();
+    ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
+    assertEquals(HttpStatus.UNAUTHORIZED.value(), status);
+    assertEquals(Utils.FULL_AUTH_IS_REQUIRED, responseBody.getMessage());
+  }
+
+  @Test
+  void shouldReturn_403_getCategoryValueById() throws Exception {
+    String categoryValueId = "cf578fec-006b-4604-a5e8-5ad1b3ea2be5";
+    String url = BASE_URL + "/" + categoryValueId;
+    MvcResult response = mockMvc.perform(get(url).with(withBadJwt())).andReturn();
+    int status = response.getResponse().getStatus();
+    String contentAsString = response.getResponse().getContentAsString();
+    ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
+    assertEquals(HttpStatus.FORBIDDEN.value(), status);
+    assertEquals(Utils.accessDeniedError(), responseBody);
+  }
+
+  @Test
+  void shouldReturn_404_getCategoryValueById() throws Exception {
+    String categoryValueId = "6c20e9eb-3f3b-4202-a987-fc940a55b4a8";
+    String url = BASE_URL + "/" + categoryValueId;
+    MvcResult response = mockMvc.perform(get(url).with(withJwt())).andReturn();
+    int status = response.getResponse().getStatus();
+    String contentAsString = response.getResponse().getContentAsString();
+    NotFoundException responseBody =
+        objectMapper.readValue(contentAsString, NotFoundException.class);
+    assertEquals(HttpStatus.NOT_FOUND.value(), status);
+    assertEquals(MSG.CATEGORY_VALUE_NOT_FOUND_MSG + categoryValueId, responseBody.getMessage());
+  }
+
+  @Test
+  void shouldReturn_404_getCategoryValueById_isDeletedTrue() throws Exception {
+    String categoryValueId = "1967c46a-11fa-4fc7-89dd-ec08c6bb770b";
+    String url = BASE_URL + "/" + categoryValueId;
+    MvcResult response = mockMvc.perform(get(url).with(withJwt())).andReturn();
+    int status = response.getResponse().getStatus();
+    String contentAsString = response.getResponse().getContentAsString();
+    NotFoundException responseBody =
+        objectMapper.readValue(contentAsString, NotFoundException.class);
+    assertEquals(HttpStatus.NOT_FOUND.value(), status);
+    assertEquals(MSG.CATEGORY_VALUE_NOT_FOUND_MSG + categoryValueId, responseBody.getMessage());
+  }
+
+  @Test
+  void shouldReturn_200_editCategoryValueById() throws Exception {
+    String categoryValueId = "e8a2f295-3f5a-4da3-9354-a7fc26ac16a9";
+    String url = BASE_URL + "/" + categoryValueId;
+    CategoryValueEditRequestDTO request =
+        CategoryValueEditRequestDTO.builder()
+            .numericValue(null)
+            .stringValue("edited")
+            .dateValue(null)
             .build();
     String requestBody = objectMapper.writeValueAsString(request);
     MvcResult response =
@@ -412,22 +385,47 @@ class CompanyControllerTest {
             .andReturn();
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
-    Map<String, String> responseBody =
-        objectMapper.readValue(contentAsString, new TypeReference<>() {});
-    assertEquals(HttpStatus.BAD_REQUEST.value(), status);
-    assertEquals(MSG.INVALID_UUID, responseBody.get("message"));
+    CategoryValueDTO responseBody = objectMapper.readValue(contentAsString, CategoryValueDTO.class);
+    assertEquals(HttpStatus.OK.value(), status);
+    assertEquals(UUID.fromString(categoryValueId), responseBody.getId());
+    assertEquals(request.getStringValue(), responseBody.getStringValue());
   }
 
   @Test
-  void shouldReturn_401_editCompanyById() throws Exception {
-    String companyId = "ac1da9e4-7e4b-42ab-b9a5-b87cc4f30c2c";
-    String url = BASE_URL + "/" + companyId;
-    CompanyCreateRequestDTO request =
-        CompanyCreateRequestDTO.builder()
-            .name("Co")
-            .nip("test")
-            .regon("test")
-            .website("http://company-test.com")
+  void shouldReturn_400_editCategoryValueById() throws Exception {
+    String categoryValueId = "invalid-uuid";
+    String url = BASE_URL + "/" + categoryValueId;
+    CategoryValueEditRequestDTO request =
+        CategoryValueEditRequestDTO.builder()
+            .numericValue(null)
+            .stringValue("edited")
+            .dateValue(null)
+            .build();
+    String requestBody = objectMapper.writeValueAsString(request);
+    MvcResult response =
+        mockMvc
+            .perform(
+                put(url)
+                    .with(withJwt())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(requestBody))
+            .andReturn();
+    int status = response.getResponse().getStatus();
+    String contentAsString = response.getResponse().getContentAsString();
+    ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
+    assertEquals(HttpStatus.BAD_REQUEST.value(), status);
+    assertEquals(MSG.INVALID_UUID, responseBody.getMessage());
+  }
+
+  @Test
+  void shouldReturn_401_editCategoryValueById() throws Exception {
+    String categoryValueId = "ac1da9e4-7e4b-42ab-b9a5-b87cc4f30c2c";
+    String url = BASE_URL + "/" + categoryValueId;
+    CategoryValueEditRequestDTO request =
+        CategoryValueEditRequestDTO.builder()
+            .numericValue(null)
+            .stringValue("edited")
+            .dateValue(null)
             .build();
     String requestBody = objectMapper.writeValueAsString(request);
     MvcResult response =
@@ -436,22 +434,21 @@ class CompanyControllerTest {
             .andReturn();
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
-    Map<String, String> responseBody =
+    ReactAdminError responseBody =
         objectMapper.readValue(contentAsString, new TypeReference<>() {});
     assertEquals(HttpStatus.UNAUTHORIZED.value(), status);
-    assertEquals(Utils.FULL_AUTH_IS_REQUIRED, responseBody.get("message"));
+    assertEquals(Utils.FULL_AUTH_IS_REQUIRED, responseBody.getMessage());
   }
 
   @Test
-  void shouldReturn_403_editCompanyById() throws Exception {
-    String companyId = "ac1da9e4-7e4b-42ab-b9a5-b87cc4f30c2c";
-    String url = BASE_URL + "/" + companyId;
-    CompanyCreateRequestDTO request =
-        CompanyCreateRequestDTO.builder()
-            .name("Company test")
-            .nip("1234567890")
-            .regon("123456789")
-            .website("https://company-test.com")
+  void shouldReturn_403_editCategoryValueById() throws Exception {
+    String categoryValueId = "ac1da9e4-7e4b-42ab-b9a5-b87cc4f30c2c";
+    String url = BASE_URL + "/" + categoryValueId;
+    CategoryValueEditRequestDTO request =
+        CategoryValueEditRequestDTO.builder()
+            .numericValue(null)
+            .stringValue("edited")
+            .dateValue(null)
             .build();
     String requestBody = objectMapper.writeValueAsString(request);
     MvcResult response =
@@ -470,15 +467,14 @@ class CompanyControllerTest {
   }
 
   @Test
-  void shouldReturn_404_editCompanyById() throws Exception {
-    String companyId = "ac1da9e4-7e4b-42ab-b7a5-b87cc4f30c2c";
-    String url = BASE_URL + "/" + companyId;
-    CompanyEditRequestDTO request =
-        CompanyEditRequestDTO.builder()
-            .name("Updated company")
-            .nip("9999999999")
-            .regon("111111111")
-            .website("https://updated-company.com")
+  void shouldReturn_404_editCategoryValueById() throws Exception {
+    String categoryValueId = "92c164d6-425a-4d29-b92c-a29648ec5736";
+    String url = BASE_URL + "/" + categoryValueId;
+    CategoryValueEditRequestDTO request =
+        CategoryValueEditRequestDTO.builder()
+            .numericValue(null)
+            .stringValue("edited")
+            .dateValue(null)
             .build();
     String requestBody = objectMapper.writeValueAsString(request);
     MvcResult response =
@@ -493,13 +489,13 @@ class CompanyControllerTest {
     String contentAsString = response.getResponse().getContentAsString();
     ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
     assertEquals(HttpStatus.NOT_FOUND.value(), status);
-    assertEquals(MSG.COMPANY_NOT_FOUND + companyId, responseBody.getMessage());
+    assertEquals(MSG.CATEGORY_VALUE_NOT_FOUND_MSG + categoryValueId, responseBody.getMessage());
   }
 
   @Test
-  void shouldReturn_200_deleteCompanyById_isDeletedFalse() throws Exception {
-    String companyId = "4c7a2cc5-1e03-4337-8901-93c0b46585af";
-    String url = BASE_URL + "/" + companyId;
+  void shouldReturn_200_deleteCategoryValueById_isDeletedFalse() throws Exception {
+    String categoryValueId = "7cd86293-698f-4fbb-8360-af3c86a3c267";
+    String url = BASE_URL + "/" + categoryValueId;
     MvcResult response =
         mockMvc
             .perform(delete(url).with(withJwt()).contentType(MediaType.APPLICATION_JSON))
@@ -508,14 +504,13 @@ class CompanyControllerTest {
     String contentAsString = response.getResponse().getContentAsString();
     SimpleResponse responseBody = objectMapper.readValue(contentAsString, SimpleResponse.class);
     assertEquals(HttpStatus.OK.value(), status);
-    assertEquals(
-        "Deleted company with id: 4c7a2cc5-1e03-4337-8901-93c0b46585af", responseBody.getMessage());
+    assertEquals("Deleted category value with id: " + categoryValueId, responseBody.getMessage());
   }
 
   @Test
-  void shouldReturn_400_deleteCompanyById_isDeletedFalse() throws Exception {
-    String companyId = "invalid-uuid";
-    String url = BASE_URL + "/" + companyId;
+  void shouldReturn_400_deleteCategoryValueById_isDeletedFalse() throws Exception {
+    String categoryValueId = "invalid-uuid";
+    String url = BASE_URL + "/" + categoryValueId;
     MvcResult response =
         mockMvc
             .perform(delete(url).with(withJwt()).contentType(MediaType.APPLICATION_JSON))
@@ -528,9 +523,9 @@ class CompanyControllerTest {
   }
 
   @Test
-  void shouldReturn_401_deleteCompanyById_isDeletedFalse() throws Exception {
-    String companyId = "4c7a2cc5-1e03-4337-8901-93c0b46585af";
-    String url = BASE_URL + "/" + companyId;
+  void shouldReturn_401_deleteCategoryValueById_isDeletedFalse() throws Exception {
+    String categoryValueId = "4c7a2cc5-1e03-4337-8901-93c0b46585af";
+    String url = BASE_URL + "/" + categoryValueId;
     MvcResult response =
         mockMvc.perform(delete(url).contentType(MediaType.APPLICATION_JSON)).andReturn();
     int status = response.getResponse().getStatus();
@@ -541,9 +536,9 @@ class CompanyControllerTest {
   }
 
   @Test
-  void shouldReturn_403_deleteCompanyById_isDeletedFalse() throws Exception {
-    String companyId = "4c7a2cc5-1e03-4337-8901-93c0b46585af";
-    String url = BASE_URL + "/" + companyId;
+  void shouldReturn_403_deleteCategoryValueById_isDeletedFalse() throws Exception {
+    String categoryValueId = "4c7a2cc5-1e03-4337-8901-93c0b46585af";
+    String url = BASE_URL + "/" + categoryValueId;
     MvcResult response =
         mockMvc
             .perform(delete(url).with(withBadJwt()).contentType(MediaType.APPLICATION_JSON))
@@ -556,9 +551,9 @@ class CompanyControllerTest {
   }
 
   @Test
-  void shouldReturn_404_deleteCompanyById_isDeletedFalse() throws Exception {
-    String companyId = "4c7a6cc5-1e03-4337-8901-93c0b46585af";
-    String url = BASE_URL + "/" + companyId;
+  void shouldReturn_404_deleteCategoryValueById() throws Exception {
+    String categoryValueId = "e7255097-61da-4e9b-86f6-020a92b33143";
+    String url = BASE_URL + "/" + categoryValueId;
     MvcResult response =
         mockMvc
             .perform(delete(url).with(withJwt()).contentType(MediaType.APPLICATION_JSON))
@@ -567,13 +562,13 @@ class CompanyControllerTest {
     String contentAsString = response.getResponse().getContentAsString();
     ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
     assertEquals(HttpStatus.NOT_FOUND.value(), status);
-    assertEquals(MSG.COMPANY_NOT_FOUND + companyId, responseBody.getMessage());
+    assertEquals(MSG.CATEGORY_VALUE_NOT_FOUND_MSG + categoryValueId, responseBody.getMessage());
   }
 
   @Test
-  void shouldReturn_404_deleteCompanyById_isDeletedTrue() throws Exception {
-    String companyId = "84198896-de25-4d17-b47d-11a0c80fc396";
-    String url = BASE_URL + "/" + companyId;
+  void shouldReturn_404_deleteCategoryValueById_isDeletedTrue() throws Exception {
+    String categoryValueId = "1967c46a-11fa-4fc7-89dd-ec08c6bb770b";
+    String url = BASE_URL + "/" + categoryValueId;
     MvcResult response =
         mockMvc
             .perform(delete(url).with(withJwt()).contentType(MediaType.APPLICATION_JSON))
@@ -582,8 +577,6 @@ class CompanyControllerTest {
     String contentAsString = response.getResponse().getContentAsString();
     SimpleResponse responseBody = objectMapper.readValue(contentAsString, SimpleResponse.class);
     assertEquals(HttpStatus.NOT_FOUND.value(), status);
-    assertEquals(
-        "Company not found with id: 84198896-de25-4d17-b47d-11a0c80fc396",
-        responseBody.getMessage());
+    assertEquals(MSG.CATEGORY_VALUE_NOT_FOUND_MSG + categoryValueId, responseBody.getMessage());
   }
 }
