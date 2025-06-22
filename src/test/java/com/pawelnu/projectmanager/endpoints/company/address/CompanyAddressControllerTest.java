@@ -11,8 +11,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pawelnu.projectmanager.config.security.jwt.JwtUtils;
+import com.pawelnu.projectmanager.exception.NotFoundException;
 import com.pawelnu.projectmanager.exception.model.ReactAdminBadRequestError;
 import com.pawelnu.projectmanager.exception.model.ReactAdminError;
+import com.pawelnu.projectmanager.utils.Consts.MSG;
 import com.pawelnu.projectmanager.utils.Path;
 import com.pawelnu.projectmanager.utils.Utils;
 import java.util.List;
@@ -309,7 +311,89 @@ class CompanyAddressControllerTest {
     assertEquals(Utils.accessDeniedError(), responseBody);
   }
 
-  // TODO Test getById() {}
+  @Test
+  void shouldReturn_200_getCompanyAddressById() throws Exception {
+    String companyAddressId = "e3d2061e-ef6b-4f94-9442-43bdf4f1f6c7";
+    String url = BASE_URL + "/" + companyAddressId;
+    MvcResult response = mockMvc.perform(get(url).with(withJwt())).andReturn();
+    int status = response.getResponse().getStatus();
+    String contentAsString = response.getResponse().getContentAsString();
+    CompanyAddressDTO responseBody =
+        objectMapper.readValue(contentAsString, CompanyAddressDTO.class);
+    assertEquals(HttpStatus.OK.value(), status);
+    assertEquals(UUID.fromString(companyAddressId), responseBody.getId());
+    assertEquals("Hayes-Welch", responseBody.getCompanyName());
+    assertEquals("Huey Rapid", responseBody.getStreet());
+    assertEquals("55", responseBody.getStreetNumber());
+    assertEquals("West Aleasestad", responseBody.getCity());
+    assertEquals("20624", responseBody.getZipCode());
+    assertEquals("Kenya", responseBody.getCountry());
+    assertEquals("251.126.8153", responseBody.getPhoneNumber());
+    assertEquals("hayes_welch@example.com", responseBody.getEmailAddress());
+    assertEquals("main", responseBody.getAddressType());
+  }
+
+  @Test
+  void shouldReturn_400_getCompanyAddressById() throws Exception {
+    String companyAddressId = "invalid-uuid";
+    String url = BASE_URL + "/" + companyAddressId;
+    MvcResult response = mockMvc.perform(get(url).with(withJwt())).andReturn();
+    int status = response.getResponse().getStatus();
+    String contentAsString = response.getResponse().getContentAsString();
+    ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
+    assertEquals(HttpStatus.BAD_REQUEST.value(), status);
+    assertEquals(MSG.INVALID_UUID, responseBody.getMessage());
+  }
+
+  @Test
+  void shouldReturn_401_getCompanyAddressById() throws Exception {
+    String companyAddressId = "cf578fec-006b-4604-a5e8-5ad1b3ea2be5";
+    String url = BASE_URL + "/" + companyAddressId;
+    MvcResult response = mockMvc.perform(get(url)).andReturn();
+    int status = response.getResponse().getStatus();
+    String contentAsString = response.getResponse().getContentAsString();
+    ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
+    assertEquals(HttpStatus.UNAUTHORIZED.value(), status);
+    assertEquals(Utils.FULL_AUTH_IS_REQUIRED, responseBody.getMessage());
+  }
+
+  @Test
+  void shouldReturn_403_getCompanyAddressById() throws Exception {
+    String companyAddressId = "cf578fec-006b-4604-a5e8-5ad1b3ea2be5";
+    String url = BASE_URL + "/" + companyAddressId;
+    MvcResult response = mockMvc.perform(get(url).with(withBadJwt())).andReturn();
+    int status = response.getResponse().getStatus();
+    String contentAsString = response.getResponse().getContentAsString();
+    ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
+    assertEquals(HttpStatus.FORBIDDEN.value(), status);
+    assertEquals(Utils.accessDeniedError(), responseBody);
+  }
+
+  @Test
+  void shouldReturn_404_getCompanyAddressById() throws Exception {
+    String companyAddressId = "cf578fec-006b-4604-a5e8-5ad1b3ea2be5";
+    String url = BASE_URL + "/" + companyAddressId;
+    MvcResult response = mockMvc.perform(get(url).with(withJwt())).andReturn();
+    int status = response.getResponse().getStatus();
+    String contentAsString = response.getResponse().getContentAsString();
+    NotFoundException responseBody =
+        objectMapper.readValue(contentAsString, NotFoundException.class);
+    assertEquals(HttpStatus.NOT_FOUND.value(), status);
+    assertEquals(MSG.AUTHORITY_NOT_FOUND_MSG + companyAddressId, responseBody.getMessage());
+  }
+
+  @Test
+  void shouldReturn_404_getCompanyAddressById_isDeletedTrue() throws Exception {
+    String companyAddressId = "acf847a2-1b20-4a31-8872-93fcbbe7934f";
+    String url = BASE_URL + "/" + companyAddressId;
+    MvcResult response = mockMvc.perform(get(url).with(withJwt())).andReturn();
+    int status = response.getResponse().getStatus();
+    String contentAsString = response.getResponse().getContentAsString();
+    NotFoundException responseBody =
+        objectMapper.readValue(contentAsString, NotFoundException.class);
+    assertEquals(HttpStatus.NOT_FOUND.value(), status);
+    assertEquals(MSG.AUTHORITY_NOT_FOUND_MSG + companyAddressId, responseBody.getMessage());
+  }
 
   // TODO Test editById() {}
 
