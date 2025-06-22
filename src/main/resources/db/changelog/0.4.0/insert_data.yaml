@@ -1,0 +1,31 @@
+databaseChangeLog:
+  - changeSet:
+      id: 10
+      author: pawelNu
+      changes:
+        - loadUpdateData:
+            file: authorities.csv
+            relativeToChangelogFile: true
+            separator: ','
+            tableName: authorities
+            primaryKey: id
+  - changeSet:
+      id: 11
+      author: pawelNu
+      changes:
+        - loadUpdateData:
+            file: category_values.csv
+            relativeToChangelogFile: true
+            separator: ','
+            tableName: category_values
+            primaryKey: id
+  - changeSet:
+      id: 12
+      author: pawelNu
+      changes:
+        - loadUpdateData:
+            file: employee_authorities.csv
+            relativeToChangelogFile: true
+            separator: ','
+            tableName: employee_authorities
+            primaryKey: id
