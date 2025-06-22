@@ -7,6 +7,7 @@ import static com.pawelnu.projectmanager.utils.Utils.withJwt;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -361,7 +362,133 @@ class CategoryValueControllerTest {
     assertEquals(MSG.CATEGORY_VALUE_NOT_FOUND_MSG + categoryValueId, responseBody.getMessage());
   }
 
-  //  TODO Test void editById()
+  @Test
+  void shouldReturn_200_editCategoryValueById() throws Exception {
+    String categoryValueId = "e8a2f295-3f5a-4da3-9354-a7fc26ac16a9";
+    String url = BASE_URL + "/" + categoryValueId;
+    CategoryValueEditRequestDTO request =
+        CategoryValueEditRequestDTO.builder()
+            .numericValue(null)
+            .stringValue("edited")
+            .dateValue(null)
+            .build();
+    String requestBody = objectMapper.writeValueAsString(request);
+    MvcResult response =
+        mockMvc
+            .perform(
+                put(url)
+                    .with(withJwt())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(requestBody))
+            .andReturn();
+    int status = response.getResponse().getStatus();
+    String contentAsString = response.getResponse().getContentAsString();
+    CategoryValueDTO responseBody = objectMapper.readValue(contentAsString, CategoryValueDTO.class);
+    assertEquals(HttpStatus.OK.value(), status);
+    assertEquals(UUID.fromString(categoryValueId), responseBody.getId());
+    assertEquals(request.getStringValue(), responseBody.getStringValue());
+  }
+
+  @Test
+  void shouldReturn_400_editCategoryValueById() throws Exception {
+    String categoryValueId = "invalid-uuid";
+    String url = BASE_URL + "/" + categoryValueId;
+    CategoryValueEditRequestDTO request =
+        CategoryValueEditRequestDTO.builder()
+            .numericValue(null)
+            .stringValue("edited")
+            .dateValue(null)
+            .build();
+    String requestBody = objectMapper.writeValueAsString(request);
+    MvcResult response =
+        mockMvc
+            .perform(
+                put(url)
+                    .with(withJwt())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(requestBody))
+            .andReturn();
+    int status = response.getResponse().getStatus();
+    String contentAsString = response.getResponse().getContentAsString();
+    ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
+    assertEquals(HttpStatus.BAD_REQUEST.value(), status);
+    assertEquals(MSG.INVALID_UUID, responseBody.getMessage());
+  }
+
+  @Test
+  void shouldReturn_401_editCategoryValueById() throws Exception {
+    String categoryValueId = "ac1da9e4-7e4b-42ab-b9a5-b87cc4f30c2c";
+    String url = BASE_URL + "/" + categoryValueId;
+    CategoryValueEditRequestDTO request =
+        CategoryValueEditRequestDTO.builder()
+            .numericValue(null)
+            .stringValue("edited")
+            .dateValue(null)
+            .build();
+    String requestBody = objectMapper.writeValueAsString(request);
+    MvcResult response =
+        mockMvc
+            .perform(put(url).contentType(MediaType.APPLICATION_JSON).content(requestBody))
+            .andReturn();
+    int status = response.getResponse().getStatus();
+    String contentAsString = response.getResponse().getContentAsString();
+    ReactAdminError responseBody =
+        objectMapper.readValue(contentAsString, new TypeReference<>() {});
+    assertEquals(HttpStatus.UNAUTHORIZED.value(), status);
+    assertEquals(Utils.FULL_AUTH_IS_REQUIRED, responseBody.getMessage());
+  }
+
+  @Test
+  void shouldReturn_403_editCategoryValueById() throws Exception {
+    String categoryValueId = "ac1da9e4-7e4b-42ab-b9a5-b87cc4f30c2c";
+    String url = BASE_URL + "/" + categoryValueId;
+    CategoryValueEditRequestDTO request =
+        CategoryValueEditRequestDTO.builder()
+            .numericValue(null)
+            .stringValue("edited")
+            .dateValue(null)
+            .build();
+    String requestBody = objectMapper.writeValueAsString(request);
+    MvcResult response =
+        mockMvc
+            .perform(
+                put(url)
+                    .with(withBadJwt())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(requestBody))
+            .andReturn();
+    int status = response.getResponse().getStatus();
+    String contentAsString = response.getResponse().getContentAsString();
+    ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
+    assertEquals(HttpStatus.FORBIDDEN.value(), status);
+    assertEquals(Utils.accessDeniedError(), responseBody);
+  }
+
+  @Test
+  void shouldReturn_404_editCategoryValueById() throws Exception {
+    String categoryValueId = "92c164d6-425a-4d29-b92c-a29648ec5736";
+    String url = BASE_URL + "/" + categoryValueId;
+    CategoryValueEditRequestDTO request =
+        CategoryValueEditRequestDTO.builder()
+            .numericValue(null)
+            .stringValue("edited")
+            .dateValue(null)
+            .build();
+    String requestBody = objectMapper.writeValueAsString(request);
+    MvcResult response =
+        mockMvc
+            .perform(
+                put(url)
+                    .with(withJwt())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(requestBody))
+            .andReturn();
+    int status = response.getResponse().getStatus();
+    String contentAsString = response.getResponse().getContentAsString();
+    ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
+    assertEquals(HttpStatus.NOT_FOUND.value(), status);
+    assertEquals(MSG.CATEGORY_VALUE_NOT_FOUND_MSG + categoryValueId, responseBody.getMessage());
+  }
 
   //  TODO Test void deleteById()
 }
