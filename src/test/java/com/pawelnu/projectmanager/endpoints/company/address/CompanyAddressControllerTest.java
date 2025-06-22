@@ -255,7 +255,7 @@ class CompanyAddressControllerTest {
   @Test
   void shouldReturn_200_getCompanyAddressList_withRange() throws Exception {
     List<String> range = List.of("0", "0");
-    List<String> sort = List.of("name", "ASC");
+    List<String> sort = List.of("city", "ASC");
     String rangeString = objectMapper.writeValueAsString(range);
     String sortString = objectMapper.writeValueAsString(sort);
     MvcResult response =
@@ -265,11 +265,11 @@ class CompanyAddressControllerTest {
             .andReturn();
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
-    List<CategoryDTO> responseBody =
+    List<CompanyAddressDTO> responseBody =
         objectMapper.readValue(contentAsString, new TypeReference<>() {});
     assertEquals(HttpStatus.OK.value(), status);
     assertEquals(1, responseBody.size());
-    assertEquals("category a", responseBody.getFirst().getName());
+    assertEquals("Adrianfort", responseBody.getFirst().getCity());
   }
 
   @Test
