@@ -11,8 +11,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pawelnu.projectmanager.config.security.jwt.JwtUtils;
+import com.pawelnu.projectmanager.exception.NotFoundException;
 import com.pawelnu.projectmanager.exception.model.ReactAdminBadRequestError;
 import com.pawelnu.projectmanager.exception.model.ReactAdminError;
+import com.pawelnu.projectmanager.utils.Consts.MSG;
 import com.pawelnu.projectmanager.utils.Path;
 import com.pawelnu.projectmanager.utils.Utils;
 import java.math.BigDecimal;
@@ -284,7 +286,80 @@ class CategoryValueControllerTest {
     assertEquals(Utils.accessDeniedError(), responseBody);
   }
 
-  //  TODO Test void getById()
+  @Test
+  void shouldReturn_200_getCategoryValueById() throws Exception {
+    String categoryValueId = "d35f40aa-ddbe-4ed8-846e-c744f56f8184";
+    String url = BASE_URL + "/" + categoryValueId;
+    MvcResult response = mockMvc.perform(get(url).with(withJwt())).andReturn();
+    int status = response.getResponse().getStatus();
+    String contentAsString = response.getResponse().getContentAsString();
+    CategoryValueDTO responseBody = objectMapper.readValue(contentAsString, CategoryValueDTO.class);
+    assertEquals(HttpStatus.OK.value(), status);
+    assertEquals("company status", responseBody.getCategoryName());
+    assertEquals("ACTIVE", responseBody.getStringValue());
+  }
+
+  @Test
+  void shouldReturn_400_getCategoryValueById() throws Exception {
+    String categoryValueId = "invalid-uuid";
+    String url = BASE_URL + "/" + categoryValueId;
+    MvcResult response = mockMvc.perform(get(url).with(withJwt())).andReturn();
+    int status = response.getResponse().getStatus();
+    String contentAsString = response.getResponse().getContentAsString();
+    ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
+    assertEquals(HttpStatus.BAD_REQUEST.value(), status);
+    assertEquals(MSG.INVALID_UUID, responseBody.getMessage());
+  }
+
+  @Test
+  void shouldReturn_401_getCategoryValueById() throws Exception {
+    String categoryValueId = "cf578fec-006b-4604-a5e8-5ad1b3ea2be5";
+    String url = BASE_URL + "/" + categoryValueId;
+    MvcResult response = mockMvc.perform(get(url)).andReturn();
+    int status = response.getResponse().getStatus();
+    String contentAsString = response.getResponse().getContentAsString();
+    ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
+    assertEquals(HttpStatus.UNAUTHORIZED.value(), status);
+    assertEquals(Utils.FULL_AUTH_IS_REQUIRED, responseBody.getMessage());
+  }
+
+  @Test
+  void shouldReturn_403_getCategoryValueById() throws Exception {
+    String categoryValueId = "cf578fec-006b-4604-a5e8-5ad1b3ea2be5";
+    String url = BASE_URL + "/" + categoryValueId;
+    MvcResult response = mockMvc.perform(get(url).with(withBadJwt())).andReturn();
+    int status = response.getResponse().getStatus();
+    String contentAsString = response.getResponse().getContentAsString();
+    ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
+    assertEquals(HttpStatus.FORBIDDEN.value(), status);
+    assertEquals(Utils.accessDeniedError(), responseBody);
+  }
+
+  @Test
+  void shouldReturn_404_getCategoryValueById() throws Exception {
+    String categoryValueId = "6c20e9eb-3f3b-4202-a987-fc940a55b4a8";
+    String url = BASE_URL + "/" + categoryValueId;
+    MvcResult response = mockMvc.perform(get(url).with(withJwt())).andReturn();
+    int status = response.getResponse().getStatus();
+    String contentAsString = response.getResponse().getContentAsString();
+    NotFoundException responseBody =
+        objectMapper.readValue(contentAsString, NotFoundException.class);
+    assertEquals(HttpStatus.NOT_FOUND.value(), status);
+    assertEquals(MSG.CATEGORY_VALUE_NOT_FOUND_MSG + categoryValueId, responseBody.getMessage());
+  }
+
+  @Test
+  void shouldReturn_404_getCategoryValueById_isDeletedTrue() throws Exception {
+    String categoryValueId = "1967c46a-11fa-4fc7-89dd-ec08c6bb770b";
+    String url = BASE_URL + "/" + categoryValueId;
+    MvcResult response = mockMvc.perform(get(url).with(withJwt())).andReturn();
+    int status = response.getResponse().getStatus();
+    String contentAsString = response.getResponse().getContentAsString();
+    NotFoundException responseBody =
+        objectMapper.readValue(contentAsString, NotFoundException.class);
+    assertEquals(HttpStatus.NOT_FOUND.value(), status);
+    assertEquals(MSG.CATEGORY_VALUE_NOT_FOUND_MSG + categoryValueId, responseBody.getMessage());
+  }
 
   //  TODO Test void editById()
 

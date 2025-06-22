@@ -1,2 +1,2 @@
 id,category_id,numeric_value,string_value,date_value,version,created,last_modified,is_deleted
-f26d863b-626a-4903-883b-6086aeb590c7,3f9e9b4b-bd4f-4112-93ac-d4804107838c,,ACTIVE,,0,2025-05-10 13:46:33.400,2025-05-10 13:46:33.400,FALSE
+1967c46a-11fa-4fc7-89dd-ec08c6bb770b,3f9e9b4b-bd4f-4112-93ac-d4804107838c,,IS DELETED,,0,2025-06-22 13:46:33.400,2025-06-22 13:46:33.400,TRUE
