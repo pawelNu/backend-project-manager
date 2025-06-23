@@ -1,0 +1,2 @@
+id,first_name,last_name,username,password,email,phone_number,role_id,company_id,version,created,last_modified,is_deleted
+bbc5d705-bfdf-4314-b926-30371ef10682,Tom deleted,Keeling deleted,Tom_KeelingDeleted,$2a$12$pwnwU5hQ52IO2wwP3WOjOOKc8JgIPLQayTe4C956A165W2oyHGtMC,tom.keeling@example.com,(528) 897-8632,b8b0f19d-5254-40ff-869f-cf4573aa9dd8,a08ac822-9a5b-4b8e-bcbb-1603f0cdb729,0,2025-06-23 14:19:45.192,2025-06-23 14:19:45.192,TRUE

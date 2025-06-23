@@ -29,3 +29,13 @@ databaseChangeLog:
             separator: ','
             tableName: employee_authorities
             primaryKey: id
+  - changeSet:
+      id: 13
+      author: pawelNu
+      changes:
+        - loadUpdateData:
+            file: employees.csv
+            relativeToChangelogFile: true
+            separator: ','
+            tableName: employees
+            primaryKey: id

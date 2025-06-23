@@ -11,8 +11,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pawelnu.projectmanager.config.security.jwt.JwtUtils;
+import com.pawelnu.projectmanager.exception.NotFoundException;
 import com.pawelnu.projectmanager.exception.model.ReactAdminBadRequestError;
 import com.pawelnu.projectmanager.exception.model.ReactAdminError;
+import com.pawelnu.projectmanager.utils.Consts.MSG;
 import com.pawelnu.projectmanager.utils.Path;
 import com.pawelnu.projectmanager.utils.Utils;
 import java.util.List;
@@ -197,7 +199,7 @@ class EmployeeControllerTest {
 
   @Test
   void shouldReturn_200_getEmployeeList_withFilters() throws Exception {
-    Map<String, String> filter = Map.of("companyName", "sons", "firstName","tom");
+    Map<String, String> filter = Map.of("companyName", "sons", "firstName", "tom");
     String filterStrig = objectMapper.writeValueAsString(filter);
     MvcResult response =
         mockMvc.perform(get(BASE_URL).with(withJwt()).param("filter", filterStrig)).andReturn();
@@ -297,7 +299,85 @@ class EmployeeControllerTest {
     assertEquals(Utils.accessDeniedError(), responseBody);
   }
 
-  //  TODO Test getById()
+  @Test
+  void shouldReturn_200_getEmployeeById() throws Exception {
+    String employeeId = "94759f68-0be8-403e-803a-cd6b9cfa1c8f";
+    String url = BASE_URL + "/" + employeeId;
+    MvcResult response = mockMvc.perform(get(url).with(withJwt())).andReturn();
+    int status = response.getResponse().getStatus();
+    String contentAsString = response.getResponse().getContentAsString();
+    EmployeeDTO responseBody = objectMapper.readValue(contentAsString, EmployeeDTO.class);
+    assertEquals(HttpStatus.OK.value(), status);
+    assertEquals(UUID.fromString(employeeId), responseBody.getId());
+    assertEquals("Georgine", responseBody.getFirstName());
+    assertEquals("Welch", responseBody.getLastName());
+    assertEquals("Georgine_Welch85182", responseBody.getUsername());
+    assertEquals("georgine.welch@example.com", responseBody.getEmail());
+    assertEquals("(219) 720-6247", responseBody.getPhoneNumber());
+    assertEquals("Wolff-Effertz", responseBody.getCompanyName());
+  }
+
+  @Test
+  void shouldReturn_400_getEmployeeById() throws Exception {
+    String employeeId = "invalid-uuid";
+    String url = BASE_URL + "/" + employeeId;
+    MvcResult response = mockMvc.perform(get(url).with(withJwt())).andReturn();
+    int status = response.getResponse().getStatus();
+    String contentAsString = response.getResponse().getContentAsString();
+    ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
+    assertEquals(HttpStatus.BAD_REQUEST.value(), status);
+    assertEquals(MSG.INVALID_UUID, responseBody.getMessage());
+  }
+
+  @Test
+  void shouldReturn_401_getEmployeeById() throws Exception {
+    String employeeId = "cf578fec-006b-4604-a5e8-5ad1b3ea2be5";
+    String url = BASE_URL + "/" + employeeId;
+    MvcResult response = mockMvc.perform(get(url)).andReturn();
+    int status = response.getResponse().getStatus();
+    String contentAsString = response.getResponse().getContentAsString();
+    ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
+    assertEquals(HttpStatus.UNAUTHORIZED.value(), status);
+    assertEquals(Utils.FULL_AUTH_IS_REQUIRED, responseBody.getMessage());
+  }
+
+  @Test
+  void shouldReturn_403_getEmployeeById() throws Exception {
+    String employeeId = "cf578fec-006b-4604-a5e8-5ad1b3ea2be5";
+    String url = BASE_URL + "/" + employeeId;
+    MvcResult response = mockMvc.perform(get(url).with(withBadJwt())).andReturn();
+    int status = response.getResponse().getStatus();
+    String contentAsString = response.getResponse().getContentAsString();
+    ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
+    assertEquals(HttpStatus.FORBIDDEN.value(), status);
+    assertEquals(Utils.accessDeniedError(), responseBody);
+  }
+
+  @Test
+  void shouldReturn_404_getEmployeeById() throws Exception {
+    String employeeId = "bbc5d705-bfdf-4314-b926-30371ef10682";
+    String url = BASE_URL + "/" + employeeId;
+    MvcResult response = mockMvc.perform(get(url).with(withJwt())).andReturn();
+    int status = response.getResponse().getStatus();
+    String contentAsString = response.getResponse().getContentAsString();
+    NotFoundException responseBody =
+        objectMapper.readValue(contentAsString, NotFoundException.class);
+    assertEquals(HttpStatus.NOT_FOUND.value(), status);
+    assertEquals(MSG.EMPLOYEE_NOT_FOUND + employeeId, responseBody.getMessage());
+  }
+
+  @Test
+  void shouldReturn_404_getEmployeeById_isDeletedTrue() throws Exception {
+    String employeeId = "bbc5d705-bfdf-4314-b926-30371ef10682";
+    String url = BASE_URL + "/" + employeeId;
+    MvcResult response = mockMvc.perform(get(url).with(withJwt())).andReturn();
+    int status = response.getResponse().getStatus();
+    String contentAsString = response.getResponse().getContentAsString();
+    NotFoundException responseBody =
+        objectMapper.readValue(contentAsString, NotFoundException.class);
+    assertEquals(HttpStatus.NOT_FOUND.value(), status);
+    assertEquals(MSG.EMPLOYEE_NOT_FOUND + employeeId, responseBody.getMessage());
+  }
 
   //  TODO Test editById()
 

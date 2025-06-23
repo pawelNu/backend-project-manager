@@ -13,6 +13,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -125,5 +126,24 @@ public class EmployeeQueryRepository {
       return result;
     }
     return List.of();
+  }
+
+  public Optional<EmployeeEntity> findById(UUID id) {
+    QEmployeeEntity employee = QEmployeeEntity.employeeEntity;
+    QCompanyEntity company = QCompanyEntity.companyEntity;
+
+    List<EmployeeEntity> fetch =
+        queryFactory
+            .selectFrom(employee)
+            .leftJoin(employee.company, company)
+            .fetchJoin()
+            .where(employee.id.eq(id).and(employee.isDeleted.isFalse()))
+            .fetch();
+
+    if (fetch != null && !fetch.isEmpty()) {
+      EmployeeEntity employeeEntity = fetch.getFirst();
+      return Optional.of(employeeEntity);
+    }
+    return Optional.empty();
   }
 }
