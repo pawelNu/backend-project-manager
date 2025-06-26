@@ -38,7 +38,8 @@ public class AuthController {
   //  private final RoleRepository roleRepository;
 
   //  PasswordEncoder encoder;
-
+  // TODO add test
+  //  TODO add storing authorities in redis
   @PostMapping("/login")
   @SecurityRequirements
   public ResponseEntity<UserInfoResponse> login(@RequestBody LoginRequest loginRequest) {
