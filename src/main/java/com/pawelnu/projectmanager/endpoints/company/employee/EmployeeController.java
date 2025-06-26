@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -18,7 +19,7 @@ public class EmployeeController implements EmployeeApi {
   @Override
   public ResponseEntity<EmployeeDTO> create(EmployeeCreateRequestDTO body) {
     EmployeeDTO employee = employeeService.createEmployee(body);
-    return ResponseEntity.ok(employee);
+    return ResponseEntity.status(HttpStatus.CREATED).body(employee);
   }
 
   @Override

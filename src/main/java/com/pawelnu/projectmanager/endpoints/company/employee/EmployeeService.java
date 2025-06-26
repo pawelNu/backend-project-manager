@@ -60,7 +60,7 @@ public class EmployeeService {
   }
 
   public EmployeeDTO getEmployeeById(UUID id) {
-    return employeeRepository
+    return employeeQueryRepository
         .findById(id)
         .map(employeeMapper::toDTO)
         .orElseThrow(() -> new NotFoundException(MSG.EMPLOYEE_NOT_FOUND + id));

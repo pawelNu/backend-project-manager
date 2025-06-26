@@ -96,4 +96,28 @@ public class CategoryValueQueryRepository {
     }
     return Optional.empty();
   }
+
+  public Optional<CategoryValueEntity> findCompanyStatusActive(
+      String categoryString, String valueString) {
+    QCategoryValueEntity categoryValue = QCategoryValueEntity.categoryValueEntity;
+    QCategoryEntity category = QCategoryEntity.categoryEntity;
+
+    List<CategoryValueEntity> fetch =
+        queryFactory
+            .selectFrom(categoryValue)
+            .leftJoin(categoryValue.category, category)
+            .where(
+                categoryValue
+                    .stringValue
+                    .likeIgnoreCase(valueString)
+                    .and(categoryValue.isDeleted.isFalse())
+                    .and(category.name.equalsIgnoreCase(categoryString)))
+            .fetch();
+
+    if (fetch != null && !fetch.isEmpty()) {
+      CategoryValueEntity categoryValueEntity = fetch.getFirst();
+      return Optional.of(categoryValueEntity);
+    }
+    return Optional.empty();
+  }
 }

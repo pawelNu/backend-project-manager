@@ -463,10 +463,9 @@ class CompanyAddressControllerTest {
             .andReturn();
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
-    Map<String, String> responseBody =
-        objectMapper.readValue(contentAsString, new TypeReference<>() {});
+    ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
     assertEquals(HttpStatus.BAD_REQUEST.value(), status);
-    assertEquals(MSG.INVALID_UUID, responseBody.get("message"));
+    assertEquals(MSG.INVALID_UUID, responseBody.getMessage());
   }
 
   @Test
@@ -491,8 +490,7 @@ class CompanyAddressControllerTest {
             .andReturn();
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
-    ReactAdminError responseBody =
-        objectMapper.readValue(contentAsString, new TypeReference<>() {});
+    ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
     assertEquals(HttpStatus.UNAUTHORIZED.value(), status);
     assertEquals(Utils.FULL_AUTH_IS_REQUIRED, responseBody.getMessage());
   }

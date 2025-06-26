@@ -88,10 +88,9 @@ class CompanyControllerTest {
     MvcResult response = mockMvc.perform(get(url).with(withJwt())).andReturn();
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
-    Map<String, String> responseBody =
-        objectMapper.readValue(contentAsString, new TypeReference<>() {});
+    ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
     assertEquals(HttpStatus.BAD_REQUEST.value(), status);
-    assertEquals(MSG.INVALID_UUID, responseBody.get("message"));
+    assertEquals(MSG.INVALID_UUID, responseBody.getMessage());
   }
 
   @Test
@@ -169,6 +168,7 @@ class CompanyControllerTest {
     assertEquals(request.getName(), responseBody.getName());
     assertEquals(request.getNip(), responseBody.getNip());
     assertEquals(request.getRegon(), responseBody.getRegon());
+    assertEquals("ACTIVE", responseBody.getStatus());
     assertEquals(request.getWebsite(), responseBody.getWebsite());
   }
 
@@ -412,10 +412,9 @@ class CompanyControllerTest {
             .andReturn();
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
-    Map<String, String> responseBody =
-        objectMapper.readValue(contentAsString, new TypeReference<>() {});
+    ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
     assertEquals(HttpStatus.BAD_REQUEST.value(), status);
-    assertEquals(MSG.INVALID_UUID, responseBody.get("message"));
+    assertEquals(MSG.INVALID_UUID, responseBody.getMessage());
   }
 
   @Test
@@ -436,10 +435,9 @@ class CompanyControllerTest {
             .andReturn();
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
-    Map<String, String> responseBody =
-        objectMapper.readValue(contentAsString, new TypeReference<>() {});
+    ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
     assertEquals(HttpStatus.UNAUTHORIZED.value(), status);
-    assertEquals(Utils.FULL_AUTH_IS_REQUIRED, responseBody.get("message"));
+    assertEquals(Utils.FULL_AUTH_IS_REQUIRED, responseBody.getMessage());
   }
 
   @Test
