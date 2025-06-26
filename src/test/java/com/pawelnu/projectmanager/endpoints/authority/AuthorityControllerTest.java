@@ -388,8 +388,7 @@ class AuthorityControllerTest {
             .andReturn();
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
-    ReactAdminError responseBody =
-        objectMapper.readValue(contentAsString, new TypeReference<>() {});
+    ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
     assertEquals(HttpStatus.UNAUTHORIZED.value(), status);
     assertEquals(Utils.FULL_AUTH_IS_REQUIRED, responseBody.getMessage());
   }

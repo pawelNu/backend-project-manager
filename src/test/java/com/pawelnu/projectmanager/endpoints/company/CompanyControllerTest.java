@@ -88,10 +88,10 @@ class CompanyControllerTest {
     MvcResult response = mockMvc.perform(get(url).with(withJwt())).andReturn();
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
-    Map<String, String> responseBody =
-        objectMapper.readValue(contentAsString, new TypeReference<>() {});
+    ReactAdminBadRequestError responseBody =
+        objectMapper.readValue(contentAsString, ReactAdminBadRequestError.class);
     assertEquals(HttpStatus.BAD_REQUEST.value(), status);
-    assertEquals(MSG.INVALID_UUID, responseBody.get("message"));
+    assertEquals(MSG.INVALID_UUID, responseBody.getErrors().get("message"));
   }
 
   @Test
@@ -413,10 +413,10 @@ class CompanyControllerTest {
             .andReturn();
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
-    Map<String, String> responseBody =
-        objectMapper.readValue(contentAsString, new TypeReference<>() {});
+    ReactAdminBadRequestError responseBody =
+        objectMapper.readValue(contentAsString, ReactAdminBadRequestError.class);
     assertEquals(HttpStatus.BAD_REQUEST.value(), status);
-    assertEquals(MSG.INVALID_UUID, responseBody.get("message"));
+    assertEquals(MSG.INVALID_UUID, responseBody.getErrors().get("message"));
   }
 
   @Test
@@ -437,10 +437,10 @@ class CompanyControllerTest {
             .andReturn();
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
-    Map<String, String> responseBody =
-        objectMapper.readValue(contentAsString, new TypeReference<>() {});
+    ReactAdminBadRequestError responseBody =
+        objectMapper.readValue(contentAsString, ReactAdminBadRequestError.class);
     assertEquals(HttpStatus.UNAUTHORIZED.value(), status);
-    assertEquals(Utils.FULL_AUTH_IS_REQUIRED, responseBody.get("message"));
+    assertEquals(Utils.FULL_AUTH_IS_REQUIRED, responseBody.getErrors().get("message"));
   }
 
   @Test
