@@ -7,6 +7,7 @@ import static com.pawelnu.projectmanager.utils.Utils.withJwt;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -236,8 +237,8 @@ class EmployeeControllerTest {
     List<EmployeeDTO> responseBody =
         objectMapper.readValue(contentAsString, new TypeReference<>() {});
     assertEquals(HttpStatus.OK.value(), status);
-    assertEquals("items 0-8/9", headerContentRange);
-    assertEquals(9, responseBody.size());
+    assertEquals("items 0-9/10", headerContentRange);
+    assertEquals(10, responseBody.size());
     assertEquals("user_with_no_authorities", responseBody.getFirst().getFirstName());
   }
 
@@ -379,7 +380,146 @@ class EmployeeControllerTest {
     assertEquals(MSG.EMPLOYEE_NOT_FOUND + employeeId, responseBody.getMessage());
   }
 
-  //  TODO Test editById()
+  @Test
+  void shouldReturn_200_editEmployeeById() throws Exception {
+    String employeeId = "b4b7091a-0dc5-463c-b009-a7ffb1159e0d";
+    String url = BASE_URL + "/" + employeeId;
+    EmployeeEditRequestDTO request =
+        EmployeeEditRequestDTO.builder()
+            .firstName("updated firstName")
+            .lastName("updated lastName")
+            .username("upadted username")
+            .email("updated.email@.com")
+            .phoneNumber("123-123-123")
+            .build();
+    String requestBody = objectMapper.writeValueAsString(request);
+    MvcResult response =
+        mockMvc
+            .perform(
+                put(url)
+                    .with(withJwt())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(requestBody))
+            .andReturn();
+    int status = response.getResponse().getStatus();
+    String contentAsString = response.getResponse().getContentAsString();
+    EmployeeDTO responseBody = objectMapper.readValue(contentAsString, EmployeeDTO.class);
+    assertEquals(HttpStatus.OK.value(), status);
+    assertEquals(request.getFirstName(), responseBody.getFirstName());
+    assertEquals(request.getLastName(), responseBody.getLastName());
+    assertEquals(request.getUsername(), responseBody.getUsername());
+    assertEquals(request.getEmail(), responseBody.getEmail());
+    assertEquals(request.getPhoneNumber(), responseBody.getPhoneNumber());
+    assertEquals("Brakus and Sons", responseBody.getCompanyName());
+  }
+
+  @Test
+  void shouldReturn_400_editEmployeeById() throws Exception {
+    String employeeId = "invalid-uuid";
+    String url = BASE_URL + "/" + employeeId;
+    EmployeeEditRequestDTO request =
+        EmployeeEditRequestDTO.builder()
+            .firstName("updated firstName")
+            .lastName("updated lastName")
+            .username("upadted username")
+            .email("updated.email@.com")
+            .phoneNumber("123-123-123")
+            .build();
+    String requestBody = objectMapper.writeValueAsString(request);
+    MvcResult response =
+        mockMvc
+            .perform(
+                put(url)
+                    .with(withJwt())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(requestBody))
+            .andReturn();
+    int status = response.getResponse().getStatus();
+    String contentAsString = response.getResponse().getContentAsString();
+    ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
+    assertEquals(HttpStatus.BAD_REQUEST.value(), status);
+    assertEquals(MSG.INVALID_UUID, responseBody.getMessage());
+  }
+
+  @Test
+  void shouldReturn_401_editEmployeeById() throws Exception {
+    String employeeId = "ac1da9e4-7e4b-42ab-b9a5-b87cc4f30c2c";
+    String url = BASE_URL + "/" + employeeId;
+    EmployeeEditRequestDTO request =
+        EmployeeEditRequestDTO.builder()
+            .firstName("updated firstName")
+            .lastName("updated lastName")
+            .username("upadted username")
+            .email("updated.email@.com")
+            .phoneNumber("123-123-123")
+            .build();
+    String requestBody = objectMapper.writeValueAsString(request);
+    MvcResult response =
+        mockMvc
+            .perform(put(url).contentType(MediaType.APPLICATION_JSON).content(requestBody))
+            .andReturn();
+    int status = response.getResponse().getStatus();
+    String contentAsString = response.getResponse().getContentAsString();
+    ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
+    assertEquals(HttpStatus.UNAUTHORIZED.value(), status);
+    assertEquals(Utils.FULL_AUTH_IS_REQUIRED, responseBody.getMessage());
+  }
+
+  @Test
+  void shouldReturn_403_editEmployeeById() throws Exception {
+    String employeeId = "ac1da9e4-7e4b-42ab-b9a5-b87cc4f30c2c";
+    String url = BASE_URL + "/" + employeeId;
+    EmployeeEditRequestDTO request =
+        EmployeeEditRequestDTO.builder()
+            .firstName("updated firstName")
+            .lastName("updated lastName")
+            .username("upadted username")
+            .email("updated.email@.com")
+            .phoneNumber("123-123-123")
+            .build();
+    String requestBody = objectMapper.writeValueAsString(request);
+    MvcResult response =
+        mockMvc
+            .perform(
+                put(url)
+                    .with(withBadJwt())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(requestBody))
+            .andReturn();
+    int status = response.getResponse().getStatus();
+    String contentAsString = response.getResponse().getContentAsString();
+    ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
+    assertEquals(HttpStatus.FORBIDDEN.value(), status);
+    assertEquals(Utils.accessDeniedError(), responseBody);
+  }
+
+  @Test
+  void shouldReturn_404_editEmployeeById() throws Exception {
+    String employeeId = "ac1da9e4-7e4b-42ab-b9a5-b87cc4f30c2c";
+    String url = BASE_URL + "/" + employeeId;
+    EmployeeEditRequestDTO request =
+        EmployeeEditRequestDTO.builder()
+            .firstName("updated firstName")
+            .lastName("updated lastName")
+            .username("upadted username")
+            .email("updated.email@.com")
+            .phoneNumber("123-123-123")
+            .build();
+    String requestBody = objectMapper.writeValueAsString(request);
+    MvcResult response =
+        mockMvc
+            .perform(
+                put(url)
+                    .with(withJwt())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(requestBody))
+            .andReturn();
+    int status = response.getResponse().getStatus();
+    String contentAsString = response.getResponse().getContentAsString();
+    ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
+    assertEquals(HttpStatus.NOT_FOUND.value(), status);
+    assertEquals(MSG.EMPLOYEE_NOT_FOUND + employeeId, responseBody.getMessage());
+  }
 
   //  TODO Test deleteById()
 }

@@ -463,10 +463,9 @@ class CompanyAddressControllerTest {
             .andReturn();
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
-    ReactAdminBadRequestError responseBody =
-        objectMapper.readValue(contentAsString, ReactAdminBadRequestError.class);
+    ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
     assertEquals(HttpStatus.BAD_REQUEST.value(), status);
-    assertEquals(MSG.INVALID_UUID, responseBody.getErrors().get("message"));
+    assertEquals(MSG.INVALID_UUID, responseBody.getMessage());
   }
 
   @Test

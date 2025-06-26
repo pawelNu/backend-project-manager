@@ -88,10 +88,9 @@ class CompanyControllerTest {
     MvcResult response = mockMvc.perform(get(url).with(withJwt())).andReturn();
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
-    ReactAdminBadRequestError responseBody =
-        objectMapper.readValue(contentAsString, ReactAdminBadRequestError.class);
+    ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
     assertEquals(HttpStatus.BAD_REQUEST.value(), status);
-    assertEquals(MSG.INVALID_UUID, responseBody.getErrors().get("message"));
+    assertEquals(MSG.INVALID_UUID, responseBody.getMessage());
   }
 
   @Test
@@ -413,10 +412,9 @@ class CompanyControllerTest {
             .andReturn();
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
-    ReactAdminBadRequestError responseBody =
-        objectMapper.readValue(contentAsString, ReactAdminBadRequestError.class);
+    ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
     assertEquals(HttpStatus.BAD_REQUEST.value(), status);
-    assertEquals(MSG.INVALID_UUID, responseBody.getErrors().get("message"));
+    assertEquals(MSG.INVALID_UUID, responseBody.getMessage());
   }
 
   @Test
@@ -437,10 +435,9 @@ class CompanyControllerTest {
             .andReturn();
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
-    ReactAdminBadRequestError responseBody =
-        objectMapper.readValue(contentAsString, ReactAdminBadRequestError.class);
+    ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
     assertEquals(HttpStatus.UNAUTHORIZED.value(), status);
-    assertEquals(Utils.FULL_AUTH_IS_REQUIRED, responseBody.getErrors().get("message"));
+    assertEquals(Utils.FULL_AUTH_IS_REQUIRED, responseBody.getMessage());
   }
 
   @Test
