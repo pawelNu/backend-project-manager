@@ -62,12 +62,22 @@ public class CompanyAddressService {
   }
 
   public SimpleResponse deleteById(UUID id) {
-    Optional<CompanyAddressEntity> companyToDelete = companyAddressQueryRepository.findById(id);
-    if (companyToDelete.isPresent()) {
-      companyAddressRepository.delete(companyToDelete.get());
-      return SimpleResponse.builder().message("Deleted company address with id: " + id).build();
+    Optional<CompanyAddressEntity> companyAddressToDelete =
+        companyAddressRepository.findByIdAndIsDeletedFalse(id);
+    if (companyAddressToDelete.isPresent()) {
+      CompanyAddressEntity existingCompanyAddress = companyAddressToDelete.get();
+      existingCompanyAddress.setIsDeleted(true);
+      CompanyAddressEntity updatedCompanyAddress =
+          companyAddressRepository.save(existingCompanyAddress);
+      if (updatedCompanyAddress.getIsDeleted()) {
+        return SimpleResponse.builder().message("Deleted company address with id: " + id).build();
+      } else {
+        return SimpleResponse.builder()
+            .message("Cannot delete company address with id: " + id)
+            .build();
+      }
     } else {
-      throw new NotFoundException(MSG.COMPANY_ADDRESS_NOT_FOUND + id);
+      throw new NotFoundException(COMPANY_ADDRESS_NOT_FOUND + id);
     }
   }
 
