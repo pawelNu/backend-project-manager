@@ -115,4 +115,6 @@ public interface AuthorityApi {
   @Operation(description = "Add authority to user.")
   ResponseEntity<AddAuthorityToUserResponseDTO> addAuthorityToEmployee(
       @Valid @RequestBody AddAuthorityToUserRequestDTO body);
+  //  TODO add delete authority from user
+  //  TODO add test delete authority from user
 }
