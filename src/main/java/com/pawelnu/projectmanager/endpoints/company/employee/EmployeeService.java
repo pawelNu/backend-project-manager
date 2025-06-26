@@ -89,10 +89,16 @@ public class EmployeeService {
   }
 
   public SimpleResponse deleteById(UUID id) {
-    Optional<EmployeeEntity> employeeToDelete = employeeRepository.findById(id);
+    Optional<EmployeeEntity> employeeToDelete = employeeRepository.findByIdAndIsDeletedFalse(id);
     if (employeeToDelete.isPresent()) {
-      employeeRepository.delete(employeeToDelete.get());
-      return SimpleResponse.builder().message("Deleted employee with id: " + id).build();
+      EmployeeEntity existingEmployee = employeeToDelete.get();
+      existingEmployee.setIsDeleted(true);
+      EmployeeEntity updatedEmployee = employeeRepository.save(existingEmployee);
+      if (updatedEmployee.getIsDeleted()) {
+        return SimpleResponse.builder().message("Deleted employee with id: " + id).build();
+      } else {
+        return SimpleResponse.builder().message("Cannot delete employee with id: " + id).build();
+      }
     } else {
       throw new NotFoundException(MSG.EMPLOYEE_NOT_FOUND + id);
     }
