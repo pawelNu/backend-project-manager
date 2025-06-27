@@ -1,5 +1,6 @@
 package com.pawelnu.projectmanager.endpoints.company.employee.authority;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pawelnu.projectmanager.endpoints.authority.AuthorityEntity;
 import com.pawelnu.projectmanager.endpoints.authority.AuthorityService;
 import com.pawelnu.projectmanager.endpoints.company.employee.EmployeeEntity;
@@ -7,10 +8,13 @@ import com.pawelnu.projectmanager.endpoints.company.employee.EmployeeService;
 import com.pawelnu.projectmanager.exception.NotFoundException;
 import com.pawelnu.projectmanager.exception.model.SimpleResponse;
 import com.pawelnu.projectmanager.utils.Consts.MSG;
+import com.pawelnu.projectmanager.utils.PageableParams;
+import com.pawelnu.projectmanager.utils.Shared;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -18,9 +22,11 @@ import org.springframework.stereotype.Service;
 public class EmployeeAuthorityService {
 
   private final EmployeeAuthorityRepository employeeAuthorityRepository;
+  private final EmployeeAuthorityQueryRepository employeeAuthorityQueryRepository;
   private final AuthorityService authorityService;
   private final EmployeeService employeeService;
   private final EmployeeAuthorityMapper employeeAuthorityMapper;
+  private final ObjectMapper objectMapper;
 
   public List<EmployeeAuthorityDTO> create(EmployeeAuthorityCreateRequestDTO body) {
     List<AuthorityEntity> authorities =
@@ -85,5 +91,25 @@ public class EmployeeAuthorityService {
     } else {
       return employeeAuthorities;
     }
+  }
+
+  public EmployeeAuthorityListResponseDTO getList(String sort, String range, String filter) {
+    PageableParams params =
+        Shared.preparePageableParams(objectMapper, "employee_id", sort, range, filter);
+
+    Page<EmployeeAuthorityEntity> page =
+        employeeAuthorityQueryRepository.filter(
+            params.getFilters(),
+            params.getOffset(),
+            params.getLimit(),
+            params.getSortDir(),
+            params.getSortField());
+    List<EmployeeAuthorityDTO> employeeAuthorityDTOs =
+        page.getContent().stream().map(employeeAuthorityMapper::toDTO).toList();
+    String contentRange = Shared.prepareContentRange(page, params.getOffset(), params.getLimit());
+    return EmployeeAuthorityListResponseDTO.builder()
+        .data(employeeAuthorityDTOs)
+        .contentRange(contentRange)
+        .build();
   }
 }

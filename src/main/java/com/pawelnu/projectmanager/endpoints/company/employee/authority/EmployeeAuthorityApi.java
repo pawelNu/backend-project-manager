@@ -12,12 +12,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.util.List;
-import java.util.UUID;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -62,19 +60,6 @@ public interface EmployeeAuthorityApi {
       @Parameter(description = "Filter as JSON string, e.g. {\"title\":\"bar\"}")
           @RequestParam(required = false)
           String filter);
-
-  @ApiResponse(
-      responseCode = "200",
-      description = "OK",
-      content = {
-        @Content(
-            mediaType = MediaType.APPLICATION_JSON_VALUE,
-            schema = @Schema(implementation = EmployeeAuthorityDTO.class))
-      })
-  @ResponseErrors
-  @GetMapping("/{id}")
-  @Operation(description = "Get employee authority by id.")
-  ResponseEntity<EmployeeAuthorityDTO> getById(@Parameter() @PathVariable() UUID id);
 
   @ApiResponse(
       responseCode = "200",
