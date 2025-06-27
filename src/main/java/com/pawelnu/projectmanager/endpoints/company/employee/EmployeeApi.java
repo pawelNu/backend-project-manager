@@ -101,5 +101,4 @@ public interface EmployeeApi {
   @DeleteMapping("/{id}")
   @Operation(description = "Delete employee by id.")
   ResponseEntity<SimpleResponse> deleteById(@Parameter() @PathVariable() UUID id);
-
 }
