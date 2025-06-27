@@ -1,15 +1,14 @@
 package com.pawelnu.projectmanager.endpoints.company.employee.authority;
 
-import static com.pawelnu.projectmanager.utils.Consts.MSG.AUTHORITY_NOT_FOUND_MSG;
-import static com.pawelnu.projectmanager.utils.Consts.MSG.EMPLOYEE_NOT_FOUND;
-
 import com.pawelnu.projectmanager.endpoints.authority.AddAuthorityToUserRequestDTO;
 import com.pawelnu.projectmanager.endpoints.authority.AddAuthorityToUserResponseDTO;
 import com.pawelnu.projectmanager.endpoints.authority.AuthorityEntity;
-import com.pawelnu.projectmanager.endpoints.authority.AuthorityRepository;
+import com.pawelnu.projectmanager.endpoints.authority.AuthorityService;
 import com.pawelnu.projectmanager.endpoints.company.employee.EmployeeEntity;
-import com.pawelnu.projectmanager.endpoints.company.employee.EmployeeRepository;
-import com.pawelnu.projectmanager.exception.NotFoundException;
+import com.pawelnu.projectmanager.endpoints.company.employee.EmployeeService;
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,23 +17,31 @@ import org.springframework.stereotype.Service;
 public class EmployeeAuthorityService {
 
   private final EmployeeAuthorityRepository employeeAuthorityRepository;
-  private final AuthorityRepository authorityRepository;
-  private final EmployeeRepository employeeRepository;
+  private final AuthorityService authorityService;
+  private final EmployeeService employeeService;
   private final EmployeeAuthorityMapper employeeAuthorityMapper;
 
-  public AddAuthorityToUserResponseDTO addAuthorityToEmployee(AddAuthorityToUserRequestDTO body) {
-    AuthorityEntity authority =
-        authorityRepository
-            .findByIdAndIsDeletedFalse(body.getAuthorityId())
-            .orElseThrow(
-                () -> new NotFoundException(AUTHORITY_NOT_FOUND_MSG + body.getAuthorityId()));
-    EmployeeEntity employee =
-        employeeRepository
-            .findByIdAndIsDeletedFalse(body.getEmployeeId())
-            .orElseThrow(() -> new NotFoundException(EMPLOYEE_NOT_FOUND + body.getEmployeeId()));
-    EmployeeAuthorityEntity entity =
-        EmployeeAuthorityEntity.builder().authority(authority).employee(employee).build();
-    EmployeeAuthorityEntity save = employeeAuthorityRepository.save(entity);
-    return employeeAuthorityMapper.toDTO(save);
+  public List<AddAuthorityToUserResponseDTO> addAuthorityToEmployee(
+      UUID id, AddAuthorityToUserRequestDTO body) {
+    List<AuthorityEntity> authorities =
+        authorityService.findAllByIdInAndIsDeletedFalse(body.getAuthorityIds());
+    EmployeeEntity employee = employeeService.getEmployeeEntityById(id);
+
+    List<EmployeeAuthorityEntity> employeeAuthorities =
+        authorities.stream()
+            .map(
+                authority ->
+                    EmployeeAuthorityEntity.builder()
+                        .authority(authority)
+                        .employee(employee)
+                        .build())
+            .collect(Collectors.toList());
+
+    List<EmployeeAuthorityEntity> savedEmployeeAuthorities =
+        employeeAuthorityRepository.saveAll(employeeAuthorities);
+
+    return savedEmployeeAuthorities.stream()
+        .map(employeeAuthorityMapper::toDTO)
+        .collect(Collectors.toList());
   }
 }

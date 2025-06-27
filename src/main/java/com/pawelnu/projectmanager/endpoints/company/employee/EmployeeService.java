@@ -59,11 +59,15 @@ public class EmployeeService {
     return EmployeesListResponseDTO.builder().data(companyDTOs).contentRange(contentRange).build();
   }
 
-  public EmployeeDTO getEmployeeById(UUID id) {
+  public EmployeeEntity getEmployeeEntityById(UUID id) {
     return employeeQueryRepository
         .findById(id)
-        .map(employeeMapper::toDTO)
         .orElseThrow(() -> new NotFoundException(MSG.EMPLOYEE_NOT_FOUND + id));
+  }
+
+  public EmployeeDTO getEmployeeById(UUID id) {
+    EmployeeEntity employee = getEmployeeEntityById(id);
+    return employeeMapper.toDTO(employee);
   }
 
   public EmployeeRowDTO findByUsernameWithAuthorities(String username) {

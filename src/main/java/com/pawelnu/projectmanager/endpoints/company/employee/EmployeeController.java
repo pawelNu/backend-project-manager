@@ -53,9 +53,10 @@ public class EmployeeController implements EmployeeApi {
   }
 
   @Override
-  public ResponseEntity<AddAuthorityToUserResponseDTO> addAuthorityToEmployee(
-      AddAuthorityToUserRequestDTO body) {
-    AddAuthorityToUserResponseDTO response = employeeAuthorityService.addAuthorityToEmployee(body);
+  public ResponseEntity<List<AddAuthorityToUserResponseDTO>> addAuthorityToEmployee(
+      UUID id, AddAuthorityToUserRequestDTO body) {
+    List<AddAuthorityToUserResponseDTO> response =
+        employeeAuthorityService.addAuthorityToEmployee(id, body);
     return ResponseEntity.status(HttpStatus.CREATED).body(response);
   }
 }

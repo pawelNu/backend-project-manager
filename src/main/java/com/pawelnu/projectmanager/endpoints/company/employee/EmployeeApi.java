@@ -110,13 +110,16 @@ public interface EmployeeApi {
       content = {
         @Content(
             mediaType = MediaType.APPLICATION_JSON_VALUE,
-            schema = @Schema(implementation = AddAuthorityToUserResponseDTO.class))
+            //            schema = @Schema(implementation = AddAuthorityToUserResponseDTO.class))
+            array =
+                @ArraySchema(
+                    schema = @Schema(implementation = AddAuthorityToUserResponseDTO.class)))
       })
   @ResponseErrors
-  @PostMapping("/add-authority-to-employee")
-  @Operation(description = "Add authority to user.")
-  ResponseEntity<AddAuthorityToUserResponseDTO> addAuthorityToEmployee(
-      @Valid @RequestBody AddAuthorityToUserRequestDTO body);
+  @PostMapping("/{id}/authorities")
+  @Operation(description = "Add authorities to employee.")
+  ResponseEntity<List<AddAuthorityToUserResponseDTO>> addAuthorityToEmployee(
+      @Parameter() @PathVariable() UUID id, @Valid @RequestBody AddAuthorityToUserRequestDTO body);
   //  TODO add delete authority from user
   //  TODO add test delete authority from user
 }
