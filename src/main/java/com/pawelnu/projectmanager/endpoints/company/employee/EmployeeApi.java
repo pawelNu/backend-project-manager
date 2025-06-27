@@ -1,8 +1,5 @@
 package com.pawelnu.projectmanager.endpoints.company.employee;
 
-import com.pawelnu.projectmanager.endpoints.company.employee.authority.AddAuthorityToUserRequestDTO;
-import com.pawelnu.projectmanager.endpoints.company.employee.authority.AddAuthorityToUserResponseDTO;
-import com.pawelnu.projectmanager.endpoints.company.employee.authority.DeleteAuthorityFromUserRequestDTO;
 import com.pawelnu.projectmanager.exception.model.SimpleResponse;
 import com.pawelnu.projectmanager.utils.Path;
 import com.pawelnu.projectmanager.utils.ResponseErrors;
@@ -105,37 +102,4 @@ public interface EmployeeApi {
   @Operation(description = "Delete employee by id.")
   ResponseEntity<SimpleResponse> deleteById(@Parameter() @PathVariable() UUID id);
 
-  @ApiResponse(
-      responseCode = "201",
-      description = "Created",
-      content = {
-        @Content(
-            mediaType = MediaType.APPLICATION_JSON_VALUE,
-            //            schema = @Schema(implementation = AddAuthorityToUserResponseDTO.class))
-            array =
-                @ArraySchema(
-                    schema = @Schema(implementation = AddAuthorityToUserResponseDTO.class)))
-      })
-  @ResponseErrors
-  @PostMapping("/{id}/authorities")
-  @Operation(description = "Add authorities to employee.")
-  ResponseEntity<List<AddAuthorityToUserResponseDTO>> addAuthoritiesToEmployee(
-      @Parameter() @PathVariable() UUID id, @Valid @RequestBody AddAuthorityToUserRequestDTO body);
-
-  @ApiResponse(
-      responseCode = "201",
-      description = "Created",
-      content = {
-        @Content(
-            mediaType = MediaType.APPLICATION_JSON_VALUE,
-            schema = @Schema(implementation = SimpleResponse.class))
-      })
-  @ResponseErrors
-  @DeleteMapping("/{id}/authorities")
-  @Operation(description = "Delete authorities from employee.")
-  ResponseEntity<SimpleResponse> deleteAuthoritiesFromEmployee(
-      @Parameter() @PathVariable() UUID id,
-      @Valid @RequestBody DeleteAuthorityFromUserRequestDTO body);
-  //  TODO add delete authority from user
-  //  TODO add test delete authority from user
 }
