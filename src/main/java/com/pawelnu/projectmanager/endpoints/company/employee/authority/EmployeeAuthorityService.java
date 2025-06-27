@@ -1,11 +1,10 @@
 package com.pawelnu.projectmanager.endpoints.company.employee.authority;
 
-import com.pawelnu.projectmanager.endpoints.authority.AddAuthorityToUserRequestDTO;
-import com.pawelnu.projectmanager.endpoints.authority.AddAuthorityToUserResponseDTO;
 import com.pawelnu.projectmanager.endpoints.authority.AuthorityEntity;
 import com.pawelnu.projectmanager.endpoints.authority.AuthorityService;
 import com.pawelnu.projectmanager.endpoints.company.employee.EmployeeEntity;
 import com.pawelnu.projectmanager.endpoints.company.employee.EmployeeService;
+import com.pawelnu.projectmanager.exception.model.SimpleResponse;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -21,7 +20,7 @@ public class EmployeeAuthorityService {
   private final EmployeeService employeeService;
   private final EmployeeAuthorityMapper employeeAuthorityMapper;
 
-  public List<AddAuthorityToUserResponseDTO> addAuthorityToEmployee(
+  public List<AddAuthorityToUserResponseDTO> addAuthoritiesToEmployee(
       UUID id, AddAuthorityToUserRequestDTO body) {
     List<AuthorityEntity> authorities =
         authorityService.findAllByIdInAndIsDeletedFalse(body.getAuthorityIds());
@@ -43,5 +42,13 @@ public class EmployeeAuthorityService {
     return savedEmployeeAuthorities.stream()
         .map(employeeAuthorityMapper::toDTO)
         .collect(Collectors.toList());
+  }
+
+  public SimpleResponse deleteAuthoritiesFromEmployee(
+      UUID id, DeleteAuthorityFromUserRequestDTO body) {
+    //    find EmployeeAuthority to delete
+    //    delete authorities
+    //    return response
+    return null;
   }
 }

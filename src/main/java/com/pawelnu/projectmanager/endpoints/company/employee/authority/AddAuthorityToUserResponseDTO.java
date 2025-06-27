@@ -1,4 +1,4 @@
-package com.pawelnu.projectmanager.endpoints.authority;
+package com.pawelnu.projectmanager.endpoints.company.employee.authority;
 
 import lombok.Builder;
 import lombok.Data;

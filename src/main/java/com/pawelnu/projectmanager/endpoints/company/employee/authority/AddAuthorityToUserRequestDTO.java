@@ -1,4 +1,4 @@
-package com.pawelnu.projectmanager.endpoints.authority;
+package com.pawelnu.projectmanager.endpoints.company.employee.authority;
 
 import jakarta.validation.constraints.NotNull;
 import java.util.List;

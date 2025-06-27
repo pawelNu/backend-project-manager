@@ -1,7 +1,8 @@
 package com.pawelnu.projectmanager.endpoints.company.employee;
 
-import com.pawelnu.projectmanager.endpoints.authority.AddAuthorityToUserRequestDTO;
-import com.pawelnu.projectmanager.endpoints.authority.AddAuthorityToUserResponseDTO;
+import com.pawelnu.projectmanager.endpoints.company.employee.authority.AddAuthorityToUserRequestDTO;
+import com.pawelnu.projectmanager.endpoints.company.employee.authority.AddAuthorityToUserResponseDTO;
+import com.pawelnu.projectmanager.endpoints.company.employee.authority.DeleteAuthorityFromUserRequestDTO;
 import com.pawelnu.projectmanager.endpoints.company.employee.authority.EmployeeAuthorityService;
 import com.pawelnu.projectmanager.exception.model.SimpleResponse;
 import java.util.List;
@@ -53,10 +54,17 @@ public class EmployeeController implements EmployeeApi {
   }
 
   @Override
-  public ResponseEntity<List<AddAuthorityToUserResponseDTO>> addAuthorityToEmployee(
+  public ResponseEntity<List<AddAuthorityToUserResponseDTO>> addAuthoritiesToEmployee(
       UUID id, AddAuthorityToUserRequestDTO body) {
     List<AddAuthorityToUserResponseDTO> response =
-        employeeAuthorityService.addAuthorityToEmployee(id, body);
+        employeeAuthorityService.addAuthoritiesToEmployee(id, body);
     return ResponseEntity.status(HttpStatus.CREATED).body(response);
+  }
+
+  @Override
+  public ResponseEntity<SimpleResponse> deleteAuthoritiesFromEmployee(
+      UUID id, DeleteAuthorityFromUserRequestDTO body) {
+    SimpleResponse result = employeeAuthorityService.deleteAuthoritiesFromEmployee(id, body);
+    return ResponseEntity.ok(result);
   }
 }

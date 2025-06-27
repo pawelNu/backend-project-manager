@@ -1,6 +1,5 @@
 package com.pawelnu.projectmanager.endpoints.company.employee.authority;
 
-import com.pawelnu.projectmanager.endpoints.authority.AddAuthorityToUserResponseDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
