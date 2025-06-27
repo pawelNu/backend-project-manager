@@ -1,5 +1,7 @@
 package com.pawelnu.projectmanager.endpoints.company.employee;
 
+import com.pawelnu.projectmanager.endpoints.authority.AddAuthorityToUserRequestDTO;
+import com.pawelnu.projectmanager.endpoints.authority.AddAuthorityToUserResponseDTO;
 import com.pawelnu.projectmanager.exception.model.SimpleResponse;
 import com.pawelnu.projectmanager.utils.Path;
 import com.pawelnu.projectmanager.utils.ResponseErrors;
@@ -101,4 +103,20 @@ public interface EmployeeApi {
   @DeleteMapping("/{id}")
   @Operation(description = "Delete employee by id.")
   ResponseEntity<SimpleResponse> deleteById(@Parameter() @PathVariable() UUID id);
+
+  @ApiResponse(
+      responseCode = "201",
+      description = "Created",
+      content = {
+        @Content(
+            mediaType = MediaType.APPLICATION_JSON_VALUE,
+            schema = @Schema(implementation = AddAuthorityToUserResponseDTO.class))
+      })
+  @ResponseErrors
+  @PostMapping("/add-authority-to-employee")
+  @Operation(description = "Add authority to user.")
+  ResponseEntity<AddAuthorityToUserResponseDTO> addAuthorityToEmployee(
+      @Valid @RequestBody AddAuthorityToUserRequestDTO body);
+  //  TODO add delete authority from user
+  //  TODO add test delete authority from user
 }

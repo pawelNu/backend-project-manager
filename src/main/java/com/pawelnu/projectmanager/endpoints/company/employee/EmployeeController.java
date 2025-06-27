@@ -1,5 +1,8 @@
 package com.pawelnu.projectmanager.endpoints.company.employee;
 
+import com.pawelnu.projectmanager.endpoints.authority.AddAuthorityToUserRequestDTO;
+import com.pawelnu.projectmanager.endpoints.authority.AddAuthorityToUserResponseDTO;
+import com.pawelnu.projectmanager.endpoints.company.employee.authority.EmployeeAuthorityService;
 import com.pawelnu.projectmanager.exception.model.SimpleResponse;
 import java.util.List;
 import java.util.UUID;
@@ -15,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class EmployeeController implements EmployeeApi {
 
   private final EmployeeService employeeService;
+  private final EmployeeAuthorityService employeeAuthorityService;
 
   @Override
   public ResponseEntity<EmployeeDTO> create(EmployeeCreateRequestDTO body) {
@@ -46,5 +50,12 @@ public class EmployeeController implements EmployeeApi {
   public ResponseEntity<SimpleResponse> deleteById(UUID id) {
     SimpleResponse result = employeeService.deleteById(id);
     return ResponseEntity.ok(result);
+  }
+
+  @Override
+  public ResponseEntity<AddAuthorityToUserResponseDTO> addAuthorityToEmployee(
+      AddAuthorityToUserRequestDTO body) {
+    AddAuthorityToUserResponseDTO response = employeeAuthorityService.addAuthorityToEmployee(body);
+    return ResponseEntity.status(HttpStatus.CREATED).body(response);
   }
 }

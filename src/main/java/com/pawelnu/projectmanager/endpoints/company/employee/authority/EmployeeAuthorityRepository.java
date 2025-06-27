@@ -1,4 +1,4 @@
-package com.pawelnu.projectmanager.endpoints.authority.employee;
+package com.pawelnu.projectmanager.endpoints.company.employee.authority;
 
 import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;

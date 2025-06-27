@@ -1,4 +1,4 @@
-package com.pawelnu.projectmanager.endpoints.authority.employee;
+package com.pawelnu.projectmanager.endpoints.company.employee.authority;
 
 import static com.pawelnu.projectmanager.utils.Consts.MSG.AUTHORITY_NOT_FOUND_MSG;
 import static com.pawelnu.projectmanager.utils.Consts.MSG.EMPLOYEE_NOT_FOUND;
