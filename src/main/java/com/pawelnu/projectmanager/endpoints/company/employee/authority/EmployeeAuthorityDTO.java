@@ -5,8 +5,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class AddAuthorityToUserResponseDTO {
-
+public class EmployeeAuthorityDTO {
   private String username;
   private String authorityName;
 }

@@ -8,5 +8,5 @@ public interface EmployeeAuthorityMapper {
 
   @Mapping(source = "authority.name", target = "authorityName")
   @Mapping(source = "employee.username", target = "username")
-  AddAuthorityToUserResponseDTO toDTO(EmployeeAuthorityEntity save);
+  EmployeeAuthorityDTO toDTO(EmployeeAuthorityEntity save);
 }

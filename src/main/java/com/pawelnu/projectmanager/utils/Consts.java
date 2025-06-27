@@ -27,6 +27,8 @@ public final class Consts {
     public static final String EMPLOYEE_NOT_FOUND = "Employee not found with id: ";
     public static final String AUTHORITY_NOT_FOUND_MSG = "Authority not found with id: ";
     public static final String AUTHORITIES_NOT_FOUND_MSG = "Authorities not found for ids: ";
+    public static final String EMPLOYEE_AUTHORITIES_NOT_FOUND_MSG =
+        "Employee authorities not found for ids: ";
     public static final String CATEGORY_NOT_FOUND_MSG = "Category not found with id: ";
     public static final String CATEGORY_VALUE_NOT_FOUND_MSG = "Category value not found with id: ";
     public static final String INVALID_UUID =

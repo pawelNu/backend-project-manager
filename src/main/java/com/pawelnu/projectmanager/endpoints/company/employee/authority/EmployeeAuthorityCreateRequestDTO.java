@@ -8,7 +8,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class AddAuthorityToUserRequestDTO {
-
+public class EmployeeAuthorityCreateRequestDTO {
+  @NotNull private UUID employeeId;
   @NotNull private List<UUID> authorityIds;
 }
