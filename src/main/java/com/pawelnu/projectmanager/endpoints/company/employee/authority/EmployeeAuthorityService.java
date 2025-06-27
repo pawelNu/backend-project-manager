@@ -43,14 +43,14 @@ public class EmployeeAuthorityService {
     return savedEmployeeAuthorities.stream().map(employeeAuthorityMapper::toDTO).toList();
   }
 
-  public SimpleResponse deleteAuthoritiesFromEmployee(
-      UUID employeeId, DeleteAuthorityFromUserRequestDTO body) {
+  public SimpleResponse delete(EmployeeAuthorityDeleteRequestDTO body) {
     List<EmployeeAuthorityEntity> employeeAuthorities =
-        findEmployeeAuthorityByEmployeeIdAndAuthorityIds(employeeId, body.getAuthorityIds());
+        findEmployeeAuthorityByEmployeeIdAndAuthorityIds(
+            body.getEmployeeId(), body.getAuthorityIds());
     employeeAuthorities.forEach(employeeAuthority -> employeeAuthority.setIsDeleted(true));
     List<EmployeeAuthorityEntity> deletedEmployeeAuthorities =
         employeeAuthorityRepository.saveAll(employeeAuthorities);
-    String message = validateDeleteResult(employeeId, deletedEmployeeAuthorities);
+    String message = validateDeleteResult(body.getEmployeeId(), deletedEmployeeAuthorities);
     return SimpleResponse.builder().message(message).build();
   }
 

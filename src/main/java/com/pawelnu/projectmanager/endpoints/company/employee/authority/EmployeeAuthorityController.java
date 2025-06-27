@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.NotImplementedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,16 +26,17 @@ public class EmployeeAuthorityController implements EmployeeAuthorityApi {
   @Override
   public ResponseEntity<List<EmployeeAuthorityDTO>> getList(
       String sort, String range, String filter) {
-    return null;
+    throw new NotImplementedException("not implemented");
   }
 
   @Override
   public ResponseEntity<EmployeeAuthorityDTO> getById(UUID id) {
-    return null;
+    throw new NotImplementedException("not implemented");
   }
 
   @Override
-  public ResponseEntity<SimpleResponse> delete(DeleteAuthorityFromUserRequestDTO body) {
-    return null;
+  public ResponseEntity<SimpleResponse> delete(EmployeeAuthorityDeleteRequestDTO body) {
+    SimpleResponse result = employeeAuthorityService.delete(body);
+    return ResponseEntity.ok(result);
   }
 }

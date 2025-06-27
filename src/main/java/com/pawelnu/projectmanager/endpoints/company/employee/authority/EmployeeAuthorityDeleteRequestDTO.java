@@ -8,7 +8,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class DeleteAuthorityFromUserRequestDTO {
-
+public class EmployeeAuthorityDeleteRequestDTO {
+  @NotNull private UUID employeeId;
   @NotNull private List<UUID> authorityIds;
 }
