@@ -3,9 +3,6 @@ package com.pawelnu.projectmanager.endpoints.company.employee.authority;
 import com.pawelnu.projectmanager.endpoints.authority.QAuthorityEntity;
 import com.pawelnu.projectmanager.endpoints.company.employee.QEmployeeEntity;
 import com.querydsl.core.BooleanBuilder;
-import com.querydsl.core.types.Order;
-import com.querydsl.core.types.OrderSpecifier;
-import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
@@ -16,7 +13,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -34,20 +30,16 @@ public class EmployeeAuthorityQueryRepository {
     QEmployeeEntity employee = QEmployeeEntity.employeeEntity;
     BooleanBuilder allConditions = new BooleanBuilder();
 
-    if (filters.containsKey(authority.name.getMetadata().getName())) {
-      allConditions.and(
-          authority.name.likeIgnoreCase(
-              "%" + filters.get(authority.name.getMetadata().getName()) + "%"));
+    if (filters.containsKey("authorityName")) {
+      allConditions.and(authority.name.likeIgnoreCase("%" + filters.get("authorityName") + "%"));
     }
-    if (filters.containsKey(employee.firstName.getMetadata().getName())) {
+    if (filters.containsKey("employeeFirstName")) {
       allConditions.and(
-          employee.firstName.likeIgnoreCase(
-              "%" + filters.get(employee.firstName.getMetadata().getName()) + "%"));
+          employee.firstName.likeIgnoreCase("%" + filters.get("employeeFirstName") + "%"));
     }
-    if (filters.containsKey(employee.lastName.getMetadata().getName())) {
+    if (filters.containsKey("employeeLastName")) {
       allConditions.and(
-          employee.lastName.likeIgnoreCase(
-              "%" + filters.get(employee.lastName.getMetadata().getName()) + "%"));
+          employee.lastName.likeIgnoreCase("%" + filters.get("employeeLastName") + "%"));
     }
 
     allConditions.and(employeeAuthority.isDeleted.isFalse());
@@ -63,18 +55,19 @@ public class EmployeeAuthorityQueryRepository {
             .offset(offset)
             .limit(limit);
 
-    if (!sortField.isEmpty()) {
-      if (sortField.equals(authority.name.getMetadata().getName())) {
-        query.orderBy(
-            sortDir.equalsIgnoreCase("DESC") ? authority.name.desc() : authority.name.asc());
-      } else {
-        PathBuilder<EmployeeAuthorityEntity> entityPath =
-            new PathBuilder<>(EmployeeAuthorityEntity.class, "employeeAuthorityEntity");
-        query.orderBy(
-            new OrderSpecifier<>(
-                Sort.Direction.fromString(sortDir) == Sort.Direction.ASC ? Order.ASC : Order.DESC,
-                entityPath.getString(sortField)));
-      }
+    switch (sortField) {
+      case "authorityName" -> query.orderBy(
+          sortDir.equalsIgnoreCase("DESC") ? authority.name.desc() : authority.name.asc());
+      case "employeeFirstName" -> query.orderBy(
+          sortDir.equalsIgnoreCase("DESC") ? employee.firstName.desc() : employee.firstName.asc());
+      case "employeeLastName" -> query.orderBy(
+          sortDir.equalsIgnoreCase("DESC") ? employee.lastName.desc() : employee.lastName.asc());
+      case "id" -> query.orderBy(
+          sortDir.equalsIgnoreCase("DESC")
+              ? employeeAuthority.id.desc()
+              : employeeAuthority.id.asc());
+      default -> query.orderBy(
+          sortDir.equalsIgnoreCase("DESC") ? employee.id.desc() : employee.id.asc());
     }
 
     List<EmployeeAuthorityEntity> results = query.fetch();
