@@ -18,6 +18,8 @@ import com.pawelnu.projectmanager.exception.model.SimpleResponse;
 import com.pawelnu.projectmanager.utils.Consts.MSG;
 import com.pawelnu.projectmanager.utils.Path;
 import com.pawelnu.projectmanager.utils.Utils;
+import com.pawelnu.projectmanager.utils.Utils.Postgres;
+import com.pawelnu.projectmanager.utils.Utils.SpringDataSource;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -52,16 +54,16 @@ class CompanyControllerTest {
 
   @Container
   static PostgreSQLContainer<?> postgres =
-      new PostgreSQLContainer<>("postgres:17")
-          .withDatabaseName("testdb")
-          .withUsername("user")
-          .withPassword("password");
+      new PostgreSQLContainer<>(Postgres.POSTGRES_17)
+          .withDatabaseName(Postgres.DB_NAME)
+          .withUsername(Postgres.USER)
+          .withPassword(Postgres.PASSWORD);
 
   @DynamicPropertySource
   static void postgresProperties(DynamicPropertyRegistry registry) {
-    registry.add("spring.datasource.url", postgres::getJdbcUrl);
-    registry.add("spring.datasource.username", postgres::getUsername);
-    registry.add("spring.datasource.password", postgres::getPassword);
+    registry.add(SpringDataSource.URL, postgres::getJdbcUrl);
+    registry.add(SpringDataSource.USERNAME, postgres::getUsername);
+    registry.add(SpringDataSource.PASSWORD, postgres::getPassword);
   }
 
   @BeforeEach
