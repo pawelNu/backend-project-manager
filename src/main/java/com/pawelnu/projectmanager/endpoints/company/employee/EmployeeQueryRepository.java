@@ -1,8 +1,8 @@
 package com.pawelnu.projectmanager.endpoints.company.employee;
 
 import com.pawelnu.projectmanager.endpoints.authority.QAuthorityEntity;
-import com.pawelnu.projectmanager.endpoints.authority.employee.QEmployeeAuthorityEntity;
 import com.pawelnu.projectmanager.endpoints.company.QCompanyEntity;
+import com.pawelnu.projectmanager.endpoints.company.employee.authority.QEmployeeAuthorityEntity;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;

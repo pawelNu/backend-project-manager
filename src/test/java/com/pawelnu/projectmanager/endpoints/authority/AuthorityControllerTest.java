@@ -20,6 +20,8 @@ import com.pawelnu.projectmanager.exception.model.SimpleResponse;
 import com.pawelnu.projectmanager.utils.Consts.MSG;
 import com.pawelnu.projectmanager.utils.Path;
 import com.pawelnu.projectmanager.utils.Utils;
+import com.pawelnu.projectmanager.utils.Utils.Postgres;
+import com.pawelnu.projectmanager.utils.Utils.SpringDataSource;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -54,16 +56,16 @@ class AuthorityControllerTest {
 
   @Container
   static PostgreSQLContainer<?> postgres =
-      new PostgreSQLContainer<>("postgres:17")
-          .withDatabaseName("testdb")
-          .withUsername("user")
-          .withPassword("password");
+      new PostgreSQLContainer<>(Postgres.POSTGRES_17)
+          .withDatabaseName(Postgres.DB_NAME)
+          .withUsername(Postgres.USER)
+          .withPassword(Postgres.PASSWORD);
 
   @DynamicPropertySource
   static void postgresProperties(DynamicPropertyRegistry registry) {
-    registry.add("spring.datasource.url", postgres::getJdbcUrl);
-    registry.add("spring.datasource.username", postgres::getUsername);
-    registry.add("spring.datasource.password", postgres::getPassword);
+    registry.add(SpringDataSource.URL, postgres::getJdbcUrl);
+    registry.add(SpringDataSource.USERNAME, postgres::getUsername);
+    registry.add(SpringDataSource.PASSWORD, postgres::getPassword);
   }
 
   @BeforeEach
@@ -163,7 +165,7 @@ class AuthorityControllerTest {
 
   @Test
   void shouldReturn_200_getAuthorityList_withFilters() throws Exception {
-    Map<String, String> filter = Map.of("name", "autho%delete");
+    Map<String, String> filter = Map.of("name", "AUTHORITY_DELETE_BY_ID");
     String filterStrig = objectMapper.writeValueAsString(filter);
     MvcResult response =
         mockMvc.perform(get(BASE_URL).with(withJwt()).param("filter", filterStrig)).andReturn();
@@ -181,7 +183,7 @@ class AuthorityControllerTest {
   @Test
   void shouldReturn_200_getAuthorityList_withFiltersAndSort() throws Exception {
     List<String> sort = List.of("name", "DESC");
-    Map<String, String> filter = Map.of("name", "authority");
+    Map<String, String> filter = Map.of("name", "authority_get");
     String sortString = objectMapper.writeValueAsString(sort);
     String filterStrig = objectMapper.writeValueAsString(filter);
     MvcResult response =
@@ -198,9 +200,9 @@ class AuthorityControllerTest {
     List<AuthorityDTO> responseBody =
         objectMapper.readValue(contentAsString, new TypeReference<>() {});
     assertEquals(HttpStatus.OK.value(), status);
-    assertEquals("items 0-5/6", headerContentRange);
-    assertEquals(6, responseBody.size());
-    assertEquals("AUTHORITY_GET_LIST", responseBody.getFirst().getName());
+    assertEquals("items 0-2/3", headerContentRange);
+    assertEquals(3, responseBody.size());
+    assertEquals("EMPLOYEE_AUTHORITY_GET_LIST", responseBody.getFirst().getName());
   }
 
   @Test
@@ -523,153 +525,5 @@ class AuthorityControllerTest {
     SimpleResponse responseBody = objectMapper.readValue(contentAsString, SimpleResponse.class);
     assertEquals(HttpStatus.NOT_FOUND.value(), status);
     assertEquals(MSG.AUTHORITY_NOT_FOUND_MSG + authorityId, responseBody.getMessage());
-  }
-
-  @Test
-  void shouldReturn_201_addAuthorityToEmployee() throws Exception {
-    UUID authorityId = UUID.fromString("e6ddcd5e-c3c2-40cb-a74b-83e8fa072fd3");
-    UUID employeeId = UUID.fromString("f4e5e7b6-c407-4545-8608-ab55414dc42b");
-    AddAuthorityToUserRequestDTO request =
-        AddAuthorityToUserRequestDTO.builder()
-            .authorityId(authorityId)
-            .employeeId(employeeId)
-            .build();
-    String requestBody = objectMapper.writeValueAsString(request);
-    MvcResult response =
-        mockMvc
-            .perform(
-                post(ADD_AUTHORITY_TO_EMPLOYEE)
-                    .with(withJwt())
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(requestBody))
-            .andReturn();
-    int status = response.getResponse().getStatus();
-    String contentAsString = response.getResponse().getContentAsString();
-    AddAuthorityToUserResponseDTO responseBody =
-        objectMapper.readValue(contentAsString, AddAuthorityToUserResponseDTO.class);
-    assertEquals(HttpStatus.CREATED.value(), status);
-    assertEquals("ADD_ITEM_TO_EMPLOYEE", responseBody.getAuthorityName());
-    assertEquals("Tom_Keeling16493", responseBody.getUsername());
-  }
-
-  @Test
-  void shouldReturn_400_addAuthorityToEmployee() throws Exception {
-    UUID authorityId = UUID.fromString("e6ddcd5e-c3c2-40cb-a74b-83e8fa072fd3");
-    AddAuthorityToUserRequestDTO request =
-        AddAuthorityToUserRequestDTO.builder().authorityId(authorityId).employeeId(null).build();
-    String requestBody = objectMapper.writeValueAsString(request);
-    MvcResult response =
-        mockMvc
-            .perform(
-                post(ADD_AUTHORITY_TO_EMPLOYEE)
-                    .with(withJwt())
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(requestBody))
-            .andReturn();
-    int status = response.getResponse().getStatus();
-    String contentAsString = response.getResponse().getContentAsString();
-    ReactAdminBadRequestError responseBody =
-        objectMapper.readValue(contentAsString, ReactAdminBadRequestError.class);
-    assertEquals(HttpStatus.BAD_REQUEST.value(), status);
-    assertEquals("must not be null", responseBody.getErrors().get("employeeId"));
-  }
-
-  @Test
-  void shouldReturn_401_addAuthorityToEmployee() throws Exception {
-    UUID authorityId = UUID.fromString("e6ddcd5e-c3c2-40cb-a74b-83e8fa072fd3");
-    UUID employeeId = UUID.fromString("f4e5e7b6-c407-4545-8608-ab55414dc42b");
-    AddAuthorityToUserRequestDTO request =
-        AddAuthorityToUserRequestDTO.builder()
-            .authorityId(authorityId)
-            .employeeId(employeeId)
-            .build();
-    String requestBody = objectMapper.writeValueAsString(request);
-    MvcResult response =
-        mockMvc
-            .perform(
-                post(ADD_AUTHORITY_TO_EMPLOYEE)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(requestBody))
-            .andReturn();
-    int status = response.getResponse().getStatus();
-    String contentAsString = response.getResponse().getContentAsString();
-    ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
-    assertEquals(HttpStatus.UNAUTHORIZED.value(), status);
-    assertEquals(FULL_AUTH_IS_REQUIRED, responseBody.getMessage());
-  }
-
-  @Test
-  void shouldReturn_403_addAuthorityToEmployee() throws Exception {
-    UUID authorityId = UUID.fromString("e6ddcd5e-c3c2-40cb-a74b-83e8fa072fd3");
-    UUID employeeId = UUID.fromString("f4e5e7b6-c407-4545-8608-ab55414dc42b");
-    AddAuthorityToUserRequestDTO request =
-        AddAuthorityToUserRequestDTO.builder()
-            .authorityId(authorityId)
-            .employeeId(employeeId)
-            .build();
-    String requestBody = objectMapper.writeValueAsString(request);
-    MvcResult response =
-        mockMvc
-            .perform(
-                post(ADD_AUTHORITY_TO_EMPLOYEE)
-                    .with(withBadJwt())
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(requestBody))
-            .andReturn();
-    int status = response.getResponse().getStatus();
-    String contentAsString = response.getResponse().getContentAsString();
-    ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
-    assertEquals(HttpStatus.FORBIDDEN.value(), status);
-    assertEquals(accessDeniedError(), responseBody);
-  }
-
-  @Test
-  void shouldReturn_404_addAuthorityToEmployee_noAuthority() throws Exception {
-    UUID authorityId = UUID.fromString("d8e79842-c633-4934-81eb-3a463a08e82d");
-    UUID employeeId = UUID.fromString("f4e5e7b6-c407-4545-8608-ab55414dc42b");
-    AddAuthorityToUserRequestDTO request =
-        AddAuthorityToUserRequestDTO.builder()
-            .authorityId(authorityId)
-            .employeeId(employeeId)
-            .build();
-    String requestBody = objectMapper.writeValueAsString(request);
-    MvcResult response =
-        mockMvc
-            .perform(
-                post(ADD_AUTHORITY_TO_EMPLOYEE)
-                    .with(withJwt())
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(requestBody))
-            .andReturn();
-    int status = response.getResponse().getStatus();
-    String contentAsString = response.getResponse().getContentAsString();
-    ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
-    assertEquals(HttpStatus.NOT_FOUND.value(), status);
-    assertEquals(MSG.AUTHORITY_NOT_FOUND_MSG + authorityId, responseBody.getMessage());
-  }
-
-  @Test
-  void shouldReturn_404_addAuthorityToEmployee_noEmployee() throws Exception {
-    UUID authorityId = UUID.fromString("e6ddcd5e-c3c2-40cb-a74b-83e8fa072fd3");
-    UUID employeeId = UUID.fromString("43db27a8-cceb-4d4c-a8dd-7f89b2add802");
-    AddAuthorityToUserRequestDTO request =
-        AddAuthorityToUserRequestDTO.builder()
-            .authorityId(authorityId)
-            .employeeId(employeeId)
-            .build();
-    String requestBody = objectMapper.writeValueAsString(request);
-    MvcResult response =
-        mockMvc
-            .perform(
-                post(ADD_AUTHORITY_TO_EMPLOYEE)
-                    .with(withJwt())
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(requestBody))
-            .andReturn();
-    int status = response.getResponse().getStatus();
-    String contentAsString = response.getResponse().getContentAsString();
-    ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
-    assertEquals(HttpStatus.NOT_FOUND.value(), status);
-    assertEquals(MSG.EMPLOYEE_NOT_FOUND + employeeId, responseBody.getMessage());
   }
 }

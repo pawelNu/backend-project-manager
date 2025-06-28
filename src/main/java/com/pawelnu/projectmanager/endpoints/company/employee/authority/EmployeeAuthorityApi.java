@@ -1,4 +1,4 @@
-package com.pawelnu.projectmanager.endpoints.authority;
+package com.pawelnu.projectmanager.endpoints.company.employee.authority;
 
 import com.pawelnu.projectmanager.exception.model.SimpleResponse;
 import com.pawelnu.projectmanager.utils.Path;
@@ -12,21 +12,18 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.util.List;
-import java.util.UUID;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@Tag(name = "Authorities")
-@RequestMapping(Path.API_AUTHORITIES)
-public interface AuthorityApi {
+@Tag(name = "Employee Authorities")
+@RequestMapping(Path.API_EMPLOYEE_AUTHORITIES)
+public interface EmployeeAuthorityApi {
 
   @ApiResponse(
       responseCode = "201",
@@ -34,25 +31,27 @@ public interface AuthorityApi {
       content = {
         @Content(
             mediaType = MediaType.APPLICATION_JSON_VALUE,
-            schema = @Schema(implementation = AuthorityDTO.class))
+            array = @ArraySchema(schema = @Schema(implementation = EmployeeAuthoritiesDTO.class)))
       })
   @ResponseErrors
   @PostMapping("")
-  @Operation(description = "Add new authority.")
-  ResponseEntity<AuthorityDTO> create(@Valid @RequestBody AuthorityCreateRequestDTO body);
+  @Operation(description = "Add new employee authority.")
+  ResponseEntity<EmployeeAuthoritiesDTO> create(
+      @Valid @RequestBody EmployeeAuthorityCreateRequestDTO body);
 
   @Operation(
-      description = "List authorities with filtering, sorting and pagination (react-admin format)")
+      description =
+          "List employees authority with filtering, sorting and pagination (react-admin format)")
   @ApiResponse(
       responseCode = "200",
       description = "OK",
       content =
           @Content(
               mediaType = MediaType.APPLICATION_JSON_VALUE,
-              array = @ArraySchema(schema = @Schema(implementation = AuthorityDTO.class))))
+              array = @ArraySchema(schema = @Schema(implementation = EmployeeAuthorityDTO.class))))
   @ResponseErrors
   @GetMapping("")
-  ResponseEntity<List<AuthorityDTO>> getList(
+  ResponseEntity<List<EmployeeAuthorityDTO>> getList(
       @Parameter(description = "Sort as JSON string, e.g. [\"title\",\"ASC\"]")
           @RequestParam(required = false)
           String sort,
@@ -68,37 +67,10 @@ public interface AuthorityApi {
       content = {
         @Content(
             mediaType = MediaType.APPLICATION_JSON_VALUE,
-            schema = @Schema(implementation = AuthorityDTO.class))
-      })
-  @ResponseErrors
-  @GetMapping("/{id}")
-  @Operation(description = "Get authority by id.")
-  ResponseEntity<AuthorityDTO> getById(@Parameter() @PathVariable() UUID id);
-
-  @ApiResponse(
-      responseCode = "200",
-      description = "OK",
-      content = {
-        @Content(
-            mediaType = MediaType.APPLICATION_JSON_VALUE,
-            schema = @Schema(implementation = AuthorityDTO.class))
-      })
-  @ResponseErrors
-  @PutMapping("/{id}")
-  @Operation(description = "Edit authority by id.")
-  ResponseEntity<AuthorityDTO> editById(
-      @Parameter() @PathVariable() UUID id, @Valid @RequestBody AuthorityEditRequestDTO body);
-
-  @ApiResponse(
-      responseCode = "200",
-      description = "OK",
-      content = {
-        @Content(
-            mediaType = MediaType.APPLICATION_JSON_VALUE,
             schema = @Schema(implementation = SimpleResponse.class))
       })
   @ResponseErrors
-  @DeleteMapping("/{id}")
-  @Operation(description = "Delete authority by id.")
-  ResponseEntity<SimpleResponse> deleteById(@Parameter() @PathVariable() UUID id);
+  @DeleteMapping("")
+  @Operation(description = "Delete employee authorities.")
+  ResponseEntity<SimpleResponse> delete(@Valid @RequestBody EmployeeAuthorityDeleteRequestDTO body);
 }

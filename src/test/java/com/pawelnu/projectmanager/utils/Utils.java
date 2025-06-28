@@ -42,4 +42,17 @@ public class Utils {
   public static ReactAdminError accessDeniedError() {
     return new ReactAdminError("Access denied");
   }
+
+  public static class Postgres {
+    public static final String POSTGRES_17 = "postgres:17";
+    public static final String DB_NAME = "testdb";
+    public static final String USER = "user";
+    public static final String PASSWORD = "password";
+  }
+
+  public static class SpringDataSource {
+    public static final String URL = "spring.datasource.url";
+    public static final String USERNAME = "spring.datasource.username";
+    public static final String PASSWORD = "spring.datasource.password";
+  }
 }

@@ -1,8 +1,8 @@
 package com.pawelnu.projectmanager.endpoints.company.employee;
 
-import com.pawelnu.projectmanager.endpoints.authority.employee.EmployeeAuthorityEntity;
 import com.pawelnu.projectmanager.endpoints.category.value.CategoryValueEntity;
 import com.pawelnu.projectmanager.endpoints.company.CompanyEntity;
+import com.pawelnu.projectmanager.endpoints.company.employee.authority.EmployeeAuthorityEntity;
 import com.pawelnu.projectmanager.entity.Auditable;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

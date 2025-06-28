@@ -1,5 +1,6 @@
 package com.pawelnu.projectmanager.endpoints.company.employee;
 
+import com.pawelnu.projectmanager.endpoints.company.employee.authority.EmployeeAuthorityService;
 import com.pawelnu.projectmanager.exception.model.SimpleResponse;
 import java.util.List;
 import java.util.UUID;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class EmployeeController implements EmployeeApi {
 
   private final EmployeeService employeeService;
+  private final EmployeeAuthorityService employeeAuthorityService;
 
   @Override
   public ResponseEntity<EmployeeDTO> create(EmployeeCreateRequestDTO body) {

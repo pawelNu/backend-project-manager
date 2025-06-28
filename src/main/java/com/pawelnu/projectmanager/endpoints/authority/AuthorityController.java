@@ -1,6 +1,6 @@
 package com.pawelnu.projectmanager.endpoints.authority;
 
-import com.pawelnu.projectmanager.endpoints.authority.employee.EmployeeAuthorityService;
+import com.pawelnu.projectmanager.endpoints.company.employee.authority.EmployeeAuthorityService;
 import com.pawelnu.projectmanager.exception.model.SimpleResponse;
 import java.util.List;
 import java.util.UUID;
@@ -43,12 +43,5 @@ public class AuthorityController implements AuthorityApi {
   @Override
   public ResponseEntity<SimpleResponse> deleteById(UUID id) {
     return ResponseEntity.ok(authorityService.deleteById(id));
-  }
-
-  @Override
-  public ResponseEntity<AddAuthorityToUserResponseDTO> addAuthorityToEmployee(
-      AddAuthorityToUserRequestDTO body) {
-    AddAuthorityToUserResponseDTO response = employeeAuthorityService.addAuthorityToEmployee(body);
-    return ResponseEntity.status(HttpStatus.CREATED).body(response);
   }
 }
