@@ -27,8 +27,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 @ActiveProfiles("test")
 @Slf4j
 class EmployeeAuthorityControllerTest {
-  @Autowired
-  private JwtUtils jwtUtils;
+  @Autowired private JwtUtils jwtUtils;
   @Autowired private MockMvc mockMvc;
   @Autowired private ObjectMapper objectMapper;
   private static final String BASE_URL = "/" + Path.API_EMPLOYEE_AUTHORITIES;
