@@ -1,13 +1,7 @@
 package com.pawelnu.projectmanager.endpoints.project;
 
-import com.pawelnu.projectmanager.endpoints.company.CompanyCreateRequestDTO;
-import com.pawelnu.projectmanager.endpoints.company.CompanyDTO;
-import com.pawelnu.projectmanager.endpoints.company.CompanyEditRequestDTO;
-import com.pawelnu.projectmanager.endpoints.company.CompanyFilterRequestDTO;
-import com.pawelnu.projectmanager.endpoints.company.CompanyListResponseDTO;
-import com.pawelnu.projectmanager.endpoints.company.CompanySimpleDTO;
+import com.pawelnu.projectmanager.dto.project.ProjectCreateRequestDTO;
 import com.pawelnu.projectmanager.exception.model.SimpleResponse;
-import com.pawelnu.projectmanager.utils.Consts.Request;
 import com.pawelnu.projectmanager.utils.Path;
 import com.pawelnu.projectmanager.utils.ResponseErrors;
 import io.swagger.v3.oas.annotations.Operation;
@@ -31,8 +25,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@Tag(name = "Companies")
-@RequestMapping(Path.API_COMPANIES)
+@Tag(name = "Projects")
+@RequestMapping(Path.API_PROJECTS)
 public interface ProjectApi {
 
   @ApiResponse(
@@ -41,57 +35,12 @@ public interface ProjectApi {
       content = {
         @Content(
             mediaType = MediaType.APPLICATION_JSON_VALUE,
-            schema = @Schema(implementation = CompanyDTO.class))
+            schema = @Schema(implementation = ProjectDTO.class))
       })
   @ResponseErrors
   @PostMapping("")
-  @Operation(description = "Add new company.")
-  ResponseEntity<CompanyDTO> create(@Valid @RequestBody CompanyCreateRequestDTO body);
-
-  @ApiResponse(
-      responseCode = "200",
-      description = "OK",
-      content = {
-        @Content(
-            mediaType = MediaType.APPLICATION_JSON_VALUE,
-            schema = @Schema(implementation = CompanyListResponseDTO.class))
-      })
-  @ResponseErrors
-  @GetMapping("/pagination")
-  @Operation(description = "Get list of companies.")
-  ResponseEntity<CompanyListResponseDTO> getList(
-      @Parameter(description = "Page number from 0")
-          @RequestParam(
-              required = false,
-              name = Request.PAGE_NUMBER_NAME,
-              defaultValue = Request.PAGE_NUMBER_STRING)
-          Integer pageNumber,
-      @Parameter(description = "Page size")
-          @RequestParam(
-              required = false,
-              name = Request.PAGE_SIZE_NAME,
-              defaultValue = Request.PAGE_SIZE_NUMBER_STRING)
-          Integer pageSize,
-      @Parameter(description = "Sorting field name")
-          @RequestParam(required = false, name = Request.SORTED_BY_NAME)
-          String sortedBy,
-      @Parameter(description = "Sorting direction [asc, desc, other - not sorted]")
-          @RequestParam(required = false, name = Request.DIRECTION_NAME)
-          String direction);
-
-  @ApiResponse(
-      responseCode = "200",
-      description = "OK",
-      content = {
-        @Content(
-            mediaType = MediaType.APPLICATION_JSON_VALUE,
-            schema = @Schema(implementation = CompanyListResponseDTO.class))
-      })
-  @ResponseErrors
-  @PostMapping("/filter")
-  @Operation(description = "Filter companies")
-  ResponseEntity<CompanyListResponseDTO> filterCompanies(
-      @Valid @RequestBody CompanyFilterRequestDTO body);
+  @Operation(description = "Add new project.")
+  ResponseEntity<ProjectDTO> create(@Valid @RequestBody ProjectCreateRequestDTO body);
 
   @Operation(
       description = "List companies with filtering, sorting and pagination (react-admin format)")
@@ -101,10 +50,10 @@ public interface ProjectApi {
       content =
           @Content(
               mediaType = MediaType.APPLICATION_JSON_VALUE,
-              array = @ArraySchema(schema = @Schema(implementation = CompanySimpleDTO.class))))
+              array = @ArraySchema(schema = @Schema(implementation = ProjectSimpleDTO.class))))
   @ResponseErrors
   @GetMapping("")
-  ResponseEntity<List<CompanySimpleDTO>> getList(
+  ResponseEntity<List<ProjectSimpleDTO>> getList(
       @Parameter(description = "Sort as JSON string, e.g. [\"title\",\"ASC\"]")
           @RequestParam(required = false)
           String sort,
@@ -120,12 +69,12 @@ public interface ProjectApi {
       content = {
         @Content(
             mediaType = MediaType.APPLICATION_JSON_VALUE,
-            schema = @Schema(implementation = CompanyDTO.class))
+            schema = @Schema(implementation = ProjectDTO.class))
       })
   @ResponseErrors
   @GetMapping("/{id}")
   @Operation(description = "Get company by id.")
-  ResponseEntity<CompanyDTO> getById(@Parameter() @PathVariable() UUID id);
+  ResponseEntity<ProjectDTO> getById(@Parameter() @PathVariable() UUID id);
 
   @ApiResponse(
       responseCode = "200",
@@ -133,13 +82,13 @@ public interface ProjectApi {
       content = {
         @Content(
             mediaType = MediaType.APPLICATION_JSON_VALUE,
-            schema = @Schema(implementation = CompanyDTO.class))
+            schema = @Schema(implementation = ProjectDTO.class))
       })
   @ResponseErrors
   @PutMapping("/{id}")
   @Operation(description = "Edit company by id.")
-  ResponseEntity<CompanyDTO> editById(
-      @Parameter() @PathVariable() UUID id, @Valid @RequestBody CompanyEditRequestDTO body);
+  ResponseEntity<ProjectDTO> editById(
+      @Parameter() @PathVariable() UUID id, @Valid @RequestBody ProjectEditRequestDTO body);
 
   @ApiResponse(
       responseCode = "200",
