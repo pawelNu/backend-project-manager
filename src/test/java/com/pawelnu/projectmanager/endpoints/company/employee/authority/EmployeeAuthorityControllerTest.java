@@ -225,7 +225,7 @@ class EmployeeAuthorityControllerTest {
   @Test
   void shouldReturn_200_getEmployeeAuthorityList_withFiltersAndSort() throws Exception {
     List<String> sort = List.of("employeeLastName", "DESC");
-    Map<String, String> filter = Map.of("authorityName", "employee");
+    Map<String, String> filter = Map.of("authorityName", "item");
     String sortString = objectMapper.writeValueAsString(sort);
     String filterStrig = objectMapper.writeValueAsString(filter);
     MvcResult response =
@@ -242,10 +242,10 @@ class EmployeeAuthorityControllerTest {
     List<EmployeeAuthorityDTO> responseBody =
         objectMapper.readValue(contentAsString, new TypeReference<>() {});
     assertEquals(HttpStatus.OK.value(), status);
-    assertEquals("items 0-10/11", headerContentRange);
-    assertEquals(11, responseBody.size());
-    assertEquals("test", responseBody.getFirst().getUsername());
-    assertEquals("EMPLOYEE_GET_BY_ID", responseBody.getFirst().getAuthorityName());
+    assertEquals("items 0-0/1", headerContentRange);
+    assertEquals(1, responseBody.size());
+    assertEquals("withAuthToDelete", responseBody.getFirst().getUsername());
+    assertEquals("ITEM_AUTHORITY", responseBody.getFirst().getAuthorityName());
   }
 
   @Test
@@ -354,9 +354,10 @@ class EmployeeAuthorityControllerTest {
             .andReturn();
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
-    SimpleResponse responseBody = objectMapper.readValue(contentAsString, SimpleResponse.class);
+    ReactAdminBadRequestError responseBody =
+        objectMapper.readValue(contentAsString, ReactAdminBadRequestError.class);
     assertEquals(HttpStatus.BAD_REQUEST.value(), status);
-    assertEquals(MSG.INVALID_UUID, responseBody.getMessage());
+    assertEquals("must not be null", responseBody.getErrors().get("authorityIds"));
   }
 
   @Test
@@ -430,7 +431,10 @@ class EmployeeAuthorityControllerTest {
     String contentAsString = response.getResponse().getContentAsString();
     ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
     assertEquals(HttpStatus.NOT_FOUND.value(), status);
-    assertEquals(MSG.EMPLOYEE_NOT_FOUND + "employeeId", responseBody.getMessage());
+    assertEquals(
+        MSG.EMPLOYEE_AUTHORITIES_NOT_FOUND_MSG
+            + "c6974c09-8b90-4fa0-a9ac-d59e4ee9598b, 142ba2ba-d9af-4d7e-b202-f3dedd55e0e2",
+        responseBody.getMessage());
   }
 
   @Test

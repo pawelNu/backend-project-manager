@@ -73,7 +73,4 @@ public interface EmployeeAuthorityApi {
   @DeleteMapping("")
   @Operation(description = "Delete employee authorities.")
   ResponseEntity<SimpleResponse> delete(@Valid @RequestBody EmployeeAuthorityDeleteRequestDTO body);
-
-  //  TODO add delete authority from user
-  //  TODO add test delete authority from user
 }
