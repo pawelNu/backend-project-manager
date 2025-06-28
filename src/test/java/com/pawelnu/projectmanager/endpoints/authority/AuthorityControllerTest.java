@@ -165,7 +165,7 @@ class AuthorityControllerTest {
 
   @Test
   void shouldReturn_200_getAuthorityList_withFilters() throws Exception {
-    Map<String, String> filter = Map.of("name", "autho%delete");
+    Map<String, String> filter = Map.of("name", "AUTHORITY_DELETE_BY_ID");
     String filterStrig = objectMapper.writeValueAsString(filter);
     MvcResult response =
         mockMvc.perform(get(BASE_URL).with(withJwt()).param("filter", filterStrig)).andReturn();
@@ -183,7 +183,7 @@ class AuthorityControllerTest {
   @Test
   void shouldReturn_200_getAuthorityList_withFiltersAndSort() throws Exception {
     List<String> sort = List.of("name", "DESC");
-    Map<String, String> filter = Map.of("name", "authority");
+    Map<String, String> filter = Map.of("name", "authority_get");
     String sortString = objectMapper.writeValueAsString(sort);
     String filterStrig = objectMapper.writeValueAsString(filter);
     MvcResult response =
@@ -200,9 +200,9 @@ class AuthorityControllerTest {
     List<AuthorityDTO> responseBody =
         objectMapper.readValue(contentAsString, new TypeReference<>() {});
     assertEquals(HttpStatus.OK.value(), status);
-    assertEquals("items 0-5/6", headerContentRange);
-    assertEquals(6, responseBody.size());
-    assertEquals("AUTHORITY_GET_LIST", responseBody.getFirst().getName());
+    assertEquals("items 0-2/3", headerContentRange);
+    assertEquals(3, responseBody.size());
+    assertEquals("EMPLOYEE_AUTHORITY_GET_LIST", responseBody.getFirst().getName());
   }
 
   @Test

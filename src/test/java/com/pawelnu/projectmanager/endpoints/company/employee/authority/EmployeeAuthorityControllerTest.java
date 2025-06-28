@@ -245,7 +245,7 @@ class EmployeeAuthorityControllerTest {
     assertEquals("items 0-0/1", headerContentRange);
     assertEquals(1, responseBody.size());
     assertEquals("withAuthToDelete", responseBody.getFirst().getUsername());
-    assertEquals("ITEM_AUTHORITY", responseBody.getFirst().getAuthorityName());
+    assertEquals("ITEM_TO_FILTER", responseBody.getFirst().getAuthorityName());
   }
 
   @Test
