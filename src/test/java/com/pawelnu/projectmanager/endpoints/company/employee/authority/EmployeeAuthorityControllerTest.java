@@ -5,6 +5,7 @@ import static com.pawelnu.projectmanager.utils.Utils.accessDeniedError;
 import static com.pawelnu.projectmanager.utils.Utils.withBadJwt;
 import static com.pawelnu.projectmanager.utils.Utils.withJwt;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
@@ -13,6 +14,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pawelnu.projectmanager.config.security.jwt.JwtUtils;
 import com.pawelnu.projectmanager.exception.model.ReactAdminBadRequestError;
 import com.pawelnu.projectmanager.exception.model.ReactAdminError;
+import com.pawelnu.projectmanager.exception.model.SimpleResponse;
+import com.pawelnu.projectmanager.utils.Consts.MSG;
 import com.pawelnu.projectmanager.utils.Path;
 import com.pawelnu.projectmanager.utils.Utils;
 import com.pawelnu.projectmanager.utils.Utils.Postgres;
@@ -304,6 +307,120 @@ class EmployeeAuthorityControllerTest {
     assertEquals(Utils.accessDeniedError(), responseBody);
   }
 
-  //  TODO add Test delete() {
+  @Test
+  void shouldReturn_200_deleteEmployeeAuthority_isDeletedFalse() throws Exception {
+    EmployeeAuthorityDeleteRequestDTO request =
+        EmployeeAuthorityDeleteRequestDTO.builder()
+            .employeeId(UUID.fromString("2da2d58f-ff96-465a-bd1f-f1a4aabda7ca"))
+            .authorityIds(
+                List.of(
+                    UUID.fromString("c6974c09-8b90-4fa0-a9ac-d59e4ee9598b"),
+                    UUID.fromString("142ba2ba-d9af-4d7e-b202-f3dedd55e0e2")))
+            .build();
+    String requestBody = objectMapper.writeValueAsString(request);
+    MvcResult response =
+        mockMvc
+            .perform(
+                delete(BASE_URL)
+                    .with(withJwt())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(requestBody))
+            .andReturn();
+    int status = response.getResponse().getStatus();
+    String contentAsString = response.getResponse().getContentAsString();
+    SimpleResponse responseBody = objectMapper.readValue(contentAsString, SimpleResponse.class);
+    assertEquals(HttpStatus.OK.value(), status);
+    assertEquals("Deleted employee with id: " + "test", responseBody.getMessage());
+  }
 
+  @Test
+  void shouldReturn_400_deleteEmployeeAuthority_isDeletedFalse() throws Exception {
+
+    MvcResult response =
+        mockMvc
+            .perform(delete(BASE_URL).with(withJwt()).contentType(MediaType.APPLICATION_JSON))
+            .andReturn();
+    int status = response.getResponse().getStatus();
+    String contentAsString = response.getResponse().getContentAsString();
+    SimpleResponse responseBody = objectMapper.readValue(contentAsString, SimpleResponse.class);
+    assertEquals(HttpStatus.BAD_REQUEST.value(), status);
+    assertEquals(MSG.INVALID_UUID, responseBody.getMessage());
+  }
+
+  @Test
+  void shouldReturn_401_deleteEmployeeAuthority_isDeletedFalse() throws Exception {
+
+    MvcResult response =
+        mockMvc.perform(delete(BASE_URL).contentType(MediaType.APPLICATION_JSON)).andReturn();
+    int status = response.getResponse().getStatus();
+    String contentAsString = response.getResponse().getContentAsString();
+    ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
+    assertEquals(HttpStatus.UNAUTHORIZED.value(), status);
+    assertEquals(Utils.FULL_AUTH_IS_REQUIRED, responseBody.getMessage());
+  }
+
+  @Test
+  void shouldReturn_403_deleteEmployeeAuthority_isDeletedFalse() throws Exception {
+    MvcResult response =
+        mockMvc
+            .perform(delete(BASE_URL).with(withBadJwt()).contentType(MediaType.APPLICATION_JSON))
+            .andReturn();
+    int status = response.getResponse().getStatus();
+    String contentAsString = response.getResponse().getContentAsString();
+    ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
+    assertEquals(HttpStatus.FORBIDDEN.value(), status);
+    assertEquals(Utils.accessDeniedError(), responseBody);
+  }
+
+  @Test
+  void shouldReturn_404_deleteEmployeeAuthority_isDeletedFalse() throws Exception {
+    EmployeeAuthorityDeleteRequestDTO request =
+        EmployeeAuthorityDeleteRequestDTO.builder()
+            .employeeId(UUID.fromString("2da2d58f-ff96-465a-bd1f-f1a4aabda7ca"))
+            .authorityIds(
+                List.of(
+                    UUID.fromString("c6974c09-8b90-4fa0-a9ac-d59e4ee9598b"),
+                    UUID.fromString("142ba2ba-d9af-4d7e-b202-f3dedd55e0e2")))
+            .build();
+    String requestBody = objectMapper.writeValueAsString(request);
+    MvcResult response =
+        mockMvc
+            .perform(
+                delete(BASE_URL)
+                    .with(withJwt())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(requestBody))
+            .andReturn();
+    int status = response.getResponse().getStatus();
+    String contentAsString = response.getResponse().getContentAsString();
+    ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
+    assertEquals(HttpStatus.NOT_FOUND.value(), status);
+    assertEquals(MSG.EMPLOYEE_NOT_FOUND + "employeeId", responseBody.getMessage());
+  }
+
+  @Test
+  void shouldReturn_404_deleteEmployeeAuthority_isDeletedTrue() throws Exception {
+    EmployeeAuthorityDeleteRequestDTO request =
+        EmployeeAuthorityDeleteRequestDTO.builder()
+            .employeeId(UUID.fromString("2da2d58f-ff96-465a-bd1f-f1a4aabda7ca"))
+            .authorityIds(
+                List.of(
+                    UUID.fromString("c6974c09-8b90-4fa0-a9ac-d59e4ee9598b"),
+                    UUID.fromString("142ba2ba-d9af-4d7e-b202-f3dedd55e0e2")))
+            .build();
+    String requestBody = objectMapper.writeValueAsString(request);
+    MvcResult response =
+        mockMvc
+            .perform(
+                delete(BASE_URL)
+                    .with(withJwt())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(requestBody))
+            .andReturn();
+    int status = response.getResponse().getStatus();
+    String contentAsString = response.getResponse().getContentAsString();
+    SimpleResponse responseBody = objectMapper.readValue(contentAsString, SimpleResponse.class);
+    assertEquals(HttpStatus.NOT_FOUND.value(), status);
+    assertEquals(MSG.EMPLOYEE_NOT_FOUND + "employeeId", responseBody.getMessage());
+  }
 }
