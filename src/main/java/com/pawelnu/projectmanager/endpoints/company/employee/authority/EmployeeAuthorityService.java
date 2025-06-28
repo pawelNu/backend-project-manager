@@ -28,7 +28,7 @@ public class EmployeeAuthorityService {
   private final EmployeeAuthorityMapper employeeAuthorityMapper;
   private final ObjectMapper objectMapper;
 
-  public List<EmployeeAuthorityDTO> create(EmployeeAuthorityCreateRequestDTO body) {
+  public EmployeeAuthoritiesDTO create(EmployeeAuthorityCreateRequestDTO body) {
     List<AuthorityEntity> authorities =
         authorityService.findAllByIdInAndIsDeletedFalse(body.getAuthorityIds());
     EmployeeEntity employee = employeeService.getEmployeeEntityById(body.getEmployeeId());
@@ -45,8 +45,9 @@ public class EmployeeAuthorityService {
 
     List<EmployeeAuthorityEntity> savedEmployeeAuthorities =
         employeeAuthorityRepository.saveAll(employeeAuthorities);
-
-    return savedEmployeeAuthorities.stream().map(employeeAuthorityMapper::toDTO).toList();
+    EmployeeAuthoritiesDTO employeeAuthoritiesDTO =
+        employeeAuthorityMapper.toDTO(savedEmployeeAuthorities);
+    return employeeAuthoritiesDTO;
   }
 
   public SimpleResponse delete(EmployeeAuthorityDeleteRequestDTO body) {

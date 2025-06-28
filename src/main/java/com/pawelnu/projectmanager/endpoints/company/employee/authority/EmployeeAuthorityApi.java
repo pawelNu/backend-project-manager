@@ -31,12 +31,12 @@ public interface EmployeeAuthorityApi {
       content = {
         @Content(
             mediaType = MediaType.APPLICATION_JSON_VALUE,
-            array = @ArraySchema(schema = @Schema(implementation = EmployeeAuthorityDTO.class)))
+            array = @ArraySchema(schema = @Schema(implementation = EmployeeAuthoritiesDTO.class)))
       })
   @ResponseErrors
   @PostMapping("")
   @Operation(description = "Add new employee authority.")
-  ResponseEntity<List<EmployeeAuthorityDTO>> create(
+  ResponseEntity<EmployeeAuthoritiesDTO> create(
       @Valid @RequestBody EmployeeAuthorityCreateRequestDTO body);
 
   @Operation(

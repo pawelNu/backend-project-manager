@@ -16,8 +16,8 @@ public class EmployeeAuthorityController implements EmployeeAuthorityApi {
   private final EmployeeAuthorityService employeeAuthorityService;
 
   @Override
-  public ResponseEntity<List<EmployeeAuthorityDTO>> create(EmployeeAuthorityCreateRequestDTO body) {
-    List<EmployeeAuthorityDTO> result = employeeAuthorityService.create(body);
+  public ResponseEntity<EmployeeAuthoritiesDTO> create(EmployeeAuthorityCreateRequestDTO body) {
+    EmployeeAuthoritiesDTO result = employeeAuthorityService.create(body);
     return ResponseEntity.status(HttpStatus.CREATED).body(result);
   }
 

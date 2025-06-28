@@ -1,0 +1,2 @@
+id,first_name,last_name,username,password,email,phone_number,role_id,company_id,version,created,last_modified,is_deleted
+fc473d21-c66e-4fbd-9d2d-7c6b4be75984,User,NoAuthorities,userNoAuthorities,$2a$12$pwnwU5hQ52IO2wwP3WOjOOKc8JgIPLQayTe4C956A165W2oyHGtMC,user.no.authorities@example.com,(528) 897-8632,b8b0f19d-5254-40ff-869f-cf4573aa9dd8,970bd741-66ca-4fce-ba3a-0e8801f227ee,0,2025-06-28 14:19:45.192,2025-06-28 14:19:45.192,FALSE
