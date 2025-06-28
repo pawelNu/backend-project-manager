@@ -330,15 +330,27 @@ class EmployeeAuthorityControllerTest {
     String contentAsString = response.getResponse().getContentAsString();
     SimpleResponse responseBody = objectMapper.readValue(contentAsString, SimpleResponse.class);
     assertEquals(HttpStatus.OK.value(), status);
-    assertEquals("Deleted employee with id: " + "test", responseBody.getMessage());
+    assertEquals(
+        "Deleted employee authority with id: ca9f1e9d-c912-458a-b23f-e6059cac05bf for employee with"
+            + " id: 2da2d58f-ff96-465a-bd1f-f1a4aabda7ca",
+        responseBody.getMessage());
   }
 
   @Test
   void shouldReturn_400_deleteEmployeeAuthority_isDeletedFalse() throws Exception {
-
+    EmployeeAuthorityDeleteRequestDTO request =
+        EmployeeAuthorityDeleteRequestDTO.builder()
+            .employeeId(UUID.fromString("2da2d58f-ff96-465a-bd1f-f1a4aabda7ca"))
+            .authorityIds(null)
+            .build();
+    String requestBody = objectMapper.writeValueAsString(request);
     MvcResult response =
         mockMvc
-            .perform(delete(BASE_URL).with(withJwt()).contentType(MediaType.APPLICATION_JSON))
+            .perform(
+                delete(BASE_URL)
+                    .with(withJwt())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(requestBody))
             .andReturn();
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
@@ -349,9 +361,19 @@ class EmployeeAuthorityControllerTest {
 
   @Test
   void shouldReturn_401_deleteEmployeeAuthority_isDeletedFalse() throws Exception {
-
+    EmployeeAuthorityDeleteRequestDTO request =
+        EmployeeAuthorityDeleteRequestDTO.builder()
+            .employeeId(UUID.fromString("2da2d58f-ff96-465a-bd1f-f1a4aabda7ca"))
+            .authorityIds(
+                List.of(
+                    UUID.fromString("c6974c09-8b90-4fa0-a9ac-d59e4ee9598b"),
+                    UUID.fromString("142ba2ba-d9af-4d7e-b202-f3dedd55e0e2")))
+            .build();
+    String requestBody = objectMapper.writeValueAsString(request);
     MvcResult response =
-        mockMvc.perform(delete(BASE_URL).contentType(MediaType.APPLICATION_JSON)).andReturn();
+        mockMvc
+            .perform(delete(BASE_URL).contentType(MediaType.APPLICATION_JSON).content(requestBody))
+            .andReturn();
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
     ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
@@ -361,9 +383,22 @@ class EmployeeAuthorityControllerTest {
 
   @Test
   void shouldReturn_403_deleteEmployeeAuthority_isDeletedFalse() throws Exception {
+    EmployeeAuthorityDeleteRequestDTO request =
+        EmployeeAuthorityDeleteRequestDTO.builder()
+            .employeeId(UUID.fromString("2da2d58f-ff96-465a-bd1f-f1a4aabda7ca"))
+            .authorityIds(
+                List.of(
+                    UUID.fromString("c6974c09-8b90-4fa0-a9ac-d59e4ee9598b"),
+                    UUID.fromString("142ba2ba-d9af-4d7e-b202-f3dedd55e0e2")))
+            .build();
+    String requestBody = objectMapper.writeValueAsString(request);
     MvcResult response =
         mockMvc
-            .perform(delete(BASE_URL).with(withBadJwt()).contentType(MediaType.APPLICATION_JSON))
+            .perform(
+                delete(BASE_URL)
+                    .with(withBadJwt())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(requestBody))
             .andReturn();
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
@@ -405,8 +440,8 @@ class EmployeeAuthorityControllerTest {
             .employeeId(UUID.fromString("2da2d58f-ff96-465a-bd1f-f1a4aabda7ca"))
             .authorityIds(
                 List.of(
-                    UUID.fromString("c6974c09-8b90-4fa0-a9ac-d59e4ee9598b"),
-                    UUID.fromString("142ba2ba-d9af-4d7e-b202-f3dedd55e0e2")))
+                    UUID.fromString("45b037b8-0026-4625-8b84-33776ddd585f"),
+                    UUID.fromString("4961b918-11c3-48fd-8ae4-dc2695866a6d")))
             .build();
     String requestBody = objectMapper.writeValueAsString(request);
     MvcResult response =
@@ -421,6 +456,9 @@ class EmployeeAuthorityControllerTest {
     String contentAsString = response.getResponse().getContentAsString();
     SimpleResponse responseBody = objectMapper.readValue(contentAsString, SimpleResponse.class);
     assertEquals(HttpStatus.NOT_FOUND.value(), status);
-    assertEquals(MSG.EMPLOYEE_NOT_FOUND + "employeeId", responseBody.getMessage());
+    assertEquals(
+        MSG.EMPLOYEE_AUTHORITIES_NOT_FOUND_MSG
+            + "45b037b8-0026-4625-8b84-33776ddd585f, 4961b918-11c3-48fd-8ae4-dc2695866a6d",
+        responseBody.getMessage());
   }
 }
