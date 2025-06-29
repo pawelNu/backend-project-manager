@@ -5,7 +5,7 @@ import java.util.stream.Collectors;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.ERROR)
+@Mapper(componentModel = "spring")
 public interface EmployeeAuthorityMapper {
 
   @Mapping(source = "authority.name", target = "authorityName")

@@ -4,9 +4,8 @@ import com.pawelnu.projectmanager.enums.CompanyStatus;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
-import org.mapstruct.ReportingPolicy;
 
-@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.ERROR)
+@Mapper(componentModel = "spring")
 public interface CompanyMapper {
 
   @Mapping(source = "addresses", target = "addresses")
