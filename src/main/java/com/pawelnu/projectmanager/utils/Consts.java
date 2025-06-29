@@ -34,5 +34,6 @@ public final class Consts {
     public static final String INVALID_UUID =
         "Method parameter 'id': Failed to convert value of type 'java.lang.String' to required type"
             + " 'java.util.UUID'; Invalid UUID string: invalid-uuid";
+    public static final String PROJECT_NOT_FOUND = "Project not found with id: ";
   }
 }

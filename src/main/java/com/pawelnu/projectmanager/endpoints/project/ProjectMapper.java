@@ -13,8 +13,8 @@ public interface ProjectMapper {
   @Mapping(source = "categoryValue.stringValue", target = "categoryValue")
   @Mapping(source = "company.name", target = "companyName")
   @Mapping(source = "assignedEmployee", target = "assignedEmployee")
-  @Mapping(source = "priority.category.name", target = "priorityName")
-  @Mapping(source = "priority.stringValue", target = "priorityValue")
+  @Mapping(source = "priorityValue.category.name", target = "priorityName")
+  @Mapping(source = "priorityValue.stringValue", target = "priorityValue")
   ProjectDTO toDTO(ProjectEntity companyEntity);
 
   default String employeeToString(EmployeeEntity employee) {

@@ -7,6 +7,9 @@ import com.pawelnu.projectmanager.endpoints.company.CompanyEntity;
 import com.pawelnu.projectmanager.endpoints.company.CompanyService;
 import com.pawelnu.projectmanager.endpoints.company.employee.EmployeeEntity;
 import com.pawelnu.projectmanager.endpoints.company.employee.EmployeeService;
+import com.pawelnu.projectmanager.exception.NotFoundException;
+import com.pawelnu.projectmanager.utils.Consts.MSG;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -38,8 +41,19 @@ public class ProjectService {
     projectEntity.setCategoryValue(projectCategory);
     projectEntity.setCompany(companyEntity);
     projectEntity.setAssignedEmployee(employeeEntity);
-    projectEntity.setPriority(projectPriority);
+    projectEntity.setPriorityValue(projectPriority);
     ProjectEntity savedCompany = projectRepository.save(projectEntity);
     return projectMapper.toDTO(savedCompany);
+  }
+
+  public ProjectDTO getById(UUID id) {
+    ProjectEntity companyEntity = getProjectEntityById(id);
+    return projectMapper.toDTO(companyEntity);
+  }
+
+  public ProjectEntity getProjectEntityById(UUID id) {
+    return projectQueryRepository
+        .findById(id)
+        .orElseThrow(() -> new NotFoundException(MSG.PROJECT_NOT_FOUND + id));
   }
 }

@@ -17,8 +17,7 @@ public class ProjectController implements ProjectApi {
 
   @Override
   public ResponseEntity<ProjectDTO> create(ProjectCreateRequestDTO body) {
-    ProjectDTO company = projectService.create(body);
-    return ResponseEntity.status(HttpStatus.CREATED).body(company);
+    return ResponseEntity.status(HttpStatus.CREATED).body(projectService.create(body));
   }
 
   @Override
@@ -28,7 +27,7 @@ public class ProjectController implements ProjectApi {
 
   @Override
   public ResponseEntity<ProjectDTO> getById(UUID id) {
-    throw new NotImplementedException("not implemented");
+    return ResponseEntity.ok(projectService.getById(id));
   }
 
   @Override
