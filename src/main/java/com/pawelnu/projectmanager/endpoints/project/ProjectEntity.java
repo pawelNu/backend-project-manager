@@ -33,7 +33,7 @@ public class ProjectEntity extends Auditable {
 
   @ManyToOne
   @JoinColumn(name = "category_id")
-  private CategoryValueEntity category;
+  private CategoryValueEntity categoryValue;
 
   @ManyToOne
   @JoinColumn(name = "company_id")

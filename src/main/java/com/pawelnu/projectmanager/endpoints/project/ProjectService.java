@@ -35,7 +35,7 @@ public class ProjectService {
     CategoryValueEntity projectPriority =
         categoryValueService.findCategoryByNameAndValue("project priority", "5");
     ProjectEntity projectEntity = projectMapper.toEntity(body);
-    projectEntity.setCategory(projectCategory);
+    projectEntity.setCategoryValue(projectCategory);
     projectEntity.setCompany(companyEntity);
     projectEntity.setAssignedEmployee(employeeEntity);
     projectEntity.setPriority(projectPriority);

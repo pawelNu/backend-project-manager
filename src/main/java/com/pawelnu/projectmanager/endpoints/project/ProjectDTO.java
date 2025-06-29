@@ -7,8 +7,10 @@ import lombok.Data;
 public class ProjectDTO {
   private UUID id;
   private String name;
-  private String category;
+  private String categoryName;
+  private String categoryValue;
   private String companyName;
   private String assignedEmployee;
-  private String priority;
+  private String priorityName;
+  private String priorityValue;
 }
