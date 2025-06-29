@@ -68,4 +68,11 @@ public class ProjectService {
       return SimpleResponse.builder().message("Cannot delete project with id: " + id).build();
     }
   }
+
+  public ProjectDTO editById(UUID id, ProjectEditRequestDTO body) {
+    ProjectEntity projectToEdit = getProjectEntityById(id);
+    projectMapper.toEntity(body, projectToEdit);
+    ProjectEntity updatedProject = projectRepository.save(projectToEdit);
+    return projectMapper.toDTO(updatedProject);
+  }
 }

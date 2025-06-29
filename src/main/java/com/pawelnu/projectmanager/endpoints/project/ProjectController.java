@@ -32,7 +32,7 @@ public class ProjectController implements ProjectApi {
 
   @Override
   public ResponseEntity<ProjectDTO> editById(UUID id, ProjectEditRequestDTO body) {
-    throw new NotImplementedException("not implemented");
+    return ResponseEntity.ok(projectService.editById(id, body));
   }
 
   @Override
