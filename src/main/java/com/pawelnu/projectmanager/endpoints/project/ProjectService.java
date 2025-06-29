@@ -5,6 +5,8 @@ import com.pawelnu.projectmanager.endpoints.category.value.CategoryValueEntity;
 import com.pawelnu.projectmanager.endpoints.category.value.CategoryValueService;
 import com.pawelnu.projectmanager.endpoints.company.CompanyEntity;
 import com.pawelnu.projectmanager.endpoints.company.CompanyService;
+import com.pawelnu.projectmanager.endpoints.company.employee.EmployeeEntity;
+import com.pawelnu.projectmanager.endpoints.company.employee.EmployeeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.NotImplementedException;
@@ -21,6 +23,7 @@ public class ProjectService {
   private final ProjectQueryRepository projectQueryRepository;
   private final CategoryValueService categoryValueService;
   private final CompanyService companyService;
+  private final EmployeeService employeeService;
   private final ProjectMapper projectMapper;
   private final ObjectMapper objectMapper;
 
@@ -34,11 +37,13 @@ public class ProjectService {
     CategoryValueEntity projectCategory =
         categoryValueService.findCategoryByNameAndValue(categoryString, valueString);
     CompanyEntity companyEntity = companyService.getCompanyEntityById(body.getCompanyId());
+    EmployeeEntity employeeEntity =
+        employeeService.getEmployeeEntityById(body.getAssignedEmployeeId());
     companyService.getById(body.getCompanyId());
     ProjectEntity projectEntity = projectMapper.toEntity(body);
     projectEntity.setCategory(projectCategory);
     projectEntity.setCompany(companyEntity);
-    projectEntity.setAssignedEmployee(projectCategory);
+    projectEntity.setAssignedEmployee(employeeEntity);
     projectEntity.setPriority(projectCategory);
     ProjectEntity savedCompany = projectRepository.save(projectEntity);
     return projectMapper.toDTO(savedCompany);
