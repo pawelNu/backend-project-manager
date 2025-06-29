@@ -60,9 +60,12 @@ public class CategoryValueService {
   }
 
   public CategoryValueDTO getById(UUID id) {
+    return categoryValueMapper.toDTO(getCategoryValueById(id));
+  }
+
+  public CategoryValueEntity getCategoryValueById(UUID id) {
     return categoryValueQueryRepository
         .findById(id)
-        .map(categoryValueMapper::toDTO)
         .orElseThrow(() -> new NotFoundException(MSG.CATEGORY_VALUE_NOT_FOUND_MSG + id));
   }
 

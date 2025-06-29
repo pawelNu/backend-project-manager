@@ -72,7 +72,19 @@ public class ProjectService {
   public ProjectDTO editById(UUID id, ProjectEditRequestDTO body) {
     ProjectEntity projectToEdit = getProjectEntityById(id);
     projectMapper.toEntity(body, projectToEdit);
-    ProjectEntity updatedProject = projectRepository.save(projectToEdit);
+    CategoryValueEntity projectCategory =
+        categoryValueService.getCategoryValueById(body.getCategoryId());
+    CompanyEntity companyEntity = companyService.getCompanyEntityById(body.getCompanyId());
+    EmployeeEntity employeeEntity =
+        employeeService.getEmployeeEntityById(body.getAssignedEmployeeId());
+    CategoryValueEntity projectPriority =
+        categoryValueService.getCategoryValueById(body.getPriorityId());
+    ProjectEntity projectEntity = projectMapper.toEntity(body, projectToEdit);
+    projectEntity.setCategoryValue(projectCategory);
+    projectEntity.setCompany(companyEntity);
+    projectEntity.setAssignedEmployee(employeeEntity);
+    projectEntity.setPriorityValue(projectPriority);
+    ProjectEntity updatedProject = projectRepository.save(projectEntity);
     return projectMapper.toDTO(updatedProject);
   }
 }
