@@ -97,7 +97,7 @@ public class CategoryValueQueryRepository {
     return Optional.empty();
   }
 
-  public Optional<CategoryValueEntity> findCompanyStatusActive(
+  public Optional<CategoryValueEntity> findCategoryByNameAndValue(
       String categoryString, String valueString) {
     QCategoryValueEntity categoryValue = QCategoryValueEntity.categoryValueEntity;
     QCategoryEntity category = QCategoryEntity.categoryEntity;

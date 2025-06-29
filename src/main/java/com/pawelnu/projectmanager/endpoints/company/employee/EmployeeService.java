@@ -2,7 +2,7 @@ package com.pawelnu.projectmanager.endpoints.company.employee;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pawelnu.projectmanager.endpoints.company.CompanyEntity;
-import com.pawelnu.projectmanager.endpoints.company.CompanyRepository;
+import com.pawelnu.projectmanager.endpoints.company.CompanyService;
 import com.pawelnu.projectmanager.exception.NotFoundException;
 import com.pawelnu.projectmanager.exception.model.SimpleResponse;
 import com.pawelnu.projectmanager.utils.Consts.MSG;
@@ -23,24 +23,19 @@ import org.springframework.stereotype.Service;
 public class EmployeeService {
 
   private final EmployeeRepository employeeRepository;
-  private final CompanyRepository companyRepository;
+  private final CompanyService companyService;
   private final EmployeeQueryRepository employeeQueryRepository;
   private final EmployeeMapper employeeMapper;
   private final ObjectMapper objectMapper;
   private final PasswordEncoder passwordEncoder;
 
   public EmployeeDTO createEmployee(EmployeeCreateRequestDTO body) {
-    Optional<CompanyEntity> company =
-        companyRepository.findByIdAndIsDeletedFalse(body.getCompanyId());
-    if (company.isPresent()) {
-      body.setPassword(passwordEncoder.encode(body.getPassword()));
-      EmployeeEntity entity = employeeMapper.toEntity(body);
-      entity.setCompany(company.get());
-      EmployeeEntity save = employeeRepository.save(entity);
-      return employeeMapper.toDTO(save);
-    } else {
-      throw new NotFoundException(MSG.COMPANY_NOT_FOUND + body.getCompanyId());
-    }
+    CompanyEntity company = companyService.getCompanyEntityById(body.getCompanyId());
+    body.setPassword(passwordEncoder.encode(body.getPassword()));
+    EmployeeEntity entity = employeeMapper.toEntity(body);
+    entity.setCompany(company);
+    EmployeeEntity save = employeeRepository.save(entity);
+    return employeeMapper.toDTO(save);
   }
 
   public EmployeesListResponseDTO getEmployeeList(String sort, String range, String filter) {

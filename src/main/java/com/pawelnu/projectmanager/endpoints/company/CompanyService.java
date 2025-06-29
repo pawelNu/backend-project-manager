@@ -3,7 +3,7 @@ package com.pawelnu.projectmanager.endpoints.company;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pawelnu.projectmanager.dto.PagingAndSortingMetadataDTO;
 import com.pawelnu.projectmanager.endpoints.category.value.CategoryValueEntity;
-import com.pawelnu.projectmanager.endpoints.category.value.CategoryValueQueryRepository;
+import com.pawelnu.projectmanager.endpoints.category.value.CategoryValueService;
 import com.pawelnu.projectmanager.exception.NotFoundException;
 import com.pawelnu.projectmanager.exception.model.SimpleResponse;
 import com.pawelnu.projectmanager.mapper.PagingAndSortingMapper;
@@ -11,7 +11,6 @@ import com.pawelnu.projectmanager.utils.Consts.MSG;
 import com.pawelnu.projectmanager.utils.PageableParams;
 import com.pawelnu.projectmanager.utils.Shared;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,7 +28,7 @@ public class CompanyService {
 
   private final CompanyRepository companyRepository;
   private final CompanyQueryRepository companyQueryRepository;
-  private final CategoryValueQueryRepository categoryValueQueryRepository;
+  private final CategoryValueService categoryValueService;
   private final CompanyMapper companyMapper;
   private final PagingAndSortingMapper pageMapper;
   private final ObjectMapper objectMapper;
@@ -47,53 +46,42 @@ public class CompanyService {
   }
 
   public CompanyDTO getById(UUID id) {
+    CompanyEntity companyEntity = getCompanyEntityById(id);
+    return companyMapper.toDTO(companyEntity);
+  }
+
+  public CompanyEntity getCompanyEntityById(UUID id) {
     return companyQueryRepository
         .findById(id)
-        .map(companyMapper::toDTO)
         .orElseThrow(() -> new NotFoundException(MSG.COMPANY_NOT_FOUND + id));
   }
 
   public CompanyDTO create(CompanyCreateRequestDTO companyCreateRequestDTO) {
     String categoryString = "company status";
     String valueString = "active";
-    Optional<CategoryValueEntity> companyStatusActive =
-        categoryValueQueryRepository.findCompanyStatusActive(categoryString, valueString);
-    if (companyStatusActive.isPresent()) {
-      CompanyEntity companyEntity = companyMapper.toEntity(companyCreateRequestDTO);
-      companyEntity.setStatus(companyStatusActive.get());
-      CompanyEntity savedCompany = companyRepository.save(companyEntity);
-      return companyMapper.toDTO(savedCompany);
-    } else {
-      throw new NotFoundException(
-          "For category: %s, category value: %s not found".formatted(categoryString, valueString));
-    }
+    CategoryValueEntity companyStatusActive =
+        categoryValueService.findCategoryByNameAndValue(categoryString, valueString);
+    CompanyEntity companyEntity = companyMapper.toEntity(companyCreateRequestDTO);
+    companyEntity.setStatus(companyStatusActive);
+    CompanyEntity savedCompany = companyRepository.save(companyEntity);
+    return companyMapper.toDTO(savedCompany);
   }
 
   public CompanyDTO editById(UUID id, CompanyEditRequestDTO body) {
-    Optional<CompanyEntity> companyToEdit = companyRepository.findById(id);
-    if (companyToEdit.isPresent()) {
-      CompanyEntity existingCompany = companyToEdit.get();
-      companyMapper.toEntity(body, existingCompany);
-      CompanyEntity updatedCompany = companyRepository.save(existingCompany);
-      return companyMapper.toDTO(updatedCompany);
-    } else {
-      throw new NotFoundException(MSG.COMPANY_NOT_FOUND + id);
-    }
+    CompanyEntity companyToEdit = getCompanyEntityById(id);
+    companyMapper.toEntity(body, companyToEdit);
+    CompanyEntity updatedCompany = companyRepository.save(companyToEdit);
+    return companyMapper.toDTO(updatedCompany);
   }
 
   public SimpleResponse deleteById(UUID id) {
-    Optional<CompanyEntity> companyToDelete = companyRepository.findByIdAndIsDeletedFalse(id);
-    if (companyToDelete.isPresent()) {
-      CompanyEntity existingCompany = companyToDelete.get();
-      existingCompany.setIsDeleted(true);
-      CompanyEntity updatedCompany = companyRepository.save(existingCompany);
-      if (updatedCompany.getIsDeleted()) {
-        return SimpleResponse.builder().message("Deleted company with id: " + id).build();
-      } else {
-        return SimpleResponse.builder().message("Cannot delete company with id: " + id).build();
-      }
+    CompanyEntity companyToDelete = getCompanyEntityById(id);
+    companyToDelete.setIsDeleted(true);
+    CompanyEntity updatedCompany = companyRepository.save(companyToDelete);
+    if (updatedCompany.getIsDeleted()) {
+      return SimpleResponse.builder().message("Deleted company with id: " + id).build();
     } else {
-      throw new NotFoundException(MSG.COMPANY_NOT_FOUND + id);
+      return SimpleResponse.builder().message("Cannot delete company with id: " + id).build();
     }
   }
 

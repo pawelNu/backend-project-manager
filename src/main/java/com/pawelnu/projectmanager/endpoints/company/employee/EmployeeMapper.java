@@ -11,7 +11,7 @@ import org.mapstruct.MappingTarget;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.ERROR)
 public interface EmployeeMapper {
 
   @Mapping(target = "id", ignore = true)

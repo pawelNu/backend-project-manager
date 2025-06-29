@@ -97,4 +97,14 @@ public class CategoryValueService {
       throw new NotFoundException(MSG.CATEGORY_VALUE_NOT_FOUND_MSG + id);
     }
   }
+
+  public CategoryValueEntity findCategoryByNameAndValue(String categoryString, String valueString) {
+    return categoryValueQueryRepository
+        .findCategoryByNameAndValue(categoryString, valueString)
+        .orElseThrow(
+            () ->
+                new NotFoundException(
+                    "For category: %s, category value: %s not found"
+                        .formatted(categoryString, valueString)));
+  }
 }

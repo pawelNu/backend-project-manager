@@ -1,12 +1,11 @@
 package com.pawelnu.projectmanager.endpoints.project;
 
-import com.pawelnu.projectmanager.dto.project.ProjectCreateRequestDTO;
-import com.pawelnu.projectmanager.endpoints.company.CompanyService;
 import com.pawelnu.projectmanager.exception.model.SimpleResponse;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.NotImplementedException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -14,11 +13,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class ProjectController implements ProjectApi {
 
-  private final CompanyService companyService;
+  private final ProjectService projectService;
 
   @Override
   public ResponseEntity<ProjectDTO> create(ProjectCreateRequestDTO body) {
-    throw new NotImplementedException("not implemented");
+    ProjectDTO company = projectService.create(body);
+    return ResponseEntity.status(HttpStatus.CREATED).body(company);
   }
 
   @Override
