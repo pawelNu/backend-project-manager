@@ -8,6 +8,7 @@ import com.pawelnu.projectmanager.endpoints.company.CompanyService;
 import com.pawelnu.projectmanager.endpoints.company.employee.EmployeeEntity;
 import com.pawelnu.projectmanager.endpoints.company.employee.EmployeeService;
 import com.pawelnu.projectmanager.exception.NotFoundException;
+import com.pawelnu.projectmanager.exception.model.SimpleResponse;
 import com.pawelnu.projectmanager.utils.Consts.MSG;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -55,5 +56,16 @@ public class ProjectService {
     return projectQueryRepository
         .findById(id)
         .orElseThrow(() -> new NotFoundException(MSG.PROJECT_NOT_FOUND + id));
+  }
+
+  public SimpleResponse deleteById(UUID id) {
+    ProjectEntity projectToDelete = getProjectEntityById(id);
+    projectToDelete.setIsDeleted(true);
+    ProjectEntity projectDeleted = projectRepository.save(projectToDelete);
+    if (projectDeleted.getIsDeleted()) {
+      return SimpleResponse.builder().message("Deleted project with id: " + id).build();
+    } else {
+      return SimpleResponse.builder().message("Cannot delete project with id: " + id).build();
+    }
   }
 }

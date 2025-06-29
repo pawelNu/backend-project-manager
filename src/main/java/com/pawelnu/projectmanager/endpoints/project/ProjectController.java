@@ -37,6 +37,6 @@ public class ProjectController implements ProjectApi {
 
   @Override
   public ResponseEntity<SimpleResponse> deleteById(UUID id) {
-    throw new NotImplementedException("not implemented");
+    return ResponseEntity.ok(projectService.deleteById(id));
   }
 }
