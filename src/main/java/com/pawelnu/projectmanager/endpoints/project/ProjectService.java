@@ -28,25 +28,19 @@ public class ProjectService {
   private final ObjectMapper objectMapper;
 
   public ProjectDTO create(ProjectCreateRequestDTO body) {
-    String categoryString = "project category";
-    String valueString = "production";
-    //   TODO get from database categoryId;
-    //   TODO get from database companyId;
-    //   TODO get from database assignedEmployeeId;
-    //   TODO get from database priorityId;
     CategoryValueEntity projectCategory =
-        categoryValueService.findCategoryByNameAndValue(categoryString, valueString);
+        categoryValueService.findCategoryByNameAndValue("project category", "production");
     CompanyEntity companyEntity = companyService.getCompanyEntityById(body.getCompanyId());
     EmployeeEntity employeeEntity =
         employeeService.getEmployeeEntityById(body.getAssignedEmployeeId());
-    companyService.getById(body.getCompanyId());
+    CategoryValueEntity projectPriority =
+        categoryValueService.findCategoryByNameAndValue("project priority", "5");
     ProjectEntity projectEntity = projectMapper.toEntity(body);
     projectEntity.setCategory(projectCategory);
     projectEntity.setCompany(companyEntity);
     projectEntity.setAssignedEmployee(employeeEntity);
-    projectEntity.setPriority(projectCategory);
+    projectEntity.setPriority(projectPriority);
     ProjectEntity savedCompany = projectRepository.save(projectEntity);
     return projectMapper.toDTO(savedCompany);
-    throw new NotImplementedException("not implemented");
   }
 }
