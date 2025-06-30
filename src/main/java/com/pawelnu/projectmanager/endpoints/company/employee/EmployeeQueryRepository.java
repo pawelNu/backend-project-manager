@@ -29,7 +29,7 @@ public class EmployeeQueryRepository {
 
   private final JPAQueryFactory queryFactory;
 
-  public Page<EmployeeEntity> getEmployeeList(
+  public Page<EmployeeEntity> getList(
       Map<String, String> filters, int offset, int limit, String sortDir, String sortField) {
     log.info(filters.toString());
     QCompanyEntity company = QCompanyEntity.companyEntity;

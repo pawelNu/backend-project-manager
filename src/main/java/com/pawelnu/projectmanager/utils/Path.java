@@ -15,6 +15,7 @@ public final class Path {
   private static final String COMPANY_ADDRESSES = "/company-addresses";
   private static final String EMPLOYEES = "/employees";
   private static final String EMPLOYEE_AUTHORITIES = "/employee-authorities";
+  private static final String PROJECTS = "/projects";
 
   public static final String API_AUTH = API_PREFIX + AUTH;
   public static final String API_AUTHORITIES = API_PREFIX + AUTHORITIES;
@@ -24,4 +25,5 @@ public final class Path {
   public static final String API_COMPANY_ADDRESSES = API_PREFIX + COMPANY_ADDRESSES;
   public static final String API_EMPLOYEES = API_PREFIX + EMPLOYEES;
   public static final String API_EMPLOYEE_AUTHORITIES = API_PREFIX + EMPLOYEE_AUTHORITIES;
+  public static final String API_PROJECTS = API_PREFIX + PROJECTS;
 }
