@@ -38,12 +38,12 @@ public class EmployeeService {
     return employeeMapper.toDTO(save);
   }
 
-  public EmployeesListResponseDTO getEmployeeList(String sort, String range, String filter) {
+  public EmployeesListResponseDTO getList(String sort, String range, String filter) {
     PageableParams params =
         Shared.preparePageableParams(objectMapper, "lastName", sort, range, filter);
 
     Page<EmployeeEntity> page =
-        employeeQueryRepository.getEmployeeList(
+        employeeQueryRepository.getList(
             params.getFilters(),
             params.getOffset(),
             params.getLimit(),
@@ -60,7 +60,7 @@ public class EmployeeService {
         .orElseThrow(() -> new NotFoundException(MSG.EMPLOYEE_NOT_FOUND + id));
   }
 
-  public EmployeeDTO getEmployeeById(UUID id) {
+  public EmployeeDTO getById(UUID id) {
     EmployeeEntity employee = getEmployeeEntityById(id);
     return employeeMapper.toDTO(employee);
   }

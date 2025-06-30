@@ -49,10 +49,10 @@ public interface ProjectApi {
       content =
           @Content(
               mediaType = MediaType.APPLICATION_JSON_VALUE,
-              array = @ArraySchema(schema = @Schema(implementation = ProjectSimpleDTO.class))))
+              array = @ArraySchema(schema = @Schema(implementation = ProjectDTO.class))))
   @ResponseErrors
   @GetMapping("")
-  ResponseEntity<List<ProjectSimpleDTO>> getList(
+  ResponseEntity<List<ProjectDTO>> getList(
       @Parameter(description = "Sort as JSON string, e.g. [\"title\",\"ASC\"]")
           @RequestParam(required = false)
           String sort,

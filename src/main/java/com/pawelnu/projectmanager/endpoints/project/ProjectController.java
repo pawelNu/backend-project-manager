@@ -4,7 +4,6 @@ import com.pawelnu.projectmanager.exception.model.SimpleResponse;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.NotImplementedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,8 +20,11 @@ public class ProjectController implements ProjectApi {
   }
 
   @Override
-  public ResponseEntity<List<ProjectSimpleDTO>> getList(String sort, String range, String filter) {
-    throw new NotImplementedException("not implemented");
+  public ResponseEntity<List<ProjectDTO>> getList(String sort, String range, String filter) {
+    ProjectListResponseDTO result = projectService.filter(sort, range, filter);
+    return ResponseEntity.ok()
+        .header("Content-Range", result.getContentRange())
+        .body(result.getData());
   }
 
   @Override

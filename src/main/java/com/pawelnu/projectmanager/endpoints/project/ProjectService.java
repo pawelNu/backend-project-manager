@@ -10,9 +10,13 @@ import com.pawelnu.projectmanager.endpoints.company.employee.EmployeeService;
 import com.pawelnu.projectmanager.exception.NotFoundException;
 import com.pawelnu.projectmanager.exception.model.SimpleResponse;
 import com.pawelnu.projectmanager.utils.Consts.MSG;
+import com.pawelnu.projectmanager.utils.PageableParams;
+import com.pawelnu.projectmanager.utils.Shared;
+import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -86,5 +90,15 @@ public class ProjectService {
     projectEntity.setPriorityValue(projectPriority);
     ProjectEntity updatedProject = projectRepository.save(projectEntity);
     return projectMapper.toDTO(updatedProject);
+  }
+
+  public ProjectListResponseDTO filter(String sort, String range, String filter) {
+    PageableParams params =
+        Shared.preparePageableParams(objectMapper, "lastName", sort, range, filter);
+
+    Page<ProjectEntity> page = projectQueryRepository.getList(params);
+    List<ProjectDTO> projectDTOs = page.getContent().stream().map(projectMapper::toDTO).toList();
+    String contentRange = Shared.prepareContentRange(page, params.getOffset(), params.getLimit());
+    return ProjectListResponseDTO.builder().data(projectDTOs).contentRange(contentRange).build();
   }
 }
