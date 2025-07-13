@@ -41,6 +41,9 @@ public class EmployeeAuthorityQueryRepository {
       allConditions.and(
           employee.lastName.likeIgnoreCase("%" + filters.get("employeeLastName") + "%"));
     }
+    if (filters.containsKey("username")) {
+      allConditions.and(employee.username.likeIgnoreCase("%" + filters.get("username") + "%"));
+    }
 
     allConditions.and(employeeAuthority.isDeleted.isFalse());
 
@@ -56,18 +59,26 @@ public class EmployeeAuthorityQueryRepository {
             .limit(limit);
 
     switch (sortField) {
-      case "authorityName" -> query.orderBy(
-          sortDir.equalsIgnoreCase("DESC") ? authority.name.desc() : authority.name.asc());
-      case "employeeFirstName" -> query.orderBy(
-          sortDir.equalsIgnoreCase("DESC") ? employee.firstName.desc() : employee.firstName.asc());
-      case "employeeLastName" -> query.orderBy(
-          sortDir.equalsIgnoreCase("DESC") ? employee.lastName.desc() : employee.lastName.asc());
-      case "id" -> query.orderBy(
-          sortDir.equalsIgnoreCase("DESC")
-              ? employeeAuthority.id.desc()
-              : employeeAuthority.id.asc());
-      default -> query.orderBy(
-          sortDir.equalsIgnoreCase("DESC") ? employee.id.desc() : employee.id.asc());
+      case "authorityName" ->
+          query.orderBy(
+              sortDir.equalsIgnoreCase("DESC") ? authority.name.desc() : authority.name.asc());
+      case "employeeFirstName" ->
+          query.orderBy(
+              sortDir.equalsIgnoreCase("DESC")
+                  ? employee.firstName.desc()
+                  : employee.firstName.asc());
+      case "employeeLastName" ->
+          query.orderBy(
+              sortDir.equalsIgnoreCase("DESC")
+                  ? employee.lastName.desc()
+                  : employee.lastName.asc());
+      case "id" ->
+          query.orderBy(
+              sortDir.equalsIgnoreCase("DESC")
+                  ? employeeAuthority.id.desc()
+                  : employeeAuthority.id.asc());
+      default ->
+          query.orderBy(sortDir.equalsIgnoreCase("DESC") ? employee.id.desc() : employee.id.asc());
     }
 
     List<EmployeeAuthorityEntity> results = query.fetch();
