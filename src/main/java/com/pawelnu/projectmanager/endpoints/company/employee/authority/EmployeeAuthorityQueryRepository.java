@@ -41,6 +41,9 @@ public class EmployeeAuthorityQueryRepository {
       allConditions.and(
           employee.lastName.likeIgnoreCase("%" + filters.get("employeeLastName") + "%"));
     }
+    if (filters.containsKey("username")) {
+      allConditions.and(employee.username.likeIgnoreCase("%" + filters.get("username") + "%"));
+    }
 
     allConditions.and(employeeAuthority.isDeleted.isFalse());
 

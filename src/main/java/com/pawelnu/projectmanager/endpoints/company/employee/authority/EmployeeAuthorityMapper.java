@@ -10,6 +10,8 @@ public interface EmployeeAuthorityMapper {
 
   @Mapping(source = "authority.name", target = "authorityName")
   @Mapping(source = "employee.username", target = "username")
+  @Mapping(source = "employee.firstName", target = "employeeFirstName")
+  @Mapping(source = "employee.lastName", target = "employeeLastName")
   EmployeeAuthorityDTO toDTO(EmployeeAuthorityEntity save);
 
   default EmployeeAuthoritiesDTO toDTO(List<EmployeeAuthorityEntity> entities) {
