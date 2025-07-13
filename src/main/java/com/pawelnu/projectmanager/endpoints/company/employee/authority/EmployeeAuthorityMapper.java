@@ -16,7 +16,7 @@ public interface EmployeeAuthorityMapper {
   @Mapping(source = "employee.firstName", target = "employeeFirstName")
   @Mapping(source = "employee.lastName", target = "employeeLastName")
   EmployeeAuthorityDTO toDTO(EmployeeAuthorityEntity save);
-  
+
   @Mapping(source = "authority.name", target = "name")
   EmployeeAuthorityIdNameDTO toIdNameDTO(EmployeeAuthorityEntity save);
 
@@ -29,9 +29,7 @@ public interface EmployeeAuthorityMapper {
     String username = entities.getFirst().getEmployee().getUsername();
 
     List<EmployeeAuthorityIdNameDTO> employeeAuthorityDTOs =
-        entities.stream()
-            .map(this::toIdNameDTO)
-            .toList();
+        entities.stream().map(this::toIdNameDTO).toList();
 
     return EmployeeAuthorityCreateResponseDTO.builder()
         .id(employeeId)

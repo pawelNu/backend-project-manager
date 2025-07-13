@@ -35,7 +35,9 @@ public interface EmployeeAuthorityApi {
       content = {
         @Content(
             mediaType = MediaType.APPLICATION_JSON_VALUE,
-            array = @ArraySchema(schema = @Schema(implementation = EmployeeAuthorityCreateResponseDTO.class)))
+            array =
+                @ArraySchema(
+                    schema = @Schema(implementation = EmployeeAuthorityCreateResponseDTO.class)))
       })
   @ResponseErrors
   @PostMapping("")
