@@ -86,9 +86,9 @@ public interface EmployeeAuthorityApi {
       responseCode = "200",
       description = "OK",
       content = {
-          @Content(
-              mediaType = MediaType.APPLICATION_JSON_VALUE,
-              schema = @Schema(implementation = SimpleResponse.class))
+        @Content(
+            mediaType = MediaType.APPLICATION_JSON_VALUE,
+            schema = @Schema(implementation = SimpleResponse.class))
       })
   @ResponseErrors
   @DeleteMapping("/{id}")

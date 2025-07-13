@@ -14,7 +14,7 @@ public interface EmployeeAuthorityRepository extends JpaRepository<EmployeeAutho
       @NotNull List<UUID> authorityIds, @NotNull UUID employeeId);
 
   @Query(
-"""
+      """
     SELECT ea.authority.id
     FROM EmployeeAuthorityEntity ea
     WHERE ea.employee.id = :employeeId

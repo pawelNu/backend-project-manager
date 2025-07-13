@@ -42,7 +42,8 @@ public class EmployeeAuthorityController implements EmployeeAuthorityApi {
     SimpleResponse result = employeeAuthorityService.delete(body);
     return ResponseEntity.ok(result);
   }
-// TODO write test
+
+  // TODO write test
   @Override
   public ResponseEntity<SimpleResponse> deleteById(UUID id) {
     SimpleResponse result = employeeAuthorityService.deleteById(id);

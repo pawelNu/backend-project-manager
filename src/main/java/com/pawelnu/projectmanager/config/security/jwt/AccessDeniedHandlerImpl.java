@@ -31,7 +31,7 @@ public class AccessDeniedHandlerImpl implements AccessDeniedHandler {
     response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 
     Map<String, Object> data = new HashMap<>();
-//    data.put("status", HttpStatus.FORBIDDEN.value());
+    //    data.put("status", HttpStatus.FORBIDDEN.value());
     data.put("message", "Access denied");
 
     response.getOutputStream().println(objectMapper.writeValueAsString(data));
