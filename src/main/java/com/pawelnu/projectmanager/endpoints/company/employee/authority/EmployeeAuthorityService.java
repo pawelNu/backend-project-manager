@@ -20,11 +20,13 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class EmployeeAuthorityService {
 
   private final EmployeeAuthorityRepository employeeAuthorityRepository;
@@ -41,9 +43,18 @@ public class EmployeeAuthorityService {
             body.getEmployeeId(), authorityIds);
     List<UUID> filteredAuthorityIds =
         authorityIds.stream().filter(uuid -> !foundEmployeeAuthorities.contains(uuid)).toList();
+    EmployeeEntity employee = employeeService.getEmployeeEntityById(body.getEmployeeId());
+
+    if (filteredAuthorityIds.isEmpty()) {
+      log.info(
+          "Employee with id: [{}] and username: [{}] has all requested authorities!",
+          body.getEmployeeId(),
+          employee.getUsername());
+      return EmployeeAuthorityCreateResponseDTO.builder().build();
+    }
+
     List<AuthorityEntity> authorities =
         authorityService.findAllByIdInAndIsDeletedFalse(filteredAuthorityIds);
-    EmployeeEntity employee = employeeService.getEmployeeEntityById(body.getEmployeeId());
 
     List<EmployeeAuthorityEntity> employeeAuthorities =
         authorities.stream()
