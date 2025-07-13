@@ -16,6 +16,7 @@ import com.pawelnu.projectmanager.utils.Consts.MSG;
 import com.pawelnu.projectmanager.utils.PageableParams;
 import com.pawelnu.projectmanager.utils.Shared;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -34,8 +35,14 @@ public class EmployeeAuthorityService {
   private final ObjectMapper objectMapper;
 
   public EmployeeAuthorityCreateResponseDTO create(EmployeeAuthorityCreateRequestDTO body) {
+    List<UUID> authorityIds = body.getAuthorityIds();
+    List<UUID> foundEmployeeAuthorities =
+        employeeAuthorityRepository.findExistingAuthorityIdsForEmployee(
+            body.getEmployeeId(), authorityIds);
+    List<UUID> filteredAuthorityIds =
+        authorityIds.stream().filter(uuid -> !foundEmployeeAuthorities.contains(uuid)).toList();
     List<AuthorityEntity> authorities =
-        authorityService.findAllByIdInAndIsDeletedFalse(body.getAuthorityIds());
+        authorityService.findAllByIdInAndIsDeletedFalse(filteredAuthorityIds);
     EmployeeEntity employee = employeeService.getEmployeeEntityById(body.getEmployeeId());
 
     List<EmployeeAuthorityEntity> employeeAuthorities =
@@ -50,9 +57,7 @@ public class EmployeeAuthorityService {
 
     List<EmployeeAuthorityEntity> savedEmployeeAuthorities =
         employeeAuthorityRepository.saveAll(employeeAuthorities);
-    EmployeeAuthorityCreateResponseDTO employeeAuthoritiesDTO =
-        employeeAuthorityMapper.toDTO(savedEmployeeAuthorities);
-    return employeeAuthoritiesDTO;
+    return employeeAuthorityMapper.toDTO(savedEmployeeAuthorities);
   }
 
   public SimpleResponse delete(EmployeeAuthorityDeleteRequestDTO body) {
@@ -117,5 +122,26 @@ public class EmployeeAuthorityService {
         .data(employeeAuthorityDTOs)
         .contentRange(contentRange)
         .build();
+  }
+
+  public SimpleResponse deleteById(UUID id) {
+    Optional<EmployeeAuthorityEntity> employeeToDelete =
+        employeeAuthorityRepository.findByIdAndIsDeletedFalse(id);
+    if (employeeToDelete.isPresent()) {
+      EmployeeAuthorityEntity existingEmployee = employeeToDelete.get();
+      existingEmployee.setIsDeleted(true);
+      EmployeeAuthorityEntity updatedEmployee = employeeAuthorityRepository.save(existingEmployee);
+      if (updatedEmployee.getIsDeleted()) {
+        return SimpleResponse.builder()
+            .message("Deleted employee authority with id: " + id)
+            .build();
+      } else {
+        return SimpleResponse.builder()
+            .message("Cannot delete employee authority with id: " + id)
+            .build();
+      }
+    } else {
+      throw new NotFoundException(MSG.EMPLOYEE_AUTHORITY_NOT_FOUND_MSG + id);
+    }
   }
 }

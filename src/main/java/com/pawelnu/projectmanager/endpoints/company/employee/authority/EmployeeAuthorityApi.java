@@ -16,10 +16,12 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.util.List;
+import java.util.UUID;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -79,4 +81,17 @@ public interface EmployeeAuthorityApi {
   @DeleteMapping("")
   @Operation(description = "Delete employee authorities.")
   ResponseEntity<SimpleResponse> delete(@Valid @RequestBody EmployeeAuthorityDeleteRequestDTO body);
+
+  @ApiResponse(
+      responseCode = "200",
+      description = "OK",
+      content = {
+          @Content(
+              mediaType = MediaType.APPLICATION_JSON_VALUE,
+              schema = @Schema(implementation = SimpleResponse.class))
+      })
+  @ResponseErrors
+  @DeleteMapping("/{id}")
+  @Operation(description = "Delete employee authority by id.")
+  ResponseEntity<SimpleResponse> deleteById(@Parameter() @PathVariable() UUID id);
 }

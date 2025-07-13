@@ -17,9 +17,8 @@ public class AuthorityChecker {
         auth.getAuthorities().stream()
             .map(GrantedAuthority::getAuthority)
             .anyMatch(a -> a.equals(authority));
-    if (auth == null || !hasAuthority) {
-      log.error("Missing required authority: {}", authority);
-      throw new AccessDeniedException("Access denied");
+    if (!hasAuthority) {
+      throw new AccessDeniedException("Missing required authority: " + authority);
     }
   }
 }
