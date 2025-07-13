@@ -5,6 +5,11 @@ import com.pawelnu.projectmanager.endpoints.authority.AuthorityEntity;
 import com.pawelnu.projectmanager.endpoints.authority.AuthorityService;
 import com.pawelnu.projectmanager.endpoints.company.employee.EmployeeEntity;
 import com.pawelnu.projectmanager.endpoints.company.employee.EmployeeService;
+import com.pawelnu.projectmanager.endpoints.company.employee.authority.dto.EmployeeAuthorityCreateRequestDTO;
+import com.pawelnu.projectmanager.endpoints.company.employee.authority.dto.EmployeeAuthorityCreateResponseDTO;
+import com.pawelnu.projectmanager.endpoints.company.employee.authority.dto.EmployeeAuthorityDTO;
+import com.pawelnu.projectmanager.endpoints.company.employee.authority.dto.EmployeeAuthorityDeleteRequestDTO;
+import com.pawelnu.projectmanager.endpoints.company.employee.authority.dto.EmployeeAuthorityListResponseDTO;
 import com.pawelnu.projectmanager.exception.NotFoundException;
 import com.pawelnu.projectmanager.exception.model.SimpleResponse;
 import com.pawelnu.projectmanager.utils.Consts.MSG;
@@ -28,7 +33,7 @@ public class EmployeeAuthorityService {
   private final EmployeeAuthorityMapper employeeAuthorityMapper;
   private final ObjectMapper objectMapper;
 
-  public EmployeeAuthoritiesDTO create(EmployeeAuthorityCreateRequestDTO body) {
+  public EmployeeAuthorityCreateResponseDTO create(EmployeeAuthorityCreateRequestDTO body) {
     List<AuthorityEntity> authorities =
         authorityService.findAllByIdInAndIsDeletedFalse(body.getAuthorityIds());
     EmployeeEntity employee = employeeService.getEmployeeEntityById(body.getEmployeeId());
@@ -45,7 +50,7 @@ public class EmployeeAuthorityService {
 
     List<EmployeeAuthorityEntity> savedEmployeeAuthorities =
         employeeAuthorityRepository.saveAll(employeeAuthorities);
-    EmployeeAuthoritiesDTO employeeAuthoritiesDTO =
+    EmployeeAuthorityCreateResponseDTO employeeAuthoritiesDTO =
         employeeAuthorityMapper.toDTO(savedEmployeeAuthorities);
     return employeeAuthoritiesDTO;
   }

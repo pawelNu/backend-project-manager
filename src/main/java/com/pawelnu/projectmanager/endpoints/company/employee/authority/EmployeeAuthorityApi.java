@@ -1,5 +1,9 @@
 package com.pawelnu.projectmanager.endpoints.company.employee.authority;
 
+import com.pawelnu.projectmanager.endpoints.company.employee.authority.dto.EmployeeAuthorityCreateRequestDTO;
+import com.pawelnu.projectmanager.endpoints.company.employee.authority.dto.EmployeeAuthorityCreateResponseDTO;
+import com.pawelnu.projectmanager.endpoints.company.employee.authority.dto.EmployeeAuthorityDTO;
+import com.pawelnu.projectmanager.endpoints.company.employee.authority.dto.EmployeeAuthorityDeleteRequestDTO;
 import com.pawelnu.projectmanager.exception.model.SimpleResponse;
 import com.pawelnu.projectmanager.utils.Path;
 import com.pawelnu.projectmanager.utils.ResponseErrors;
@@ -31,12 +35,12 @@ public interface EmployeeAuthorityApi {
       content = {
         @Content(
             mediaType = MediaType.APPLICATION_JSON_VALUE,
-            array = @ArraySchema(schema = @Schema(implementation = EmployeeAuthoritiesDTO.class)))
+            array = @ArraySchema(schema = @Schema(implementation = EmployeeAuthorityCreateResponseDTO.class)))
       })
   @ResponseErrors
   @PostMapping("")
   @Operation(description = "Add new employee authority.")
-  ResponseEntity<EmployeeAuthoritiesDTO> create(
+  ResponseEntity<EmployeeAuthorityCreateResponseDTO> create(
       @Valid @RequestBody EmployeeAuthorityCreateRequestDTO body);
 
   @Operation(
