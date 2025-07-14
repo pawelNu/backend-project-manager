@@ -1,6 +1,5 @@
 package com.pawelnu.projectmanager.endpoints.company.employee.authority;
 
-import com.pawelnu.projectmanager.endpoints.company.employee.EmployeeDTO;
 import com.pawelnu.projectmanager.endpoints.company.employee.authority.dto.EmployeeAuthorityCreateRequestDTO;
 import com.pawelnu.projectmanager.endpoints.company.employee.authority.dto.EmployeeAuthorityCreateResponseDTO;
 import com.pawelnu.projectmanager.endpoints.company.employee.authority.dto.EmployeeAuthorityDTO;
