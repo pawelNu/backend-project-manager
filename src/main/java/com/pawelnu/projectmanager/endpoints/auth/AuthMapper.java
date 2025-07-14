@@ -16,15 +16,10 @@ public interface AuthMapper {
     String resource = authority.substring(0, index);
     String action = authority.substring(index + 1);
 
-    return PermissionDTO.builder()
-        .resource(resource.replace("_", "-"))
-        .action(action)
-        .build();
+    return PermissionDTO.builder().resource(resource.replace("_", "-")).action(action).build();
   }
 
   default List<PermissionDTO> toPermissions(List<String> frontendAuthorities) {
-    return frontendAuthorities.stream()
-        .map(this::stringToPermission)
-        .collect(Collectors.toList());
+    return frontendAuthorities.stream().map(this::stringToPermission).collect(Collectors.toList());
   }
 }

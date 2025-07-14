@@ -31,7 +31,8 @@ public class EmployeeAuthorityQueryRepository {
     BooleanBuilder allConditions = new BooleanBuilder();
 
     if (filters.containsKey("authorityName")) {
-      allConditions.and(authority.nameBackend.likeIgnoreCase("%" + filters.get("authorityName") + "%"));
+      allConditions.and(
+          authority.nameBackend.likeIgnoreCase("%" + filters.get("authorityName") + "%"));
     }
     if (filters.containsKey("employeeFirstName")) {
       allConditions.and(
@@ -60,7 +61,9 @@ public class EmployeeAuthorityQueryRepository {
 
     switch (sortField) {
       case "authorityName" -> query.orderBy(
-          sortDir.equalsIgnoreCase("DESC") ? authority.nameBackend.desc() : authority.nameBackend.asc());
+          sortDir.equalsIgnoreCase("DESC")
+              ? authority.nameBackend.desc()
+              : authority.nameBackend.asc());
       case "employeeFirstName" -> query.orderBy(
           sortDir.equalsIgnoreCase("DESC") ? employee.firstName.desc() : employee.firstName.asc());
       case "employeeLastName" -> query.orderBy(

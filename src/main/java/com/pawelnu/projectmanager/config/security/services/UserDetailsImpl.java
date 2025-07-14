@@ -38,9 +38,7 @@ public class UserDetailsImpl implements UserDetails {
   }
 
   private static List<String> getFrontendAuthorities(UserDetailsDTO user) {
-    return user.getFrontendAuthorities().stream()
-        .map(GrantedAuthority::getAuthority)
-        .toList();
+    return user.getFrontendAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
   }
 
   private static List<GrantedAuthority> getBackendAuthorities(UserDetailsDTO user) {
