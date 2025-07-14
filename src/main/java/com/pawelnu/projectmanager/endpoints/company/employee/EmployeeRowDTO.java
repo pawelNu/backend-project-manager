@@ -13,5 +13,6 @@ public class EmployeeRowDTO {
   private String username;
   private String email;
   private String password;
-  private List<String> authorities;
+  private List<String> backendAuthorities;
+  private List<String> frontendAuthorities;
 }

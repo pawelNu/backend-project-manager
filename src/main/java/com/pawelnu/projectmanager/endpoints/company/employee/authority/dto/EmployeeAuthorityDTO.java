@@ -9,7 +9,8 @@ import lombok.Data;
 public class EmployeeAuthorityDTO {
   private UUID id;
   private String username;
-  private String authorityName;
+  private String authorityNameBackend;
+  private String authorityNameFrontend;
   private String employeeFirstName;
   private String employeeLastName;
 }

@@ -12,5 +12,6 @@ public class UserDetailsDTO {
   private String username;
   private String email;
   @JsonIgnore private String password;
-  private Collection<? extends GrantedAuthority> authorities;
+  private Collection<? extends GrantedAuthority> backendAuthorities;
+  private Collection<? extends GrantedAuthority> frontendAuthorities;
 }

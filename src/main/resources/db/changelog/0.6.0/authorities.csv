@@ -1,3 +1,3 @@
 id,name_backend,name_frontend,version,created,last_modified,is_deleted
 b7b7e526-227f-41a9-8be2-2bf6bee29ded,EMPLOYEE_AUTHORITIES_DELETE_BY_ID,employee_authorities_delete,0,2025-07-13 14:26:34.963,2025-07-13 14:26:34.963,FALSE
-45eda70a-a041-4e16-a74c-6baddb977539,EMPLOYEE_AUTHORITIES_GET_BY_ID,employee_authorities_delete,0,2025-07-13 14:26:34.963,2025-07-13 14:26:34.963,FALSE
+45eda70a-a041-4e16-a74c-6baddb977539,EMPLOYEE_AUTHORITIES_GET_BY_ID,employee_authorities_show,0,2025-07-13 14:26:34.963,2025-07-13 14:26:34.963,FALSE
