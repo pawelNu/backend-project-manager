@@ -1,7 +1,13 @@
 package com.pawelnu.projectmanager.endpoints.company.employee.authority;
 
+import com.pawelnu.projectmanager.endpoints.company.employee.authority.dto.EmployeeAuthorityCreateRequestDTO;
+import com.pawelnu.projectmanager.endpoints.company.employee.authority.dto.EmployeeAuthorityCreateResponseDTO;
+import com.pawelnu.projectmanager.endpoints.company.employee.authority.dto.EmployeeAuthorityDTO;
+import com.pawelnu.projectmanager.endpoints.company.employee.authority.dto.EmployeeAuthorityDeleteRequestDTO;
+import com.pawelnu.projectmanager.endpoints.company.employee.authority.dto.EmployeeAuthorityListResponseDTO;
 import com.pawelnu.projectmanager.exception.model.SimpleResponse;
 import java.util.List;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -16,8 +22,9 @@ public class EmployeeAuthorityController implements EmployeeAuthorityApi {
   private final EmployeeAuthorityService employeeAuthorityService;
 
   @Override
-  public ResponseEntity<EmployeeAuthoritiesDTO> create(EmployeeAuthorityCreateRequestDTO body) {
-    EmployeeAuthoritiesDTO result = employeeAuthorityService.create(body);
+  public ResponseEntity<EmployeeAuthorityCreateResponseDTO> create(
+      EmployeeAuthorityCreateRequestDTO body) {
+    EmployeeAuthorityCreateResponseDTO result = employeeAuthorityService.create(body);
     return ResponseEntity.status(HttpStatus.CREATED).body(result);
   }
 
@@ -31,8 +38,21 @@ public class EmployeeAuthorityController implements EmployeeAuthorityApi {
   }
 
   @Override
+  public ResponseEntity<EmployeeAuthorityDTO> getById(UUID id) {
+    EmployeeAuthorityDTO result = employeeAuthorityService.getById(id);
+    return ResponseEntity.ok(result);
+  }
+
+  @Override
   public ResponseEntity<SimpleResponse> delete(EmployeeAuthorityDeleteRequestDTO body) {
     SimpleResponse result = employeeAuthorityService.delete(body);
+    return ResponseEntity.ok(result);
+  }
+
+  // TODO write test
+  @Override
+  public ResponseEntity<SimpleResponse> deleteById(UUID id) {
+    SimpleResponse result = employeeAuthorityService.deleteById(id);
     return ResponseEntity.ok(result);
   }
 }

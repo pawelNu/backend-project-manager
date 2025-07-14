@@ -5,20 +5,28 @@ import com.pawelnu.projectmanager.endpoints.authority.AuthorityEntity;
 import com.pawelnu.projectmanager.endpoints.authority.AuthorityService;
 import com.pawelnu.projectmanager.endpoints.company.employee.EmployeeEntity;
 import com.pawelnu.projectmanager.endpoints.company.employee.EmployeeService;
+import com.pawelnu.projectmanager.endpoints.company.employee.authority.dto.EmployeeAuthorityCreateRequestDTO;
+import com.pawelnu.projectmanager.endpoints.company.employee.authority.dto.EmployeeAuthorityCreateResponseDTO;
+import com.pawelnu.projectmanager.endpoints.company.employee.authority.dto.EmployeeAuthorityDTO;
+import com.pawelnu.projectmanager.endpoints.company.employee.authority.dto.EmployeeAuthorityDeleteRequestDTO;
+import com.pawelnu.projectmanager.endpoints.company.employee.authority.dto.EmployeeAuthorityListResponseDTO;
 import com.pawelnu.projectmanager.exception.NotFoundException;
 import com.pawelnu.projectmanager.exception.model.SimpleResponse;
 import com.pawelnu.projectmanager.utils.Consts.MSG;
 import com.pawelnu.projectmanager.utils.PageableParams;
 import com.pawelnu.projectmanager.utils.Shared;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class EmployeeAuthorityService {
 
   private final EmployeeAuthorityRepository employeeAuthorityRepository;
@@ -28,10 +36,25 @@ public class EmployeeAuthorityService {
   private final EmployeeAuthorityMapper employeeAuthorityMapper;
   private final ObjectMapper objectMapper;
 
-  public EmployeeAuthoritiesDTO create(EmployeeAuthorityCreateRequestDTO body) {
-    List<AuthorityEntity> authorities =
-        authorityService.findAllByIdInAndIsDeletedFalse(body.getAuthorityIds());
+  public EmployeeAuthorityCreateResponseDTO create(EmployeeAuthorityCreateRequestDTO body) {
+    List<UUID> authorityIds = body.getAuthorityIds();
+    List<UUID> foundEmployeeAuthorities =
+        employeeAuthorityRepository.findExistingAuthorityIdsForEmployee(
+            body.getEmployeeId(), authorityIds);
+    List<UUID> filteredAuthorityIds =
+        authorityIds.stream().filter(uuid -> !foundEmployeeAuthorities.contains(uuid)).toList();
     EmployeeEntity employee = employeeService.getEmployeeEntityById(body.getEmployeeId());
+
+    if (filteredAuthorityIds.isEmpty()) {
+      log.info(
+          "Employee with id: [{}] and username: [{}] has all requested authorities!",
+          body.getEmployeeId(),
+          employee.getUsername());
+      return EmployeeAuthorityCreateResponseDTO.builder().build();
+    }
+
+    List<AuthorityEntity> authorities =
+        authorityService.findAllByIdInAndIsDeletedFalse(filteredAuthorityIds);
 
     List<EmployeeAuthorityEntity> employeeAuthorities =
         authorities.stream()
@@ -45,9 +68,7 @@ public class EmployeeAuthorityService {
 
     List<EmployeeAuthorityEntity> savedEmployeeAuthorities =
         employeeAuthorityRepository.saveAll(employeeAuthorities);
-    EmployeeAuthoritiesDTO employeeAuthoritiesDTO =
-        employeeAuthorityMapper.toDTO(savedEmployeeAuthorities);
-    return employeeAuthoritiesDTO;
+    return employeeAuthorityMapper.toDTO(savedEmployeeAuthorities);
   }
 
   public SimpleResponse delete(EmployeeAuthorityDeleteRequestDTO body) {
@@ -112,5 +133,37 @@ public class EmployeeAuthorityService {
         .data(employeeAuthorityDTOs)
         .contentRange(contentRange)
         .build();
+  }
+
+  public SimpleResponse deleteById(UUID id) {
+    Optional<EmployeeAuthorityEntity> employeeToDelete =
+        employeeAuthorityRepository.findByIdAndIsDeletedFalse(id);
+    if (employeeToDelete.isPresent()) {
+      EmployeeAuthorityEntity existingEmployee = employeeToDelete.get();
+      existingEmployee.setIsDeleted(true);
+      EmployeeAuthorityEntity updatedEmployee = employeeAuthorityRepository.save(existingEmployee);
+      if (updatedEmployee.getIsDeleted()) {
+        return SimpleResponse.builder()
+            .message("Deleted employee authority with id: " + id)
+            .build();
+      } else {
+        return SimpleResponse.builder()
+            .message("Cannot delete employee authority with id: " + id)
+            .build();
+      }
+    } else {
+      throw new NotFoundException(MSG.EMPLOYEE_AUTHORITY_NOT_FOUND_MSG + id);
+    }
+  }
+
+  public EmployeeAuthorityDTO getById(UUID id) {
+    EmployeeAuthorityEntity employee = getEmployeeAuthorityEntityById(id);
+    return employeeAuthorityMapper.toDTO(employee);
+  }
+
+  public EmployeeAuthorityEntity getEmployeeAuthorityEntityById(UUID id) {
+    return employeeAuthorityRepository
+        .findById(id)
+        .orElseThrow(() -> new NotFoundException(MSG.EMPLOYEE_AUTHORITY_NOT_FOUND_MSG + id));
   }
 }

@@ -1,5 +1,9 @@
 package com.pawelnu.projectmanager.endpoints.company.employee.authority;
 
+import com.pawelnu.projectmanager.endpoints.company.employee.authority.dto.EmployeeAuthorityCreateRequestDTO;
+import com.pawelnu.projectmanager.endpoints.company.employee.authority.dto.EmployeeAuthorityCreateResponseDTO;
+import com.pawelnu.projectmanager.endpoints.company.employee.authority.dto.EmployeeAuthorityDTO;
+import com.pawelnu.projectmanager.endpoints.company.employee.authority.dto.EmployeeAuthorityDeleteRequestDTO;
 import com.pawelnu.projectmanager.exception.model.SimpleResponse;
 import com.pawelnu.projectmanager.utils.Path;
 import com.pawelnu.projectmanager.utils.ResponseErrors;
@@ -12,10 +16,12 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.util.List;
+import java.util.UUID;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,12 +37,14 @@ public interface EmployeeAuthorityApi {
       content = {
         @Content(
             mediaType = MediaType.APPLICATION_JSON_VALUE,
-            array = @ArraySchema(schema = @Schema(implementation = EmployeeAuthoritiesDTO.class)))
+            array =
+                @ArraySchema(
+                    schema = @Schema(implementation = EmployeeAuthorityCreateResponseDTO.class)))
       })
   @ResponseErrors
   @PostMapping("")
   @Operation(description = "Add new employee authority.")
-  ResponseEntity<EmployeeAuthoritiesDTO> create(
+  ResponseEntity<EmployeeAuthorityCreateResponseDTO> create(
       @Valid @RequestBody EmployeeAuthorityCreateRequestDTO body);
 
   @Operation(
@@ -67,10 +75,36 @@ public interface EmployeeAuthorityApi {
       content = {
         @Content(
             mediaType = MediaType.APPLICATION_JSON_VALUE,
+            schema = @Schema(implementation = EmployeeAuthorityDTO.class))
+      })
+  @ResponseErrors
+  @GetMapping("/{id}")
+  @Operation(description = "Get employee authority by id.")
+  ResponseEntity<EmployeeAuthorityDTO> getById(@Parameter() @PathVariable() UUID id);
+
+  @ApiResponse(
+      responseCode = "200",
+      description = "OK",
+      content = {
+        @Content(
+            mediaType = MediaType.APPLICATION_JSON_VALUE,
             schema = @Schema(implementation = SimpleResponse.class))
       })
   @ResponseErrors
   @DeleteMapping("")
   @Operation(description = "Delete employee authorities.")
   ResponseEntity<SimpleResponse> delete(@Valid @RequestBody EmployeeAuthorityDeleteRequestDTO body);
+
+  @ApiResponse(
+      responseCode = "200",
+      description = "OK",
+      content = {
+        @Content(
+            mediaType = MediaType.APPLICATION_JSON_VALUE,
+            schema = @Schema(implementation = SimpleResponse.class))
+      })
+  @ResponseErrors
+  @DeleteMapping("/{id}")
+  @Operation(description = "Delete employee authority by id.")
+  ResponseEntity<SimpleResponse> deleteById(@Parameter() @PathVariable() UUID id);
 }

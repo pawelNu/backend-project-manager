@@ -27,6 +27,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
   private final UserDetailsServiceImpl userDetailsService;
   private final List<HandlerMapping> handlerMappings;
 
+  // TODO add request id to log and header
   @Override
   protected void doFilterInternal(
       HttpServletRequest request,
@@ -39,11 +40,10 @@ public class AuthTokenFilter extends OncePerRequestFilter {
       String username = jwtUtils.getUserNameFromJwtHeaderToken(jwt);
 
       UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-      log.info(userDetails.toString());
+      log.info("User and roles: {}", userDetails.toString());
 
       UsernamePasswordAuthenticationToken authentication =
           new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-      log.debug("Roles from JWT: {}", userDetails.getAuthorities());
       authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
       SecurityContextHolder.getContext().setAuthentication(authentication);
       HandlerMethod handlerMethod = getHandlerMethod(request);

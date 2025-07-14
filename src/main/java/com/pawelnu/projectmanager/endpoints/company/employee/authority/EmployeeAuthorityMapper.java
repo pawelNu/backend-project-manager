@@ -1,7 +1,10 @@
 package com.pawelnu.projectmanager.endpoints.company.employee.authority;
 
+import com.pawelnu.projectmanager.endpoints.company.employee.authority.dto.EmployeeAuthorityCreateResponseDTO;
+import com.pawelnu.projectmanager.endpoints.company.employee.authority.dto.EmployeeAuthorityDTO;
+import com.pawelnu.projectmanager.endpoints.company.employee.authority.dto.EmployeeAuthorityIdNameDTO;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.UUID;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -14,22 +17,24 @@ public interface EmployeeAuthorityMapper {
   @Mapping(source = "employee.lastName", target = "employeeLastName")
   EmployeeAuthorityDTO toDTO(EmployeeAuthorityEntity save);
 
-  default EmployeeAuthoritiesDTO toDTO(List<EmployeeAuthorityEntity> entities) {
+  @Mapping(source = "authority.name", target = "name")
+  EmployeeAuthorityIdNameDTO toIdNameDTO(EmployeeAuthorityEntity save);
+
+  default EmployeeAuthorityCreateResponseDTO toDTO(List<EmployeeAuthorityEntity> entities) {
     if (entities == null || entities.isEmpty()) {
       return null;
     }
 
-    String username = entities.get(0).getEmployee().getUsername();
+    UUID employeeId = entities.getFirst().getEmployee().getId();
+    String username = entities.getFirst().getEmployee().getUsername();
 
-    List<String> authorityNames =
-        entities.stream()
-            .map(e -> e.getAuthority().getName())
-            .distinct()
-            .collect(Collectors.toList());
+    List<EmployeeAuthorityIdNameDTO> employeeAuthorityDTOs =
+        entities.stream().map(this::toIdNameDTO).toList();
 
-    return EmployeeAuthoritiesDTO.builder()
+    return EmployeeAuthorityCreateResponseDTO.builder()
+        .id(employeeId)
         .username(username)
-        .authorityNames(authorityNames)
+        .employeeAuthorities(employeeAuthorityDTOs)
         .build();
   }
 }
