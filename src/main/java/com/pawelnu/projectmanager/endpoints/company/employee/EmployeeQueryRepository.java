@@ -116,7 +116,8 @@ public class EmployeeQueryRepository {
                     employee.username,
                     employee.email,
                     employee.password,
-                    authority.name))
+                    authority.nameBackend,
+                    authority.nameFrontend))
             .from(employee)
             .leftJoin(employee.authorities, employeeAuthority)
             .leftJoin(employeeAuthority.authority, authority)

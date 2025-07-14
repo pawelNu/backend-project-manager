@@ -27,23 +27,23 @@ public class CategoryQueryRepository {
 
   public Page<CategoryDTO> filter(
       Map<String, String> filters, int offset, int limit, String sortDir, String sortField) {
-    QCategoryEntity authority = QCategoryEntity.categoryEntity;
+    QCategoryEntity category = QCategoryEntity.categoryEntity;
     BooleanBuilder allConditions = new BooleanBuilder();
 
-    if (filters.containsKey(authority.name.getMetadata().getName())) {
+    if (filters.containsKey(category.name.getMetadata().getName())) {
       allConditions.and(
-          authority.name.likeIgnoreCase(
-              "%" + filters.get(authority.name.getMetadata().getName()) + "%"));
+          category.name.likeIgnoreCase(
+              "%" + filters.get(category.name.getMetadata().getName()) + "%"));
     }
-    allConditions.and(authority.isDeleted.isFalse());
+    allConditions.and(category.isDeleted.isFalse());
     if (sortDir == null || sortDir.isEmpty()) {
       sortDir = "ASC";
     }
 
     JPAQuery<CategoryDTO> query =
         queryFactory
-            .select(Projections.constructor(CategoryDTO.class, authority.id, authority.name))
-            .from(authority)
+            .select(Projections.constructor(CategoryDTO.class, category.id, category.name))
+            .from(category)
             .where(allConditions)
             .offset(offset)
             .limit(limit);
@@ -55,7 +55,7 @@ public class CategoryQueryRepository {
       Order order = sortDir.equalsIgnoreCase("DESC") ? Order.DESC : Order.ASC;
 
       if (sortField.equals("name")) {
-        query.orderBy(new OrderSpecifier<>(order, authority.name));
+        query.orderBy(new OrderSpecifier<>(order, category.name));
       } else {
         query.orderBy(new OrderSpecifier<>(order, entityPath.getString(sortField)));
       }
@@ -65,8 +65,8 @@ public class CategoryQueryRepository {
     long total =
         Optional.ofNullable(
                 queryFactory
-                    .select(authority.count())
-                    .from(authority)
+                    .select(category.count())
+                    .from(category)
                     .where(allConditions)
                     .fetchOne())
             .orElse(0L);

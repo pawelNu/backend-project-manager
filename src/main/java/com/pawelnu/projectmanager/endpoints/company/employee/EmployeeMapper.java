@@ -24,7 +24,8 @@ public interface EmployeeMapper {
   EmployeeDTO toDTO(EmployeeEntity entity);
 
   @Mapping(source = "userId", target = "id")
-  @Mapping(source = "authorities", target = "authorities")
+  @Mapping(source = "backendAuthorities", target = "backendAuthorities")
+  @Mapping(source = "frontendAuthorities", target = "frontendAuthorities")
   UserDetailsDTO toUserDetailsDTO(EmployeeRowDTO entity);
 
   default Collection<? extends GrantedAuthority> map(List<String> authorities) {
@@ -36,9 +37,14 @@ public interface EmployeeMapper {
   }
 
   default EmployeeRowDTO toEmployeeRowDTO(List<EmployeeAuthorityRowDTO> rows) {
-    List<String> authorities =
+    List<String> backendAuthorities =
         rows.stream()
-            .map(EmployeeAuthorityRowDTO::getAuthorityName)
+            .map(EmployeeAuthorityRowDTO::getBackendAuthority)
+            .filter(Objects::nonNull)
+            .toList();
+    List<String> frontendAuthorities =
+        rows.stream()
+            .map(EmployeeAuthorityRowDTO::getFrontendAuthority)
             .filter(Objects::nonNull)
             .toList();
     EmployeeAuthorityRowDTO first = rows.getFirst();
@@ -47,7 +53,8 @@ public interface EmployeeMapper {
         .username(first.getUsername())
         .email(first.getEmail())
         .password(first.getPassword())
-        .authorities(authorities)
+        .backendAuthorities(backendAuthorities)
+        .frontendAuthorities(frontendAuthorities)
         .build();
   }
 }

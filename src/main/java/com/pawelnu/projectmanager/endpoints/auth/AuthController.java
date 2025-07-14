@@ -2,6 +2,7 @@ package com.pawelnu.projectmanager.endpoints.auth;
 
 import com.pawelnu.projectmanager.config.security.jwt.JwtUtils;
 import com.pawelnu.projectmanager.config.security.services.UserDetailsImpl;
+import com.pawelnu.projectmanager.config.security.services.UserDetailsServiceImpl;
 import com.pawelnu.projectmanager.endpoints.company.employee.EmployeeEntity;
 import com.pawelnu.projectmanager.endpoints.company.employee.EmployeeRepository;
 import com.pawelnu.projectmanager.exception.model.SimpleResponse;
@@ -34,6 +35,8 @@ public class AuthController {
   private final JwtUtils jwtUtils;
   private final AuthenticationManager authenticationManager;
   private final EmployeeRepository employeeRepository;
+  private final UserDetailsServiceImpl userDetailsService;
+  private final AuthMapper authMapper;
 
   //  private final RoleRepository roleRepository;
 
@@ -56,17 +59,17 @@ public class AuthController {
     UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 
     String jwtString = jwtUtils.generateTokenFromUsername(userDetails.getUsername());
+    //    UserDetails userData = userDetailsService.loadUserByUsername(userDetails.getUsername());
 
-    //    List<String> roles =
-    //        userDetails.getAuthorities().stream()
-    //            .map(item -> item.getAuthority())
-    //            .collect(Collectors.toList());
+    List<String> backendAuthorities =
+        userDetails.getBackendAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
 
     UserInfoResponse response =
         UserInfoResponse.builder()
             .id(userDetails.getId())
             .username(userDetails.getUsername())
-            .roles(null)
+            .backendAuthorities(backendAuthorities)
+            .frontendAuthorities(authMapper.toPermissions(userDetails.getFrontendAuthorities()))
             .jwtToken(jwtString)
             .expireAt(jwtUtils.getExpirationDateFromToken(jwtString))
             .build();
@@ -147,13 +150,13 @@ public class AuthController {
     UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 
     List<String> roles =
-        userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
+        userDetails.getBackendAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
 
     UserInfoResponse response =
         UserInfoResponse.builder()
             .id(userDetails.getId())
             .username(userDetails.getUsername())
-            .roles(null)
+            .backendAuthorities(null)
             .jwtToken(null)
             .build();
 

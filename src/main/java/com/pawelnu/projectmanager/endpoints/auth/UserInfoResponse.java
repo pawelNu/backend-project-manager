@@ -13,5 +13,6 @@ public class UserInfoResponse {
   private String jwtToken;
   private String username;
   private Date expireAt;
-  private List<String> roles;
+  private List<String> backendAuthorities;
+  private List<PermissionDTO> frontendAuthorities;
 }

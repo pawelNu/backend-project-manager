@@ -8,5 +8,6 @@ import lombok.Data;
 @Builder
 public class EmployeeAuthorityIdNameDTO {
   private UUID id;
-  private String name;
+  private String nameBackend;
+  private String nameFrontend;
 }

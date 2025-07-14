@@ -30,10 +30,10 @@ public class AuthorityQueryRepository {
     QAuthorityEntity authority = QAuthorityEntity.authorityEntity;
     BooleanBuilder allConditions = new BooleanBuilder();
 
-    if (filters.containsKey(authority.name.getMetadata().getName())) {
+    if (filters.containsKey(authority.nameBackend.getMetadata().getName())) {
       allConditions.and(
-          authority.name.likeIgnoreCase(
-              "%" + filters.get(authority.name.getMetadata().getName()) + "%"));
+          authority.nameBackend.likeIgnoreCase(
+              "%" + filters.get(authority.nameBackend.getMetadata().getName()) + "%"));
     }
     allConditions.and(authority.isDeleted.isFalse());
     if (sortDir == null || sortDir.isEmpty()) {
@@ -42,7 +42,8 @@ public class AuthorityQueryRepository {
 
     JPAQuery<AuthorityDTO> query =
         queryFactory
-            .select(Projections.constructor(AuthorityDTO.class, authority.id, authority.name))
+            .select(
+                Projections.constructor(AuthorityDTO.class, authority.id, authority.nameBackend))
             .from(authority)
             .where(allConditions)
             .offset(offset)
@@ -55,7 +56,7 @@ public class AuthorityQueryRepository {
       Order order = sortDir.equalsIgnoreCase("DESC") ? Order.DESC : Order.ASC;
 
       if (sortField.equals("name")) {
-        query.orderBy(new OrderSpecifier<>(order, authority.name));
+        query.orderBy(new OrderSpecifier<>(order, authority.nameBackend));
       } else {
         query.orderBy(new OrderSpecifier<>(order, entityPath.getString(sortField)));
       }

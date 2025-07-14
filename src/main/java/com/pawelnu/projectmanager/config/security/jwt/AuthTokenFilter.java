@@ -1,5 +1,7 @@
 package com.pawelnu.projectmanager.config.security.jwt;
 
+import static com.pawelnu.projectmanager.config.security.jwt.AuthorityUtil.prepareAuthorityString;
+
 import com.pawelnu.projectmanager.config.security.AuthorityChecker;
 import com.pawelnu.projectmanager.config.security.services.UserDetailsServiceImpl;
 import jakarta.servlet.FilterChain;
@@ -77,14 +79,5 @@ public class AuthTokenFilter extends OncePerRequestFilter {
       log.error("Error getting HandlerMethod for request", e);
     }
     return null;
-  }
-
-  public static String prepareAuthorityString(String className, String methodName) {
-    String baseName = className.replace("Controller", "");
-    return toUpperSnakeCase(baseName) + "_" + toUpperSnakeCase(methodName);
-  }
-
-  private static String toUpperSnakeCase(String input) {
-    return input.replaceAll("([a-z])([A-Z])", "$1_$2").toUpperCase();
   }
 }

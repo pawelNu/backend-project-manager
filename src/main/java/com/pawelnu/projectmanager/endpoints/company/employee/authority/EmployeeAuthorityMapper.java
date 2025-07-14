@@ -11,13 +11,15 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface EmployeeAuthorityMapper {
 
-  @Mapping(source = "authority.name", target = "authorityName")
+  @Mapping(source = "authority.nameBackend", target = "authorityNameBackend")
+  @Mapping(source = "authority.nameFrontend", target = "authorityNameFrontend")
   @Mapping(source = "employee.username", target = "username")
   @Mapping(source = "employee.firstName", target = "employeeFirstName")
   @Mapping(source = "employee.lastName", target = "employeeLastName")
   EmployeeAuthorityDTO toDTO(EmployeeAuthorityEntity save);
 
-  @Mapping(source = "authority.name", target = "name")
+  @Mapping(source = "authority.nameBackend", target = "nameBackend")
+  @Mapping(source = "authority.nameFrontend", target = "nameFrontend")
   EmployeeAuthorityIdNameDTO toIdNameDTO(EmployeeAuthorityEntity save);
 
   default EmployeeAuthorityCreateResponseDTO toDTO(List<EmployeeAuthorityEntity> entities) {

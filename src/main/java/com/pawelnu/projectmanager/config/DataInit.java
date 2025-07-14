@@ -176,7 +176,9 @@ public class DataInit {
         Set.of("create", "get_list", "get_by_id", "edit_by_id", "delete_by_id");
     for (String operation : operations) {
       authorities.add(
-          AuthorityEntity.builder().name((controllerName + "_" + operation).toUpperCase()).build());
+          AuthorityEntity.builder()
+              .nameBackend((controllerName + "_" + operation).toUpperCase())
+              .build());
     }
     return authorities;
   }
