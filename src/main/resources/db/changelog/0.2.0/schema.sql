@@ -92,7 +92,8 @@ add constraint fk_employees_and_companies foreign key (company_id) references co
 --
 create table authorities (
     id uuid not null,
-    name varchar(255) not null,
+    name_backend varchar(255) not null,
+    name_frontend varchar(255) not null,
     version integer not null,
     created timestamp(6) without time zone not null,
     last_modified timestamp(6) without time zone not null,

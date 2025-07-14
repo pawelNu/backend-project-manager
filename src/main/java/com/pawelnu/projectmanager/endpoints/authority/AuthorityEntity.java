@@ -24,7 +24,8 @@ import lombok.NoArgsConstructor;
 public class AuthorityEntity extends Auditable {
 
   @Id @GeneratedValue private UUID id;
-  private String name;
+  private String nameBackend;
+  private String nameFrontend;
 
   @ManyToMany(mappedBy = "authority")
   private Set<EmployeeAuthorityEntity> employees = new HashSet<>();
