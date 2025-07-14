@@ -1,5 +1,6 @@
 package com.pawelnu.projectmanager.endpoints.company.employee.authority;
 
+import com.pawelnu.projectmanager.endpoints.company.employee.EmployeeDTO;
 import com.pawelnu.projectmanager.endpoints.company.employee.authority.dto.EmployeeAuthorityCreateRequestDTO;
 import com.pawelnu.projectmanager.endpoints.company.employee.authority.dto.EmployeeAuthorityCreateResponseDTO;
 import com.pawelnu.projectmanager.endpoints.company.employee.authority.dto.EmployeeAuthorityDTO;
@@ -35,6 +36,12 @@ public class EmployeeAuthorityController implements EmployeeAuthorityApi {
     return ResponseEntity.ok()
         .header("Content-Range", result.getContentRange())
         .body(result.getData());
+  }
+
+  @Override
+  public ResponseEntity<EmployeeAuthorityDTO> getById(UUID id) {
+    EmployeeAuthorityDTO result = employeeAuthorityService.getById(id);
+    return ResponseEntity.ok(result);
   }
 
   @Override

@@ -155,4 +155,15 @@ public class EmployeeAuthorityService {
       throw new NotFoundException(MSG.EMPLOYEE_AUTHORITY_NOT_FOUND_MSG + id);
     }
   }
+
+  public EmployeeAuthorityDTO getById(UUID id) {
+    EmployeeAuthorityEntity employee = getEmployeeAuthorityEntityById(id);
+    return employeeAuthorityMapper.toDTO(employee);
+  }
+
+  public EmployeeAuthorityEntity getEmployeeAuthorityEntityById(UUID id) {
+    return employeeAuthorityRepository
+        .findById(id)
+        .orElseThrow(() -> new NotFoundException(MSG.EMPLOYEE_AUTHORITY_NOT_FOUND_MSG + id));
+  }
 }

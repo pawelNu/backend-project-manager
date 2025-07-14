@@ -75,6 +75,19 @@ public interface EmployeeAuthorityApi {
       content = {
         @Content(
             mediaType = MediaType.APPLICATION_JSON_VALUE,
+            schema = @Schema(implementation = EmployeeAuthorityDTO.class))
+      })
+  @ResponseErrors
+  @GetMapping("/{id}")
+  @Operation(description = "Get employee authority by id.")
+  ResponseEntity<EmployeeAuthorityDTO> getById(@Parameter() @PathVariable() UUID id);
+
+  @ApiResponse(
+      responseCode = "200",
+      description = "OK",
+      content = {
+        @Content(
+            mediaType = MediaType.APPLICATION_JSON_VALUE,
             schema = @Schema(implementation = SimpleResponse.class))
       })
   @ResponseErrors
