@@ -43,7 +43,11 @@ public class AuthorityQueryRepository {
     JPAQuery<AuthorityDTO> query =
         queryFactory
             .select(
-                Projections.constructor(AuthorityDTO.class, authority.id, authority.nameBackend))
+                Projections.constructor(
+                    AuthorityDTO.class,
+                    authority.id,
+                    authority.nameBackend,
+                    authority.nameFrontend))
             .from(authority)
             .where(allConditions)
             .offset(offset)

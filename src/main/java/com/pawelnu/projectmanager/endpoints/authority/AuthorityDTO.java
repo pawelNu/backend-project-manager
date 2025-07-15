@@ -9,5 +9,6 @@ import lombok.Data;
 public class AuthorityDTO {
 
   private UUID id;
-  private String name;
+  private String nameBackend;
+  private String nameFrontend;
 }

@@ -3,13 +3,10 @@ package com.pawelnu.projectmanager.endpoints.project;
 import com.pawelnu.projectmanager.endpoints.category.QCategoryEntity;
 import com.pawelnu.projectmanager.endpoints.category.value.QCategoryValueEntity;
 import com.pawelnu.projectmanager.endpoints.company.QCompanyEntity;
-import com.pawelnu.projectmanager.endpoints.company.employee.EmployeeEntity;
 import com.pawelnu.projectmanager.endpoints.company.employee.QEmployeeEntity;
 import com.pawelnu.projectmanager.utils.PageableParams;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Order;
-import com.querydsl.core.types.OrderSpecifier;
-import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
@@ -65,12 +62,12 @@ public class ProjectQueryRepository {
 
   public Page<ProjectEntity> getList(PageableParams params) {
     QProjectEntity project = QProjectEntity.projectEntity;
-    QCategoryValueEntity projectCategoryValue = QCategoryValueEntity.categoryValueEntity;
-    QCategoryEntity projectCategory = QCategoryEntity.categoryEntity;
+    QCategoryValueEntity projectCategoryValue = new QCategoryValueEntity("projectCategoryValue");
+    QCategoryEntity projectCategory = new QCategoryEntity("projectCategory");
     QCompanyEntity company = QCompanyEntity.companyEntity;
     QEmployeeEntity assignedEmployee = QEmployeeEntity.employeeEntity;
-    QCategoryValueEntity projectPriorityValue = QCategoryValueEntity.categoryValueEntity;
-    QCategoryEntity projectPriority = QCategoryEntity.categoryEntity;
+    QCategoryValueEntity projectPriorityValue = new QCategoryValueEntity("projectPriorityValue");
+    QCategoryEntity projectPriority = new QCategoryEntity("projectPriority");
     BooleanBuilder allConditions = new BooleanBuilder();
 
     //    if (params.getFilters().containsKey("companyName")) {
@@ -128,21 +125,7 @@ public class ProjectQueryRepository {
             .limit(params.getLimit());
 
     if (!params.getSortField().isEmpty()) {
-      if (params.getSortField().equals("companyName")) {
-        query.orderBy(
-            params.getSortDir().equalsIgnoreCase("DESC")
-                ? company.name.desc()
-                : company.name.asc());
-      } else {
-        PathBuilder<EmployeeEntity> entityPath =
-            new PathBuilder<>(EmployeeEntity.class, "employeeEntity");
-        query.orderBy(
-            new OrderSpecifier<>(
-                Sort.Direction.fromString(params.getSortDir()) == Sort.Direction.ASC
-                    ? Order.ASC
-                    : Order.DESC,
-                entityPath.getString(params.getSortField())));
-      }
+      applySorting(query, params.getSortField(), params.getSortDir());
     }
 
     List<ProjectEntity> results = query.fetch();
@@ -177,20 +160,41 @@ public class ProjectQueryRepository {
                     .select(project.count())
                     .from(project)
                     .leftJoin(project.categoryValue, projectCategoryValue)
-                    .fetchJoin()
                     .leftJoin(projectCategoryValue.category, projectCategory)
-                    .fetchJoin()
                     .leftJoin(project.company, company)
-                    .fetchJoin()
                     .leftJoin(project.assignedEmployee, assignedEmployee)
-                    .fetchJoin()
                     .leftJoin(project.priorityValue, projectPriorityValue)
-                    .fetchJoin()
                     .leftJoin(projectPriorityValue.category, projectPriority)
-                    .fetchJoin()
                     .where(allConditions)
                     .fetchOne())
             .orElse(0L);
     return total;
+  }
+
+  private void applySorting(JPAQuery<ProjectEntity> query, String sortField, String sortDir) {
+    QProjectEntity project = QProjectEntity.projectEntity;
+    QCompanyEntity company = QCompanyEntity.companyEntity;
+    QEmployeeEntity employee = QEmployeeEntity.employeeEntity;
+    QCategoryEntity category = new QCategoryEntity("category");
+    QCategoryEntity priority = new QCategoryEntity("priority");
+
+    Order order = Sort.Direction.fromString(sortDir) == Sort.Direction.ASC ? Order.ASC : Order.DESC;
+
+    switch (sortField) {
+      case "categoryName":
+        query.orderBy(order == Order.ASC ? category.name.asc() : category.name.desc());
+        break;
+      case "companyName":
+        query.orderBy(order == Order.ASC ? company.name.asc() : company.name.desc());
+        break;
+      case "assignedEmployee":
+        query.orderBy(order == Order.ASC ? employee.lastName.asc() : employee.lastName.desc());
+        break;
+      case "priorityName":
+        query.orderBy(order == Order.ASC ? priority.name.asc() : priority.name.desc());
+        break;
+      default:
+        query.orderBy(order == Order.ASC ? project.name.asc() : project.name.desc());
+    }
   }
 }
