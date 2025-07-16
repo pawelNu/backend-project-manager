@@ -14,10 +14,14 @@ public interface ProjectMapper {
   ProjectEntity toEntity(ProjectEditRequestDTO dto, @MappingTarget ProjectEntity entity);
 
   @Mapping(source = "categoryValue.category.name", target = "categoryName")
+  @Mapping(source = "categoryValue.id", target = "categoryValueId")
   @Mapping(source = "categoryValue.stringValue", target = "categoryValue")
+  @Mapping(source = "company.id", target = "companyId")
   @Mapping(source = "company.name", target = "companyName")
+  @Mapping(source = "assignedEmployee.id", target = "assignedEmployeeId")
   @Mapping(source = "assignedEmployee", target = "assignedEmployee")
   @Mapping(source = "priorityValue.category.name", target = "priorityName")
+  @Mapping(source = "priorityValue.id", target = "priorityValueId")
   @Mapping(source = "priorityValue.stringValue", target = "priorityValue")
   ProjectDTO toDTO(ProjectEntity entity);
 

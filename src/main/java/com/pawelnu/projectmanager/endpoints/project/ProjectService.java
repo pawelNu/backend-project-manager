@@ -77,12 +77,12 @@ public class ProjectService {
     ProjectEntity projectToEdit = getProjectEntityById(id);
     projectMapper.toEntity(body, projectToEdit);
     CategoryValueEntity projectCategory =
-        categoryValueService.getCategoryValueById(body.getCategoryId());
+        categoryValueService.getCategoryValueById(body.getCategoryValueId());
     CompanyEntity companyEntity = companyService.getCompanyEntityById(body.getCompanyId());
     EmployeeEntity employeeEntity =
         employeeService.getEmployeeEntityById(body.getAssignedEmployeeId());
     CategoryValueEntity projectPriority =
-        categoryValueService.getCategoryValueById(body.getPriorityId());
+        categoryValueService.getCategoryValueById(body.getPriorityValueId());
     ProjectEntity projectEntity = projectMapper.toEntity(body, projectToEdit);
     projectEntity.setCategoryValue(projectCategory);
     projectEntity.setCompany(companyEntity);

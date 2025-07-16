@@ -28,12 +28,12 @@ public class ProjectQueryRepository {
 
   public Optional<ProjectEntity> findById(UUID id) {
     QProjectEntity project = QProjectEntity.projectEntity;
-    QCategoryValueEntity projectCategoryValue = QCategoryValueEntity.categoryValueEntity;
-    QCategoryEntity projectCategory = QCategoryEntity.categoryEntity;
+    QCategoryValueEntity projectCategoryValue = new QCategoryValueEntity("projectCategoryValue");
+    QCategoryEntity projectCategory = new QCategoryEntity("projectCategory");
     QCompanyEntity company = QCompanyEntity.companyEntity;
     QEmployeeEntity assignedEmployee = QEmployeeEntity.employeeEntity;
-    QCategoryValueEntity projectPriorityValue = QCategoryValueEntity.categoryValueEntity;
-    QCategoryEntity projectPriority = QCategoryEntity.categoryEntity;
+    QCategoryValueEntity projectPriorityValue = new QCategoryValueEntity("projectPriorityValue");
+    QCategoryEntity projectPriority = new QCategoryEntity("projectPriority");
 
     List<ProjectEntity> fetch =
         queryFactory

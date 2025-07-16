@@ -8,9 +8,13 @@ public class ProjectDTO {
   private UUID id;
   private String name;
   private String categoryName;
+  private String categoryValueId;
   private String categoryValue;
+  private String companyId;
   private String companyName;
+  private String assignedEmployeeId;
   private String assignedEmployee;
   private String priorityName;
+  private String priorityValueId;
   private String priorityValue;
 }

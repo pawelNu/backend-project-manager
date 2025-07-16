@@ -6,8 +6,8 @@ import lombok.Data;
 @Data
 public class ProjectEditRequestDTO {
   private String name;
-  private UUID categoryId;
+  private UUID categoryValueId;
   private UUID companyId;
   private UUID assignedEmployeeId;
-  private UUID priorityId;
+  private UUID priorityValueId;
 }
