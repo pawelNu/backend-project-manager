@@ -53,8 +53,7 @@ public class AuthorityQueryRepository {
                     authority.id,
                     authority.nameBackend,
                     authority.nameFrontend,
-                    ConstantImpl.create(Collections.emptyList())
-                ))
+                    ConstantImpl.create(Collections.emptyList())))
             .from(authority)
             .where(allConditions)
             .offset(offset)
