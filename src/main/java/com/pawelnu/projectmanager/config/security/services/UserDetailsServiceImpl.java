@@ -1,7 +1,7 @@
 package com.pawelnu.projectmanager.config.security.services;
 
 import com.pawelnu.projectmanager.endpoints.company.employee.EmployeeMapper;
-import com.pawelnu.projectmanager.endpoints.company.employee.EmployeeRowDTO;
+import com.pawelnu.projectmanager.endpoints.company.employee.dto.EmployeeRowDTO;
 import com.pawelnu.projectmanager.endpoints.company.employee.EmployeeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

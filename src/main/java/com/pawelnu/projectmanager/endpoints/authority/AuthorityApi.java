@@ -1,5 +1,8 @@
 package com.pawelnu.projectmanager.endpoints.authority;
 
+import com.pawelnu.projectmanager.endpoints.authority.dto.AuthorityCreateRequestDTO;
+import com.pawelnu.projectmanager.endpoints.authority.dto.AuthorityDTO;
+import com.pawelnu.projectmanager.endpoints.authority.dto.AuthorityEditRequestDTO;
 import com.pawelnu.projectmanager.exception.model.SimpleResponse;
 import com.pawelnu.projectmanager.utils.Path;
 import com.pawelnu.projectmanager.utils.ResponseErrors;

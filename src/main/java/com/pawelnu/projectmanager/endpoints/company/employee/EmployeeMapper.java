@@ -1,6 +1,12 @@
 package com.pawelnu.projectmanager.endpoints.company.employee;
 
 import com.pawelnu.projectmanager.config.security.services.UserDetailsDTO;
+import com.pawelnu.projectmanager.endpoints.company.employee.dto.EmployeeAuthorityRowDTO;
+import com.pawelnu.projectmanager.endpoints.company.employee.dto.EmployeeCreateRequestDTO;
+import com.pawelnu.projectmanager.endpoints.company.employee.dto.EmployeeDTO;
+import com.pawelnu.projectmanager.endpoints.company.employee.dto.EmployeeEditRequestDTO;
+import com.pawelnu.projectmanager.endpoints.company.employee.dto.EmployeeRowDTO;
+import com.pawelnu.projectmanager.endpoints.company.employee.dto.EmployeeSimpleDTO;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -22,6 +28,9 @@ public interface EmployeeMapper {
 
   @Mapping(source = "company.name", target = "companyName")
   EmployeeDTO toDTO(EmployeeEntity entity);
+
+  @Mapping(source = "company.name", target = "companyName")
+  EmployeeSimpleDTO toSimpleDTO(EmployeeEntity entity);
 
   @Mapping(source = "userId", target = "id")
   @Mapping(source = "backendAuthorities", target = "backendAuthorities")

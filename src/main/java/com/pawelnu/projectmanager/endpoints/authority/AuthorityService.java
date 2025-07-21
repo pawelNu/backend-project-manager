@@ -1,6 +1,12 @@
 package com.pawelnu.projectmanager.endpoints.authority;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.pawelnu.projectmanager.endpoints.authority.dto.AuthorityCreateRequestDTO;
+import com.pawelnu.projectmanager.endpoints.authority.dto.AuthorityDTO;
+import com.pawelnu.projectmanager.endpoints.authority.dto.AuthorityEditRequestDTO;
+import com.pawelnu.projectmanager.endpoints.authority.dto.AuthorityListResponseDTO;
+import com.pawelnu.projectmanager.endpoints.authority.mapper.AuthorityMapper;
+import com.pawelnu.projectmanager.endpoints.authority.mapper.AuthorityMapperManual;
 import com.pawelnu.projectmanager.exception.NotFoundException;
 import com.pawelnu.projectmanager.exception.model.SimpleResponse;
 import com.pawelnu.projectmanager.utils.Consts.MSG;
@@ -23,6 +29,7 @@ public class AuthorityService {
   private final AuthorityRepository authorityRepository;
   private final AuthorityQueryRepository authorityQueryRepository;
   private final AuthorityMapper authorityMapper;
+  private final AuthorityMapperManual authorityMapperManual;
   private final ObjectMapper objectMapper;
 
   public AuthorityDTO create(AuthorityCreateRequestDTO body) {
@@ -49,7 +56,7 @@ public class AuthorityService {
   public AuthorityDTO getById(UUID id) {
     return authorityQueryRepository
         .findById(id)
-        .map(authorityMapper::toDTO)
+        .map(authorityMapperManual::toDTO)
         .orElseThrow(() -> new NotFoundException(MSG.AUTHORITY_NOT_FOUND_MSG + id));
   }
 
