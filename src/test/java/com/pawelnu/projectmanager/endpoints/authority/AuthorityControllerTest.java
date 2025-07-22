@@ -93,7 +93,7 @@ class AuthorityControllerTest {
     String contentAsString = response.getResponse().getContentAsString();
     AuthorityDTO responseBody = objectMapper.readValue(contentAsString, AuthorityDTO.class);
     assertEquals(HttpStatus.CREATED.value(), status);
-    assertEquals("FOR_TEST_AUTHORITY", responseBody.getName());
+    assertEquals("FOR_TEST_AUTHORITY", responseBody.getNameBackend());
   }
 
   @Test
@@ -180,7 +180,7 @@ class AuthorityControllerTest {
     assertEquals(HttpStatus.OK.value(), status);
     assertEquals("items 0-0/1", headerContentRange);
     assertEquals(1, responseBody.size());
-    assertEquals("AUTHORITY_DELETE_BY_ID", responseBody.getFirst().getName());
+    assertEquals("AUTHORITY_DELETE_BY_ID", responseBody.getFirst().getNameBackend());
   }
 
   @Test
@@ -205,7 +205,7 @@ class AuthorityControllerTest {
     assertEquals(HttpStatus.OK.value(), status);
     assertEquals("items 0-2/3", headerContentRange);
     assertEquals(3, responseBody.size());
-    assertEquals("EMPLOYEE_AUTHORITY_GET_LIST", responseBody.getFirst().getName());
+    assertEquals("EMPLOYEE_AUTHORITY_GET_LIST", responseBody.getFirst().getNameBackend());
   }
 
   @Test
@@ -220,7 +220,7 @@ class AuthorityControllerTest {
         objectMapper.readValue(contentAsString, new TypeReference<>() {});
     assertEquals(HttpStatus.OK.value(), status);
     assertEquals(1, responseBody.size());
-    assertEquals("ADD_ITEM_TO_EMPLOYEE", responseBody.getFirst().getName());
+    assertEquals("ADD_ITEM_TO_EMPLOYEE", responseBody.getFirst().getNameBackend());
   }
 
   @Test
@@ -270,7 +270,7 @@ class AuthorityControllerTest {
     String contentAsString = response.getResponse().getContentAsString();
     AuthorityDTO responseBody = objectMapper.readValue(contentAsString, AuthorityDTO.class);
     assertEquals(HttpStatus.OK.value(), status);
-    assertEquals("AUTHORITY_EDIT_BY_ID", responseBody.getName());
+    assertEquals("AUTHORITY_EDIT_BY_ID", responseBody.getNameBackend());
   }
 
   @Test
@@ -355,7 +355,7 @@ class AuthorityControllerTest {
     AuthorityDTO responseBody = objectMapper.readValue(contentAsString, AuthorityDTO.class);
     assertEquals(HttpStatus.OK.value(), status);
     assertEquals(UUID.fromString(authorityId), responseBody.getId());
-    assertEquals(request.getName(), responseBody.getName());
+    assertEquals(request.getName(), responseBody.getNameBackend());
   }
 
   @Test

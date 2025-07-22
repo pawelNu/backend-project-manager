@@ -223,7 +223,7 @@ class EmployeeAuthorityControllerTest {
     assertEquals("items 0-4/5", headerContentRange);
     assertEquals(5, responseBody.size());
     assertEquals("test", responseBody.getFirst().getUsername());
-    assertEquals("CATEGORY_VALUE_GET_BY_ID", responseBody.getFirst().getAuthorityName());
+    assertEquals("CATEGORY_VALUE_GET_BY_ID", responseBody.getFirst().getAuthorityNameBackend());
   }
 
   @Test
@@ -249,7 +249,7 @@ class EmployeeAuthorityControllerTest {
     assertEquals("items 0-0/1", headerContentRange);
     assertEquals(1, responseBody.size());
     assertEquals("withAuthToDelete", responseBody.getFirst().getUsername());
-    assertEquals("ITEM_TO_FILTER", responseBody.getFirst().getAuthorityName());
+    assertEquals("ITEM_TO_FILTER", responseBody.getFirst().getAuthorityNameBackend());
   }
 
   @Test
@@ -270,7 +270,7 @@ class EmployeeAuthorityControllerTest {
     assertEquals(HttpStatus.OK.value(), status);
     assertEquals(1, responseBody.size());
     assertEquals("test", responseBody.getFirst().getUsername());
-    assertEquals("AUTHORITY_GET_BY_ID", responseBody.getFirst().getAuthorityName());
+    assertEquals("AUTHORITY_GET_BY_ID", responseBody.getFirst().getAuthorityNameBackend());
   }
 
   @Test

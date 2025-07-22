@@ -95,7 +95,7 @@ class CategoryControllerTest {
     String contentAsString = response.getResponse().getContentAsString();
     AuthorityDTO responseBody = objectMapper.readValue(contentAsString, AuthorityDTO.class);
     assertEquals(HttpStatus.CREATED.value(), status);
-    assertEquals(request.getName(), responseBody.getName());
+    assertEquals(request.getName(), responseBody.getNameBackend());
   }
 
   @Test
