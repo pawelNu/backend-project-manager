@@ -85,7 +85,12 @@ public class CategoryQueryRepository {
             .selectFrom(category)
             .leftJoin(category.values, categoryValue)
             .fetchJoin()
-            .where(category.id.eq(id).and(category.isDeleted.isFalse()))
+            .where(
+                category
+                    .id
+                    .eq(id)
+                    .and(category.isDeleted.isFalse())
+                    .and(categoryValue.isDeleted.isFalse()))
             .fetch();
 
     if (fetch != null && !fetch.isEmpty()) {
