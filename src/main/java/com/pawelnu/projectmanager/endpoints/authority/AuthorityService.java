@@ -14,7 +14,6 @@ import com.pawelnu.projectmanager.utils.PageableParams;
 import com.pawelnu.projectmanager.utils.Shared;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -81,37 +80,30 @@ public class AuthorityService {
   }
 
   public AuthorityDTO getById(UUID id) {
+    return authorityMapperManual.toDTO(getAuthorityEntityById(id));
+  }
+
+  public AuthorityEntity getAuthorityEntityById(UUID id) {
     return authorityQueryRepository
         .findById(id)
-        .map(authorityMapperManual::toDTO)
         .orElseThrow(() -> new NotFoundException(MSG.AUTHORITY_NOT_FOUND_MSG + id));
   }
 
   public AuthorityDTO editById(UUID id, AuthorityEditRequestDTO body) {
-    Optional<AuthorityEntity> companyToEdit = authorityQueryRepository.findById(id);
-    if (companyToEdit.isPresent()) {
-      AuthorityEntity existingAuthority = companyToEdit.get();
-      authorityMapper.toEntity(body, existingAuthority);
-      AuthorityEntity updatedCompany = authorityRepository.save(existingAuthority);
-      return authorityMapper.toDTO(updatedCompany);
-    } else {
-      throw new NotFoundException(MSG.AUTHORITY_NOT_FOUND_MSG + id);
-    }
+    AuthorityEntity companyToEdit = getAuthorityEntityById(id);
+    authorityMapper.toEntity(body, companyToEdit);
+    AuthorityEntity updatedCompany = authorityRepository.save(companyToEdit);
+    return authorityMapper.toDTO(updatedCompany);
   }
 
   public SimpleResponse deleteById(UUID id) {
-    Optional<AuthorityEntity> authorityToDelete = authorityRepository.findByIdAndIsDeletedFalse(id);
-    if (authorityToDelete.isPresent()) {
-      AuthorityEntity existingAuthority = authorityToDelete.get();
-      existingAuthority.setIsDeleted(true);
-      AuthorityEntity updatedAuthority = authorityRepository.save(existingAuthority);
-      if (updatedAuthority.getIsDeleted()) {
-        return SimpleResponse.builder().message("Deleted authority with id: " + id).build();
-      } else {
-        return SimpleResponse.builder().message("Cannot delete authority with id: " + id).build();
-      }
+    AuthorityEntity authorityToDelete = getAuthorityEntityById(id);
+    authorityToDelete.setIsDeleted(true);
+    AuthorityEntity updatedAuthority = authorityRepository.save(authorityToDelete);
+    if (updatedAuthority.getIsDeleted()) {
+      return SimpleResponse.builder().message("Deleted authority with id: " + id).build();
     } else {
-      throw new NotFoundException(MSG.AUTHORITY_NOT_FOUND_MSG + id);
+      return SimpleResponse.builder().message("Cannot delete authority with id: " + id).build();
     }
   }
 

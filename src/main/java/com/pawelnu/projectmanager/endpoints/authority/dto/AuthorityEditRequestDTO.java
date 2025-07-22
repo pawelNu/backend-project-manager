@@ -7,5 +7,6 @@ import lombok.Data;
 @Data
 @Builder
 public class AuthorityEditRequestDTO {
-  @NotNull private String name;
+  @NotNull private String nameBackend;
+  private String nameFrontend;
 }

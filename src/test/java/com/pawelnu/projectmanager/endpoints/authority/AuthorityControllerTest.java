@@ -51,6 +51,8 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 @ActiveProfiles("test")
 @Slf4j
 class AuthorityControllerTest {
+
+  public static final String FIELD_NAME_BACKEND = "nameBackend";
   @Autowired private JwtUtils jwtUtils;
   @Autowired private MockMvc mockMvc;
   @Autowired private ObjectMapper objectMapper;
@@ -78,8 +80,9 @@ class AuthorityControllerTest {
 
   @Test
   void shouldReturn_201_createAuthority() throws Exception {
+    String name = "FOR_TEST_AUTHORITY";
     AuthorityCreateRequestDTO request =
-        AuthorityCreateRequestDTO.builder().nameBackend("FOR_TEST_AUTHORITY").build();
+        AuthorityCreateRequestDTO.builder().nameBackend(name).build();
     String requestBody = objectMapper.writeValueAsString(request);
     MvcResult response =
         mockMvc
@@ -92,9 +95,53 @@ class AuthorityControllerTest {
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
     AuthorityDTO responseBody = objectMapper.readValue(contentAsString, AuthorityDTO.class);
-    // FIXME test
     assertEquals(HttpStatus.CREATED.value(), status);
-    assertEquals("FOR_TEST_AUTHORITY", responseBody.getNameBackend());
+    assertEquals(name, responseBody.getNameBackend());
+    assertEquals(name.toLowerCase(), responseBody.getNameFrontend());
+  }
+
+  @Test
+  void shouldReturn_201_createAuthority_getById() throws Exception {
+    String name = "FOR_TEST_GET_BY_ID";
+    AuthorityCreateRequestDTO request =
+        AuthorityCreateRequestDTO.builder().nameBackend(name).build();
+    String requestBody = objectMapper.writeValueAsString(request);
+    MvcResult response =
+        mockMvc
+            .perform(
+                post(BASE_URL)
+                    .with(withJwt())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(requestBody))
+            .andReturn();
+    int status = response.getResponse().getStatus();
+    String contentAsString = response.getResponse().getContentAsString();
+    AuthorityDTO responseBody = objectMapper.readValue(contentAsString, AuthorityDTO.class);
+    assertEquals(HttpStatus.CREATED.value(), status);
+    assertEquals(name, responseBody.getNameBackend());
+    assertEquals("for_test_show".toLowerCase(), responseBody.getNameFrontend());
+  }
+
+  @Test
+  void shouldReturn_201_createAuthority_getById2() throws Exception {
+    String name = "FOR_TEST_GET_BY_ID";
+    AuthorityCreateRequestDTO request =
+        AuthorityCreateRequestDTO.builder().nameBackend(name).nameFrontend(name).build();
+    String requestBody = objectMapper.writeValueAsString(request);
+    MvcResult response =
+        mockMvc
+            .perform(
+                post(BASE_URL)
+                    .with(withJwt())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(requestBody))
+            .andReturn();
+    int status = response.getResponse().getStatus();
+    String contentAsString = response.getResponse().getContentAsString();
+    AuthorityDTO responseBody = objectMapper.readValue(contentAsString, AuthorityDTO.class);
+    assertEquals(HttpStatus.CREATED.value(), status);
+    assertEquals(name, responseBody.getNameBackend());
+    assertEquals(name, responseBody.getNameFrontend());
   }
 
   @Test
@@ -115,7 +162,7 @@ class AuthorityControllerTest {
     ReactAdminBadRequestError responseBody =
         objectMapper.readValue(contentAsString, ReactAdminBadRequestError.class);
     assertEquals(HttpStatus.BAD_REQUEST.value(), status);
-    assertEquals("Name should has 5-255 characters", responseBody.getErrors().get("name"));
+    assertEquals("Name should has 5-255 characters", responseBody.getErrors().get("nameBackend"));
   }
 
   @Test
@@ -172,7 +219,8 @@ class AuthorityControllerTest {
 
   @Test
   void shouldReturn_200_getAuthorityList_withFilters() throws Exception {
-    Map<String, String> filter = Map.of("name", "AUTHORITY_DELETE_BY_ID");
+    String searchString = "AUTHORITIES_DELETE_BY_ID";
+    Map<String, String> filter = Map.of(FIELD_NAME_BACKEND, searchString);
     String filterStrig = objectMapper.writeValueAsString(filter);
     MvcResult response =
         mockMvc.perform(get(BASE_URL).with(withJwt()).param("filter", filterStrig)).andReturn();
@@ -181,16 +229,16 @@ class AuthorityControllerTest {
     String contentAsString = response.getResponse().getContentAsString();
     List<AuthorityDTO> responseBody =
         objectMapper.readValue(contentAsString, new TypeReference<>() {});
-    assertEquals(HttpStatus.OK.value(), status); // FIXME test
-    assertEquals("items 0-0/1", headerContentRange);
-    assertEquals(1, responseBody.size());
-    assertEquals("AUTHORITY_DELETE_BY_ID", responseBody.getFirst().getNameBackend());
+    assertEquals(HttpStatus.OK.value(), status);
+    assertEquals("items 0-1/2", headerContentRange);
+    assertEquals(2, responseBody.size());
+    assertEquals(searchString, responseBody.getFirst().getNameBackend());
   }
 
   @Test
   void shouldReturn_200_getAuthorityList_withFiltersAndSort() throws Exception {
-    List<String> sort = List.of("name", "DESC");
-    Map<String, String> filter = Map.of("name", "authority_get");
+    List<String> sort = List.of(FIELD_NAME_BACKEND, "DESC");
+    Map<String, String> filter = Map.of(FIELD_NAME_BACKEND, "authorities_get");
     String sortString = objectMapper.writeValueAsString(sort);
     String filterStrig = objectMapper.writeValueAsString(filter);
     MvcResult response =
@@ -206,10 +254,10 @@ class AuthorityControllerTest {
     String contentAsString = response.getResponse().getContentAsString();
     List<AuthorityDTO> responseBody =
         objectMapper.readValue(contentAsString, new TypeReference<>() {});
-    assertEquals(HttpStatus.OK.value(), status); // FIXME test
-    assertEquals("items 0-2/3", headerContentRange);
-    assertEquals(3, responseBody.size());
-    assertEquals("EMPLOYEE_AUTHORITY_GET_LIST", responseBody.getFirst().getNameBackend());
+    assertEquals(HttpStatus.OK.value(), status);
+    assertEquals("items 0-3/4", headerContentRange);
+    assertEquals(4, responseBody.size());
+    assertEquals("EMPLOYEE_AUTHORITIES_GET_LIST", responseBody.getFirst().getNameBackend());
   }
 
   @Test
@@ -229,7 +277,7 @@ class AuthorityControllerTest {
 
   @Test
   void shouldReturn_200_getAuthorityList_emptyResult() throws Exception {
-    Map<String, String> filter = Map.of("name", "user");
+    Map<String, String> filter = Map.of(FIELD_NAME_BACKEND, "user");
     String filterStrig = objectMapper.writeValueAsString(filter);
     MvcResult response =
         mockMvc.perform(get(BASE_URL).with(withJwt()).param("filter", filterStrig)).andReturn();
@@ -239,7 +287,6 @@ class AuthorityControllerTest {
     List<AuthorityDTO> responseBody =
         objectMapper.readValue(contentAsString, new TypeReference<>() {});
     assertEquals(HttpStatus.OK.value(), status);
-    // FIXME test
     assertEquals("items 0--1/0", headerContentRange);
     assertEquals(0, responseBody.size());
   }
@@ -275,8 +322,7 @@ class AuthorityControllerTest {
     String contentAsString = response.getResponse().getContentAsString();
     AuthorityDTO responseBody = objectMapper.readValue(contentAsString, AuthorityDTO.class);
     assertEquals(HttpStatus.OK.value(), status);
-    // FIXME test
-    assertEquals("AUTHORITY_EDIT_BY_ID", responseBody.getNameBackend());
+    assertEquals("AUTHORITIES_EDIT_BY_ID", responseBody.getNameBackend());
   }
 
   @Test
@@ -346,7 +392,7 @@ class AuthorityControllerTest {
     String authorityId = "79700b85-7a8e-4c13-aae6-b2b9955d73ab";
     String url = BASE_URL + "/" + authorityId;
     AuthorityEditRequestDTO request =
-        AuthorityEditRequestDTO.builder().name("ITEM_UPDATED").build();
+        AuthorityEditRequestDTO.builder().nameBackend("ITEM_UPDATED").build();
     String requestBody = objectMapper.writeValueAsString(request);
     MvcResult response =
         mockMvc
@@ -359,9 +405,10 @@ class AuthorityControllerTest {
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
     AuthorityDTO responseBody = objectMapper.readValue(contentAsString, AuthorityDTO.class);
-    assertEquals(HttpStatus.OK.value(), status); // FIXME test
+    assertEquals(HttpStatus.OK.value(), status);
     assertEquals(UUID.fromString(authorityId), responseBody.getId());
-    assertEquals(request.getName(), responseBody.getNameBackend());
+    assertEquals(request.getNameBackend(), responseBody.getNameBackend());
+    assertEquals(request.getNameFrontend(), responseBody.getNameFrontend());
   }
 
   @Test
@@ -369,7 +416,7 @@ class AuthorityControllerTest {
     String authorityId = "invalid-uuid";
     String url = BASE_URL + "/" + authorityId;
     AuthorityEditRequestDTO request =
-        AuthorityEditRequestDTO.builder().name("ITEM_UPDATED").build();
+        AuthorityEditRequestDTO.builder().nameBackend("ITEM_UPDATED").build();
     String requestBody = objectMapper.writeValueAsString(request);
     MvcResult response =
         mockMvc
@@ -391,7 +438,7 @@ class AuthorityControllerTest {
     String authorityId = "ac1da9e4-7e4b-42ab-b9a5-b87cc4f30c2c";
     String url = BASE_URL + "/" + authorityId;
     AuthorityEditRequestDTO request =
-        AuthorityEditRequestDTO.builder().name("ITEM_UPDATED").build();
+        AuthorityEditRequestDTO.builder().nameBackend("ITEM_UPDATED").build();
     String requestBody = objectMapper.writeValueAsString(request);
     MvcResult response =
         mockMvc
@@ -409,7 +456,7 @@ class AuthorityControllerTest {
     String authorityId = "ac1da9e4-7e4b-42ab-b9a5-b87cc4f30c2c";
     String url = BASE_URL + "/" + authorityId;
     AuthorityEditRequestDTO request =
-        AuthorityEditRequestDTO.builder().name("ITEM_UPDATED").build();
+        AuthorityEditRequestDTO.builder().nameBackend("ITEM_UPDATED").build();
     String requestBody = objectMapper.writeValueAsString(request);
     MvcResult response =
         mockMvc
@@ -431,7 +478,7 @@ class AuthorityControllerTest {
     String authorityId = "84ad8217-9bc4-4244-8d23-d0354ddb9100";
     String url = BASE_URL + "/" + authorityId;
     AuthorityEditRequestDTO request =
-        AuthorityEditRequestDTO.builder().name("ITEM_UPDATED").build();
+        AuthorityEditRequestDTO.builder().nameBackend("ITEM_UPDATED").build();
     String requestBody = objectMapper.writeValueAsString(request);
     MvcResult response =
         mockMvc
