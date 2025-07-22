@@ -35,13 +35,17 @@ public class ProjectService {
   private final ObjectMapper objectMapper;
 
   public ProjectDTO create(ProjectCreateRequestDTO body) {
+    //    CategoryValueEntity projectCategory =
+    //        categoryValueService.findCategoryByNameAndValue("project category", "production");
     CategoryValueEntity projectCategory =
-        categoryValueService.findCategoryByNameAndValue("project category", "production");
+        categoryValueService.getCategoryValueById(body.getCategoryId());
     CompanyEntity companyEntity = companyService.getCompanyEntityById(body.getCompanyId());
     EmployeeEntity employeeEntity =
         employeeService.getEmployeeEntityById(body.getAssignedEmployeeId());
+    //    CategoryValueEntity projectPriority =
+    //        categoryValueService.findCategoryByNameAndValue("project priority", "5");
     CategoryValueEntity projectPriority =
-        categoryValueService.findCategoryByNameAndValue("project priority", "5");
+        categoryValueService.getCategoryValueById(body.getPriorityId());
     ProjectEntity projectEntity = projectMapper.toEntity(body);
     projectEntity.setCategoryValue(projectCategory);
     projectEntity.setCompany(companyEntity);
