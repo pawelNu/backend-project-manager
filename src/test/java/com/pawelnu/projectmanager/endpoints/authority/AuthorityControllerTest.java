@@ -79,7 +79,7 @@ class AuthorityControllerTest {
   @Test
   void shouldReturn_201_createAuthority() throws Exception {
     AuthorityCreateRequestDTO request =
-        AuthorityCreateRequestDTO.builder().name("FOR_TEST_AUTHORITY").build();
+        AuthorityCreateRequestDTO.builder().nameBackend("FOR_TEST_AUTHORITY").build();
     String requestBody = objectMapper.writeValueAsString(request);
     MvcResult response =
         mockMvc
@@ -92,13 +92,14 @@ class AuthorityControllerTest {
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
     AuthorityDTO responseBody = objectMapper.readValue(contentAsString, AuthorityDTO.class);
+    // FIXME test
     assertEquals(HttpStatus.CREATED.value(), status);
     assertEquals("FOR_TEST_AUTHORITY", responseBody.getNameBackend());
   }
 
   @Test
   void shouldReturn_400_createAuthority() throws Exception {
-    AuthorityCreateRequestDTO request = AuthorityCreateRequestDTO.builder().name("TEST").build();
+    AuthorityCreateRequestDTO request = AuthorityCreateRequestDTO.builder().nameBackend("TEST").build();
     String requestBody = objectMapper.writeValueAsString(request);
     MvcResult response =
         mockMvc
@@ -118,7 +119,7 @@ class AuthorityControllerTest {
 
   @Test
   void shouldReturn_401_createAuthority() throws Exception {
-    AuthorityCreateRequestDTO request = AuthorityCreateRequestDTO.builder().name("TEST").build();
+    AuthorityCreateRequestDTO request = AuthorityCreateRequestDTO.builder().nameBackend("TEST").build();
     String requestBody = objectMapper.writeValueAsString(request);
     MvcResult response =
         mockMvc
@@ -133,7 +134,7 @@ class AuthorityControllerTest {
 
   @Test
   void shouldReturn_403_createAuthority() throws Exception {
-    AuthorityCreateRequestDTO request = AuthorityCreateRequestDTO.builder().name("TEST").build();
+    AuthorityCreateRequestDTO request = AuthorityCreateRequestDTO.builder().nameBackend("TEST").build();
     String requestBody = objectMapper.writeValueAsString(request);
     MvcResult response =
         mockMvc
@@ -177,7 +178,7 @@ class AuthorityControllerTest {
     String contentAsString = response.getResponse().getContentAsString();
     List<AuthorityDTO> responseBody =
         objectMapper.readValue(contentAsString, new TypeReference<>() {});
-    assertEquals(HttpStatus.OK.value(), status);
+    assertEquals(HttpStatus.OK.value(), status); // FIXME test
     assertEquals("items 0-0/1", headerContentRange);
     assertEquals(1, responseBody.size());
     assertEquals("AUTHORITY_DELETE_BY_ID", responseBody.getFirst().getNameBackend());
@@ -202,7 +203,7 @@ class AuthorityControllerTest {
     String contentAsString = response.getResponse().getContentAsString();
     List<AuthorityDTO> responseBody =
         objectMapper.readValue(contentAsString, new TypeReference<>() {});
-    assertEquals(HttpStatus.OK.value(), status);
+    assertEquals(HttpStatus.OK.value(), status); // FIXME test
     assertEquals("items 0-2/3", headerContentRange);
     assertEquals(3, responseBody.size());
     assertEquals("EMPLOYEE_AUTHORITY_GET_LIST", responseBody.getFirst().getNameBackend());
@@ -235,6 +236,7 @@ class AuthorityControllerTest {
     List<AuthorityDTO> responseBody =
         objectMapper.readValue(contentAsString, new TypeReference<>() {});
     assertEquals(HttpStatus.OK.value(), status);
+    // FIXME test
     assertEquals("items 0--1/0", headerContentRange);
     assertEquals(0, responseBody.size());
   }
@@ -270,6 +272,7 @@ class AuthorityControllerTest {
     String contentAsString = response.getResponse().getContentAsString();
     AuthorityDTO responseBody = objectMapper.readValue(contentAsString, AuthorityDTO.class);
     assertEquals(HttpStatus.OK.value(), status);
+    // FIXME test
     assertEquals("AUTHORITY_EDIT_BY_ID", responseBody.getNameBackend());
   }
 
@@ -353,7 +356,7 @@ class AuthorityControllerTest {
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
     AuthorityDTO responseBody = objectMapper.readValue(contentAsString, AuthorityDTO.class);
-    assertEquals(HttpStatus.OK.value(), status);
+    assertEquals(HttpStatus.OK.value(), status); // FIXME test
     assertEquals(UUID.fromString(authorityId), responseBody.getId());
     assertEquals(request.getName(), responseBody.getNameBackend());
   }

@@ -224,6 +224,7 @@ class EmployeeControllerTest {
     assertEquals("Keeling", responseBody.getFirst().getLastName());
   }
 
+  // FIXME test
   @Test
   void shouldReturn_200_getEmployeeList_withFiltersAndSort() throws Exception {
     List<String> sort = List.of("lastName", "DESC");

@@ -13,6 +13,7 @@ import com.pawelnu.projectmanager.utils.Consts.MSG;
 import com.pawelnu.projectmanager.utils.PageableParams;
 import com.pawelnu.projectmanager.utils.Shared;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -34,8 +35,34 @@ public class AuthorityService {
 
   public AuthorityDTO create(AuthorityCreateRequestDTO body) {
     AuthorityEntity entity = authorityMapper.toEntity(body);
+    String nameFrontend = generateNameFrontend(body.getNameFrontend(), entity.getNameBackend());
+    entity.setNameFrontend(nameFrontend);
     AuthorityEntity save = authorityRepository.save(entity);
     return authorityMapper.toDTO(save);
+  }
+
+  private String generateNameFrontend(String nameFrontend, String nameBackend) {
+    if (nameFrontend != null) {
+      return nameFrontend;
+    }
+
+    Map<String, String> suffixMap =
+        Map.of(
+            "DELETE_BY_ID", "delete",
+            "GET_BY_ID", "show",
+            "GET_LIST", "list",
+            "EDIT_BY_ID", "edit");
+
+    for (Map.Entry<String, String> entry : suffixMap.entrySet()) {
+      String suffix = entry.getKey();
+      String replacement = entry.getValue();
+      if (nameBackend.endsWith(suffix)) {
+        nameBackend = nameBackend.replace(suffix, replacement);
+        break;
+      }
+    }
+
+    return nameBackend.toLowerCase();
   }
 
   public AuthorityListResponseDTO filter(String sort, String range, String filter) {

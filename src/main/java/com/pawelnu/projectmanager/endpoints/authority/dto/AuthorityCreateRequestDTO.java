@@ -11,5 +11,8 @@ public class AuthorityCreateRequestDTO {
 
   @NotNull
   @Size(min = 5, max = 255, message = "Name should has 5-255 characters")
-  private String name;
+  private String nameBackend;
+
+  @Size(min = 5, max = 255, message = "Name should has 5-255 characters")
+  private String nameFrontend;
 }

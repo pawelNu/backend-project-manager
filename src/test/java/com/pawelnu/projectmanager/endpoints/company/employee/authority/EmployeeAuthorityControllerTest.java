@@ -74,6 +74,7 @@ class EmployeeAuthorityControllerTest {
     Utils.generateToken(jwtUtils);
   }
 
+  // FIXME test
   @Test
   void shouldReturn_201_createEmployeeAuthority() throws Exception {
     EmployeeAuthorityCreateRequestDTO request =
@@ -223,6 +224,7 @@ class EmployeeAuthorityControllerTest {
     assertEquals("items 0-4/5", headerContentRange);
     assertEquals(5, responseBody.size());
     assertEquals("test", responseBody.getFirst().getUsername());
+    // FIXME test
     assertEquals("CATEGORY_VALUE_GET_BY_ID", responseBody.getFirst().getAuthorityNameBackend());
   }
 
@@ -270,6 +272,7 @@ class EmployeeAuthorityControllerTest {
     assertEquals(HttpStatus.OK.value(), status);
     assertEquals(1, responseBody.size());
     assertEquals("test", responseBody.getFirst().getUsername());
+    // FIXME test
     assertEquals("AUTHORITY_GET_BY_ID", responseBody.getFirst().getAuthorityNameBackend());
   }
 

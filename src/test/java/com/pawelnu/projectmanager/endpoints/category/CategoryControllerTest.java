@@ -95,7 +95,7 @@ class CategoryControllerTest {
     String contentAsString = response.getResponse().getContentAsString();
     AuthorityDTO responseBody = objectMapper.readValue(contentAsString, AuthorityDTO.class);
     assertEquals(HttpStatus.CREATED.value(), status);
-    assertEquals(request.getName(), responseBody.getNameBackend());
+    assertEquals(request.getName(), responseBody.getNameBackend()); // FIXME test
   }
 
   @Test
@@ -120,7 +120,7 @@ class CategoryControllerTest {
 
   @Test
   void shouldReturn_401_createCategory() throws Exception {
-    AuthorityCreateRequestDTO request = AuthorityCreateRequestDTO.builder().name("TEST").build();
+    AuthorityCreateRequestDTO request = AuthorityCreateRequestDTO.builder().nameBackend("TEST").build();
     String requestBody = objectMapper.writeValueAsString(request);
     MvcResult response =
         mockMvc
@@ -135,7 +135,7 @@ class CategoryControllerTest {
 
   @Test
   void shouldReturn_403_createCategory() throws Exception {
-    AuthorityCreateRequestDTO request = AuthorityCreateRequestDTO.builder().name("TEST").build();
+    AuthorityCreateRequestDTO request = AuthorityCreateRequestDTO.builder().nameBackend("TEST").build();
     String requestBody = objectMapper.writeValueAsString(request);
     MvcResult response =
         mockMvc
@@ -162,7 +162,7 @@ class CategoryControllerTest {
     String headerContentRange = response.getResponse().getHeader("Content-Range");
     String contentAsString = response.getResponse().getContentAsString();
     List<CategoryDTO> responseBody =
-        objectMapper.readValue(contentAsString, new TypeReference<>() {});
+        objectMapper.readValue(contentAsString, new TypeReference<>() {}); // FIXME test
     assertEquals(HttpStatus.OK.value(), status);
     assertEquals("items 0-1", headerContentRange.substring(0, 9));
     assertEquals(2, responseBody.size());
@@ -178,7 +178,7 @@ class CategoryControllerTest {
     String headerContentRange = response.getResponse().getHeader("Content-Range");
     String contentAsString = response.getResponse().getContentAsString();
     List<CategoryDTO> responseBody =
-        objectMapper.readValue(contentAsString, new TypeReference<>() {});
+        objectMapper.readValue(contentAsString, new TypeReference<>() {}); // FIXME test
     assertEquals(HttpStatus.OK.value(), status);
     assertEquals("items 0-0/1", headerContentRange);
     assertEquals(1, responseBody.size());
@@ -203,7 +203,7 @@ class CategoryControllerTest {
     String headerContentRange = response.getResponse().getHeader("Content-Range");
     String contentAsString = response.getResponse().getContentAsString();
     List<CategoryDTO> responseBody =
-        objectMapper.readValue(contentAsString, new TypeReference<>() {});
+        objectMapper.readValue(contentAsString, new TypeReference<>() {}); // FIXME test
     assertEquals(HttpStatus.OK.value(), status);
     assertEquals("items 0-1/2", headerContentRange);
     assertEquals(2, responseBody.size());
@@ -224,7 +224,7 @@ class CategoryControllerTest {
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
     List<CategoryDTO> responseBody =
-        objectMapper.readValue(contentAsString, new TypeReference<>() {});
+        objectMapper.readValue(contentAsString, new TypeReference<>() {}); // FIXME test
     assertEquals(HttpStatus.OK.value(), status);
     assertEquals(1, responseBody.size());
     assertEquals("category a", responseBody.getFirst().getName());
@@ -240,7 +240,7 @@ class CategoryControllerTest {
     String headerContentRange = response.getResponse().getHeader("Content-Range");
     String contentAsString = response.getResponse().getContentAsString();
     List<CategoryDTO> responseBody =
-        objectMapper.readValue(contentAsString, new TypeReference<>() {});
+        objectMapper.readValue(contentAsString, new TypeReference<>() {}); // FIXME test
     assertEquals(HttpStatus.OK.value(), status);
     assertEquals("items 0--1/0", headerContentRange);
     assertEquals(0, responseBody.size());
@@ -360,7 +360,7 @@ class CategoryControllerTest {
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
     CategoryDTO responseBody = objectMapper.readValue(contentAsString, CategoryDTO.class);
-    assertEquals(HttpStatus.OK.value(), status);
+    assertEquals(HttpStatus.OK.value(), status); // FIXME test
     assertEquals(UUID.fromString(categoryId), responseBody.getId());
     assertEquals(request.getName(), responseBody.getName());
   }
@@ -456,7 +456,7 @@ class CategoryControllerTest {
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
     SimpleResponse responseBody = objectMapper.readValue(contentAsString, SimpleResponse.class);
-    assertEquals(HttpStatus.OK.value(), status);
+    assertEquals(HttpStatus.OK.value(), status); // FIXME test
     assertEquals("Deleted authority with id: " + categoryId, responseBody.getMessage());
   }
 
