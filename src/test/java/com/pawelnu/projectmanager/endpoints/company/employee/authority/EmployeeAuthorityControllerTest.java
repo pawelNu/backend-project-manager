@@ -12,10 +12,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pawelnu.projectmanager.config.security.jwt.JwtUtils;
-import com.pawelnu.projectmanager.endpoints.company.employee.authority.dto.EmployeeAuthoritiesDTO;
 import com.pawelnu.projectmanager.endpoints.company.employee.authority.dto.EmployeeAuthorityCreateRequestDTO;
+import com.pawelnu.projectmanager.endpoints.company.employee.authority.dto.EmployeeAuthorityCreateResponseDTO;
 import com.pawelnu.projectmanager.endpoints.company.employee.authority.dto.EmployeeAuthorityDTO;
 import com.pawelnu.projectmanager.endpoints.company.employee.authority.dto.EmployeeAuthorityDeleteRequestDTO;
+import com.pawelnu.projectmanager.endpoints.company.employee.authority.dto.EmployeeAuthorityIdNameDTO;
 import com.pawelnu.projectmanager.exception.model.ReactAdminBadRequestError;
 import com.pawelnu.projectmanager.exception.model.ReactAdminError;
 import com.pawelnu.projectmanager.exception.model.SimpleResponse;
@@ -74,7 +75,6 @@ class EmployeeAuthorityControllerTest {
     Utils.generateToken(jwtUtils);
   }
 
-  // FIXME test
   @Test
   void shouldReturn_201_createEmployeeAuthority() throws Exception {
     EmployeeAuthorityCreateRequestDTO request =
@@ -99,20 +99,21 @@ class EmployeeAuthorityControllerTest {
             .andReturn();
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
-    EmployeeAuthoritiesDTO responseBody =
-        objectMapper.readValue(contentAsString, EmployeeAuthoritiesDTO.class);
+    EmployeeAuthorityCreateResponseDTO responseBody =
+        objectMapper.readValue(contentAsString, EmployeeAuthorityCreateResponseDTO.class);
     assertEquals(HttpStatus.CREATED.value(), status);
     assertEquals("userNoAuthorities", responseBody.getUsername());
     assertTrue(
-        responseBody
-            .getAuthorityNames()
+        responseBody.getEmployeeAuthorities().stream()
+            .map(EmployeeAuthorityIdNameDTO::getNameBackend)
+            .toList()
             .containsAll(
                 List.of(
-                    "COMPANY_GET_BY_ID",
-                    "COMPANY_GET_LIST",
-                    "COMPANY_CREATE",
-                    "COMPANY_DELETE_BY_ID",
-                    "COMPANY_EDIT_BY_ID")));
+                    "COMPANIES_GET_BY_ID",
+                    "COMPANIES_GET_LIST",
+                    "COMPANIES_CREATE",
+                    "COMPANIES_DELETE_BY_ID",
+                    "COMPANIES_EDIT_BY_ID")));
   }
 
   @Test
@@ -224,8 +225,7 @@ class EmployeeAuthorityControllerTest {
     assertEquals("items 0-4/5", headerContentRange);
     assertEquals(5, responseBody.size());
     assertEquals("test", responseBody.getFirst().getUsername());
-    // FIXME test
-    assertEquals("CATEGORY_VALUE_GET_BY_ID", responseBody.getFirst().getAuthorityNameBackend());
+    assertEquals("CATEGORY_VALUES_GET_BY_ID", responseBody.getFirst().getAuthorityNameBackend());
   }
 
   @Test
@@ -272,8 +272,7 @@ class EmployeeAuthorityControllerTest {
     assertEquals(HttpStatus.OK.value(), status);
     assertEquals(1, responseBody.size());
     assertEquals("test", responseBody.getFirst().getUsername());
-    // FIXME test
-    assertEquals("AUTHORITY_GET_BY_ID", responseBody.getFirst().getAuthorityNameBackend());
+    assertEquals("AUTHORITIES_GET_BY_ID", responseBody.getFirst().getAuthorityNameBackend());
   }
 
   @Test
