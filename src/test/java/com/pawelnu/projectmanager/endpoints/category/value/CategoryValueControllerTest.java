@@ -236,7 +236,7 @@ class CategoryValueControllerTest {
   @Test
   void shouldReturn_200_getCategoryValueList_withRange() throws Exception {
     List<String> range = List.of("0", "0");
-    List<String> sort = List.of("id", "ASC");
+    List<String> sort = List.of("stringValue", "ASC");
     String rangeString = objectMapper.writeValueAsString(range);
     String sortString = objectMapper.writeValueAsString(sort);
     MvcResult response =
