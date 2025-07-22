@@ -224,11 +224,10 @@ class EmployeeControllerTest {
     assertEquals("Keeling", responseBody.getFirst().getLastName());
   }
 
-  // FIXME test
   @Test
   void shouldReturn_200_getEmployeeList_withFiltersAndSort() throws Exception {
     List<String> sort = List.of("lastName", "DESC");
-    Map<String, String> filter = Map.of("companyName", "sons");
+    Map<String, String> filter = Map.of("companyName", "boy%sons");
     String sortString = objectMapper.writeValueAsString(sort);
     String filterStrig = objectMapper.writeValueAsString(filter);
     MvcResult response =
@@ -245,9 +244,9 @@ class EmployeeControllerTest {
     List<EmployeeDTO> responseBody =
         objectMapper.readValue(contentAsString, new TypeReference<>() {});
     assertEquals(HttpStatus.OK.value(), status);
-    assertEquals("items 0-9/10", headerContentRange);
-    assertEquals(10, responseBody.size());
-    assertEquals("user_with_no_authorities", responseBody.getFirst().getFirstName());
+    assertEquals("items 0-1/2", headerContentRange);
+    assertEquals(2, responseBody.size());
+    assertEquals("Lean_Bruen23156", responseBody.getFirst().getUsername());
   }
 
   @Test
