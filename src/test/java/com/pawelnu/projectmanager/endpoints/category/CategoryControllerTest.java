@@ -120,7 +120,8 @@ class CategoryControllerTest {
 
   @Test
   void shouldReturn_401_createCategory() throws Exception {
-    AuthorityCreateRequestDTO request = AuthorityCreateRequestDTO.builder().nameBackend("TEST").build();
+    AuthorityCreateRequestDTO request =
+        AuthorityCreateRequestDTO.builder().nameBackend("TEST").build();
     String requestBody = objectMapper.writeValueAsString(request);
     MvcResult response =
         mockMvc
@@ -135,7 +136,8 @@ class CategoryControllerTest {
 
   @Test
   void shouldReturn_403_createCategory() throws Exception {
-    AuthorityCreateRequestDTO request = AuthorityCreateRequestDTO.builder().nameBackend("TEST").build();
+    AuthorityCreateRequestDTO request =
+        AuthorityCreateRequestDTO.builder().nameBackend("TEST").build();
     String requestBody = objectMapper.writeValueAsString(request);
     MvcResult response =
         mockMvc

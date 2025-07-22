@@ -99,7 +99,8 @@ class AuthorityControllerTest {
 
   @Test
   void shouldReturn_400_createAuthority() throws Exception {
-    AuthorityCreateRequestDTO request = AuthorityCreateRequestDTO.builder().nameBackend("TEST").build();
+    AuthorityCreateRequestDTO request =
+        AuthorityCreateRequestDTO.builder().nameBackend("TEST").build();
     String requestBody = objectMapper.writeValueAsString(request);
     MvcResult response =
         mockMvc
@@ -119,7 +120,8 @@ class AuthorityControllerTest {
 
   @Test
   void shouldReturn_401_createAuthority() throws Exception {
-    AuthorityCreateRequestDTO request = AuthorityCreateRequestDTO.builder().nameBackend("TEST").build();
+    AuthorityCreateRequestDTO request =
+        AuthorityCreateRequestDTO.builder().nameBackend("TEST").build();
     String requestBody = objectMapper.writeValueAsString(request);
     MvcResult response =
         mockMvc
@@ -134,7 +136,8 @@ class AuthorityControllerTest {
 
   @Test
   void shouldReturn_403_createAuthority() throws Exception {
-    AuthorityCreateRequestDTO request = AuthorityCreateRequestDTO.builder().nameBackend("TEST").build();
+    AuthorityCreateRequestDTO request =
+        AuthorityCreateRequestDTO.builder().nameBackend("TEST").build();
     String requestBody = objectMapper.writeValueAsString(request);
     MvcResult response =
         mockMvc
