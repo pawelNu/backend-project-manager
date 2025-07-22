@@ -1,13 +1,16 @@
 package com.pawelnu.projectmanager.endpoints.category;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.pawelnu.projectmanager.endpoints.category.dto.CategoryCreateRequestDTO;
+import com.pawelnu.projectmanager.endpoints.category.dto.CategoryDTO;
+import com.pawelnu.projectmanager.endpoints.category.dto.CategoryEditRequestDTO;
+import com.pawelnu.projectmanager.endpoints.category.dto.CategoryListResponseDTO;
 import com.pawelnu.projectmanager.exception.NotFoundException;
 import com.pawelnu.projectmanager.exception.model.SimpleResponse;
 import com.pawelnu.projectmanager.utils.Consts.MSG;
 import com.pawelnu.projectmanager.utils.PageableParams;
 import com.pawelnu.projectmanager.utils.Shared;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +25,7 @@ public class CategoryService {
   private final CategoryRepository categoryRepository;
   private final CategoryQueryRepository categoryQueryRepository;
   private final CategoryMapper categoryMapper;
+  private final CategoryMapperManual categoryMapperManual;
   private final ObjectMapper objectMapper;
 
   public CategoryDTO create(CategoryCreateRequestDTO body) {
@@ -46,37 +50,30 @@ public class CategoryService {
   }
 
   public CategoryDTO getById(UUID id) {
+    return categoryMapperManual.toDTO(getCategoryEntityById(id));
+  }
+
+  private CategoryEntity getCategoryEntityById(UUID id) {
     return categoryQueryRepository
         .findById(id)
-        .map(categoryMapper::toDTO)
         .orElseThrow(() -> new NotFoundException(MSG.CATEGORY_NOT_FOUND_MSG + id));
   }
 
   public CategoryDTO editById(UUID id, CategoryEditRequestDTO body) {
-    Optional<CategoryEntity> companyToEdit = categoryQueryRepository.findById(id);
-    if (companyToEdit.isPresent()) {
-      CategoryEntity existingAuthority = companyToEdit.get();
-      categoryMapper.toEntity(body, existingAuthority);
-      CategoryEntity updatedCompany = categoryRepository.save(existingAuthority);
-      return categoryMapper.toDTO(updatedCompany);
-    } else {
-      throw new NotFoundException(MSG.CATEGORY_NOT_FOUND_MSG + id);
-    }
+    CategoryEntity categoryToEdit = getCategoryEntityById(id);
+    categoryMapper.toEntity(body, categoryToEdit);
+    CategoryEntity updatedCompany = categoryRepository.save(categoryToEdit);
+    return categoryMapper.toDTO(updatedCompany);
   }
 
   public SimpleResponse deleteById(UUID id) {
-    Optional<CategoryEntity> authorityToDelete = categoryRepository.findByIdAndIsDeletedFalse(id);
-    if (authorityToDelete.isPresent()) {
-      CategoryEntity existingAuthority = authorityToDelete.get();
-      existingAuthority.setIsDeleted(true);
-      CategoryEntity updatedAuthority = categoryRepository.save(existingAuthority);
-      if (updatedAuthority.getIsDeleted()) {
-        return SimpleResponse.builder().message("Deleted authority with id: " + id).build();
-      } else {
-        return SimpleResponse.builder().message("Cannot delete authority with id: " + id).build();
-      }
+    CategoryEntity categoryToDelete = getCategoryEntityById(id);
+    categoryToDelete.setIsDeleted(true);
+    CategoryEntity updatedCategory = categoryRepository.save(categoryToDelete);
+    if (updatedCategory.getIsDeleted()) {
+      return SimpleResponse.builder().message("Deleted category with id: " + id).build();
     } else {
-      throw new NotFoundException(MSG.CATEGORY_NOT_FOUND_MSG + id);
+      return SimpleResponse.builder().message("Cannot delete category with id: " + id).build();
     }
   }
 }

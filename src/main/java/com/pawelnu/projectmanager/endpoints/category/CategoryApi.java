@@ -1,5 +1,8 @@
 package com.pawelnu.projectmanager.endpoints.category;
 
+import com.pawelnu.projectmanager.endpoints.category.dto.CategoryCreateRequestDTO;
+import com.pawelnu.projectmanager.endpoints.category.dto.CategoryDTO;
+import com.pawelnu.projectmanager.endpoints.category.dto.CategoryEditRequestDTO;
 import com.pawelnu.projectmanager.exception.model.SimpleResponse;
 import com.pawelnu.projectmanager.utils.Path;
 import com.pawelnu.projectmanager.utils.ResponseErrors;

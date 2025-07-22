@@ -1,4 +1,4 @@
-package com.pawelnu.projectmanager.endpoints.category;
+package com.pawelnu.projectmanager.endpoints.category.dto;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;

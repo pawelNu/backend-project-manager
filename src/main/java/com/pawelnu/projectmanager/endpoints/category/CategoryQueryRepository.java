@@ -1,5 +1,7 @@
 package com.pawelnu.projectmanager.endpoints.category;
 
+import com.pawelnu.projectmanager.endpoints.category.dto.CategoryDTO;
+import com.pawelnu.projectmanager.endpoints.category.value.QCategoryValueEntity;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
@@ -76,10 +78,13 @@ public class CategoryQueryRepository {
 
   public Optional<CategoryEntity> findById(UUID id) {
     QCategoryEntity category = QCategoryEntity.categoryEntity;
+    QCategoryValueEntity categoryValue = QCategoryValueEntity.categoryValueEntity;
 
     List<CategoryEntity> fetch =
         queryFactory
             .selectFrom(category)
+            .leftJoin(category.values, categoryValue)
+            .fetchJoin()
             .where(category.id.eq(id).and(category.isDeleted.isFalse()))
             .fetch();
 
