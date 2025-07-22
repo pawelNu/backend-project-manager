@@ -118,8 +118,7 @@ class CategoryControllerTest {
 
   @Test
   void shouldReturn_401_createCategory() throws Exception {
-    CategoryCreateRequestDTO request =
-        CategoryCreateRequestDTO.builder().name("TEST").build();
+    CategoryCreateRequestDTO request = CategoryCreateRequestDTO.builder().name("TEST").build();
     String requestBody = objectMapper.writeValueAsString(request);
     MvcResult response =
         mockMvc
@@ -134,8 +133,7 @@ class CategoryControllerTest {
 
   @Test
   void shouldReturn_403_createCategory() throws Exception {
-    CategoryCreateRequestDTO request =
-        CategoryCreateRequestDTO.builder().name("TEST").build();
+    CategoryCreateRequestDTO request = CategoryCreateRequestDTO.builder().name("TEST").build();
     String requestBody = objectMapper.writeValueAsString(request);
     MvcResult response =
         mockMvc
