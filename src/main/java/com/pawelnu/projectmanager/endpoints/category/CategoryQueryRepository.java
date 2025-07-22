@@ -3,12 +3,14 @@ package com.pawelnu.projectmanager.endpoints.category;
 import com.pawelnu.projectmanager.endpoints.category.dto.CategoryDTO;
 import com.pawelnu.projectmanager.endpoints.category.value.QCategoryValueEntity;
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.ConstantImpl;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -44,7 +46,12 @@ public class CategoryQueryRepository {
 
     JPAQuery<CategoryDTO> query =
         queryFactory
-            .select(Projections.constructor(CategoryDTO.class, category.id, category.name))
+            .select(
+                Projections.constructor(
+                    CategoryDTO.class,
+                    category.id,
+                    category.name,
+                    ConstantImpl.create(Collections.emptyList())))
             .from(category)
             .where(allConditions)
             .offset(offset)
