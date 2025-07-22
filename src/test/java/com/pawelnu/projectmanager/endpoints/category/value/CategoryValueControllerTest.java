@@ -236,7 +236,7 @@ class CategoryValueControllerTest {
   @Test
   void shouldReturn_200_getCategoryValueList_withRange() throws Exception {
     List<String> range = List.of("0", "0");
-    List<String> sort = List.of("stringValue", "ASC");
+    List<String> sort = List.of("categoryName", "ASC");
     String rangeString = objectMapper.writeValueAsString(range);
     String sortString = objectMapper.writeValueAsString(sort);
     MvcResult response =
@@ -250,7 +250,7 @@ class CategoryValueControllerTest {
         objectMapper.readValue(contentAsString, new TypeReference<>() {});
     assertEquals(HttpStatus.OK.value(), status);
     assertEquals(1, responseBody.size());
-    assertEquals("company status", responseBody.getFirst().getCategoryName());
+    assertEquals("category a", responseBody.getFirst().getCategoryName());
   }
 
   @Test

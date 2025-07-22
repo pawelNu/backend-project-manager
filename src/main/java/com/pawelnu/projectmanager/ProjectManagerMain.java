@@ -14,7 +14,6 @@ public class ProjectManagerMain {
   }
 }
 
-// FIXME broken tests
 // TODO api for project_steps
 // TODO api for project_step_comments
 // TODO api for tickets

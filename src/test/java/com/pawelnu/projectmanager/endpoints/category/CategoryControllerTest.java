@@ -93,7 +93,7 @@ class CategoryControllerTest {
     String contentAsString = response.getResponse().getContentAsString();
     CategoryDTO responseBody = objectMapper.readValue(contentAsString, CategoryDTO.class);
     assertEquals(HttpStatus.CREATED.value(), status);
-    assertEquals(request.getName(), responseBody.getName()); // FIXME test 1
+    assertEquals(request.getName(), responseBody.getName());
   }
 
   @Test
@@ -160,7 +160,7 @@ class CategoryControllerTest {
     String headerContentRange = response.getResponse().getHeader("Content-Range");
     String contentAsString = response.getResponse().getContentAsString();
     List<CategoryDTO> responseBody =
-        objectMapper.readValue(contentAsString, new TypeReference<>() {}); // FIXME test
+        objectMapper.readValue(contentAsString, new TypeReference<>() {});
     assertEquals(HttpStatus.OK.value(), status);
     assertEquals("items 0-1", headerContentRange.substring(0, 9));
     assertEquals(2, responseBody.size());
@@ -176,7 +176,7 @@ class CategoryControllerTest {
     String headerContentRange = response.getResponse().getHeader("Content-Range");
     String contentAsString = response.getResponse().getContentAsString();
     List<CategoryDTO> responseBody =
-        objectMapper.readValue(contentAsString, new TypeReference<>() {}); // FIXME test
+        objectMapper.readValue(contentAsString, new TypeReference<>() {});
     assertEquals(HttpStatus.OK.value(), status);
     assertEquals("items 0-0/1", headerContentRange);
     assertEquals(1, responseBody.size());
@@ -201,7 +201,7 @@ class CategoryControllerTest {
     String headerContentRange = response.getResponse().getHeader("Content-Range");
     String contentAsString = response.getResponse().getContentAsString();
     List<CategoryDTO> responseBody =
-        objectMapper.readValue(contentAsString, new TypeReference<>() {}); // FIXME test
+        objectMapper.readValue(contentAsString, new TypeReference<>() {});
     assertEquals(HttpStatus.OK.value(), status);
     assertEquals("items 0-1/2", headerContentRange);
     assertEquals(2, responseBody.size());
@@ -222,7 +222,7 @@ class CategoryControllerTest {
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
     List<CategoryDTO> responseBody =
-        objectMapper.readValue(contentAsString, new TypeReference<>() {}); // FIXME test
+        objectMapper.readValue(contentAsString, new TypeReference<>() {});
     assertEquals(HttpStatus.OK.value(), status);
     assertEquals(1, responseBody.size());
     assertEquals("category a", responseBody.getFirst().getName());
@@ -238,7 +238,7 @@ class CategoryControllerTest {
     String headerContentRange = response.getResponse().getHeader("Content-Range");
     String contentAsString = response.getResponse().getContentAsString();
     List<CategoryDTO> responseBody =
-        objectMapper.readValue(contentAsString, new TypeReference<>() {}); // FIXME test
+        objectMapper.readValue(contentAsString, new TypeReference<>() {});
     assertEquals(HttpStatus.OK.value(), status);
     assertEquals("items 0--1/0", headerContentRange);
     assertEquals(0, responseBody.size());
@@ -358,7 +358,7 @@ class CategoryControllerTest {
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
     CategoryDTO responseBody = objectMapper.readValue(contentAsString, CategoryDTO.class);
-    assertEquals(HttpStatus.OK.value(), status); // FIXME test
+    assertEquals(HttpStatus.OK.value(), status);
     assertEquals(UUID.fromString(categoryId), responseBody.getId());
     assertEquals(request.getName(), responseBody.getName());
   }
@@ -454,7 +454,7 @@ class CategoryControllerTest {
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
     SimpleResponse responseBody = objectMapper.readValue(contentAsString, SimpleResponse.class);
-    assertEquals(HttpStatus.OK.value(), status); // FIXME test 1
+    assertEquals(HttpStatus.OK.value(), status);
     assertEquals("Deleted category with id: " + categoryId, responseBody.getMessage());
   }
 
