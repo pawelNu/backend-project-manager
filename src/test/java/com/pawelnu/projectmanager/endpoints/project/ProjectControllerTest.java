@@ -382,15 +382,15 @@ class ProjectControllerTest {
 
   @Test
   void shouldReturn_200_editProjectById() throws Exception {
-    String projectId = "b4b7091a-0dc5-463c-b009-a7ffb1159e0d";
+    String projectId = "ba8e0e3b-bcbc-4879-8f81-8d653a165f93";
     String url = BASE_URL + "/" + projectId;
     ProjectEditRequestDTO request =
         ProjectEditRequestDTO.builder()
-            .name("test project name")
-            .categoryValueId(UUID.fromString("84c3a3ac-c2d1-499e-8e33-c495d1faf1a7"))
-            .companyId(UUID.fromString("78d3f0da-e4b5-4885-8c2a-24b1f85afe44"))
+            .name("project updated")
+            .categoryValueId(UUID.fromString("09ca21c5-4fd1-4698-9a8f-dd66bc922851"))
+            .companyId(UUID.fromString("7c872159-c95d-4ca5-9fb3-1e2404d88f12"))
             .assignedEmployeeId(UUID.fromString("9f93938c-38f4-4472-b166-5ad41437db6e"))
-            .priorityValueId(UUID.fromString("15207afc-0a06-4d5f-a086-fe98cccb341c"))
+            .priorityValueId(UUID.fromString("d2add5db-6019-42a8-a29e-0096c75ddd88"))
             .build();
     String requestBody = objectMapper.writeValueAsString(request);
     MvcResult response =
@@ -405,12 +405,16 @@ class ProjectControllerTest {
     String contentAsString = response.getResponse().getContentAsString();
     ProjectDTO responseBody = objectMapper.readValue(contentAsString, ProjectDTO.class);
     assertEquals(HttpStatus.OK.value(), status);
-    //    assertEquals(request.getFirstName(), responseBody.getFirstName());
-    //    assertEquals(request.getLastName(), responseBody.getLastName());
-    //    assertEquals(request.getUsername(), responseBody.getUsername());
-    //    assertEquals(request.getEmail(), responseBody.getEmail());
-    //    assertEquals(request.getPhoneNumber(), responseBody.getPhoneNumber());
-    assertEquals("Brakus and Sons", responseBody.getCompanyName());
+    assertEquals("Dare, Nikolaus and Bruen", responseBody.getCompanyName());
+    assertEquals(request.getName(), responseBody.getName());
+    assertEquals("project category", responseBody.getCategoryName());
+    assertEquals(request.getCategoryValueId(), responseBody.getCategoryValueId());
+    assertEquals("PROD", responseBody.getCategoryValue());
+    assertEquals("project priority", responseBody.getPriorityName());
+    assertEquals(request.getPriorityValueId(), responseBody.getPriorityValueId());
+    assertEquals("CRITICAL", responseBody.getPriorityValue());
+    assertEquals(request.getAssignedEmployeeId(), responseBody.getAssignedEmployeeId());
+    assertEquals("Todd Kunde", responseBody.getAssignedEmployee());
   }
 
   @Test
@@ -495,7 +499,7 @@ class ProjectControllerTest {
 
   @Test
   void shouldReturn_404_editProjectById() throws Exception {
-    String projectId = "ac1da9e4-7e4b-42ab-b9a5-b87cc4f30c2c";
+    String projectId = "fb044c72-9f78-4c01-8ad5-2e4c04528de2";
     String url = BASE_URL + "/" + projectId;
     ProjectEditRequestDTO request =
         ProjectEditRequestDTO.builder()
@@ -609,8 +613,6 @@ class ProjectControllerTest {
     assertEquals(MSG.PROJECT_NOT_FOUND + projectId, responseBody.getMessage());
   }
 
-  // TODO test getList()
-  // TODO test getById()
   // TODO test editById()
   // TODO test deleteById()
 }
