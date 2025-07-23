@@ -101,6 +101,7 @@ class ProjectControllerTest {
     assertEquals("project category", responseBody.getCategoryName());
     assertEquals(request.getCategoryValueId(), responseBody.getCategoryValueId());
     assertEquals("R&D", responseBody.getCategoryValue());
+    assertEquals("project priority", responseBody.getPriorityName());
     assertEquals(request.getPriorityValueId(), responseBody.getPriorityValueId());
     assertEquals("LOW", responseBody.getPriorityValue());
     assertEquals(request.getAssignedEmployeeId(), responseBody.getAssignedEmployeeId());
@@ -609,7 +610,6 @@ class ProjectControllerTest {
     assertEquals(MSG.PROJECT_NOT_FOUND + projectId, responseBody.getMessage());
   }
 
-  // TODO test create()
   // TODO test getList()
   // TODO test getById()
   // TODO test editById()

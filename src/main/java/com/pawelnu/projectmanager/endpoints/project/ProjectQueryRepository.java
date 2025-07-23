@@ -7,6 +7,7 @@ import com.pawelnu.projectmanager.endpoints.company.employee.QEmployeeEntity;
 import com.pawelnu.projectmanager.utils.PageableParams;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Order;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
@@ -70,39 +71,43 @@ public class ProjectQueryRepository {
     QCategoryEntity projectPriority = new QCategoryEntity("projectPriority");
     BooleanBuilder allConditions = new BooleanBuilder();
 
-    //    if (params.getFilters().containsKey("companyName")) {
-    //      allConditions.and(
-    //          company.name.likeIgnoreCase("%" + params.getFilters().get("companyName") + "%"));
-    //    }
-    //    if (params.getFilters().containsKey(employee.firstName.getMetadata().getName())) {
-    //      allConditions.and(
-    //          employee.firstName.likeIgnoreCase(
-    //              "%" + params.getFilters().get(employee.firstName.getMetadata().getName()) +
-    // "%"));
-    //    }
-    //    if (params.getFilters().containsKey(employee.lastName.getMetadata().getName())) {
-    //      allConditions.and(
-    //          employee.lastName.likeIgnoreCase(
-    //              "%" + params.getFilters().get(employee.lastName.getMetadata().getName()) +
-    // "%"));
-    //    }
-    //    if (params.getFilters().containsKey(employee.username.getMetadata().getName())) {
-    //      allConditions.and(
-    //          employee.username.likeIgnoreCase(
-    //              "%" + params.getFilters().get(employee.username.getMetadata().getName()) +
-    // "%"));
-    //    }
-    //    if (params.getFilters().containsKey(employee.email.getMetadata().getName())) {
-    //      allConditions.and(
-    //          employee.email.likeIgnoreCase(
-    //              "%" + params.getFilters().get(employee.email.getMetadata().getName()) + "%"));
-    //    }
-    //    if (params.getFilters().containsKey(employee.phoneNumber.getMetadata().getName())) {
-    //      allConditions.and(
-    //          employee.phoneNumber.likeIgnoreCase(
-    //              "%" + params.getFilters().get(employee.phoneNumber.getMetadata().getName()) +
-    // "%"));
-    //    }
+    String projectName = "name";
+    String categoryValue = "categoryValue";
+    String companyName = "companyName";
+    String assignedEmployeeFiled = "assignedEmployee";
+    String priorityValue = "priorityValue";
+
+    if (params.getFilters().containsKey(projectName)) {
+      allConditions.and(
+          project.name.likeIgnoreCase("%" + params.getFilters().get(projectName) + "%"));
+    }
+    if (params.getFilters().containsKey(categoryValue)) {
+      allConditions.and(
+          projectCategoryValue.stringValue.likeIgnoreCase(
+              "%" + params.getFilters().get(categoryValue) + "%"));
+    }
+    if (params.getFilters().containsKey(companyName)) {
+      allConditions.and(
+          company.name.likeIgnoreCase("%" + params.getFilters().get(companyName) + "%"));
+    }
+    if (params.getFilters().containsKey(assignedEmployeeFiled)) {
+      String employeeFilter = "%" + params.getFilters().get(assignedEmployeeFiled) + "%";
+
+      BooleanExpression employeeCondition =
+          assignedEmployee
+              .firstName
+              .likeIgnoreCase(employeeFilter)
+              .or(assignedEmployee.lastName.likeIgnoreCase(employeeFilter));
+
+      allConditions.and(employeeCondition);
+    }
+
+    if (params.getFilters().containsKey(priorityValue)) {
+      allConditions.and(
+          projectPriorityValue.stringValue.likeIgnoreCase(
+              "%" + params.getFilters().get(priorityValue) + "%"));
+    }
+
     allConditions.and(project.isDeleted.isFalse());
 
     JPAQuery<ProjectEntity> query =
