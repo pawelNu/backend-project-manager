@@ -42,6 +42,7 @@ public class Utils {
   public static ReactAdminError accessDeniedError() {
     return new ReactAdminError("Access denied");
   }
+
   public static ReactAdminError unauthorizedError() {
     return new ReactAdminError(FULL_AUTH_IS_REQUIRED);
   }
