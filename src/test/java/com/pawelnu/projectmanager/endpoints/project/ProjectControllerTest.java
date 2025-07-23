@@ -527,7 +527,7 @@ class ProjectControllerTest {
 
   @Test
   void shouldReturn_200_deleteProjectById_isDeletedFalse() throws Exception {
-    String projectId = "a3f36913-36f6-4215-9f24-06323c990608";
+    String projectId = "5122cd14-26e5-4dcc-8bc0-30df39e3fe9a";
     String url = BASE_URL + "/" + projectId;
     MvcResult response =
         mockMvc
@@ -550,7 +550,7 @@ class ProjectControllerTest {
             .andReturn();
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
-    SimpleResponse responseBody = objectMapper.readValue(contentAsString, SimpleResponse.class);
+    ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
     assertEquals(HttpStatus.BAD_REQUEST.value(), status);
     assertEquals(invalidUUIDError(), responseBody);
   }
@@ -585,7 +585,7 @@ class ProjectControllerTest {
 
   @Test
   void shouldReturn_404_deleteProjectById_isDeletedFalse() throws Exception {
-    String projectId = "4c7a6cc5-1e03-4337-8901-93c0b46585af";
+    String projectId = "4768856c-6cc0-40ad-8106-58ad8d2e9923";
     String url = BASE_URL + "/" + projectId;
     MvcResult response =
         mockMvc
@@ -600,7 +600,7 @@ class ProjectControllerTest {
 
   @Test
   void shouldReturn_404_deleteProjectById_isDeletedTrue() throws Exception {
-    String projectId = "bbc5d705-bfdf-4314-b926-30371ef10682";
+    String projectId = "9d93bd6d-e48a-4bad-b4f5-6f71d27c0342";
     String url = BASE_URL + "/" + projectId;
     MvcResult response =
         mockMvc
@@ -612,7 +612,4 @@ class ProjectControllerTest {
     assertEquals(HttpStatus.NOT_FOUND.value(), status);
     assertEquals(MSG.PROJECT_NOT_FOUND + projectId, responseBody.getMessage());
   }
-
-  // TODO test editById()
-  // TODO test deleteById()
 }
