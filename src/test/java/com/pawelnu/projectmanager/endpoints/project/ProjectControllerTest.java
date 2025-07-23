@@ -1,6 +1,7 @@
 package com.pawelnu.projectmanager.endpoints.project;
 
 import static com.pawelnu.projectmanager.utils.Utils.accessDeniedError;
+import static com.pawelnu.projectmanager.utils.Utils.invalidUUIDError;
 import static com.pawelnu.projectmanager.utils.Utils.unauthorizedError;
 import static com.pawelnu.projectmanager.utils.Utils.withBadJwt;
 import static com.pawelnu.projectmanager.utils.Utils.withJwt;
@@ -302,7 +303,7 @@ class ProjectControllerTest {
 
   @Test
   void shouldReturn_200_getProjectById() throws Exception {
-    String projectId = "94759f68-0be8-403e-803a-cd6b9cfa1c8f";
+    String projectId = "dedeabdb-948c-46b2-b1aa-be34df8fae58";
     String url = BASE_URL + "/" + projectId;
     MvcResult response = mockMvc.perform(get(url).with(withJwt())).andReturn();
     int status = response.getResponse().getStatus();
@@ -310,12 +311,11 @@ class ProjectControllerTest {
     ProjectDTO responseBody = objectMapper.readValue(contentAsString, ProjectDTO.class);
     assertEquals(HttpStatus.OK.value(), status);
     assertEquals(UUID.fromString(projectId), responseBody.getId());
-    //    assertEquals("Georgine", responseBody.getFirstName());
-    //    assertEquals("Welch", responseBody.getLastName());
-    //    assertEquals("Georgine_Welch85182", responseBody.getUsername());
-    //    assertEquals("georgine.welch@example.com", responseBody.getEmail());
-    //    assertEquals("(219) 720-6247", responseBody.getPhoneNumber());
-    assertEquals("Wolff-Effertz", responseBody.getCompanyName());
+    assertEquals("develop frontend app", responseBody.getName());
+    assertEquals("INTERNAL", responseBody.getCategoryValue());
+    assertEquals("Hintz, Parisian and Sanford", responseBody.getCompanyName());
+    assertEquals("Jerrold Brakus", responseBody.getAssignedEmployee());
+    assertEquals("MEDIUM", responseBody.getPriorityValue());
   }
 
   @Test
@@ -327,7 +327,7 @@ class ProjectControllerTest {
     String contentAsString = response.getResponse().getContentAsString();
     ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
     assertEquals(HttpStatus.BAD_REQUEST.value(), status);
-    assertEquals(MSG.INVALID_UUID, responseBody.getMessage());
+    assertEquals(invalidUUIDError(), responseBody);
   }
 
   @Test
@@ -438,7 +438,7 @@ class ProjectControllerTest {
     String contentAsString = response.getResponse().getContentAsString();
     ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
     assertEquals(HttpStatus.BAD_REQUEST.value(), status);
-    assertEquals(MSG.INVALID_UUID, responseBody.getMessage());
+    assertEquals(invalidUUIDError(), responseBody);
   }
 
   @Test
@@ -548,7 +548,7 @@ class ProjectControllerTest {
     String contentAsString = response.getResponse().getContentAsString();
     SimpleResponse responseBody = objectMapper.readValue(contentAsString, SimpleResponse.class);
     assertEquals(HttpStatus.BAD_REQUEST.value(), status);
-    assertEquals(MSG.INVALID_UUID, responseBody.getMessage());
+    assertEquals(invalidUUIDError(), responseBody);
   }
 
   @Test
