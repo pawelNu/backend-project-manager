@@ -356,7 +356,7 @@ class ProjectControllerTest {
 
   @Test
   void shouldReturn_404_getProjectById() throws Exception {
-    String projectId = "bbc5d705-bfdf-4314-b926-30371ef10682";
+    String projectId = "89258385-aa00-47d3-bafe-88bc1d56e6ee";
     String url = BASE_URL + "/" + projectId;
     MvcResult response = mockMvc.perform(get(url).with(withJwt())).andReturn();
     int status = response.getResponse().getStatus();
@@ -369,7 +369,7 @@ class ProjectControllerTest {
 
   @Test
   void shouldReturn_404_getProjectById_isDeletedTrue() throws Exception {
-    String projectId = "bbc5d705-bfdf-4314-b926-30371ef10682";
+    String projectId = "9d93bd6d-e48a-4bad-b4f5-6f71d27c0342";
     String url = BASE_URL + "/" + projectId;
     MvcResult response = mockMvc.perform(get(url).with(withJwt())).andReturn();
     int status = response.getResponse().getStatus();
