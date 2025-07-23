@@ -96,10 +96,11 @@ class ProjectControllerTest {
     String contentAsString = response.getResponse().getContentAsString();
     ProjectDTO responseBody = objectMapper.readValue(contentAsString, ProjectDTO.class);
     assertEquals(HttpStatus.CREATED.value(), status);
-    assertEquals("Hayes-Welch", responseBody.getCompanyName());
+    assertEquals("Test Company", responseBody.getCompanyName());
     assertEquals(request.getName(), responseBody.getName());
+    assertEquals("project category", responseBody.getCategoryName());
     assertEquals(request.getCategoryValueId(), responseBody.getCategoryValueId());
-    assertEquals("R&D", responseBody.getCategoryName());
+    assertEquals("R&D", responseBody.getCategoryValue());
     assertEquals(request.getPriorityValueId(), responseBody.getPriorityValueId());
     assertEquals("LOW", responseBody.getPriorityValue());
     assertEquals(request.getAssignedEmployeeId(), responseBody.getAssignedEmployeeId());
