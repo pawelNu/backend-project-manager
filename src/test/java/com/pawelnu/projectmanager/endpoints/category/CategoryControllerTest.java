@@ -468,7 +468,7 @@ class CategoryControllerTest {
             .andReturn();
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
-    SimpleResponse responseBody = objectMapper.readValue(contentAsString, SimpleResponse.class);
+    ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
     assertEquals(HttpStatus.BAD_REQUEST.value(), status);
     assertEquals(invalidUUIDError(), responseBody);
   }
