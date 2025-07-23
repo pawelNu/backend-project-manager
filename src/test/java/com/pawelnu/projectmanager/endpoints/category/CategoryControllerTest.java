@@ -1,7 +1,8 @@
 package com.pawelnu.projectmanager.endpoints.category;
 
-import static com.pawelnu.projectmanager.utils.Utils.FULL_AUTH_IS_REQUIRED;
 import static com.pawelnu.projectmanager.utils.Utils.accessDeniedError;
+import static com.pawelnu.projectmanager.utils.Utils.invalidUUIDError;
+import static com.pawelnu.projectmanager.utils.Utils.unauthorizedError;
 import static com.pawelnu.projectmanager.utils.Utils.withBadJwt;
 import static com.pawelnu.projectmanager.utils.Utils.withJwt;
 import static org.junit.jupiter.api.Assertions.*;
@@ -13,8 +14,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pawelnu.projectmanager.config.security.jwt.JwtUtils;
-import com.pawelnu.projectmanager.endpoints.authority.AuthorityCreateRequestDTO;
-import com.pawelnu.projectmanager.endpoints.authority.AuthorityDTO;
+import com.pawelnu.projectmanager.endpoints.category.dto.CategoryCreateRequestDTO;
+import com.pawelnu.projectmanager.endpoints.category.dto.CategoryDTO;
+import com.pawelnu.projectmanager.endpoints.category.dto.CategoryEditRequestDTO;
 import com.pawelnu.projectmanager.exception.NotFoundException;
 import com.pawelnu.projectmanager.exception.model.ReactAdminBadRequestError;
 import com.pawelnu.projectmanager.exception.model.ReactAdminError;
@@ -90,7 +92,7 @@ class CategoryControllerTest {
             .andReturn();
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
-    AuthorityDTO responseBody = objectMapper.readValue(contentAsString, AuthorityDTO.class);
+    CategoryDTO responseBody = objectMapper.readValue(contentAsString, CategoryDTO.class);
     assertEquals(HttpStatus.CREATED.value(), status);
     assertEquals(request.getName(), responseBody.getName());
   }
@@ -117,7 +119,7 @@ class CategoryControllerTest {
 
   @Test
   void shouldReturn_401_createCategory() throws Exception {
-    AuthorityCreateRequestDTO request = AuthorityCreateRequestDTO.builder().name("TEST").build();
+    CategoryCreateRequestDTO request = CategoryCreateRequestDTO.builder().name("TEST").build();
     String requestBody = objectMapper.writeValueAsString(request);
     MvcResult response =
         mockMvc
@@ -127,12 +129,12 @@ class CategoryControllerTest {
     String contentAsString = response.getResponse().getContentAsString();
     ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
     assertEquals(HttpStatus.UNAUTHORIZED.value(), status);
-    assertEquals(FULL_AUTH_IS_REQUIRED, responseBody.getMessage());
+    assertEquals(unauthorizedError(), responseBody);
   }
 
   @Test
   void shouldReturn_403_createCategory() throws Exception {
-    AuthorityCreateRequestDTO request = AuthorityCreateRequestDTO.builder().name("TEST").build();
+    CategoryCreateRequestDTO request = CategoryCreateRequestDTO.builder().name("TEST").build();
     String requestBody = objectMapper.writeValueAsString(request);
     MvcResult response =
         mockMvc
@@ -250,9 +252,8 @@ class CategoryControllerTest {
     String contentAsString = response.getResponse().getContentAsString();
     ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
     assertEquals(HttpStatus.UNAUTHORIZED.value(), status);
-    ReactAdminError expectedResponse =
-        new ReactAdminError("Full authentication is required to access this resource");
-    assertEquals(expectedResponse, responseBody);
+
+    assertEquals(unauthorizedError(), responseBody);
   }
 
   @Test
@@ -286,7 +287,7 @@ class CategoryControllerTest {
     String contentAsString = response.getResponse().getContentAsString();
     ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
     assertEquals(HttpStatus.BAD_REQUEST.value(), status);
-    assertEquals(MSG.INVALID_UUID, responseBody.getMessage());
+    assertEquals(invalidUUIDError(), responseBody);
   }
 
   @Test
@@ -298,7 +299,7 @@ class CategoryControllerTest {
     String contentAsString = response.getResponse().getContentAsString();
     ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
     assertEquals(HttpStatus.UNAUTHORIZED.value(), status);
-    assertEquals(Utils.FULL_AUTH_IS_REQUIRED, responseBody.getMessage());
+    assertEquals(unauthorizedError(), responseBody);
   }
 
   @Test
@@ -380,7 +381,7 @@ class CategoryControllerTest {
     String contentAsString = response.getResponse().getContentAsString();
     ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
     assertEquals(HttpStatus.BAD_REQUEST.value(), status);
-    assertEquals(MSG.INVALID_UUID, responseBody.getMessage());
+    assertEquals(invalidUUIDError(), responseBody);
   }
 
   @Test
@@ -397,7 +398,7 @@ class CategoryControllerTest {
     String contentAsString = response.getResponse().getContentAsString();
     ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
     assertEquals(HttpStatus.UNAUTHORIZED.value(), status);
-    assertEquals(Utils.FULL_AUTH_IS_REQUIRED, responseBody.getMessage());
+    assertEquals(unauthorizedError(), responseBody);
   }
 
   @Test
@@ -454,7 +455,7 @@ class CategoryControllerTest {
     String contentAsString = response.getResponse().getContentAsString();
     SimpleResponse responseBody = objectMapper.readValue(contentAsString, SimpleResponse.class);
     assertEquals(HttpStatus.OK.value(), status);
-    assertEquals("Deleted authority with id: " + categoryId, responseBody.getMessage());
+    assertEquals("Deleted category with id: " + categoryId, responseBody.getMessage());
   }
 
   @Test
@@ -467,9 +468,9 @@ class CategoryControllerTest {
             .andReturn();
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
-    SimpleResponse responseBody = objectMapper.readValue(contentAsString, SimpleResponse.class);
+    ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
     assertEquals(HttpStatus.BAD_REQUEST.value(), status);
-    assertEquals(MSG.INVALID_UUID, responseBody.getMessage());
+    assertEquals(invalidUUIDError(), responseBody);
   }
 
   @Test
@@ -482,7 +483,7 @@ class CategoryControllerTest {
     String contentAsString = response.getResponse().getContentAsString();
     ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
     assertEquals(HttpStatus.UNAUTHORIZED.value(), status);
-    assertEquals(Utils.FULL_AUTH_IS_REQUIRED, responseBody.getMessage());
+    assertEquals(unauthorizedError(), responseBody);
   }
 
   @Test

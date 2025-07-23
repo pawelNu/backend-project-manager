@@ -1,4 +1,4 @@
-package com.pawelnu.projectmanager.endpoints.company.employee;
+package com.pawelnu.projectmanager.endpoints.company.employee.dto;
 
 import java.util.List;
 import lombok.Builder;

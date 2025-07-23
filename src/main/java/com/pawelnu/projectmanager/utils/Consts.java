@@ -33,9 +33,6 @@ public final class Consts {
         "Employee authority not found with id: ";
     public static final String CATEGORY_NOT_FOUND_MSG = "Category not found with id: ";
     public static final String CATEGORY_VALUE_NOT_FOUND_MSG = "Category value not found with id: ";
-    public static final String INVALID_UUID =
-        "Method parameter 'id': Failed to convert value of type 'java.lang.String' to required type"
-            + " 'java.util.UUID'; Invalid UUID string: invalid-uuid";
     public static final String PROJECT_NOT_FOUND = "Project not found with id: ";
   }
 }

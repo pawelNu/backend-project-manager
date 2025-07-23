@@ -1,7 +1,8 @@
 package com.pawelnu.projectmanager.endpoints.company.employee;
 
-import static com.pawelnu.projectmanager.utils.Utils.FULL_AUTH_IS_REQUIRED;
 import static com.pawelnu.projectmanager.utils.Utils.accessDeniedError;
+import static com.pawelnu.projectmanager.utils.Utils.invalidUUIDError;
+import static com.pawelnu.projectmanager.utils.Utils.unauthorizedError;
 import static com.pawelnu.projectmanager.utils.Utils.withBadJwt;
 import static com.pawelnu.projectmanager.utils.Utils.withJwt;
 import static org.junit.jupiter.api.Assertions.*;
@@ -13,6 +14,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pawelnu.projectmanager.config.security.jwt.JwtUtils;
+import com.pawelnu.projectmanager.endpoints.company.employee.dto.EmployeeCreateRequestDTO;
+import com.pawelnu.projectmanager.endpoints.company.employee.dto.EmployeeDTO;
+import com.pawelnu.projectmanager.endpoints.company.employee.dto.EmployeeEditRequestDTO;
 import com.pawelnu.projectmanager.exception.NotFoundException;
 import com.pawelnu.projectmanager.exception.model.ReactAdminBadRequestError;
 import com.pawelnu.projectmanager.exception.model.ReactAdminError;
@@ -155,7 +159,7 @@ class EmployeeControllerTest {
     String contentAsString = response.getResponse().getContentAsString();
     ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
     assertEquals(HttpStatus.UNAUTHORIZED.value(), status);
-    assertEquals(FULL_AUTH_IS_REQUIRED, responseBody.getMessage());
+    assertEquals(unauthorizedError(), responseBody);
   }
 
   @Test
@@ -224,7 +228,7 @@ class EmployeeControllerTest {
   @Test
   void shouldReturn_200_getEmployeeList_withFiltersAndSort() throws Exception {
     List<String> sort = List.of("lastName", "DESC");
-    Map<String, String> filter = Map.of("companyName", "sons");
+    Map<String, String> filter = Map.of("companyName", "boy%sons");
     String sortString = objectMapper.writeValueAsString(sort);
     String filterStrig = objectMapper.writeValueAsString(filter);
     MvcResult response =
@@ -241,9 +245,9 @@ class EmployeeControllerTest {
     List<EmployeeDTO> responseBody =
         objectMapper.readValue(contentAsString, new TypeReference<>() {});
     assertEquals(HttpStatus.OK.value(), status);
-    assertEquals("items 0-9/10", headerContentRange);
-    assertEquals(10, responseBody.size());
-    assertEquals("user_with_no_authorities", responseBody.getFirst().getFirstName());
+    assertEquals("items 0-1/2", headerContentRange);
+    assertEquals(2, responseBody.size());
+    assertEquals("Lean_Bruen23156", responseBody.getFirst().getUsername());
   }
 
   @Test
@@ -289,9 +293,7 @@ class EmployeeControllerTest {
     String contentAsString = response.getResponse().getContentAsString();
     ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
     assertEquals(HttpStatus.UNAUTHORIZED.value(), status);
-    ReactAdminError expectedResponse =
-        new ReactAdminError("Full authentication is required to access this resource");
-    assertEquals(expectedResponse, responseBody);
+    assertEquals(unauthorizedError(), responseBody);
   }
 
   @Test
@@ -331,7 +333,7 @@ class EmployeeControllerTest {
     String contentAsString = response.getResponse().getContentAsString();
     ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
     assertEquals(HttpStatus.BAD_REQUEST.value(), status);
-    assertEquals(MSG.INVALID_UUID, responseBody.getMessage());
+    assertEquals(invalidUUIDError(), responseBody);
   }
 
   @Test
@@ -343,7 +345,7 @@ class EmployeeControllerTest {
     String contentAsString = response.getResponse().getContentAsString();
     ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
     assertEquals(HttpStatus.UNAUTHORIZED.value(), status);
-    assertEquals(Utils.FULL_AUTH_IS_REQUIRED, responseBody.getMessage());
+    assertEquals(unauthorizedError(), responseBody);
   }
 
   @Test
@@ -442,7 +444,7 @@ class EmployeeControllerTest {
     String contentAsString = response.getResponse().getContentAsString();
     ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
     assertEquals(HttpStatus.BAD_REQUEST.value(), status);
-    assertEquals(MSG.INVALID_UUID, responseBody.getMessage());
+    assertEquals(invalidUUIDError(), responseBody);
   }
 
   @Test
@@ -466,7 +468,7 @@ class EmployeeControllerTest {
     String contentAsString = response.getResponse().getContentAsString();
     ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
     assertEquals(HttpStatus.UNAUTHORIZED.value(), status);
-    assertEquals(Utils.FULL_AUTH_IS_REQUIRED, responseBody.getMessage());
+    assertEquals(unauthorizedError(), responseBody);
   }
 
   @Test
@@ -550,9 +552,9 @@ class EmployeeControllerTest {
             .andReturn();
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
-    SimpleResponse responseBody = objectMapper.readValue(contentAsString, SimpleResponse.class);
+    ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
     assertEquals(HttpStatus.BAD_REQUEST.value(), status);
-    assertEquals(MSG.INVALID_UUID, responseBody.getMessage());
+    assertEquals(invalidUUIDError(), responseBody);
   }
 
   @Test
@@ -565,7 +567,7 @@ class EmployeeControllerTest {
     String contentAsString = response.getResponse().getContentAsString();
     ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
     assertEquals(HttpStatus.UNAUTHORIZED.value(), status);
-    assertEquals(Utils.FULL_AUTH_IS_REQUIRED, responseBody.getMessage());
+    assertEquals(unauthorizedError(), responseBody);
   }
 
   @Test

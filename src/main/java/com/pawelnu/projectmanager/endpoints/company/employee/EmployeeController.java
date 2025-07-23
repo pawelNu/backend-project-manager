@@ -1,6 +1,10 @@
 package com.pawelnu.projectmanager.endpoints.company.employee;
 
 import com.pawelnu.projectmanager.endpoints.company.employee.authority.EmployeeAuthorityService;
+import com.pawelnu.projectmanager.endpoints.company.employee.dto.EmployeeCreateRequestDTO;
+import com.pawelnu.projectmanager.endpoints.company.employee.dto.EmployeeDTO;
+import com.pawelnu.projectmanager.endpoints.company.employee.dto.EmployeeEditRequestDTO;
+import com.pawelnu.projectmanager.endpoints.company.employee.dto.EmployeesListResponseDTO;
 import com.pawelnu.projectmanager.exception.model.SimpleResponse;
 import java.util.List;
 import java.util.UUID;

@@ -9,6 +9,9 @@ import org.springframework.test.web.servlet.request.RequestPostProcessor;
 public class Utils {
   public static final String FULL_AUTH_IS_REQUIRED =
       "Full authentication is required to access this resource";
+  public static final String INVALID_UUID =
+      "Method parameter 'id': Failed to convert value of type 'java.lang.String' to required type"
+          + " 'java.util.UUID'; Invalid UUID string: invalid-uuid";
 
   public static String TOKEN_WITH_AUTH;
   public static String TOKEN_WITHOUT_AUTH;
@@ -41,6 +44,14 @@ public class Utils {
   @NotNull
   public static ReactAdminError accessDeniedError() {
     return new ReactAdminError("Access denied");
+  }
+
+  public static ReactAdminError unauthorizedError() {
+    return new ReactAdminError(FULL_AUTH_IS_REQUIRED);
+  }
+
+  public static ReactAdminError invalidUUIDError() {
+    return new ReactAdminError(INVALID_UUID);
   }
 
   public static class Postgres {

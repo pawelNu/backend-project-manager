@@ -1,4 +1,4 @@
-package com.pawelnu.projectmanager.endpoints.authority;
+package com.pawelnu.projectmanager.endpoints.authority.dto;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -11,5 +11,8 @@ public class AuthorityCreateRequestDTO {
 
   @NotNull
   @Size(min = 5, max = 255, message = "Name should has 5-255 characters")
-  private String name;
+  private String nameBackend;
+
+  @Size(min = 5, max = 255, message = "Name should has 5-255 characters")
+  private String nameFrontend;
 }

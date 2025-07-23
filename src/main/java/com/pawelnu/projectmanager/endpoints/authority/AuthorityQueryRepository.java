@@ -1,12 +1,17 @@
 package com.pawelnu.projectmanager.endpoints.authority;
 
+import com.pawelnu.projectmanager.endpoints.authority.dto.AuthorityDTO;
+import com.pawelnu.projectmanager.endpoints.company.employee.QEmployeeEntity;
+import com.pawelnu.projectmanager.endpoints.company.employee.authority.QEmployeeAuthorityEntity;
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.ConstantImpl;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -43,7 +48,12 @@ public class AuthorityQueryRepository {
     JPAQuery<AuthorityDTO> query =
         queryFactory
             .select(
-                Projections.constructor(AuthorityDTO.class, authority.id, authority.nameBackend))
+                Projections.constructor(
+                    AuthorityDTO.class,
+                    authority.id,
+                    authority.nameBackend,
+                    authority.nameFrontend,
+                    ConstantImpl.create(Collections.emptyList())))
             .from(authority)
             .where(allConditions)
             .offset(offset)
@@ -77,10 +87,16 @@ public class AuthorityQueryRepository {
 
   public Optional<AuthorityEntity> findById(UUID id) {
     QAuthorityEntity authority = QAuthorityEntity.authorityEntity;
+    QEmployeeAuthorityEntity employeeAuthority = QEmployeeAuthorityEntity.employeeAuthorityEntity;
+    QEmployeeEntity employee = QEmployeeEntity.employeeEntity;
 
     List<AuthorityEntity> fetch =
         queryFactory
             .selectFrom(authority)
+            .leftJoin(authority.employeeAuthorities, employeeAuthority)
+            .fetchJoin()
+            .leftJoin(employeeAuthority.employee, employee)
+            .fetchJoin()
             .where(authority.id.eq(id).and(authority.isDeleted.isFalse()))
             .fetch();
 

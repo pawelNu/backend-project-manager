@@ -1,5 +1,9 @@
-package com.pawelnu.projectmanager.endpoints.authority;
+package com.pawelnu.projectmanager.endpoints.authority.mapper;
 
+import com.pawelnu.projectmanager.endpoints.authority.AuthorityEntity;
+import com.pawelnu.projectmanager.endpoints.authority.dto.AuthorityCreateRequestDTO;
+import com.pawelnu.projectmanager.endpoints.authority.dto.AuthorityDTO;
+import com.pawelnu.projectmanager.endpoints.authority.dto.AuthorityEditRequestDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;

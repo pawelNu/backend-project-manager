@@ -1,4 +1,4 @@
-package com.pawelnu.projectmanager.endpoints.category;
+package com.pawelnu.projectmanager.endpoints.category.dto;
 
 import java.util.List;
 import lombok.Builder;

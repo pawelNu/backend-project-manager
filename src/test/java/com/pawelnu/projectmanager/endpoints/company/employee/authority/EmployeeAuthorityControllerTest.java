@@ -1,7 +1,8 @@
 package com.pawelnu.projectmanager.endpoints.company.employee.authority;
 
-import static com.pawelnu.projectmanager.utils.Utils.FULL_AUTH_IS_REQUIRED;
 import static com.pawelnu.projectmanager.utils.Utils.accessDeniedError;
+import static com.pawelnu.projectmanager.utils.Utils.invalidUUIDError;
+import static com.pawelnu.projectmanager.utils.Utils.unauthorizedError;
 import static com.pawelnu.projectmanager.utils.Utils.withBadJwt;
 import static com.pawelnu.projectmanager.utils.Utils.withJwt;
 import static org.junit.jupiter.api.Assertions.*;
@@ -12,10 +13,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pawelnu.projectmanager.config.security.jwt.JwtUtils;
-import com.pawelnu.projectmanager.endpoints.company.employee.authority.dto.EmployeeAuthoritiesDTO;
 import com.pawelnu.projectmanager.endpoints.company.employee.authority.dto.EmployeeAuthorityCreateRequestDTO;
+import com.pawelnu.projectmanager.endpoints.company.employee.authority.dto.EmployeeAuthorityCreateResponseDTO;
 import com.pawelnu.projectmanager.endpoints.company.employee.authority.dto.EmployeeAuthorityDTO;
 import com.pawelnu.projectmanager.endpoints.company.employee.authority.dto.EmployeeAuthorityDeleteRequestDTO;
+import com.pawelnu.projectmanager.endpoints.company.employee.authority.dto.EmployeeAuthorityIdNameDTO;
 import com.pawelnu.projectmanager.exception.model.ReactAdminBadRequestError;
 import com.pawelnu.projectmanager.exception.model.ReactAdminError;
 import com.pawelnu.projectmanager.exception.model.SimpleResponse;
@@ -98,20 +100,21 @@ class EmployeeAuthorityControllerTest {
             .andReturn();
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
-    EmployeeAuthoritiesDTO responseBody =
-        objectMapper.readValue(contentAsString, EmployeeAuthoritiesDTO.class);
+    EmployeeAuthorityCreateResponseDTO responseBody =
+        objectMapper.readValue(contentAsString, EmployeeAuthorityCreateResponseDTO.class);
     assertEquals(HttpStatus.CREATED.value(), status);
     assertEquals("userNoAuthorities", responseBody.getUsername());
     assertTrue(
-        responseBody
-            .getAuthorityNames()
+        responseBody.getEmployeeAuthorities().stream()
+            .map(EmployeeAuthorityIdNameDTO::getNameBackend)
+            .toList()
             .containsAll(
                 List.of(
-                    "COMPANY_GET_BY_ID",
-                    "COMPANY_GET_LIST",
-                    "COMPANY_CREATE",
-                    "COMPANY_DELETE_BY_ID",
-                    "COMPANY_EDIT_BY_ID")));
+                    "COMPANIES_GET_BY_ID",
+                    "COMPANIES_GET_LIST",
+                    "COMPANIES_CREATE",
+                    "COMPANIES_DELETE_BY_ID",
+                    "COMPANIES_EDIT_BY_ID")));
   }
 
   @Test
@@ -160,7 +163,7 @@ class EmployeeAuthorityControllerTest {
     String contentAsString = response.getResponse().getContentAsString();
     ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
     assertEquals(HttpStatus.UNAUTHORIZED.value(), status);
-    assertEquals(FULL_AUTH_IS_REQUIRED, responseBody.getMessage());
+    assertEquals(unauthorizedError(), responseBody);
   }
 
   @Test
@@ -223,7 +226,7 @@ class EmployeeAuthorityControllerTest {
     assertEquals("items 0-4/5", headerContentRange);
     assertEquals(5, responseBody.size());
     assertEquals("test", responseBody.getFirst().getUsername());
-    assertEquals("CATEGORY_VALUE_GET_BY_ID", responseBody.getFirst().getAuthorityName());
+    assertEquals("CATEGORY_VALUES_GET_BY_ID", responseBody.getFirst().getAuthorityNameBackend());
   }
 
   @Test
@@ -249,7 +252,7 @@ class EmployeeAuthorityControllerTest {
     assertEquals("items 0-0/1", headerContentRange);
     assertEquals(1, responseBody.size());
     assertEquals("withAuthToDelete", responseBody.getFirst().getUsername());
-    assertEquals("ITEM_TO_FILTER", responseBody.getFirst().getAuthorityName());
+    assertEquals("ITEM_TO_FILTER", responseBody.getFirst().getAuthorityNameBackend());
   }
 
   @Test
@@ -270,7 +273,7 @@ class EmployeeAuthorityControllerTest {
     assertEquals(HttpStatus.OK.value(), status);
     assertEquals(1, responseBody.size());
     assertEquals("test", responseBody.getFirst().getUsername());
-    assertEquals("AUTHORITY_GET_BY_ID", responseBody.getFirst().getAuthorityName());
+    assertEquals("AUTHORITIES_GET_BY_ID", responseBody.getFirst().getAuthorityNameBackend());
   }
 
   @Test
@@ -296,9 +299,7 @@ class EmployeeAuthorityControllerTest {
     String contentAsString = response.getResponse().getContentAsString();
     ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
     assertEquals(HttpStatus.UNAUTHORIZED.value(), status);
-    ReactAdminError expectedResponse =
-        new ReactAdminError("Full authentication is required to access this resource");
-    assertEquals(expectedResponse, responseBody);
+    assertEquals(unauthorizedError(), responseBody);
   }
 
   @Test
@@ -383,7 +384,7 @@ class EmployeeAuthorityControllerTest {
     String contentAsString = response.getResponse().getContentAsString();
     ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
     assertEquals(HttpStatus.UNAUTHORIZED.value(), status);
-    assertEquals(Utils.FULL_AUTH_IS_REQUIRED, responseBody.getMessage());
+    assertEquals(unauthorizedError(), responseBody);
   }
 
   @Test
@@ -468,5 +469,96 @@ class EmployeeAuthorityControllerTest {
         MSG.EMPLOYEE_AUTHORITIES_NOT_FOUND_MSG
             + "45b037b8-0026-4625-8b84-33776ddd585f, 4961b918-11c3-48fd-8ae4-dc2695866a6d",
         responseBody.getMessage());
+  }
+
+  @Test
+  void shouldReturn_200_deleteEmployeeAuthorityById_isDeletedFalse() throws Exception {
+    String employeeAuthorityId = "9ff6e2d1-e27f-4a8a-b4b0-47a760dc6e45";
+    String url = BASE_URL + "/" + employeeAuthorityId;
+    MvcResult response =
+        mockMvc
+            .perform(delete(url).with(withJwt()).contentType(MediaType.APPLICATION_JSON))
+            .andReturn();
+    int status = response.getResponse().getStatus();
+    String contentAsString = response.getResponse().getContentAsString();
+    SimpleResponse responseBody = objectMapper.readValue(contentAsString, SimpleResponse.class);
+    assertEquals(HttpStatus.OK.value(), status);
+    assertEquals(
+        "Deleted employee authority with id: " + employeeAuthorityId, responseBody.getMessage());
+  }
+
+  @Test
+  void shouldReturn_400_deleteEmployeeAuthorityById_isDeletedFalse() throws Exception {
+    String employeeAuthorityId = "invalid-uuid";
+    String url = BASE_URL + "/" + employeeAuthorityId;
+    MvcResult response =
+        mockMvc
+            .perform(delete(url).with(withJwt()).contentType(MediaType.APPLICATION_JSON))
+            .andReturn();
+    int status = response.getResponse().getStatus();
+    String contentAsString = response.getResponse().getContentAsString();
+    ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
+    assertEquals(HttpStatus.BAD_REQUEST.value(), status);
+    assertEquals(invalidUUIDError(), responseBody);
+  }
+
+  @Test
+  void shouldReturn_401_deleteEmployeeAuthorityById_isDeletedFalse() throws Exception {
+    String employeeAuthorityId = "4c7a2cc5-1e03-4337-8901-93c0b46585af";
+    String url = BASE_URL + "/" + employeeAuthorityId;
+    MvcResult response =
+        mockMvc.perform(delete(url).contentType(MediaType.APPLICATION_JSON)).andReturn();
+    int status = response.getResponse().getStatus();
+    String contentAsString = response.getResponse().getContentAsString();
+    ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
+    assertEquals(HttpStatus.UNAUTHORIZED.value(), status);
+    assertEquals(unauthorizedError(), responseBody);
+  }
+
+  @Test
+  void shouldReturn_403_deleteEmployeeAuthorityById_isDeletedFalse() throws Exception {
+    String employeeAuthorityId = "4c7a2cc5-1e03-4337-8901-93c0b46585af";
+    String url = BASE_URL + "/" + employeeAuthorityId;
+    MvcResult response =
+        mockMvc
+            .perform(delete(url).with(withBadJwt()).contentType(MediaType.APPLICATION_JSON))
+            .andReturn();
+    int status = response.getResponse().getStatus();
+    String contentAsString = response.getResponse().getContentAsString();
+    ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
+    assertEquals(HttpStatus.FORBIDDEN.value(), status);
+    assertEquals(Utils.accessDeniedError(), responseBody);
+  }
+
+  @Test
+  void shouldReturn_404_deleteEmployeeAuthorityById_isDeletedFalse() throws Exception {
+    String employeeAuthorityId = "49a51143-8c82-4801-8c5a-c5dfb2904acd";
+    String url = BASE_URL + "/" + employeeAuthorityId;
+    MvcResult response =
+        mockMvc
+            .perform(delete(url).with(withJwt()).contentType(MediaType.APPLICATION_JSON))
+            .andReturn();
+    int status = response.getResponse().getStatus();
+    String contentAsString = response.getResponse().getContentAsString();
+    ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
+    assertEquals(HttpStatus.NOT_FOUND.value(), status);
+    assertEquals(
+        MSG.EMPLOYEE_AUTHORITY_NOT_FOUND_MSG + employeeAuthorityId, responseBody.getMessage());
+  }
+
+  @Test
+  void shouldReturn_404_deleteEmployeeAuthorityById_isDeletedTrue() throws Exception {
+    String employeeAuthorityId = "138bb80d-ce4a-472a-b8e2-d9da92fd0a48";
+    String url = BASE_URL + "/" + employeeAuthorityId;
+    MvcResult response =
+        mockMvc
+            .perform(delete(url).with(withJwt()).contentType(MediaType.APPLICATION_JSON))
+            .andReturn();
+    int status = response.getResponse().getStatus();
+    String contentAsString = response.getResponse().getContentAsString();
+    SimpleResponse responseBody = objectMapper.readValue(contentAsString, SimpleResponse.class);
+    assertEquals(HttpStatus.NOT_FOUND.value(), status);
+    assertEquals(
+        MSG.EMPLOYEE_AUTHORITY_NOT_FOUND_MSG + employeeAuthorityId, responseBody.getMessage());
   }
 }

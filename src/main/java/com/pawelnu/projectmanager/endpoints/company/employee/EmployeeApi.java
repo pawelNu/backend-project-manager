@@ -1,5 +1,8 @@
 package com.pawelnu.projectmanager.endpoints.company.employee;
 
+import com.pawelnu.projectmanager.endpoints.company.employee.dto.EmployeeCreateRequestDTO;
+import com.pawelnu.projectmanager.endpoints.company.employee.dto.EmployeeDTO;
+import com.pawelnu.projectmanager.endpoints.company.employee.dto.EmployeeEditRequestDTO;
 import com.pawelnu.projectmanager.exception.model.SimpleResponse;
 import com.pawelnu.projectmanager.utils.Path;
 import com.pawelnu.projectmanager.utils.ResponseErrors;

@@ -1,4 +1,4 @@
-package com.pawelnu.projectmanager.endpoints.authority;
+package com.pawelnu.projectmanager.endpoints.authority.dto;
 
 import java.util.List;
 import lombok.Builder;

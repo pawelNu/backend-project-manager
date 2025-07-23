@@ -58,7 +58,7 @@ public class CategoryValueQueryRepository {
       Order order = sortDir.equalsIgnoreCase("DESC") ? Order.DESC : Order.ASC;
 
       switch (sortField) {
-        case "name" -> query.orderBy(new OrderSpecifier<>(order, category.name));
+        case "categoryName" -> query.orderBy(new OrderSpecifier<>(order, category.name));
         case "numericValue" -> query.orderBy(
             new OrderSpecifier<>(order, categoryValue.numericValue));
         case "stringValue" -> query.orderBy(new OrderSpecifier<>(order, categoryValue.stringValue));

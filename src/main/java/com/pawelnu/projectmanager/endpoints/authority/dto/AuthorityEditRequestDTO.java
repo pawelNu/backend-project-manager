@@ -1,4 +1,4 @@
-package com.pawelnu.projectmanager.endpoints.authority;
+package com.pawelnu.projectmanager.endpoints.authority.dto;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
@@ -7,5 +7,6 @@ import lombok.Data;
 @Data
 @Builder
 public class AuthorityEditRequestDTO {
-  @NotNull private String name;
+  @NotNull private String nameBackend;
+  private String nameFrontend;
 }

@@ -1,5 +1,9 @@
 package com.pawelnu.projectmanager.endpoints.authority;
 
+import com.pawelnu.projectmanager.endpoints.authority.dto.AuthorityCreateRequestDTO;
+import com.pawelnu.projectmanager.endpoints.authority.dto.AuthorityDTO;
+import com.pawelnu.projectmanager.endpoints.authority.dto.AuthorityEditRequestDTO;
+import com.pawelnu.projectmanager.endpoints.authority.dto.AuthorityListResponseDTO;
 import com.pawelnu.projectmanager.endpoints.company.employee.authority.EmployeeAuthorityService;
 import com.pawelnu.projectmanager.exception.model.SimpleResponse;
 import java.util.List;
