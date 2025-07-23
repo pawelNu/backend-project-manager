@@ -49,7 +49,6 @@ public class EmployeeAuthorityController implements EmployeeAuthorityApi {
     return ResponseEntity.ok(result);
   }
 
-  // TODO write test
   @Override
   public ResponseEntity<SimpleResponse> deleteById(UUID id) {
     SimpleResponse result = employeeAuthorityService.deleteById(id);

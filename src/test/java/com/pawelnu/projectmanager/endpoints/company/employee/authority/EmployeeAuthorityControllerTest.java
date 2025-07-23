@@ -471,4 +471,95 @@ class EmployeeAuthorityControllerTest {
             + "45b037b8-0026-4625-8b84-33776ddd585f, 4961b918-11c3-48fd-8ae4-dc2695866a6d",
         responseBody.getMessage());
   }
+
+  @Test
+  void shouldReturn_200_deleteEmployeeAuthorityById_isDeletedFalse() throws Exception {
+    String employeeAuthorityId = "9ff6e2d1-e27f-4a8a-b4b0-47a760dc6e45";
+    String url = BASE_URL + "/" + employeeAuthorityId;
+    MvcResult response =
+        mockMvc
+            .perform(delete(url).with(withJwt()).contentType(MediaType.APPLICATION_JSON))
+            .andReturn();
+    int status = response.getResponse().getStatus();
+    String contentAsString = response.getResponse().getContentAsString();
+    SimpleResponse responseBody = objectMapper.readValue(contentAsString, SimpleResponse.class);
+    assertEquals(HttpStatus.OK.value(), status);
+    assertEquals(
+        "Deleted employee authority with id: " + employeeAuthorityId, responseBody.getMessage());
+  }
+
+  @Test
+  void shouldReturn_400_deleteEmployeeAuthorityById_isDeletedFalse() throws Exception {
+    String employeeAuthorityId = "invalid-uuid";
+    String url = BASE_URL + "/" + employeeAuthorityId;
+    MvcResult response =
+        mockMvc
+            .perform(delete(url).with(withJwt()).contentType(MediaType.APPLICATION_JSON))
+            .andReturn();
+    int status = response.getResponse().getStatus();
+    String contentAsString = response.getResponse().getContentAsString();
+    SimpleResponse responseBody = objectMapper.readValue(contentAsString, SimpleResponse.class);
+    assertEquals(HttpStatus.BAD_REQUEST.value(), status);
+    assertEquals(MSG.INVALID_UUID, responseBody.getMessage());
+  }
+
+  @Test
+  void shouldReturn_401_deleteEmployeeAuthorityById_isDeletedFalse() throws Exception {
+    String employeeAuthorityId = "4c7a2cc5-1e03-4337-8901-93c0b46585af";
+    String url = BASE_URL + "/" + employeeAuthorityId;
+    MvcResult response =
+        mockMvc.perform(delete(url).contentType(MediaType.APPLICATION_JSON)).andReturn();
+    int status = response.getResponse().getStatus();
+    String contentAsString = response.getResponse().getContentAsString();
+    ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
+    assertEquals(HttpStatus.UNAUTHORIZED.value(), status);
+    assertEquals(Utils.FULL_AUTH_IS_REQUIRED, responseBody.getMessage());
+  }
+
+  @Test
+  void shouldReturn_403_deleteEmployeeAuthorityById_isDeletedFalse() throws Exception {
+    String employeeAuthorityId = "4c7a2cc5-1e03-4337-8901-93c0b46585af";
+    String url = BASE_URL + "/" + employeeAuthorityId;
+    MvcResult response =
+        mockMvc
+            .perform(delete(url).with(withBadJwt()).contentType(MediaType.APPLICATION_JSON))
+            .andReturn();
+    int status = response.getResponse().getStatus();
+    String contentAsString = response.getResponse().getContentAsString();
+    ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
+    assertEquals(HttpStatus.FORBIDDEN.value(), status);
+    assertEquals(Utils.accessDeniedError(), responseBody);
+  }
+
+  @Test
+  void shouldReturn_404_deleteEmployeeAuthorityById_isDeletedFalse() throws Exception {
+    String employeeAuthorityId = "49a51143-8c82-4801-8c5a-c5dfb2904acd";
+    String url = BASE_URL + "/" + employeeAuthorityId;
+    MvcResult response =
+        mockMvc
+            .perform(delete(url).with(withJwt()).contentType(MediaType.APPLICATION_JSON))
+            .andReturn();
+    int status = response.getResponse().getStatus();
+    String contentAsString = response.getResponse().getContentAsString();
+    ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
+    assertEquals(HttpStatus.NOT_FOUND.value(), status);
+    assertEquals(
+        MSG.EMPLOYEE_AUTHORITY_NOT_FOUND_MSG + employeeAuthorityId, responseBody.getMessage());
+  }
+
+  @Test
+  void shouldReturn_404_deleteEmployeeAuthorityById_isDeletedTrue() throws Exception {
+    String employeeAuthorityId = "138bb80d-ce4a-472a-b8e2-d9da92fd0a48";
+    String url = BASE_URL + "/" + employeeAuthorityId;
+    MvcResult response =
+        mockMvc
+            .perform(delete(url).with(withJwt()).contentType(MediaType.APPLICATION_JSON))
+            .andReturn();
+    int status = response.getResponse().getStatus();
+    String contentAsString = response.getResponse().getContentAsString();
+    SimpleResponse responseBody = objectMapper.readValue(contentAsString, SimpleResponse.class);
+    assertEquals(HttpStatus.NOT_FOUND.value(), status);
+    assertEquals(
+        MSG.EMPLOYEE_AUTHORITY_NOT_FOUND_MSG + employeeAuthorityId, responseBody.getMessage());
+  }
 }
