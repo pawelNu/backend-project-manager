@@ -42,6 +42,9 @@ public class Utils {
   public static ReactAdminError accessDeniedError() {
     return new ReactAdminError("Access denied");
   }
+  public static ReactAdminError unauthorizedError() {
+    return new ReactAdminError(FULL_AUTH_IS_REQUIRED);
+  }
 
   public static class Postgres {
     public static final String POSTGRES_17 = "postgres:17";

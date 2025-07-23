@@ -1,7 +1,7 @@
 package com.pawelnu.projectmanager.endpoints.project;
 
-import static com.pawelnu.projectmanager.utils.Utils.FULL_AUTH_IS_REQUIRED;
 import static com.pawelnu.projectmanager.utils.Utils.accessDeniedError;
+import static com.pawelnu.projectmanager.utils.Utils.unauthorizedError;
 import static com.pawelnu.projectmanager.utils.Utils.withBadJwt;
 import static com.pawelnu.projectmanager.utils.Utils.withJwt;
 import static org.junit.jupiter.api.Assertions.*;
@@ -154,7 +154,7 @@ class ProjectControllerTest {
     String contentAsString = response.getResponse().getContentAsString();
     ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
     assertEquals(HttpStatus.UNAUTHORIZED.value(), status);
-    assertEquals(FULL_AUTH_IS_REQUIRED, responseBody.getMessage());
+    assertEquals(unauthorizedError(), responseBody);
   }
 
   @Test
@@ -201,7 +201,7 @@ class ProjectControllerTest {
 
   @Test
   void shouldReturn_200_getProjectList_withFilters() throws Exception {
-    Map<String, String> filter = Map.of("companyName", "sons", "firstName", "tom");
+    Map<String, String> filter = Map.of("name", "api", "categoryValue", "r&d");
     String filterStrig = objectMapper.writeValueAsString(filter);
     MvcResult response =
         mockMvc.perform(get(BASE_URL).with(withJwt()).param("filter", filterStrig)).andReturn();
@@ -211,17 +211,18 @@ class ProjectControllerTest {
     List<ProjectDTO> responseBody =
         objectMapper.readValue(contentAsString, new TypeReference<>() {});
     assertEquals(HttpStatus.OK.value(), status);
-    assertEquals("items 0-1/2", headerContentRange);
-    assertEquals(2, responseBody.size());
-    assertEquals("Brakus and Sons", responseBody.getFirst().getCompanyName());
-    //    assertEquals("Tom", responseBody.getFirst().getFirstName());
-    //    assertEquals("Keeling", responseBody.getFirst().getLastName());
+    assertEquals("items 0-0/1", headerContentRange);
+    assertEquals(1, responseBody.size());
+    assertEquals("R&D", responseBody.getFirst().getCategoryValue());
+    assertEquals("Test Company", responseBody.getFirst().getCompanyName());
+    assertEquals("test test", responseBody.getFirst().getAssignedEmployee());
+    assertEquals("VERY_LOW", responseBody.getFirst().getPriorityValue());
   }
 
   @Test
   void shouldReturn_200_getProjectList_withFiltersAndSort() throws Exception {
-    List<String> sort = List.of("lastName", "DESC");
-    Map<String, String> filter = Map.of("companyName", "boy%sons");
+    List<String> sort = List.of("name", "DESC");
+    Map<String, String> filter = Map.of("priorityValue", "low");
     String sortString = objectMapper.writeValueAsString(sort);
     String filterStrig = objectMapper.writeValueAsString(filter);
     MvcResult response =
@@ -240,13 +241,13 @@ class ProjectControllerTest {
     assertEquals(HttpStatus.OK.value(), status);
     assertEquals("items 0-1/2", headerContentRange);
     assertEquals(2, responseBody.size());
-    //    assertEquals("Lean_Bruen23156", responseBody.getFirst().getUsername());
+    assertEquals("migrate database", responseBody.getFirst().getName());
   }
 
   @Test
   void shouldReturn_200_getProjectList_withRange() throws Exception {
     List<String> range = List.of("0", "0");
-    List<String> sort = List.of("lastName", "ASC");
+    List<String> sort = List.of("name", "ASC");
     String rangeString = objectMapper.writeValueAsString(range);
     String sortString = objectMapper.writeValueAsString(sort);
     MvcResult response =
@@ -260,12 +261,12 @@ class ProjectControllerTest {
         objectMapper.readValue(contentAsString, new TypeReference<>() {});
     assertEquals(HttpStatus.OK.value(), status);
     assertEquals(1, responseBody.size());
-    //    assertEquals("Dwain", responseBody.getFirst().getFirstName());
+    assertEquals("deploy api", responseBody.getFirst().getName());
   }
 
   @Test
   void shouldReturn_200_getProjectList_emptyResult() throws Exception {
-    Map<String, String> filter = Map.of("lastName", "not exists");
+    Map<String, String> filter = Map.of("name", "not exists");
     String filterStrig = objectMapper.writeValueAsString(filter);
     MvcResult response =
         mockMvc.perform(get(BASE_URL).with(withJwt()).param("filter", filterStrig)).andReturn();
@@ -286,9 +287,7 @@ class ProjectControllerTest {
     String contentAsString = response.getResponse().getContentAsString();
     ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
     assertEquals(HttpStatus.UNAUTHORIZED.value(), status);
-    ReactAdminError expectedResponse =
-        new ReactAdminError("Full authentication is required to access this resource");
-    assertEquals(expectedResponse, responseBody);
+    assertEquals(unauthorizedError(), responseBody);
   }
 
   @Test
@@ -340,7 +339,7 @@ class ProjectControllerTest {
     String contentAsString = response.getResponse().getContentAsString();
     ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
     assertEquals(HttpStatus.UNAUTHORIZED.value(), status);
-    assertEquals(Utils.FULL_AUTH_IS_REQUIRED, responseBody.getMessage());
+    assertEquals(unauthorizedError(), responseBody);
   }
 
   @Test
@@ -463,7 +462,7 @@ class ProjectControllerTest {
     String contentAsString = response.getResponse().getContentAsString();
     ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
     assertEquals(HttpStatus.UNAUTHORIZED.value(), status);
-    assertEquals(Utils.FULL_AUTH_IS_REQUIRED, responseBody.getMessage());
+    assertEquals(unauthorizedError(), responseBody);
   }
 
   @Test
@@ -562,7 +561,7 @@ class ProjectControllerTest {
     String contentAsString = response.getResponse().getContentAsString();
     ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
     assertEquals(HttpStatus.UNAUTHORIZED.value(), status);
-    assertEquals(Utils.FULL_AUTH_IS_REQUIRED, responseBody.getMessage());
+    assertEquals(unauthorizedError(), responseBody);
   }
 
   @Test
