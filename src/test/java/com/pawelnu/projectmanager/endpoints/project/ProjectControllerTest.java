@@ -77,13 +77,11 @@ class ProjectControllerTest {
   void shouldReturn_201_createProject() throws Exception {
     ProjectCreateRequestDTO request =
         ProjectCreateRequestDTO.builder()
-            .companyId(UUID.fromString("cf578fec-006b-4604-a5e8-5ad1b3ea2be5"))
-            .firstName("test firstName")
-            .lastName("test lastName")
-            .username("testUsername")
-            .password("testPassword")
-            .email("test.test@test.test")
-            .phoneNumber("111-111-111")
+            .name("test project name")
+            .categoryValueId(UUID.fromString("84c3a3ac-c2d1-499e-8e33-c495d1faf1a7"))
+            .companyId(UUID.fromString("78d3f0da-e4b5-4885-8c2a-24b1f85afe44"))
+            .assignedEmployeeId(UUID.fromString("9f93938c-38f4-4472-b166-5ad41437db6e"))
+            .priorityValueId(UUID.fromString("15207afc-0a06-4d5f-a086-fe98cccb341c"))
             .build();
     String requestBody = objectMapper.writeValueAsString(request);
     MvcResult response =
@@ -99,24 +97,24 @@ class ProjectControllerTest {
     ProjectDTO responseBody = objectMapper.readValue(contentAsString, ProjectDTO.class);
     assertEquals(HttpStatus.CREATED.value(), status);
     assertEquals("Hayes-Welch", responseBody.getCompanyName());
-    assertEquals(request.getFirstName(), responseBody.getFirstName());
-    assertEquals(request.getLastName(), responseBody.getLastName());
-    assertEquals(request.getUsername(), responseBody.getUsername());
-    assertEquals(request.getEmail(), responseBody.getEmail());
-    assertEquals(request.getPhoneNumber(), responseBody.getPhoneNumber());
+    assertEquals(request.getName(), responseBody.getName());
+    assertEquals(request.getCategoryValueId(), responseBody.getCategoryValueId());
+    assertEquals("R&D", responseBody.getCategoryName());
+    assertEquals(request.getPriorityValueId(), responseBody.getPriorityValueId());
+    assertEquals("LOW", responseBody.getPriorityValue());
+    assertEquals(request.getAssignedEmployeeId(), responseBody.getAssignedEmployeeId());
+    assertEquals("Todd Kunde", responseBody.getAssignedEmployee());
   }
 
   @Test
   void shouldReturn_400_createProject() throws Exception {
     ProjectCreateRequestDTO request =
         ProjectCreateRequestDTO.builder()
-            .companyId(UUID.fromString("cf578fec-006b-4604-a5e8-5ad1b3ea2be5"))
-            .firstName("test firstName")
-            .lastName("test lastName")
-            .username("testUsername")
-            .password("testPassword")
-            .email("invalid.email")
-            .phoneNumber("111-111-111")
+            .name("test")
+            .categoryValueId(UUID.fromString("84c3a3ac-c2d1-499e-8e33-c495d1faf1a7"))
+            .companyId(UUID.fromString("78d3f0da-e4b5-4885-8c2a-24b1f85afe44"))
+            .assignedEmployeeId(UUID.fromString("9f93938c-38f4-4472-b166-5ad41437db6e"))
+            .priorityValueId(UUID.fromString("15207afc-0a06-4d5f-a086-fe98cccb341c"))
             .build();
     String requestBody = objectMapper.writeValueAsString(request);
     MvcResult response =
@@ -132,20 +130,18 @@ class ProjectControllerTest {
     ReactAdminBadRequestError responseBody =
         objectMapper.readValue(contentAsString, ReactAdminBadRequestError.class);
     assertEquals(HttpStatus.BAD_REQUEST.value(), status);
-    assertEquals("must be a well-formed email address", responseBody.getErrors().get("email"));
+    assertEquals("Project name has to have 5-255 characters", responseBody.getErrors().get("name"));
   }
 
   @Test
   void shouldReturn_401_createProject() throws Exception {
     ProjectCreateRequestDTO request =
         ProjectCreateRequestDTO.builder()
-            .companyId(UUID.fromString("cf578fec-006b-4604-a5e8-5ad1b3ea2be5"))
-            .firstName("test firstName")
-            .lastName("test lastName")
-            .username("testUsername")
-            .password("testPassword")
-            .email("test.test@test.test")
-            .phoneNumber("111-111-111")
+            .name("test project name")
+            .categoryValueId(UUID.fromString("84c3a3ac-c2d1-499e-8e33-c495d1faf1a7"))
+            .companyId(UUID.fromString("78d3f0da-e4b5-4885-8c2a-24b1f85afe44"))
+            .assignedEmployeeId(UUID.fromString("9f93938c-38f4-4472-b166-5ad41437db6e"))
+            .priorityValueId(UUID.fromString("15207afc-0a06-4d5f-a086-fe98cccb341c"))
             .build();
     String requestBody = objectMapper.writeValueAsString(request);
     MvcResult response =
@@ -163,13 +159,11 @@ class ProjectControllerTest {
   void shouldReturn_403_createProject() throws Exception {
     ProjectCreateRequestDTO request =
         ProjectCreateRequestDTO.builder()
-            .companyId(UUID.fromString("cf578fec-006b-4604-a5e8-5ad1b3ea2be5"))
-            .firstName("test firstName")
-            .lastName("test lastName")
-            .username("testUsername")
-            .password("testPassword")
-            .email("test.test@test.test")
-            .phoneNumber("111-111-111")
+            .name("test project name")
+            .categoryValueId(UUID.fromString("84c3a3ac-c2d1-499e-8e33-c495d1faf1a7"))
+            .companyId(UUID.fromString("78d3f0da-e4b5-4885-8c2a-24b1f85afe44"))
+            .assignedEmployeeId(UUID.fromString("9f93938c-38f4-4472-b166-5ad41437db6e"))
+            .priorityValueId(UUID.fromString("15207afc-0a06-4d5f-a086-fe98cccb341c"))
             .build();
     String requestBody = objectMapper.writeValueAsString(request);
     MvcResult response =
@@ -218,8 +212,8 @@ class ProjectControllerTest {
     assertEquals("items 0-1/2", headerContentRange);
     assertEquals(2, responseBody.size());
     assertEquals("Brakus and Sons", responseBody.getFirst().getCompanyName());
-    assertEquals("Tom", responseBody.getFirst().getFirstName());
-    assertEquals("Keeling", responseBody.getFirst().getLastName());
+    //    assertEquals("Tom", responseBody.getFirst().getFirstName());
+    //    assertEquals("Keeling", responseBody.getFirst().getLastName());
   }
 
   @Test
@@ -244,7 +238,7 @@ class ProjectControllerTest {
     assertEquals(HttpStatus.OK.value(), status);
     assertEquals("items 0-1/2", headerContentRange);
     assertEquals(2, responseBody.size());
-    assertEquals("Lean_Bruen23156", responseBody.getFirst().getUsername());
+    //    assertEquals("Lean_Bruen23156", responseBody.getFirst().getUsername());
   }
 
   @Test
@@ -264,7 +258,7 @@ class ProjectControllerTest {
         objectMapper.readValue(contentAsString, new TypeReference<>() {});
     assertEquals(HttpStatus.OK.value(), status);
     assertEquals(1, responseBody.size());
-    assertEquals("Dwain", responseBody.getFirst().getFirstName());
+    //    assertEquals("Dwain", responseBody.getFirst().getFirstName());
   }
 
   @Test
@@ -315,11 +309,11 @@ class ProjectControllerTest {
     ProjectDTO responseBody = objectMapper.readValue(contentAsString, ProjectDTO.class);
     assertEquals(HttpStatus.OK.value(), status);
     assertEquals(UUID.fromString(projectId), responseBody.getId());
-    assertEquals("Georgine", responseBody.getFirstName());
-    assertEquals("Welch", responseBody.getLastName());
-    assertEquals("Georgine_Welch85182", responseBody.getUsername());
-    assertEquals("georgine.welch@example.com", responseBody.getEmail());
-    assertEquals("(219) 720-6247", responseBody.getPhoneNumber());
+    //    assertEquals("Georgine", responseBody.getFirstName());
+    //    assertEquals("Welch", responseBody.getLastName());
+    //    assertEquals("Georgine_Welch85182", responseBody.getUsername());
+    //    assertEquals("georgine.welch@example.com", responseBody.getEmail());
+    //    assertEquals("(219) 720-6247", responseBody.getPhoneNumber());
     assertEquals("Wolff-Effertz", responseBody.getCompanyName());
   }
 
@@ -391,11 +385,11 @@ class ProjectControllerTest {
     String url = BASE_URL + "/" + projectId;
     ProjectEditRequestDTO request =
         ProjectEditRequestDTO.builder()
-            .firstName("updated firstName")
-            .lastName("updated lastName")
-            .username("upadted username")
-            .email("updated.email@.com")
-            .phoneNumber("123-123-123")
+            .name("test project name")
+            .categoryValueId(UUID.fromString("84c3a3ac-c2d1-499e-8e33-c495d1faf1a7"))
+            .companyId(UUID.fromString("78d3f0da-e4b5-4885-8c2a-24b1f85afe44"))
+            .assignedEmployeeId(UUID.fromString("9f93938c-38f4-4472-b166-5ad41437db6e"))
+            .priorityValueId(UUID.fromString("15207afc-0a06-4d5f-a086-fe98cccb341c"))
             .build();
     String requestBody = objectMapper.writeValueAsString(request);
     MvcResult response =
@@ -410,11 +404,11 @@ class ProjectControllerTest {
     String contentAsString = response.getResponse().getContentAsString();
     ProjectDTO responseBody = objectMapper.readValue(contentAsString, ProjectDTO.class);
     assertEquals(HttpStatus.OK.value(), status);
-    assertEquals(request.getFirstName(), responseBody.getFirstName());
-    assertEquals(request.getLastName(), responseBody.getLastName());
-    assertEquals(request.getUsername(), responseBody.getUsername());
-    assertEquals(request.getEmail(), responseBody.getEmail());
-    assertEquals(request.getPhoneNumber(), responseBody.getPhoneNumber());
+    //    assertEquals(request.getFirstName(), responseBody.getFirstName());
+    //    assertEquals(request.getLastName(), responseBody.getLastName());
+    //    assertEquals(request.getUsername(), responseBody.getUsername());
+    //    assertEquals(request.getEmail(), responseBody.getEmail());
+    //    assertEquals(request.getPhoneNumber(), responseBody.getPhoneNumber());
     assertEquals("Brakus and Sons", responseBody.getCompanyName());
   }
 
@@ -424,11 +418,11 @@ class ProjectControllerTest {
     String url = BASE_URL + "/" + projectId;
     ProjectEditRequestDTO request =
         ProjectEditRequestDTO.builder()
-            .firstName("updated firstName")
-            .lastName("updated lastName")
-            .username("upadted username")
-            .email("updated.email@.com")
-            .phoneNumber("123-123-123")
+            .name("test project name")
+            .categoryValueId(UUID.fromString("84c3a3ac-c2d1-499e-8e33-c495d1faf1a7"))
+            .companyId(UUID.fromString("78d3f0da-e4b5-4885-8c2a-24b1f85afe44"))
+            .assignedEmployeeId(UUID.fromString("9f93938c-38f4-4472-b166-5ad41437db6e"))
+            .priorityValueId(UUID.fromString("15207afc-0a06-4d5f-a086-fe98cccb341c"))
             .build();
     String requestBody = objectMapper.writeValueAsString(request);
     MvcResult response =
@@ -452,11 +446,11 @@ class ProjectControllerTest {
     String url = BASE_URL + "/" + projectId;
     ProjectEditRequestDTO request =
         ProjectEditRequestDTO.builder()
-            .firstName("updated firstName")
-            .lastName("updated lastName")
-            .username("upadted username")
-            .email("updated.email@.com")
-            .phoneNumber("123-123-123")
+            .name("test project name")
+            .categoryValueId(UUID.fromString("84c3a3ac-c2d1-499e-8e33-c495d1faf1a7"))
+            .companyId(UUID.fromString("78d3f0da-e4b5-4885-8c2a-24b1f85afe44"))
+            .assignedEmployeeId(UUID.fromString("9f93938c-38f4-4472-b166-5ad41437db6e"))
+            .priorityValueId(UUID.fromString("15207afc-0a06-4d5f-a086-fe98cccb341c"))
             .build();
     String requestBody = objectMapper.writeValueAsString(request);
     MvcResult response =
@@ -476,11 +470,11 @@ class ProjectControllerTest {
     String url = BASE_URL + "/" + projectId;
     ProjectEditRequestDTO request =
         ProjectEditRequestDTO.builder()
-            .firstName("updated firstName")
-            .lastName("updated lastName")
-            .username("upadted username")
-            .email("updated.email@.com")
-            .phoneNumber("123-123-123")
+            .name("test project name")
+            .categoryValueId(UUID.fromString("84c3a3ac-c2d1-499e-8e33-c495d1faf1a7"))
+            .companyId(UUID.fromString("78d3f0da-e4b5-4885-8c2a-24b1f85afe44"))
+            .assignedEmployeeId(UUID.fromString("9f93938c-38f4-4472-b166-5ad41437db6e"))
+            .priorityValueId(UUID.fromString("15207afc-0a06-4d5f-a086-fe98cccb341c"))
             .build();
     String requestBody = objectMapper.writeValueAsString(request);
     MvcResult response =
@@ -504,11 +498,11 @@ class ProjectControllerTest {
     String url = BASE_URL + "/" + projectId;
     ProjectEditRequestDTO request =
         ProjectEditRequestDTO.builder()
-            .firstName("updated firstName")
-            .lastName("updated lastName")
-            .username("upadted username")
-            .email("updated.email@.com")
-            .phoneNumber("123-123-123")
+            .name("test project name")
+            .categoryValueId(UUID.fromString("84c3a3ac-c2d1-499e-8e33-c495d1faf1a7"))
+            .companyId(UUID.fromString("78d3f0da-e4b5-4885-8c2a-24b1f85afe44"))
+            .assignedEmployeeId(UUID.fromString("9f93938c-38f4-4472-b166-5ad41437db6e"))
+            .priorityValueId(UUID.fromString("15207afc-0a06-4d5f-a086-fe98cccb341c"))
             .build();
     String requestBody = objectMapper.writeValueAsString(request);
     MvcResult response =

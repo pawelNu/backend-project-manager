@@ -38,14 +38,14 @@ public class ProjectService {
     //    CategoryValueEntity projectCategory =
     //        categoryValueService.findCategoryByNameAndValue("project category", "production");
     CategoryValueEntity projectCategory =
-        categoryValueService.getCategoryValueById(body.getCategoryId());
+        categoryValueService.getCategoryValueById(body.getCategoryValueId());
     CompanyEntity companyEntity = companyService.getCompanyEntityById(body.getCompanyId());
     EmployeeEntity employeeEntity =
         employeeService.getEmployeeEntityById(body.getAssignedEmployeeId());
     //    CategoryValueEntity projectPriority =
     //        categoryValueService.findCategoryByNameAndValue("project priority", "5");
     CategoryValueEntity projectPriority =
-        categoryValueService.getCategoryValueById(body.getPriorityId());
+        categoryValueService.getCategoryValueById(body.getPriorityValueId());
     ProjectEntity projectEntity = projectMapper.toEntity(body);
     projectEntity.setCategoryValue(projectCategory);
     projectEntity.setCompany(companyEntity);
