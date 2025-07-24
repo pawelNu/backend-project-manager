@@ -46,11 +46,6 @@ public class ProjectService {
         employeeService.getEmployeeEntityById(body.getAssignedEmployeeId());
     CategoryValueEntity projectPriority =
         categoryValueService.getCategoryValueById(body.getPriorityValueId());
-    //    ProjectEntity projectEntity = projectMapper.toEntity(body);
-    //    projectEntity.setCategoryValue(projectCategory);
-    //    projectEntity.setCompany(companyEntity);
-    //    projectEntity.setAssignedEmployee(employeeEntity);
-    //    projectEntity.setPriorityValue(projectPriority);
     ProjectEntity projectEntity =
         ProjectEntity.builder()
             .name(body.getName())
@@ -87,7 +82,6 @@ public class ProjectService {
 
   public ProjectDTO editById(UUID id, ProjectEditRequestDTO body) {
     ProjectEntity projectToEdit = getProjectEntityById(id);
-    projectMapper.toEntity(body, projectToEdit);
     CategoryValueEntity projectCategory =
         categoryValueService.getCategoryValueById(body.getCategoryValueId());
     CompanyEntity companyEntity = companyService.getCompanyEntityById(body.getCompanyId());
@@ -95,12 +89,12 @@ public class ProjectService {
         employeeService.getEmployeeEntityById(body.getAssignedEmployeeId());
     CategoryValueEntity projectPriority =
         categoryValueService.getCategoryValueById(body.getPriorityValueId());
-    ProjectEntity projectEntity = projectMapper.toEntity(body, projectToEdit);
-    projectEntity.setCategoryValue(projectCategory);
-    projectEntity.setCompany(companyEntity);
-    projectEntity.setAssignedEmployee(employeeEntity);
-    projectEntity.setPriorityValue(projectPriority);
-    ProjectEntity updatedProject = projectRepository.save(projectEntity);
+    projectToEdit.setName(body.getName());
+    projectToEdit.setCategoryValue(projectCategory);
+    projectToEdit.setCompany(companyEntity);
+    projectToEdit.setAssignedEmployee(employeeEntity);
+    projectToEdit.setPriorityValue(projectPriority);
+    ProjectEntity updatedProject = projectRepository.save(projectToEdit);
     return projectMapper.toDTO(updatedProject);
   }
 

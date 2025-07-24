@@ -146,6 +146,7 @@ create table project_steps (
     name varchar(255) not null,
     project_id uuid,
     priority_id uuid,
+    assigned_employee_id uuid,
     deadline timestamp(6) without time zone,
     version integer not null,
     created timestamp(6) without time zone not null,
@@ -157,6 +158,8 @@ alter table if exists project_steps
 add constraint fk_project_steps_and_projects foreign key (project_id) references projects;
 alter table if exists project_steps
 add constraint fk_project_steps_and_category_values foreign key (priority_id) references category_values;
+alter table if exists project_steps
+add constraint fk_project_steps_and_employees foreign key (assigned_employee_id) references employees;
 --
 --
 create table project_step_comments (
