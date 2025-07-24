@@ -45,7 +45,8 @@ public interface ProjectStepApi {
   ResponseEntity<ProjectStepDTO> create(@Valid @RequestBody ProjectStepCreateRequestDTO body);
 
   @Operation(
-      description = "List project steps with filtering, sorting and pagination (react-admin format)")
+      description =
+          "List project steps with filtering, sorting and pagination (react-admin format)")
   @ApiResponse(
       responseCode = "200",
       description = "OK",

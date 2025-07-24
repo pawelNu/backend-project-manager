@@ -1,10 +1,5 @@
 package com.pawelnu.projectmanager.endpoints.project.step;
 
-import com.pawelnu.projectmanager.endpoints.project.ProjectCreateRequestDTO;
-import com.pawelnu.projectmanager.endpoints.project.ProjectDTO;
-import com.pawelnu.projectmanager.endpoints.project.ProjectEditRequestDTO;
-import com.pawelnu.projectmanager.endpoints.project.ProjectListResponseDTO;
-import com.pawelnu.projectmanager.endpoints.project.ProjectService;
 import com.pawelnu.projectmanager.endpoints.project.step.dto.ProjectStepCreateRequestDTO;
 import com.pawelnu.projectmanager.endpoints.project.step.dto.ProjectStepDTO;
 import com.pawelnu.projectmanager.endpoints.project.step.dto.ProjectStepEditRequestDTO;
