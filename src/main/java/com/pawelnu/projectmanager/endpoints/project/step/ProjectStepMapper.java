@@ -1,4 +1,4 @@
- package com.pawelnu.projectmanager.endpoints.project.step;
+package com.pawelnu.projectmanager.endpoints.project.step;
 
 import com.pawelnu.projectmanager.endpoints.company.employee.EmployeeEntity;
 import com.pawelnu.projectmanager.endpoints.project.step.dto.ProjectStepDTO;
@@ -6,8 +6,8 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
- public interface ProjectStepMapper {
-  
+public interface ProjectStepMapper {
+
   @Mapping(source = "project.id", target = "projectId")
   @Mapping(source = "project.name", target = "projectName")
   @Mapping(source = "priority.id", target = "priorityId")
@@ -22,4 +22,4 @@ import org.mapstruct.Mapping;
     }
     return entity.getFirstName() + " " + entity.getLastName();
   }
- }
+}
