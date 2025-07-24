@@ -1,4 +1,4 @@
-package com.pawelnu.projectmanager.endpoints.project;
+package com.pawelnu.projectmanager.endpoints.project.dto;
 
 import java.util.UUID;
 import lombok.Builder;
