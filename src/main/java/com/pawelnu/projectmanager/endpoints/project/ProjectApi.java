@@ -1,5 +1,8 @@
 package com.pawelnu.projectmanager.endpoints.project;
 
+import com.pawelnu.projectmanager.endpoints.project.dto.ProjectCreateRequestDTO;
+import com.pawelnu.projectmanager.endpoints.project.dto.ProjectDTO;
+import com.pawelnu.projectmanager.endpoints.project.dto.ProjectEditRequestDTO;
 import com.pawelnu.projectmanager.exception.model.SimpleResponse;
 import com.pawelnu.projectmanager.utils.Path;
 import com.pawelnu.projectmanager.utils.ResponseErrors;

@@ -1,6 +1,9 @@
 package com.pawelnu.projectmanager.endpoints.project;
 
 import com.pawelnu.projectmanager.endpoints.company.employee.EmployeeEntity;
+import com.pawelnu.projectmanager.endpoints.project.dto.ProjectCreateRequestDTO;
+import com.pawelnu.projectmanager.endpoints.project.dto.ProjectDTO;
+import com.pawelnu.projectmanager.endpoints.project.dto.ProjectEditRequestDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;

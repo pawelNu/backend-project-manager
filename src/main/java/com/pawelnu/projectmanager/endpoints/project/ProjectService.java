@@ -7,6 +7,10 @@ import com.pawelnu.projectmanager.endpoints.company.CompanyEntity;
 import com.pawelnu.projectmanager.endpoints.company.CompanyService;
 import com.pawelnu.projectmanager.endpoints.company.employee.EmployeeEntity;
 import com.pawelnu.projectmanager.endpoints.company.employee.EmployeeService;
+import com.pawelnu.projectmanager.endpoints.project.dto.ProjectCreateRequestDTO;
+import com.pawelnu.projectmanager.endpoints.project.dto.ProjectDTO;
+import com.pawelnu.projectmanager.endpoints.project.dto.ProjectEditRequestDTO;
+import com.pawelnu.projectmanager.endpoints.project.dto.ProjectListResponseDTO;
 import com.pawelnu.projectmanager.exception.NotFoundException;
 import com.pawelnu.projectmanager.exception.model.SimpleResponse;
 import com.pawelnu.projectmanager.utils.Consts.MSG;
@@ -42,11 +46,19 @@ public class ProjectService {
         employeeService.getEmployeeEntityById(body.getAssignedEmployeeId());
     CategoryValueEntity projectPriority =
         categoryValueService.getCategoryValueById(body.getPriorityValueId());
-    ProjectEntity projectEntity = projectMapper.toEntity(body);
-    projectEntity.setCategoryValue(projectCategory);
-    projectEntity.setCompany(companyEntity);
-    projectEntity.setAssignedEmployee(employeeEntity);
-    projectEntity.setPriorityValue(projectPriority);
+    //    ProjectEntity projectEntity = projectMapper.toEntity(body);
+    //    projectEntity.setCategoryValue(projectCategory);
+    //    projectEntity.setCompany(companyEntity);
+    //    projectEntity.setAssignedEmployee(employeeEntity);
+    //    projectEntity.setPriorityValue(projectPriority);
+    ProjectEntity projectEntity =
+        ProjectEntity.builder()
+            .name(body.getName())
+            .categoryValue(projectCategory)
+            .company(companyEntity)
+            .assignedEmployee(employeeEntity)
+            .priorityValue(projectPriority)
+            .build();
     ProjectEntity savedCompany = projectRepository.save(projectEntity);
     return projectMapper.toDTO(savedCompany);
   }
