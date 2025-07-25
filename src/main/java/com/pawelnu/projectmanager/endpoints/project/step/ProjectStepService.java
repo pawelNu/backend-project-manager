@@ -66,9 +66,20 @@ public class ProjectStepService {
     return projectStepMapper.toDTO(getProjectStepEntityById(id));
   }
 
-  // TODO implement editById
   public ProjectStepDTO editById(UUID id, ProjectStepEditRequestDTO body) {
-    throw new NotImplementedException("no implementation!");
+    ProjectStepEntity projectStepToEdit = getProjectStepEntityById(id);
+    ProjectEntity project = projectService.getProjectEntityById(body.getProjectId());
+    EmployeeEntity employeeEntity =
+        employeeService.getEmployeeEntityById(body.getAssignedEmployeeId());
+    CategoryValueEntity projectStepPriority =
+        categoryValueService.getCategoryValueById(body.getPriorityValueId());
+    projectStepToEdit.setName(body.getName());
+    projectStepToEdit.setProject(project);
+    projectStepToEdit.setPriority(projectStepPriority);
+    projectStepToEdit.setAssignedEmployee(employeeEntity);
+    projectStepToEdit.setDeadline(body.getDeadline());
+    ProjectStepEntity updatedProject = projectStepRepository.save(projectStepToEdit);
+    return projectStepMapper.toDTO(updatedProject);
   }
 
   public SimpleResponse deleteById(UUID id) {
