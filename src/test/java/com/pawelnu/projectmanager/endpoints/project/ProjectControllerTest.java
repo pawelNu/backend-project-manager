@@ -243,9 +243,9 @@ class ProjectControllerTest {
     List<ProjectDTO> responseBody =
         objectMapper.readValue(contentAsString, new TypeReference<>() {});
     assertEquals(HttpStatus.OK.value(), status);
-    assertEquals("items 0-1/2", headerContentRange);
-    assertEquals(2, responseBody.size());
-    assertEquals("migrate database", responseBody.getFirst().getName());
+    assertEquals("items 0-2/3", headerContentRange);
+    assertEquals(3, responseBody.size());
+    assertEquals("steps checker", responseBody.getFirst().getName());
   }
 
   @Test
