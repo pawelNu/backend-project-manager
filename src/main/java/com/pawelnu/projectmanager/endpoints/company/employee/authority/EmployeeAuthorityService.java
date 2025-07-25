@@ -152,7 +152,7 @@ public class EmployeeAuthorityService {
 
   public EmployeeAuthorityEntity getEmployeeAuthorityEntityById(UUID id) {
     return employeeAuthorityRepository
-        .findById(id)
+        .findByIdAndIsDeletedFalse(id)
         .orElseThrow(() -> new NotFoundException(MSG.EMPLOYEE_AUTHORITY_NOT_FOUND_MSG + id));
   }
 }
