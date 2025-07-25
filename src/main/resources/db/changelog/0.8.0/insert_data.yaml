@@ -49,3 +49,13 @@ databaseChangeLog:
             separator: ','
             tableName: projects
             primaryKey: id
+  - changeSet:
+      id: 29
+      author: pawelNu
+      changes:
+        - loadUpdateData:
+            file: project_steps.csv
+            relativeToChangelogFile: true
+            separator: ','
+            tableName: project_steps
+            primaryKey: id
