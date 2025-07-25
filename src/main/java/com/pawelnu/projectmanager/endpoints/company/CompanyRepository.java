@@ -13,5 +13,5 @@ public interface CompanyRepository
   @Query("SELECT c.id FROM CompanyEntity c")
   List<UUID> findAllIds();
 
-  Optional<CompanyEntity> findByIdAndIsDeletedFalse(UUID is);
+  Optional<CompanyEntity> findByIdAndIsDeletedFalse(UUID id);
 }

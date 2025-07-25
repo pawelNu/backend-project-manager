@@ -62,9 +62,8 @@ public class ProjectStepService {
     throw new NotImplementedException("no implementation!");
   }
 
-  // TODO implement getById
   public ProjectStepDTO getById(UUID id) {
-    throw new NotImplementedException("no implementation!");
+    return projectStepMapper.toDTO(getProjectStepEntityById(id));
   }
 
   // TODO implement editById
@@ -85,8 +84,8 @@ public class ProjectStepService {
   }
 
   private ProjectStepEntity getProjectStepEntityById(UUID id) {
-    return projectStepQueryRepository
-        .findById(id)
+    return projectStepRepository
+        .findByIdAndIsDeletedFalse(id)
         .orElseThrow(() -> new NotFoundException(MSG.PROJECT_STEP_NOT_FOUND + id));
   }
 }
