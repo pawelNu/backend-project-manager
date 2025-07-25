@@ -13,6 +13,7 @@ public interface CompanyAddressMapper {
   @Mapping(target = "id", ignore = true)
   CompanyAddressEntity toEntity(CompanyAddressCreateRequestDTO body);
 
+  //  TODO refactor to manual mapping
   @Mapping(target = "id", ignore = true)
   CompanyAddressEntity toEntity(
       CompanyAddressEditRequestDTO body, @MappingTarget CompanyAddressEntity entity);

@@ -73,10 +73,11 @@ public class ProjectService {
     ProjectEntity projectToDelete = getProjectEntityById(id);
     projectToDelete.setIsDeleted(true);
     ProjectEntity projectDeleted = projectRepository.save(projectToDelete);
+    String item = "project";
     if (projectDeleted.getIsDeleted()) {
-      return SimpleResponse.builder().message("Deleted project with id: " + id).build();
+      return SimpleResponse.builder().message(Shared.deleteMessage(item, id)).build();
     } else {
-      return SimpleResponse.builder().message("Cannot delete project with id: " + id).build();
+      return SimpleResponse.builder().message(Shared.cannotDeleteMessage(item, id)).build();
     }
   }
 

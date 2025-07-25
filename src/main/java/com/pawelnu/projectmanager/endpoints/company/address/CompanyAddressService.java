@@ -4,14 +4,12 @@ import static com.pawelnu.projectmanager.utils.Consts.MSG.COMPANY_ADDRESS_NOT_FO
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pawelnu.projectmanager.endpoints.company.CompanyEntity;
-import com.pawelnu.projectmanager.endpoints.company.CompanyRepository;
+import com.pawelnu.projectmanager.endpoints.company.CompanyService;
 import com.pawelnu.projectmanager.exception.NotFoundException;
 import com.pawelnu.projectmanager.exception.model.SimpleResponse;
-import com.pawelnu.projectmanager.utils.Consts.MSG;
 import com.pawelnu.projectmanager.utils.PageableParams;
 import com.pawelnu.projectmanager.utils.Shared;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,60 +22,46 @@ import org.springframework.stereotype.Service;
 public class CompanyAddressService {
 
   private final CompanyAddressRepository companyAddressRepository;
-  private final CompanyRepository companyRepository;
+  private final CompanyService companyService;
   private final CompanyAddressQueryRepository companyAddressQueryRepository;
   private final CompanyAddressMapper companyAddressMapper;
   private final ObjectMapper objectMapper;
 
   public CompanyAddressDTO getById(UUID id) {
+    return companyAddressMapper.toDTO(getCompanyAddressEntityById(id));
+  }
+
+  public CompanyAddressEntity getCompanyAddressEntityById(UUID id) {
     return companyAddressQueryRepository
         .findById(id)
-        .map(companyAddressMapper::toDTO)
         .orElseThrow(() -> new NotFoundException(COMPANY_ADDRESS_NOT_FOUND + id));
   }
 
   public CompanyAddressDTO create(CompanyAddressCreateRequestDTO body) {
-    Optional<CompanyEntity> company =
-        companyRepository.findByIdAndIsDeletedFalse(body.getCompanyId());
-    if (company.isPresent()) {
-      CompanyAddressEntity addressEntity = companyAddressMapper.toEntity(body);
-      addressEntity.setCompany(company.get());
-      CompanyAddressEntity savedAddress = companyAddressRepository.save(addressEntity);
-      return companyAddressMapper.toDTO(savedAddress);
-    } else {
-      throw new NotFoundException(MSG.COMPANY_ADDRESS_NOT_FOUND + body.getCompanyId());
-    }
+    CompanyEntity company = companyService.getCompanyEntityById(body.getCompanyId());
+    CompanyAddressEntity addressEntity = companyAddressMapper.toEntity(body);
+    addressEntity.setCompany(company);
+    CompanyAddressEntity savedAddress = companyAddressRepository.save(addressEntity);
+    return companyAddressMapper.toDTO(savedAddress);
   }
 
   public CompanyAddressDTO editById(UUID id, CompanyAddressEditRequestDTO body) {
-    Optional<CompanyAddressEntity> companyToEdit = companyAddressRepository.findById(id);
-    if (companyToEdit.isPresent()) {
-      CompanyAddressEntity existingCompany = companyToEdit.get();
-      companyAddressMapper.toEntity(body, existingCompany);
-      CompanyAddressEntity updatedCompany = companyAddressRepository.save(existingCompany);
-      return companyAddressMapper.toDTO(updatedCompany);
-    } else {
-      throw new NotFoundException(MSG.COMPANY_ADDRESS_NOT_FOUND + id);
-    }
+    CompanyAddressEntity companyToEdit = getCompanyAddressEntityById(id);
+    companyAddressMapper.toEntity(body, companyToEdit);
+    CompanyAddressEntity updatedCompany = companyAddressRepository.save(companyToEdit);
+    return companyAddressMapper.toDTO(updatedCompany);
   }
 
   public SimpleResponse deleteById(UUID id) {
-    Optional<CompanyAddressEntity> companyAddressToDelete =
-        companyAddressRepository.findByIdAndIsDeletedFalse(id);
-    if (companyAddressToDelete.isPresent()) {
-      CompanyAddressEntity existingCompanyAddress = companyAddressToDelete.get();
-      existingCompanyAddress.setIsDeleted(true);
-      CompanyAddressEntity updatedCompanyAddress =
-          companyAddressRepository.save(existingCompanyAddress);
-      if (updatedCompanyAddress.getIsDeleted()) {
-        return SimpleResponse.builder().message("Deleted company address with id: " + id).build();
-      } else {
-        return SimpleResponse.builder()
-            .message("Cannot delete company address with id: " + id)
-            .build();
-      }
+    CompanyAddressEntity companyAddressToDelete = getCompanyAddressEntityById(id);
+    companyAddressToDelete.setIsDeleted(true);
+    CompanyAddressEntity updatedCompanyAddress =
+        companyAddressRepository.save(companyAddressToDelete);
+    String item = "company address";
+    if (updatedCompanyAddress.getIsDeleted()) {
+      return SimpleResponse.builder().message(Shared.deleteMessage(item, id)).build();
     } else {
-      throw new NotFoundException(COMPANY_ADDRESS_NOT_FOUND + id);
+      return SimpleResponse.builder().message(Shared.cannotDeleteMessage(item, id)).build();
     }
   }
 

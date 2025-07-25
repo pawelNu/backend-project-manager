@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pawelnu.projectmanager.utils.Consts.Request;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -104,5 +105,13 @@ public class Shared {
     long totalElements = page.getTotalElements();
     long end = Math.min(offset + limit - 1, totalElements - 1);
     return PageableResponse.builder().totalElements(totalElements).end(end).build();
+  }
+
+  public static String deleteMessage(String item, UUID id) {
+    return "Deleted %s with id: %s".formatted(item, id);
+  }
+
+  public static String cannotDeleteMessage(String item, UUID id) {
+    return "Cannot delete %s with id: %s".formatted(item, id);
   }
 }

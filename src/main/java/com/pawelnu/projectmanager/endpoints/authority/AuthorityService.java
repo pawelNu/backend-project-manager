@@ -100,10 +100,11 @@ public class AuthorityService {
     AuthorityEntity authorityToDelete = getAuthorityEntityById(id);
     authorityToDelete.setIsDeleted(true);
     AuthorityEntity updatedAuthority = authorityRepository.save(authorityToDelete);
+    String item = "authority";
     if (updatedAuthority.getIsDeleted()) {
-      return SimpleResponse.builder().message("Deleted authority with id: " + id).build();
+      return SimpleResponse.builder().message(Shared.deleteMessage(item, id)).build();
     } else {
-      return SimpleResponse.builder().message("Cannot delete authority with id: " + id).build();
+      return SimpleResponse.builder().message(Shared.cannotDeleteMessage(item, id)).build();
     }
   }
 

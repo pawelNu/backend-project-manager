@@ -12,7 +12,10 @@ import com.pawelnu.projectmanager.endpoints.project.step.dto.ProjectStepCreateRe
 import com.pawelnu.projectmanager.endpoints.project.step.dto.ProjectStepDTO;
 import com.pawelnu.projectmanager.endpoints.project.step.dto.ProjectStepEditRequestDTO;
 import com.pawelnu.projectmanager.endpoints.project.step.dto.ProjectStepListResponseDTO;
+import com.pawelnu.projectmanager.exception.NotFoundException;
 import com.pawelnu.projectmanager.exception.model.SimpleResponse;
+import com.pawelnu.projectmanager.utils.Consts.MSG;
+import com.pawelnu.projectmanager.utils.Shared;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class ProjectStepService {
 
   private final ProjectStepRepository projectStepRepository;
-  //  private final ProjectStepQueryRepository projectStepQueryRepository;
+  private final ProjectStepQueryRepository projectStepQueryRepository;
   private final CategoryValueService categoryValueService;
   private final CompanyService companyService;
   private final EmployeeService employeeService;
@@ -69,8 +72,21 @@ public class ProjectStepService {
     throw new NotImplementedException("no implementation!");
   }
 
-  // TODO implement deleteById
   public SimpleResponse deleteById(UUID id) {
-    throw new NotImplementedException("no implementation!");
+    ProjectStepEntity projectStepToDelete = getProjectStepEntityById(id);
+    projectStepToDelete.setIsDeleted(true);
+    ProjectStepEntity projectStepDeleted = projectStepRepository.save(projectStepToDelete);
+    String item = "project step";
+    if (projectStepDeleted.getIsDeleted()) {
+      return SimpleResponse.builder().message(Shared.deleteMessage(item, id)).build();
+    } else {
+      return SimpleResponse.builder().message(Shared.cannotDeleteMessage(item, id)).build();
+    }
+  }
+
+  private ProjectStepEntity getProjectStepEntityById(UUID id) {
+    return projectStepQueryRepository
+        .findById(id)
+        .orElseThrow(() -> new NotFoundException(MSG.PROJECT_STEP_NOT_FOUND + id));
   }
 }

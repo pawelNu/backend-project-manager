@@ -53,7 +53,7 @@ public class CategoryService {
     return categoryMapperManual.toDTO(getCategoryEntityById(id));
   }
 
-  private CategoryEntity getCategoryEntityById(UUID id) {
+  public CategoryEntity getCategoryEntityById(UUID id) {
     return categoryQueryRepository
         .findById(id)
         .orElseThrow(() -> new NotFoundException(MSG.CATEGORY_NOT_FOUND_MSG + id));
@@ -70,10 +70,11 @@ public class CategoryService {
     CategoryEntity categoryToDelete = getCategoryEntityById(id);
     categoryToDelete.setIsDeleted(true);
     CategoryEntity updatedCategory = categoryRepository.save(categoryToDelete);
+    String item = "category";
     if (updatedCategory.getIsDeleted()) {
-      return SimpleResponse.builder().message("Deleted category with id: " + id).build();
+      return SimpleResponse.builder().message(Shared.deleteMessage(item, id)).build();
     } else {
-      return SimpleResponse.builder().message("Cannot delete category with id: " + id).build();
+      return SimpleResponse.builder().message(Shared.cannotDeleteMessage(item, id)).build();
     }
   }
 }
