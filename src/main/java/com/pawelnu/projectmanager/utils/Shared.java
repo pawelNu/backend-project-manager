@@ -102,6 +102,18 @@ public class Shared {
         .build();
   }
 
+  //  TODO implement checking query params if they exist
+  /*
+  all params will be stored in map <item, keyParam>
+  in service will be check
+  checkIfParamsExists(params) {
+  get only params for item
+  loop for each param
+  throw NotFoundQueryFieldException if not found with list all available params
+  }
+  */
+  // TODO think for the same for sorting params
+
   private static PageableResponse preparePageInfo(Page page, int offset, int limit) {
     long totalElements = page.getTotalElements();
     long end = Math.min(offset + limit - 1, totalElements - 1);
