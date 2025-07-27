@@ -5,6 +5,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pawelnu.projectmanager.utils.Consts.Request;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.NumberExpression;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -81,17 +84,8 @@ public class Shared {
 
   public static PageableParams preparePageableParams(
       ObjectMapper objectMapper, String sort, String range, String filter) {
-    return preparePageableParams(objectMapper, "name", sort, range, filter);
-  }
-
-  public static PageableParams preparePageableParams(
-      ObjectMapper objectMapper,
-      String defaultSortField,
-      String sort,
-      String range,
-      String filter) {
     List<String> sortList = Shared.parseJsonList(objectMapper, sort);
-    String sortField = sortList.isEmpty() ? defaultSortField : sortList.get(0);
+    String sortField = sortList.get(0);
     String sortDir = sortList.size() > 1 ? sortList.get(1) : "ASC";
 
     List<Integer> rangeList = Shared.parseJsonListInt(objectMapper, range);
@@ -134,5 +128,20 @@ public class Shared {
   public static NumberExpression<Integer> totalPages(int limit) {
     return Expressions.numberTemplate(Integer.class, "CEIL(COUNT(*) OVER() * 1.0 / {0})", limit)
         .as("total_pages");
+  }
+
+  public static Instant parseDate(String stringDate) {
+    LocalDate startDate = LocalDate.parse(stringDate);
+    return startDate.atStartOfDay(ZoneOffset.UTC).toInstant();
+  }
+
+  public static class Field {
+    public static final String projectName = "projectName";
+    public static final String projectStepName = "projectStepName";
+    public static final String companyName = "companyName";
+    public static final String assignedEmployee = "assignedEmployee";
+    public static final String projectPriorityValue = "projectPriorityValue";
+    public static final String projectStepPriorityValue = "projectStepPriorityValue";
+    public static final String projectStepDeadline = "projectStepDeadline";
   }
 }

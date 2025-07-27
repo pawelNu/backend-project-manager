@@ -186,20 +186,16 @@ public class ProjectQueryRepository {
     Order order = Sort.Direction.fromString(sortDir) == Sort.Direction.ASC ? Order.ASC : Order.DESC;
 
     switch (sortField) {
-      case "categoryName":
-        query.orderBy(order == Order.ASC ? category.name.asc() : category.name.desc());
-        break;
-      case "companyName":
-        query.orderBy(order == Order.ASC ? company.name.asc() : company.name.desc());
-        break;
-      case "assignedEmployee":
-        query.orderBy(order == Order.ASC ? employee.lastName.asc() : employee.lastName.desc());
-        break;
-      case "priorityName":
-        query.orderBy(order == Order.ASC ? priority.name.asc() : priority.name.desc());
-        break;
-      default:
-        query.orderBy(order == Order.ASC ? project.name.asc() : project.name.desc());
+      case "name" -> query.orderBy(order == Order.ASC ? project.name.asc() : project.name.desc());
+      case "categoryName" ->
+          query.orderBy(order == Order.ASC ? category.name.asc() : category.name.desc());
+      case "companyName" ->
+          query.orderBy(order == Order.ASC ? company.name.asc() : company.name.desc());
+      case "assignedEmployee" ->
+          query.orderBy(order == Order.ASC ? employee.lastName.asc() : employee.lastName.desc());
+      case "priorityName" ->
+          query.orderBy(order == Order.ASC ? priority.name.asc() : priority.name.desc());
+      default -> query.orderBy(project.name.asc());
     }
   }
 }
