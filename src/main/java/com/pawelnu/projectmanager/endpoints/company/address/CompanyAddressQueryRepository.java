@@ -83,6 +83,7 @@ public class CompanyAddressQueryRepository {
     switch (sortField) {
       case "companyName" -> query.orderBy(
           order == Order.ASC ? company.name.asc() : company.name.desc());
+      case "city" -> query.orderBy(order == Order.ASC ? address.city.asc() : address.city.desc());
         // TODO add others fields to sorting
       default -> query.orderBy(address.city.asc());
     }

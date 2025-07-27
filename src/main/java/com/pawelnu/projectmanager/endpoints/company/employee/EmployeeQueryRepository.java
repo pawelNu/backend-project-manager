@@ -83,7 +83,7 @@ public class EmployeeQueryRepository {
       case "firstName" -> query.orderBy(
           order == Order.ASC ? employee.firstName.asc() : employee.firstName.desc());
         //      TODO add others fields
-      default -> query.orderBy(employee.lastName.desc());
+      default -> query.orderBy(employee.lastName.asc());
     }
 
     List<EmployeeEntity> results = query.fetch();

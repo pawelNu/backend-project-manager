@@ -85,7 +85,7 @@ public class Shared {
   public static PageableParams preparePageableParams(
       ObjectMapper objectMapper, String sort, String range, String filter) {
     List<String> sortList = Shared.parseJsonList(objectMapper, sort);
-    String sortField = sortList.get(0);
+    String sortField = sortList.isEmpty() ? "" : sortList.get(0);
     String sortDir = sortList.size() > 1 ? sortList.get(1) : "ASC";
 
     List<Integer> rangeList = Shared.parseJsonListInt(objectMapper, range);

@@ -64,11 +64,11 @@ public class EmployeeAuthorityQueryRepository {
     Order order = Sort.Direction.fromString(sortDir) == Sort.Direction.ASC ? Order.ASC : Order.DESC;
     switch (sortField) {
       case "authorityName" -> query.orderBy(
-          order == Order.ASC ? authority.nameBackend.desc() : authority.nameBackend.asc());
+          order == Order.ASC ? authority.nameBackend.asc() : authority.nameBackend.desc());
       case "employeeFirstName" -> query.orderBy(
-          order == Order.ASC ? employee.firstName.desc() : employee.firstName.asc());
+          order == Order.ASC ? employee.firstName.asc() : employee.firstName.desc());
       case "employeeLastName" -> query.orderBy(
-          order == Order.ASC ? employee.lastName.desc() : employee.lastName.asc());
+          order == Order.ASC ? employee.lastName.asc() : employee.lastName.desc());
       default -> query.orderBy(employee.lastName.desc());
     }
 
