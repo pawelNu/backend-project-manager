@@ -273,7 +273,7 @@ class AuthorityControllerTest {
         objectMapper.readValue(contentAsString, new TypeReference<>() {});
     assertEquals(HttpStatus.OK.value(), status);
     assertEquals(1, responseBody.size());
-    assertEquals("ADD_ITEM_TO_EMPLOYEE", responseBody.getFirst().getNameBackend());// FIXME test
+    assertEquals("ADD_ITEM_TO_EMPLOYEE", responseBody.getFirst().getNameBackend()); // FIXME test
   }
 
   @Test

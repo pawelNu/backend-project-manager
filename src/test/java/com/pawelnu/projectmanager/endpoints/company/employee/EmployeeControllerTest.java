@@ -221,7 +221,7 @@ class EmployeeControllerTest {
     assertEquals("items 0-1/2", headerContentRange);
     assertEquals(2, responseBody.size());
     assertEquals("Brakus and Sons", responseBody.getFirst().getCompanyName());
-    assertEquals("Tom", responseBody.getFirst().getFirstName());// FIXME test
+    assertEquals("Tom", responseBody.getFirst().getFirstName()); // FIXME test
     assertEquals("Keeling", responseBody.getFirst().getLastName());
   }
 
