@@ -321,7 +321,7 @@ class CompanyControllerTest {
     assertEquals(HttpStatus.OK.value(), status);
     assertEquals("items 0-0/29", headerContentRange);
     assertEquals(1, responseBody.size());
-    assertEquals("Abernathy LLC", responseBody.getFirst().getName()); // FIXME test
+    assertEquals("Abernathy LLC", responseBody.getFirst().getName());
   }
 
   @Test
