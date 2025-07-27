@@ -73,6 +73,7 @@ public class Shared {
   }
 
   public static String prepareContentRange(Page page, int offset, int limit) {
+    // TODO refactor code and remove this function
     PageableResponse pageInfo = preparePageInfo(page, offset, limit);
     return String.format("items %d-%d/%d", offset, pageInfo.getEnd(), pageInfo.getTotalElements());
   }
