@@ -1,0 +1,29 @@
+meta {
+  name: create_4
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{baseUrl}}/api/company-addresses
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "companyId": "",
+    "street": "",
+    "streetNumber": "",
+    "city": "",
+    "zipCode": "",
+    "country": "",
+    "phoneNumber": "",
+    "emailAddress": "",
+    "addressType": ""
+  }
+}

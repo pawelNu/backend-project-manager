@@ -1,0 +1,32 @@
+meta {
+  name: editById_3
+  type: http
+  seq: 2
+}
+
+put {
+  url: {{baseUrl}}/api/company-addresses/:id
+  body: json
+  auth: bearer
+}
+
+params:path {
+  id: 
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "street": "",
+    "streetNumber": "",
+    "city": "",
+    "zipCode": "",
+    "country": "",
+    "phoneNumber": "",
+    "emailAddress": "",
+    "addressType": ""
+  }
+}

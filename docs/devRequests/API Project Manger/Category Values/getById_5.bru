@@ -1,0 +1,19 @@
+meta {
+  name: getById_5
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/api/category-values/:id
+  body: none
+  auth: bearer
+}
+
+params:path {
+  id: 
+}
+
+auth:bearer {
+  token: {{token}}
+}

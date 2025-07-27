@@ -1,0 +1,22 @@
+meta {
+  name: create_3
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/api/employee-authorities
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "employeeId": "",
+    "authorityIds": []
+  }
+}

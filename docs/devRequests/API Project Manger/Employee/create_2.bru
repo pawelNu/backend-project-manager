@@ -1,0 +1,27 @@
+meta {
+  name: create_2
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{baseUrl}}/api/employees
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "companyId": "",
+    "firstName": "",
+    "lastName": "",
+    "username": "",
+    "password": "",
+    "email": "",
+    "phoneNumber": ""
+  }
+}

@@ -1,0 +1,24 @@
+meta {
+  name: create_6
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{baseUrl}}/api/category-values
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "categoryId": "",
+    "numericValue": "",
+    "stringValue": "",
+    "dateValue": ""
+  }
+}

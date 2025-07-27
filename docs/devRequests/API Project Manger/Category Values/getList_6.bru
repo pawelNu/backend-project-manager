@@ -1,0 +1,21 @@
+meta {
+  name: getList_6
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{baseUrl}}/api/category-values
+  body: none
+  auth: bearer
+}
+
+params:query {
+  ~sort: 
+  ~range: 
+  ~filter: 
+}
+
+auth:bearer {
+  token: {{token}}
+}

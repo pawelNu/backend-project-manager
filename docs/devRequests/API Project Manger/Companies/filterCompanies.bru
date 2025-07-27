@@ -1,0 +1,31 @@
+meta {
+  name: filterCompanies
+  type: http
+  seq: 6
+}
+
+post {
+  url: {{baseUrl}}/api/companies/filter
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "filters": {
+      "names": [],
+      "nips": [],
+      "regons": []
+    },
+    "page": {
+      "pageNumber": 0,
+      "pageSize": 0,
+      "sortedBy": "",
+      "direction": ""
+    }
+  }
+}

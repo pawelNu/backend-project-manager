@@ -1,0 +1,29 @@
+meta {
+  name: editById_2
+  type: http
+  seq: 2
+}
+
+put {
+  url: {{baseUrl}}/api/employees/:id
+  body: json
+  auth: bearer
+}
+
+params:path {
+  id: 
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "firstName": "",
+    "lastName": "",
+    "username": "",
+    "email": "",
+    "phoneNumber": ""
+  }
+}

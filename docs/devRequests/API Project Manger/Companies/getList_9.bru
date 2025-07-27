@@ -1,0 +1,22 @@
+meta {
+  name: getList_9
+  type: http
+  seq: 7
+}
+
+get {
+  url: {{baseUrl}}/api/companies/pagination
+  body: none
+  auth: bearer
+}
+
+params:query {
+  ~pageNumber: 
+  ~pageSize: 
+  ~sortedBy: 
+  ~direction: 
+}
+
+auth:bearer {
+  token: {{token}}
+}
