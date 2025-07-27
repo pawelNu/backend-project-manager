@@ -12,14 +12,16 @@ import com.pawelnu.projectmanager.endpoints.project.step.dto.ProjectStepCreateRe
 import com.pawelnu.projectmanager.endpoints.project.step.dto.ProjectStepDTO;
 import com.pawelnu.projectmanager.endpoints.project.step.dto.ProjectStepEditRequestDTO;
 import com.pawelnu.projectmanager.endpoints.project.step.dto.ProjectStepListResponseDTO;
+import com.pawelnu.projectmanager.endpoints.project.step.dto.ProjectStepRowDTO;
 import com.pawelnu.projectmanager.exception.NotFoundException;
 import com.pawelnu.projectmanager.exception.model.SimpleResponse;
 import com.pawelnu.projectmanager.utils.Consts.MSG;
+import com.pawelnu.projectmanager.utils.PageableParams;
 import com.pawelnu.projectmanager.utils.Shared;
+import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.NotImplementedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -59,7 +61,17 @@ public class ProjectStepService {
 
   // TODO implement filter
   public ProjectStepListResponseDTO filter(String sort, String range, String filter) {
-    throw new NotImplementedException("no implementation!");
+    PageableParams params = Shared.preparePageableParams(objectMapper, sort, range, filter);
+
+    List<ProjectStepRowDTO> results = projectStepQueryRepository.getList(params);
+    List<ProjectStepDTO> projectDTOs = results.stream().map(projectStepMapper::toDTO).toList();
+    String contentRange =
+        Shared.prepareContentRange(
+            results.getFirst().getTotalElements(), params.getOffset(), params.getLimit());
+    return ProjectStepListResponseDTO.builder()
+        .data(projectDTOs)
+        .contentRange(contentRange)
+        .build();
   }
 
   public ProjectStepDTO getById(UUID id) {

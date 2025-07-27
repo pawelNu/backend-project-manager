@@ -2,6 +2,7 @@ package com.pawelnu.projectmanager.endpoints.project.step;
 
 import com.pawelnu.projectmanager.endpoints.company.employee.EmployeeEntity;
 import com.pawelnu.projectmanager.endpoints.project.step.dto.ProjectStepDTO;
+import com.pawelnu.projectmanager.endpoints.project.step.dto.ProjectStepRowDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -15,6 +16,8 @@ public interface ProjectStepMapper {
   @Mapping(source = "assignedEmployee.id", target = "assignedEmployeeId")
   @Mapping(source = "assignedEmployee", target = "assignedEmployee")
   ProjectStepDTO toDTO(ProjectStepEntity entity);
+
+  ProjectStepDTO toDTO(ProjectStepRowDTO row);
 
   default String employeeToString(EmployeeEntity entity) {
     if (entity == null) {

@@ -3,6 +3,8 @@ package com.pawelnu.projectmanager.utils;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pawelnu.projectmanager.utils.Consts.Request;
+import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.types.dsl.NumberExpression;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -72,6 +74,11 @@ public class Shared {
     return String.format("items %d-%d/%d", offset, pageInfo.getEnd(), pageInfo.getTotalElements());
   }
 
+  public static String prepareContentRange(long totalElements, int offset, int limit) {
+    PageableResponse pageInfo = preparePageInfo(totalElements, offset, limit);
+    return String.format("items %d-%d/%d", offset, pageInfo.getEnd(), pageInfo.getTotalElements());
+  }
+
   public static PageableParams preparePageableParams(
       ObjectMapper objectMapper, String sort, String range, String filter) {
     return preparePageableParams(objectMapper, "name", sort, range, filter);
@@ -107,11 +114,25 @@ public class Shared {
     return PageableResponse.builder().totalElements(totalElements).end(end).build();
   }
 
+  private static PageableResponse preparePageInfo(long totalElements, int offset, int limit) {
+    long end = Math.min(offset + limit - 1, totalElements - 1);
+    return PageableResponse.builder().totalElements(totalElements).end(end).build();
+  }
+
   public static String deleteMessage(String item, UUID id) {
     return "Deleted %s with id: %s".formatted(item, id);
   }
 
   public static String cannotDeleteMessage(String item, UUID id) {
     return "Cannot delete %s with id: %s".formatted(item, id);
+  }
+
+  public static NumberExpression<Long> totalElements() {
+    return Expressions.numberTemplate(Long.class, "COUNT(*) OVER()").as("total_elements");
+  }
+
+  public static NumberExpression<Integer> totalPages(int limit) {
+    return Expressions.numberTemplate(Integer.class, "CEIL(COUNT(*) OVER() * 1.0 / {0})", limit)
+        .as("total_pages");
   }
 }
