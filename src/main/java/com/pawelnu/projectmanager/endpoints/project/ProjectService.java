@@ -100,8 +100,7 @@ public class ProjectService {
   }
 
   public ProjectListResponseDTO filter(String sort, String range, String filter) {
-    PageableParams params =
-        Shared.preparePageableParams(objectMapper, sort, range, filter);
+    PageableParams params = Shared.preparePageableParams(objectMapper, sort, range, filter);
 
     Page<ProjectEntity> page = projectQueryRepository.getList(params);
     List<ProjectDTO> projectDTOs = page.getContent().stream().map(projectMapper::toDTO).toList();

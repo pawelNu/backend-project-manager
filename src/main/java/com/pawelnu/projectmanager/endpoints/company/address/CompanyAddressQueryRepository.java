@@ -81,9 +81,9 @@ public class CompanyAddressQueryRepository {
 
     Order order = Sort.Direction.fromString(sortDir) == Sort.Direction.ASC ? Order.ASC : Order.DESC;
     switch (sortField) {
-      case "companyName" ->
-          query.orderBy(order == Order.ASC ? company.name.asc() : company.name.desc());
-      // TODO add others fields to sorting
+      case "companyName" -> query.orderBy(
+          order == Order.ASC ? company.name.asc() : company.name.desc());
+        // TODO add others fields to sorting
       default -> query.orderBy(address.city.asc());
     }
 

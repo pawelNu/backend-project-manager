@@ -187,14 +187,14 @@ public class ProjectQueryRepository {
 
     switch (sortField) {
       case "name" -> query.orderBy(order == Order.ASC ? project.name.asc() : project.name.desc());
-      case "categoryName" ->
-          query.orderBy(order == Order.ASC ? category.name.asc() : category.name.desc());
-      case "companyName" ->
-          query.orderBy(order == Order.ASC ? company.name.asc() : company.name.desc());
-      case "assignedEmployee" ->
-          query.orderBy(order == Order.ASC ? employee.lastName.asc() : employee.lastName.desc());
-      case "priorityName" ->
-          query.orderBy(order == Order.ASC ? priority.name.asc() : priority.name.desc());
+      case "categoryName" -> query.orderBy(
+          order == Order.ASC ? category.name.asc() : category.name.desc());
+      case "companyName" -> query.orderBy(
+          order == Order.ASC ? company.name.asc() : company.name.desc());
+      case "assignedEmployee" -> query.orderBy(
+          order == Order.ASC ? employee.lastName.asc() : employee.lastName.desc());
+      case "priorityName" -> query.orderBy(
+          order == Order.ASC ? priority.name.asc() : priority.name.desc());
       default -> query.orderBy(project.name.asc());
     }
   }

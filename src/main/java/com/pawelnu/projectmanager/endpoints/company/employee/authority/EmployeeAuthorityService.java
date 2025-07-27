@@ -115,8 +115,7 @@ public class EmployeeAuthorityService {
   }
 
   public EmployeeAuthorityListResponseDTO getList(String sort, String range, String filter) {
-    PageableParams params =
-        Shared.preparePageableParams(objectMapper, sort, range, filter);
+    PageableParams params = Shared.preparePageableParams(objectMapper, sort, range, filter);
 
     Page<EmployeeAuthorityEntity> page =
         employeeAuthorityQueryRepository.filter(
