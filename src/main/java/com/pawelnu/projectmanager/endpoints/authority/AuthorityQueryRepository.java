@@ -59,7 +59,7 @@ public class AuthorityQueryRepository {
             .limit(limit);
 
     Order order = Sort.Direction.fromString(sortDir) == Sort.Direction.ASC ? Order.ASC : Order.DESC;
-    if (sortField.equals("name")) {
+    if (sortField.equals("nameBackend")) {
       query.orderBy(
           order == Order.ASC ? authority.nameBackend.asc() : authority.nameBackend.desc());
       //      TODO add others fields
