@@ -223,7 +223,7 @@ class ProjectStepControllerTest {
     assertEquals("step 3", responseBody.getFirst().getName());
     assertEquals("steps checker", responseBody.getFirst().getProjectName());
     assertEquals("VERY_LOW", responseBody.getFirst().getPriorityValue());
-    assertEquals("test test", responseBody.getFirst().getAssignedEmployee());// FIXME test
+    assertEquals("test test", responseBody.getFirst().getAssignedEmployee()); // FIXME test
     assertEquals(Instant.parse("2025-10-25T00:00:00Z"), responseBody.getFirst().getDeadline());
   }
 
@@ -247,7 +247,7 @@ class ProjectStepControllerTest {
     List<ProjectStepDTO> responseBody =
         objectMapper.readValue(contentAsString, new TypeReference<>() {});
     assertEquals(HttpStatus.OK.value(), status);
-    assertEquals("items 0-3/4", headerContentRange);// FIXME test
+    assertEquals("items 0-3/4", headerContentRange); // FIXME test
     assertEquals(4, responseBody.size());
     assertEquals("steps checker", responseBody.getFirst().getName());
   }
@@ -269,7 +269,7 @@ class ProjectStepControllerTest {
         objectMapper.readValue(contentAsString, new TypeReference<>() {});
     assertEquals(HttpStatus.OK.value(), status);
     assertEquals(1, responseBody.size());
-    assertEquals("step 1", responseBody.getFirst().getName());// FIXME test
+    assertEquals("step 1", responseBody.getFirst().getName()); // FIXME test
   }
 
   @Test
