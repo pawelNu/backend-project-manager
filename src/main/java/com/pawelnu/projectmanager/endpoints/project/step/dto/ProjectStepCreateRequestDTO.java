@@ -12,8 +12,10 @@ import lombok.Data;
 @Builder
 public class ProjectStepCreateRequestDTO {
 
-  @NotNull @Size(min = 5, max = 255, message = "Project step name must be 5-255 characters")
+  @NotNull
+  @Size(min = 5, max = 255, message = "Project step name must be 5-255 characters")
   private String name;
+
   @NotNull private UUID projectId;
   @NotNull private UUID priorityValueId;
   @NotNull private UUID assignedEmployeeId;
