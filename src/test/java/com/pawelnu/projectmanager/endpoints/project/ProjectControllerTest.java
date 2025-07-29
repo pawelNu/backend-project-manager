@@ -14,10 +14,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pawelnu.projectmanager.config.security.jwt.JwtUtils;
+import com.pawelnu.projectmanager.endpoints.project.dto.ProjectCreateRequestDTO;
+import com.pawelnu.projectmanager.endpoints.project.dto.ProjectDTO;
 import com.pawelnu.projectmanager.endpoints.project.dto.ProjectEditRequestDTO;
-import com.pawelnu.projectmanager.endpoints.project.step.dto.ProjectStepCreateRequestDTO;
-import com.pawelnu.projectmanager.endpoints.project.step.dto.ProjectStepDTO;
-import com.pawelnu.projectmanager.endpoints.project.step.dto.ProjectStepEditRequestDTO;
 import com.pawelnu.projectmanager.exception.NotFoundException;
 import com.pawelnu.projectmanager.exception.model.ReactAdminBadRequestError;
 import com.pawelnu.projectmanager.exception.model.ReactAdminError;
@@ -80,13 +79,13 @@ class ProjectControllerTest {
 
   @Test
   void shouldReturn_201_createProject() throws Exception {
-    ProjectStepCreateRequestDTO request =
-        ProjectStepCreateRequestDTO.builder()
-            .name()
-            .projectId()
-            .priorityValueId()
-            .assignedEmployeeId()
-            .deadline()
+    ProjectCreateRequestDTO request =
+        ProjectCreateRequestDTO.builder()
+            .name("test project name")
+            .categoryValueId(UUID.fromString("84c3a3ac-c2d1-499e-8e33-c495d1faf1a7"))
+            .companyId(UUID.fromString("78d3f0da-e4b5-4885-8c2a-24b1f85afe44"))
+            .assignedEmployeeId(UUID.fromString("9f93938c-38f4-4472-b166-5ad41437db6e"))
+            .priorityValueId(UUID.fromString("15207afc-0a06-4d5f-a086-fe98cccb341c"))
             .build();
     String requestBody = objectMapper.writeValueAsString(request);
     MvcResult response =
@@ -99,7 +98,7 @@ class ProjectControllerTest {
             .andReturn();
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
-    ProjectStepDTO responseBody = objectMapper.readValue(contentAsString, ProjectStepDTO.class);
+    ProjectDTO responseBody = objectMapper.readValue(contentAsString, ProjectDTO.class);
     assertEquals(HttpStatus.CREATED.value(), status);
     assertEquals("Test Company", responseBody.getCompanyName());
     assertEquals(request.getName(), responseBody.getName());
@@ -115,13 +114,13 @@ class ProjectControllerTest {
 
   @Test
   void shouldReturn_400_createProject() throws Exception {
-    ProjectStepCreateRequestDTO request =
-        ProjectStepCreateRequestDTO.builder()
-            .name()
-            .projectId()
-            .priorityValueId()
-            .assignedEmployeeId()
-            .deadline()
+    ProjectCreateRequestDTO request =
+        ProjectCreateRequestDTO.builder()
+            .name("test")
+            .categoryValueId(UUID.fromString("84c3a3ac-c2d1-499e-8e33-c495d1faf1a7"))
+            .companyId(UUID.fromString("78d3f0da-e4b5-4885-8c2a-24b1f85afe44"))
+            .assignedEmployeeId(UUID.fromString("9f93938c-38f4-4472-b166-5ad41437db6e"))
+            .priorityValueId(UUID.fromString("15207afc-0a06-4d5f-a086-fe98cccb341c"))
             .build();
     String requestBody = objectMapper.writeValueAsString(request);
     MvcResult response =
@@ -142,13 +141,13 @@ class ProjectControllerTest {
 
   @Test
   void shouldReturn_401_createProject() throws Exception {
-    ProjectStepCreateRequestDTO request =
-        ProjectStepCreateRequestDTO.builder()
-            .name()
-            .projectId()
-            .priorityValueId()
-            .assignedEmployeeId()
-            .deadline()
+    ProjectCreateRequestDTO request =
+        ProjectCreateRequestDTO.builder()
+            .name("test project name")
+            .categoryValueId(UUID.fromString("84c3a3ac-c2d1-499e-8e33-c495d1faf1a7"))
+            .companyId(UUID.fromString("78d3f0da-e4b5-4885-8c2a-24b1f85afe44"))
+            .assignedEmployeeId(UUID.fromString("9f93938c-38f4-4472-b166-5ad41437db6e"))
+            .priorityValueId(UUID.fromString("15207afc-0a06-4d5f-a086-fe98cccb341c"))
             .build();
     String requestBody = objectMapper.writeValueAsString(request);
     MvcResult response =
@@ -164,13 +163,13 @@ class ProjectControllerTest {
 
   @Test
   void shouldReturn_403_createProject() throws Exception {
-    ProjectStepCreateRequestDTO request =
-        ProjectStepCreateRequestDTO.builder()
-            .name()
-            .projectId()
-            .priorityValueId()
-            .assignedEmployeeId()
-            .deadline()
+    ProjectCreateRequestDTO request =
+        ProjectCreateRequestDTO.builder()
+            .name("test project name")
+            .categoryValueId(UUID.fromString("84c3a3ac-c2d1-499e-8e33-c495d1faf1a7"))
+            .companyId(UUID.fromString("78d3f0da-e4b5-4885-8c2a-24b1f85afe44"))
+            .assignedEmployeeId(UUID.fromString("9f93938c-38f4-4472-b166-5ad41437db6e"))
+            .priorityValueId(UUID.fromString("15207afc-0a06-4d5f-a086-fe98cccb341c"))
             .build();
     String requestBody = objectMapper.writeValueAsString(request);
     MvcResult response =
@@ -197,7 +196,7 @@ class ProjectControllerTest {
     int status = response.getResponse().getStatus();
     String headerContentRange = response.getResponse().getHeader("Content-Range");
     String contentAsString = response.getResponse().getContentAsString();
-    List<ProjectStepDTO> responseBody =
+    List<ProjectDTO> responseBody =
         objectMapper.readValue(contentAsString, new TypeReference<>() {});
     assertEquals(HttpStatus.OK.value(), status);
     assertEquals("items 0-1", headerContentRange.substring(0, 9));
@@ -213,7 +212,7 @@ class ProjectControllerTest {
     int status = response.getResponse().getStatus();
     String headerContentRange = response.getResponse().getHeader("Content-Range");
     String contentAsString = response.getResponse().getContentAsString();
-    List<ProjectStepDTO> responseBody =
+    List<ProjectDTO> responseBody =
         objectMapper.readValue(contentAsString, new TypeReference<>() {});
     assertEquals(HttpStatus.OK.value(), status);
     assertEquals("items 0-0/1", headerContentRange);
@@ -241,7 +240,7 @@ class ProjectControllerTest {
     int status = response.getResponse().getStatus();
     String headerContentRange = response.getResponse().getHeader("Content-Range");
     String contentAsString = response.getResponse().getContentAsString();
-    List<ProjectStepDTO> responseBody =
+    List<ProjectDTO> responseBody =
         objectMapper.readValue(contentAsString, new TypeReference<>() {});
     assertEquals(HttpStatus.OK.value(), status);
     assertEquals("items 0-2/3", headerContentRange);
@@ -262,7 +261,7 @@ class ProjectControllerTest {
             .andReturn();
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
-    List<ProjectStepDTO> responseBody =
+    List<ProjectDTO> responseBody =
         objectMapper.readValue(contentAsString, new TypeReference<>() {});
     assertEquals(HttpStatus.OK.value(), status);
     assertEquals(1, responseBody.size());
@@ -278,7 +277,7 @@ class ProjectControllerTest {
     int status = response.getResponse().getStatus();
     String headerContentRange = response.getResponse().getHeader("Content-Range");
     String contentAsString = response.getResponse().getContentAsString();
-    List<ProjectStepDTO> responseBody =
+    List<ProjectDTO> responseBody =
         objectMapper.readValue(contentAsString, new TypeReference<>() {});
     assertEquals(HttpStatus.OK.value(), status);
     assertEquals("items 0--1/0", headerContentRange);
@@ -307,14 +306,14 @@ class ProjectControllerTest {
 
   @Test
   void shouldReturn_200_getProjectById() throws Exception {
-    String projectStepId = "dedeabdb-948c-46b2-b1aa-be34df8fae58";
-    String url = BASE_URL + "/" + projectStepId;
+    String projectId = "dedeabdb-948c-46b2-b1aa-be34df8fae58";
+    String url = BASE_URL + "/" + projectId;
     MvcResult response = mockMvc.perform(get(url).with(withJwt())).andReturn();
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
-    ProjectStepDTO responseBody = objectMapper.readValue(contentAsString, ProjectStepDTO.class);
+    ProjectDTO responseBody = objectMapper.readValue(contentAsString, ProjectDTO.class);
     assertEquals(HttpStatus.OK.value(), status);
-    assertEquals(UUID.fromString(projectStepId), responseBody.getId());
+    assertEquals(UUID.fromString(projectId), responseBody.getId());
     assertEquals("develop frontend app", responseBody.getName());
     assertEquals("INTERNAL", responseBody.getCategoryValue());
     assertEquals("Hintz, Parisian and Sanford", responseBody.getCompanyName());
@@ -324,8 +323,8 @@ class ProjectControllerTest {
 
   @Test
   void shouldReturn_400_getProjectById() throws Exception {
-    String projectStepId = "invalid-uuid";
-    String url = BASE_URL + "/" + projectStepId;
+    String projectId = "invalid-uuid";
+    String url = BASE_URL + "/" + projectId;
     MvcResult response = mockMvc.perform(get(url).with(withJwt())).andReturn();
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
@@ -336,8 +335,8 @@ class ProjectControllerTest {
 
   @Test
   void shouldReturn_401_getProjectById() throws Exception {
-    String projectStepId = "cf578fec-006b-4604-a5e8-5ad1b3ea2be5";
-    String url = BASE_URL + "/" + projectStepId;
+    String projectId = "cf578fec-006b-4604-a5e8-5ad1b3ea2be5";
+    String url = BASE_URL + "/" + projectId;
     MvcResult response = mockMvc.perform(get(url)).andReturn();
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
@@ -348,8 +347,8 @@ class ProjectControllerTest {
 
   @Test
   void shouldReturn_403_getProjectById() throws Exception {
-    String projectStepId = "cf578fec-006b-4604-a5e8-5ad1b3ea2be5";
-    String url = BASE_URL + "/" + projectStepId;
+    String projectId = "cf578fec-006b-4604-a5e8-5ad1b3ea2be5";
+    String url = BASE_URL + "/" + projectId;
     MvcResult response = mockMvc.perform(get(url).with(withBadJwt())).andReturn();
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
@@ -360,34 +359,34 @@ class ProjectControllerTest {
 
   @Test
   void shouldReturn_404_getProjectById() throws Exception {
-    String projectStepId = "89258385-aa00-47d3-bafe-88bc1d56e6ee";
-    String url = BASE_URL + "/" + projectStepId;
+    String projectId = "89258385-aa00-47d3-bafe-88bc1d56e6ee";
+    String url = BASE_URL + "/" + projectId;
     MvcResult response = mockMvc.perform(get(url).with(withJwt())).andReturn();
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
     NotFoundException responseBody =
         objectMapper.readValue(contentAsString, NotFoundException.class);
     assertEquals(HttpStatus.NOT_FOUND.value(), status);
-    assertEquals(MSG.PROJECT_NOT_FOUND + projectStepId, responseBody.getMessage());
+    assertEquals(MSG.PROJECT_NOT_FOUND + projectId, responseBody.getMessage());
   }
 
   @Test
   void shouldReturn_404_getProjectById_isDeletedTrue() throws Exception {
-    String projectStepId = "9d93bd6d-e48a-4bad-b4f5-6f71d27c0342";
-    String url = BASE_URL + "/" + projectStepId;
+    String projectId = "9d93bd6d-e48a-4bad-b4f5-6f71d27c0342";
+    String url = BASE_URL + "/" + projectId;
     MvcResult response = mockMvc.perform(get(url).with(withJwt())).andReturn();
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
     NotFoundException responseBody =
         objectMapper.readValue(contentAsString, NotFoundException.class);
     assertEquals(HttpStatus.NOT_FOUND.value(), status);
-    assertEquals(MSG.PROJECT_NOT_FOUND + projectStepId, responseBody.getMessage());
+    assertEquals(MSG.PROJECT_NOT_FOUND + projectId, responseBody.getMessage());
   }
 
   @Test
   void shouldReturn_200_editProjectById() throws Exception {
-    String projectStepId = "ba8e0e3b-bcbc-4879-8f81-8d653a165f93";
-    String url = BASE_URL + "/" + projectStepId;
+    String projectId = "ba8e0e3b-bcbc-4879-8f81-8d653a165f93";
+    String url = BASE_URL + "/" + projectId;
     ProjectEditRequestDTO request =
         ProjectEditRequestDTO.builder()
             .name("project updated")
@@ -407,7 +406,7 @@ class ProjectControllerTest {
             .andReturn();
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
-    ProjectStepDTO responseBody = objectMapper.readValue(contentAsString, ProjectStepDTO.class);
+    ProjectDTO responseBody = objectMapper.readValue(contentAsString, ProjectDTO.class);
     assertEquals(HttpStatus.OK.value(), status);
     assertEquals("Dare, Nikolaus and Bruen", responseBody.getCompanyName());
     assertEquals(request.getName(), responseBody.getName());
@@ -423,8 +422,8 @@ class ProjectControllerTest {
 
   @Test
   void shouldReturn_400_editProjectById() throws Exception {
-    String projectStepId = "invalid-uuid";
-    String url = BASE_URL + "/" + projectStepId;
+    String projectId = "invalid-uuid";
+    String url = BASE_URL + "/" + projectId;
     ProjectEditRequestDTO request =
         ProjectEditRequestDTO.builder()
             .name("test project name")
@@ -451,10 +450,10 @@ class ProjectControllerTest {
 
   @Test
   void shouldReturn_401_editProjectById() throws Exception {
-    String projectStepId = "ac1da9e4-7e4b-42ab-b9a5-b87cc4f30c2c";
-    String url = BASE_URL + "/" + projectStepId;
-    ProjectStepEditRequestDTO request =
-        ProjectStepEditRequestDTO.builder()
+    String projectId = "ac1da9e4-7e4b-42ab-b9a5-b87cc4f30c2c";
+    String url = BASE_URL + "/" + projectId;
+    ProjectEditRequestDTO request =
+        ProjectEditRequestDTO.builder()
             .name("test project name")
             .categoryValueId(UUID.fromString("84c3a3ac-c2d1-499e-8e33-c495d1faf1a7"))
             .companyId(UUID.fromString("78d3f0da-e4b5-4885-8c2a-24b1f85afe44"))
@@ -475,10 +474,10 @@ class ProjectControllerTest {
 
   @Test
   void shouldReturn_403_editProjectById() throws Exception {
-    String projectStepId = "ac1da9e4-7e4b-42ab-b9a5-b87cc4f30c2c";
-    String url = BASE_URL + "/" + projectStepId;
-    ProjectStepEditRequestDTO request =
-        ProjectStepEditRequestDTO.builder()
+    String projectId = "ac1da9e4-7e4b-42ab-b9a5-b87cc4f30c2c";
+    String url = BASE_URL + "/" + projectId;
+    ProjectEditRequestDTO request =
+        ProjectEditRequestDTO.builder()
             .name("test project name")
             .categoryValueId(UUID.fromString("84c3a3ac-c2d1-499e-8e33-c495d1faf1a7"))
             .companyId(UUID.fromString("78d3f0da-e4b5-4885-8c2a-24b1f85afe44"))
@@ -503,10 +502,10 @@ class ProjectControllerTest {
 
   @Test
   void shouldReturn_404_editProjectById() throws Exception {
-    String projectStepId = "fb044c72-9f78-4c01-8ad5-2e4c04528de2";
-    String url = BASE_URL + "/" + projectStepId;
-    ProjectStepEditRequestDTO request =
-        ProjectStepEditRequestDTO.builder()
+    String projectId = "fb044c72-9f78-4c01-8ad5-2e4c04528de2";
+    String url = BASE_URL + "/" + projectId;
+    ProjectEditRequestDTO request =
+        ProjectEditRequestDTO.builder()
             .name("test project name")
             .categoryValueId(UUID.fromString("84c3a3ac-c2d1-499e-8e33-c495d1faf1a7"))
             .companyId(UUID.fromString("78d3f0da-e4b5-4885-8c2a-24b1f85afe44"))
@@ -526,13 +525,13 @@ class ProjectControllerTest {
     String contentAsString = response.getResponse().getContentAsString();
     ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
     assertEquals(HttpStatus.NOT_FOUND.value(), status);
-    assertEquals(MSG.PROJECT_NOT_FOUND + projectStepId, responseBody.getMessage());
+    assertEquals(MSG.PROJECT_NOT_FOUND + projectId, responseBody.getMessage());
   }
 
   @Test
   void shouldReturn_200_deleteProjectById_isDeletedFalse() throws Exception {
-    String projectStepId = "5122cd14-26e5-4dcc-8bc0-30df39e3fe9a";
-    String url = BASE_URL + "/" + projectStepId;
+    String projectId = "5122cd14-26e5-4dcc-8bc0-30df39e3fe9a";
+    String url = BASE_URL + "/" + projectId;
     MvcResult response =
         mockMvc
             .perform(delete(url).with(withJwt()).contentType(MediaType.APPLICATION_JSON))
@@ -541,13 +540,13 @@ class ProjectControllerTest {
     String contentAsString = response.getResponse().getContentAsString();
     SimpleResponse responseBody = objectMapper.readValue(contentAsString, SimpleResponse.class);
     assertEquals(HttpStatus.OK.value(), status);
-    assertEquals("Deleted project with id: " + projectStepId, responseBody.getMessage());
+    assertEquals("Deleted project with id: " + projectId, responseBody.getMessage());
   }
 
   @Test
   void shouldReturn_400_deleteProjectById_isDeletedFalse() throws Exception {
-    String projectStepId = "invalid-uuid";
-    String url = BASE_URL + "/" + projectStepId;
+    String projectId = "invalid-uuid";
+    String url = BASE_URL + "/" + projectId;
     MvcResult response =
         mockMvc
             .perform(delete(url).with(withJwt()).contentType(MediaType.APPLICATION_JSON))
@@ -561,8 +560,8 @@ class ProjectControllerTest {
 
   @Test
   void shouldReturn_401_deleteProjectById_isDeletedFalse() throws Exception {
-    String projectStepId = "4c7a2cc5-1e03-4337-8901-93c0b46585af";
-    String url = BASE_URL + "/" + projectStepId;
+    String projectId = "4c7a2cc5-1e03-4337-8901-93c0b46585af";
+    String url = BASE_URL + "/" + projectId;
     MvcResult response =
         mockMvc.perform(delete(url).contentType(MediaType.APPLICATION_JSON)).andReturn();
     int status = response.getResponse().getStatus();
@@ -574,8 +573,8 @@ class ProjectControllerTest {
 
   @Test
   void shouldReturn_403_deleteProjectById_isDeletedFalse() throws Exception {
-    String projectStepId = "4c7a2cc5-1e03-4337-8901-93c0b46585af";
-    String url = BASE_URL + "/" + projectStepId;
+    String projectId = "4c7a2cc5-1e03-4337-8901-93c0b46585af";
+    String url = BASE_URL + "/" + projectId;
     MvcResult response =
         mockMvc
             .perform(delete(url).with(withBadJwt()).contentType(MediaType.APPLICATION_JSON))
@@ -589,8 +588,8 @@ class ProjectControllerTest {
 
   @Test
   void shouldReturn_404_deleteProjectById_isDeletedFalse() throws Exception {
-    String projectStepId = "4768856c-6cc0-40ad-8106-58ad8d2e9923";
-    String url = BASE_URL + "/" + projectStepId;
+    String projectId = "4768856c-6cc0-40ad-8106-58ad8d2e9923";
+    String url = BASE_URL + "/" + projectId;
     MvcResult response =
         mockMvc
             .perform(delete(url).with(withJwt()).contentType(MediaType.APPLICATION_JSON))
@@ -599,13 +598,13 @@ class ProjectControllerTest {
     String contentAsString = response.getResponse().getContentAsString();
     ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
     assertEquals(HttpStatus.NOT_FOUND.value(), status);
-    assertEquals(MSG.PROJECT_NOT_FOUND + projectStepId, responseBody.getMessage());
+    assertEquals(MSG.PROJECT_NOT_FOUND + projectId, responseBody.getMessage());
   }
 
   @Test
   void shouldReturn_404_deleteProjectById_isDeletedTrue() throws Exception {
-    String projectStepId = "9d93bd6d-e48a-4bad-b4f5-6f71d27c0342";
-    String url = BASE_URL + "/" + projectStepId;
+    String projectId = "9d93bd6d-e48a-4bad-b4f5-6f71d27c0342";
+    String url = BASE_URL + "/" + projectId;
     MvcResult response =
         mockMvc
             .perform(delete(url).with(withJwt()).contentType(MediaType.APPLICATION_JSON))
@@ -614,6 +613,6 @@ class ProjectControllerTest {
     String contentAsString = response.getResponse().getContentAsString();
     SimpleResponse responseBody = objectMapper.readValue(contentAsString, SimpleResponse.class);
     assertEquals(HttpStatus.NOT_FOUND.value(), status);
-    assertEquals(MSG.PROJECT_NOT_FOUND + projectStepId, responseBody.getMessage());
+    assertEquals(MSG.PROJECT_NOT_FOUND + projectId, responseBody.getMessage());
   }
 }
