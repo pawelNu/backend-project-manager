@@ -80,18 +80,6 @@ public class ProjectStepQueryRepository {
       allConditions.and(employeeCondition);
     }
 
-    if (params.getFilters().containsKey(Field.assignedEmployee)) {
-      String employeeFilter = "%" + params.getFilters().get(Field.assignedEmployee) + "%";
-
-      BooleanExpression employeeCondition =
-          assignedEmployee
-              .firstName
-              .likeIgnoreCase(employeeFilter)
-              .or(assignedEmployee.lastName.likeIgnoreCase(employeeFilter));
-
-      allConditions.and(employeeCondition);
-    }
-
     allConditions.and(projectStep.isDeleted.isFalse());
 
     JPAQuery<ProjectStepRowDTO> query =

@@ -59,7 +59,6 @@ public class ProjectStepService {
     return projectStepMapper.toDTO(savedCompany);
   }
 
-  // TODO implement filter
   public ProjectStepListResponseDTO filter(String sort, String range, String filter) {
     PageableParams params = Shared.preparePageableParams(objectMapper, sort, range, filter);
 
@@ -67,7 +66,9 @@ public class ProjectStepService {
     List<ProjectStepDTO> projectDTOs = results.stream().map(projectStepMapper::toDTO).toList();
     String contentRange =
         Shared.prepareContentRange(
-            results.getFirst().getTotalElements(), params.getOffset(), params.getLimit());
+            results.isEmpty() ? 0 : results.getFirst().getTotalElements(),
+            params.getOffset(),
+            params.getLimit());
     return ProjectStepListResponseDTO.builder()
         .data(projectDTOs)
         .contentRange(contentRange)

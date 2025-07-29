@@ -10,7 +10,7 @@ import lombok.Data;
 @Builder
 public class ProjectCreateRequestDTO {
   @NotNull
-  @Size(min = 5, max = 255, message = "Project name has to have 5-255 characters")
+  @Size(min = 5, max = 255, message = "Project name must be 5-255 characters")
   private String name;
 
   @NotNull private UUID categoryValueId;

@@ -136,7 +136,7 @@ class ProjectControllerTest {
     ReactAdminBadRequestError responseBody =
         objectMapper.readValue(contentAsString, ReactAdminBadRequestError.class);
     assertEquals(HttpStatus.BAD_REQUEST.value(), status);
-    assertEquals("Project name has to have 5-255 characters", responseBody.getErrors().get("name"));
+    assertEquals("Project name must be 5-255 characters", responseBody.getErrors().get("name"));
   }
 
   @Test

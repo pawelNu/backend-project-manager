@@ -78,7 +78,7 @@ public class Shared {
     return String.format("items %d-%d/%d", offset, pageInfo.getEnd(), pageInfo.getTotalElements());
   }
 
-  public static String prepareContentRange(long totalElements, int offset, int limit) {
+  public static String prepareContentRange(Long totalElements, int offset, int limit) {
     PageableResponse pageInfo = preparePageInfo(totalElements, offset, limit);
     return String.format("items %d-%d/%d", offset, pageInfo.getEnd(), pageInfo.getTotalElements());
   }
@@ -121,7 +121,7 @@ public class Shared {
     return PageableResponse.builder().totalElements(totalElements).end(end).build();
   }
 
-  private static PageableResponse preparePageInfo(long totalElements, int offset, int limit) {
+  private static PageableResponse preparePageInfo(Long totalElements, int offset, int limit) {
     long end = Math.min(offset + limit - 1, totalElements - 1);
     return PageableResponse.builder().totalElements(totalElements).end(end).build();
   }
@@ -150,7 +150,7 @@ public class Shared {
 
   public static class Field {
     public static final String projectName = "projectName";
-    public static final String projectStepName = "projectStepName";
+    public static final String projectStepName = "name";
     public static final String companyName = "companyName";
     public static final String assignedEmployee = "assignedEmployee";
     public static final String projectPriorityValue = "projectPriorityValue";

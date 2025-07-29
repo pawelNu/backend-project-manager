@@ -1,2 +1,3 @@
 id,name,category_id,company_id,assigned_employee_id,priority_id,version,created,last_modified,is_deleted
-6c89f693-bb0b-41c0-aebd-4abac36b49d3,steps checker,76246c86-e410-418d-a9ff-e14c5aac4a8c,ff856774-0ccf-429b-8232-dfd84c0f6401,9fb8b940-2238-4858-b801-c2e83b6fb984,0710ee93-240c-40ad-9a1f-193d1b72df70,0,2025-07-15 00:00:00.000,2025-07-15 00:00:00.000,FALSE
+6c89f693-bb0b-41c0-aebd-4abac36b49d3,steps checker,76246c86-e410-418d-a9ff-e14c5aac4a8c,ff856774-0ccf-429b-8232-dfd84c0f6401,9fb8b940-2238-4858-b801-c2e83b6fb984,0710ee93-240c-40ad-9a1f-193d1b72df70,0,2025-07-19 00:00:00.000,2025-07-19 00:00:00.000,FALSE
+bc6b9fee-e9d7-4692-853e-d6d2c00383b3,project for project steps tetes,76246c86-e410-418d-a9ff-e14c5aac4a8c,ff856774-0ccf-429b-8232-dfd84c0f6401,9fb8b940-2238-4858-b801-c2e83b6fb984,c0efdb4c-1b20-4dc8-a3c8-10fa4c77d812,0,2025-07-19 00:00:00.000,2025-07-19 00:00:00.000,FALSE
