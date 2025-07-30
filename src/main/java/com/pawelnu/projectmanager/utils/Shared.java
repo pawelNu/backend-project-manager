@@ -155,6 +155,7 @@ public class Shared {
     public static final String assignedEmployee = "assignedEmployee";
     public static final String projectPriorityValue = "projectPriorityValue";
     public static final String projectStepPriorityValue = "projectStepPriorityValue";
+    public static final String priorityValue = "priorityValue";
     public static final String projectStepDeadline = "projectStepDeadline";
   }
 }

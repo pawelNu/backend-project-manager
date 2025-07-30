@@ -202,8 +202,8 @@ class ProjectStepControllerTest {
     List<ProjectStepDTO> responseBody =
         objectMapper.readValue(contentAsString, new TypeReference<>() {});
     assertEquals(HttpStatus.OK.value(), status);
-    assertEquals("items 0-0", headerContentRange.substring(0, 9));
-    assertEquals(1, responseBody.size());
+    assertEquals("items 0-1", headerContentRange.substring(0, 9));
+    assertEquals(2, responseBody.size());
   }
 
   @Test
@@ -247,9 +247,9 @@ class ProjectStepControllerTest {
     List<ProjectStepDTO> responseBody =
         objectMapper.readValue(contentAsString, new TypeReference<>() {});
     assertEquals(HttpStatus.OK.value(), status);
-    assertEquals("items 0-4/5", headerContentRange);
-    assertEquals(5, responseBody.size());
-    assertEquals("step to update", responseBody.getFirst().getName());
+    assertEquals("items 0-3/4", headerContentRange);//FIXME test
+    assertEquals(4, responseBody.size());
+    assertEquals("step 3", responseBody.getFirst().getName());
   }
 
   @Test
@@ -269,7 +269,7 @@ class ProjectStepControllerTest {
         objectMapper.readValue(contentAsString, new TypeReference<>() {});
     assertEquals(HttpStatus.OK.value(), status);
     assertEquals(1, responseBody.size());
-    assertEquals("step 1", responseBody.getFirst().getName()); // FIXME test
+    assertEquals("step 1", responseBody.getFirst().getName());
   }
 
   @Test

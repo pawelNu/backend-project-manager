@@ -38,7 +38,6 @@ public class ProjectStepQueryRepository {
   private final QEmployeeEntity assignedEmployee = QEmployeeEntity.employeeEntity;
   private final QCategoryValueEntity projectPriorityValue =
       new QCategoryValueEntity("projectPriorityValue");
-  private final BooleanBuilder allConditions = new BooleanBuilder();
   private final QEmployeeEntity employee = QEmployeeEntity.employeeEntity;
   private final QCategoryEntity category = new QCategoryEntity("category");
   private final QCategoryEntity priority = new QCategoryEntity("priority");
@@ -49,7 +48,7 @@ public class ProjectStepQueryRepository {
   }
 
   public List<ProjectStepRowDTO> getList(PageableParams params) {
-
+    BooleanBuilder allConditions = new BooleanBuilder();
     if (params.getFilters().containsKey(Field.projectStepName)) {
       allConditions.and(
           projectStep.name.likeIgnoreCase(
@@ -63,10 +62,10 @@ public class ProjectStepQueryRepository {
       allConditions.and(
           project.name.likeIgnoreCase("%" + params.getFilters().get(Field.projectName) + "%"));
     }
-    if (params.getFilters().containsKey(Field.projectStepPriorityValue)) {
+    if (params.getFilters().containsKey(Field.priorityValue)) {
       allConditions.and(
           projectStepPriorityValue.stringValue.likeIgnoreCase(
-              "%" + params.getFilters().get(Field.projectStepPriorityValue) + "%"));
+              "%" + params.getFilters().get(Field.priorityValue) + "%"));
     }
     if (params.getFilters().containsKey(Field.assignedEmployee)) {
       String employeeFilter = "%" + params.getFilters().get(Field.assignedEmployee) + "%";
