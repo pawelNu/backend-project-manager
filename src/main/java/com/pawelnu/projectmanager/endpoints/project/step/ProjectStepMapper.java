@@ -21,7 +21,6 @@ public interface ProjectStepMapper {
   @Mapping(target = "assignedEmployee", source = ".", qualifiedByName = "concatEmployeeName")
   ProjectStepDTO toDTO(ProjectStepRowDTO row);
 
-
   default String employeeToString(EmployeeEntity entity) {
     if (entity == null) {
       return null;
