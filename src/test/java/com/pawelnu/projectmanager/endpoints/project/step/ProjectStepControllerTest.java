@@ -190,6 +190,7 @@ class ProjectStepControllerTest {
     assertEquals(accessDeniedError(), responseBody);
   }
 
+  // TODO check all getProjectStepList tests
   @Test
   void shouldReturn_200_getProjectStepList() throws Exception {
     List<String> range = List.of("0", "1");
