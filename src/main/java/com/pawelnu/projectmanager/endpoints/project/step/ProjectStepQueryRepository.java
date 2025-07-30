@@ -95,6 +95,7 @@ public class ProjectStepQueryRepository {
                     projectPriorityValue.stringValue,
                     assignedEmployee.id,
                     assignedEmployee.firstName,
+                    assignedEmployee.lastName,
                     projectStep.deadline,
                     Shared.totalElements(),
                     Shared.totalPages(params.getLimit())))

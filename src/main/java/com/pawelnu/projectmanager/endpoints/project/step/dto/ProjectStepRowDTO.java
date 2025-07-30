@@ -15,7 +15,8 @@ public class ProjectStepRowDTO {
   private UUID priorityId;
   private String priorityValue;
   private UUID assignedEmployeeId;
-  private String assignedEmployee;
+  private String employeeFirstName;
+  private String employeeLastName;
   private Instant deadline;
   private Long totalElements;
   private Integer totalPages;

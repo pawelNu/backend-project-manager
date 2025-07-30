@@ -223,7 +223,7 @@ class ProjectStepControllerTest {
     assertEquals("step 3", responseBody.getFirst().getName());
     assertEquals("steps checker", responseBody.getFirst().getProjectName());
     assertEquals("VERY_LOW", responseBody.getFirst().getPriorityValue());
-    assertEquals("test test", responseBody.getFirst().getAssignedEmployee()); // FIXME test
+    assertEquals("Alleen Koepp", responseBody.getFirst().getAssignedEmployee());
     assertEquals(Instant.parse("2025-10-25T00:00:00Z"), responseBody.getFirst().getDeadline());
   }
 
