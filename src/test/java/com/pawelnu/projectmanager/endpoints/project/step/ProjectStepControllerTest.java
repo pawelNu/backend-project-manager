@@ -248,7 +248,7 @@ class ProjectStepControllerTest {
     List<ProjectStepDTO> responseBody =
         objectMapper.readValue(contentAsString, new TypeReference<>() {});
     assertEquals(HttpStatus.OK.value(), status);
-    assertEquals("items 0-3/4", headerContentRange); // FIXME test
+    assertEquals("items 0-3/4", headerContentRange);
     assertEquals(4, responseBody.size());
     assertEquals("step 3", responseBody.getFirst().getName());
   }
