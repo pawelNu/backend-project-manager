@@ -16,16 +16,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class ProjectStepController implements ProjectStepApi {
 
-  private final ProjectStepService projectService;
+  private final ProjectStepService projectStepService;
 
   @Override
   public ResponseEntity<ProjectStepDTO> create(ProjectStepCreateRequestDTO body) {
-    return ResponseEntity.status(HttpStatus.CREATED).body(projectService.create(body));
+    return ResponseEntity.status(HttpStatus.CREATED).body(projectStepService.create(body));
   }
 
   @Override
   public ResponseEntity<List<ProjectStepDTO>> getList(String sort, String range, String filter) {
-    ProjectStepListResponseDTO result = projectService.filter(sort, range, filter);
+    ProjectStepListResponseDTO result = projectStepService.filter(sort, range, filter);
     return ResponseEntity.ok()
         .header("Content-Range", result.getContentRange())
         .body(result.getData());
@@ -33,16 +33,16 @@ public class ProjectStepController implements ProjectStepApi {
 
   @Override
   public ResponseEntity<ProjectStepDTO> getById(UUID id) {
-    return ResponseEntity.ok(projectService.getById(id));
+    return ResponseEntity.ok(projectStepService.getById(id));
   }
 
   @Override
   public ResponseEntity<ProjectStepDTO> editById(UUID id, ProjectStepEditRequestDTO body) {
-    return ResponseEntity.ok(projectService.editById(id, body));
+    return ResponseEntity.ok(projectStepService.editById(id, body));
   }
 
   @Override
   public ResponseEntity<SimpleResponse> deleteById(UUID id) {
-    return ResponseEntity.ok(projectService.deleteById(id));
+    return ResponseEntity.ok(projectStepService.deleteById(id));
   }
 }
