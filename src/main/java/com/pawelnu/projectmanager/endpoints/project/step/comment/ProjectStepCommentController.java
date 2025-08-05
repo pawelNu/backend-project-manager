@@ -26,7 +26,8 @@ public class ProjectStepCommentController implements ProjectStepCommentApi {
   @Override
   public ResponseEntity<List<ProjectStepCommentDTO>> getList(
       String sort, String range, String filter) {
-    ProjectStepCommentListResponseDTO result = projectStepCommentService.filter(sort, range, filter);
+    ProjectStepCommentListResponseDTO result =
+        projectStepCommentService.filter(sort, range, filter);
     return ResponseEntity.ok()
         .header("Content-Range", result.getContentRange())
         .body(result.getData());
