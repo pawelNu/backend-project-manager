@@ -1,8 +1,6 @@
 package com.pawelnu.projectmanager.endpoints.project.step;
 
-import com.pawelnu.projectmanager.endpoints.category.QCategoryEntity;
 import com.pawelnu.projectmanager.endpoints.category.value.QCategoryValueEntity;
-import com.pawelnu.projectmanager.endpoints.company.QCompanyEntity;
 import com.pawelnu.projectmanager.endpoints.company.employee.QEmployeeEntity;
 import com.pawelnu.projectmanager.endpoints.project.QProjectEntity;
 import com.pawelnu.projectmanager.endpoints.project.step.dto.ProjectStepRowDTO;
@@ -34,13 +32,10 @@ public class ProjectStepQueryRepository {
   private final QCategoryValueEntity projectStepPriorityValue =
       new QCategoryValueEntity("projectStepPriorityValue");
   private final QProjectEntity project = QProjectEntity.projectEntity;
-  private final QCompanyEntity company = QCompanyEntity.companyEntity;
   private final QEmployeeEntity assignedEmployee = QEmployeeEntity.employeeEntity;
   private final QCategoryValueEntity projectPriorityValue =
       new QCategoryValueEntity("projectPriorityValue");
   private final QEmployeeEntity employee = QEmployeeEntity.employeeEntity;
-  private final QCategoryEntity category = new QCategoryEntity("category");
-  private final QCategoryEntity priority = new QCategoryEntity("priority");
 
   public Optional<ProjectStepEntity> findById(UUID id) {
     //    TODO implement Optional<ProjectStepEntity> findById(UUID id)
@@ -49,14 +44,14 @@ public class ProjectStepQueryRepository {
 
   public List<ProjectStepRowDTO> getList(PageableParams params) {
     BooleanBuilder allConditions = new BooleanBuilder();
-    if (params.getFilters().containsKey(Field.projectStepName)) {
+    if (params.getFilters().containsKey(Field.name)) {
       allConditions.and(
           projectStep.name.likeIgnoreCase(
-              "%" + params.getFilters().get(Field.projectStepName) + "%"));
+              "%" + params.getFilters().get(Field.name) + "%"));
     }
-    if (params.getFilters().containsKey(Field.projectStepDeadline)) {
-      Instant startInstant = Shared.parseDate(params.getFilters().get(Field.projectStepDeadline));
-      allConditions.and(projectStep.deadline.eq(startInstant));
+    if (params.getFilters().containsKey(Field.deadline)) {
+      Instant startInstant = Shared.parseDate(params.getFilters().get(Field.deadline));
+      allConditions.and(projectStep.deadline.loe(startInstant));
     }
     if (params.getFilters().containsKey(Field.projectName)) {
       allConditions.and(

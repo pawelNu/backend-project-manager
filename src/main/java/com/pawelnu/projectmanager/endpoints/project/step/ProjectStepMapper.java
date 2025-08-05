@@ -12,7 +12,7 @@ public interface ProjectStepMapper {
 
   @Mapping(source = "project.id", target = "projectId")
   @Mapping(source = "project.name", target = "projectName")
-  @Mapping(source = "priority.id", target = "priorityId")
+  @Mapping(source = "priority.id", target = "priorityValueId")
   @Mapping(source = "priority.stringValue", target = "priorityValue")
   @Mapping(source = "assignedEmployee.id", target = "assignedEmployeeId")
   @Mapping(source = "assignedEmployee", target = "assignedEmployee")
