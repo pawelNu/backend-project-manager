@@ -46,8 +46,7 @@ public class ProjectStepQueryRepository {
     BooleanBuilder allConditions = new BooleanBuilder();
     if (params.getFilters().containsKey(Field.name)) {
       allConditions.and(
-          projectStep.name.likeIgnoreCase(
-              "%" + params.getFilters().get(Field.name) + "%"));
+          projectStep.name.likeIgnoreCase("%" + params.getFilters().get(Field.name) + "%"));
     }
     if (params.getFilters().containsKey(Field.deadline)) {
       Instant startInstant = Shared.parseDate(params.getFilters().get(Field.deadline));
