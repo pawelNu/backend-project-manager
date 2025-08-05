@@ -96,7 +96,8 @@ public class ProjectStepCommentService {
   public SimpleResponse deleteById(UUID id) {
     ProjectStepCommentEntity projectStepToDelete = getProjectStepEntityById(id);
     projectStepToDelete.setIsDeleted(true);
-    ProjectStepCommentEntity projectStepDeleted = projectStepCommentRepository.save(projectStepToDelete);
+    ProjectStepCommentEntity projectStepDeleted =
+        projectStepCommentRepository.save(projectStepToDelete);
     String item = "project step comment";
     if (projectStepDeleted.getIsDeleted()) {
       return SimpleResponse.builder().message(Shared.deleteMessage(item, id)).build();
