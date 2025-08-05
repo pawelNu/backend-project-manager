@@ -6,5 +6,5 @@ import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ProjectStepCommentRepository extends JpaRepository<ProjectStepEntity, UUID> {
-  Optional<ProjectStepEntity> findByIdAndIsDeletedFalse(UUID id);
+  Optional<ProjectStepCommentEntity> findByIdAndIsDeletedFalse(UUID id);
 }
