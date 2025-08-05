@@ -1,0 +1,21 @@
+meta {
+  name: getList_3
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/api/employee-authorities
+  body: none
+  auth: bearer
+}
+
+params:query {
+  ~sort: 
+  ~range: 
+  ~filter: 
+}
+
+auth:bearer {
+  token: {{token}}
+}

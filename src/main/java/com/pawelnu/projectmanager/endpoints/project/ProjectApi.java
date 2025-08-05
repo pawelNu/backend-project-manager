@@ -1,5 +1,8 @@
 package com.pawelnu.projectmanager.endpoints.project;
 
+import com.pawelnu.projectmanager.endpoints.project.dto.ProjectCreateRequestDTO;
+import com.pawelnu.projectmanager.endpoints.project.dto.ProjectDTO;
+import com.pawelnu.projectmanager.endpoints.project.dto.ProjectEditRequestDTO;
 import com.pawelnu.projectmanager.exception.model.SimpleResponse;
 import com.pawelnu.projectmanager.utils.Path;
 import com.pawelnu.projectmanager.utils.ResponseErrors;
@@ -42,7 +45,7 @@ public interface ProjectApi {
   ResponseEntity<ProjectDTO> create(@Valid @RequestBody ProjectCreateRequestDTO body);
 
   @Operation(
-      description = "List companies with filtering, sorting and pagination (react-admin format)")
+      description = "List projects with filtering, sorting and pagination (react-admin format)")
   @ApiResponse(
       responseCode = "200",
       description = "OK",
@@ -72,7 +75,7 @@ public interface ProjectApi {
       })
   @ResponseErrors
   @GetMapping("/{id}")
-  @Operation(description = "Get company by id.")
+  @Operation(description = "Get project by id.")
   ResponseEntity<ProjectDTO> getById(@Parameter() @PathVariable() UUID id);
 
   @ApiResponse(
@@ -85,7 +88,7 @@ public interface ProjectApi {
       })
   @ResponseErrors
   @PutMapping("/{id}")
-  @Operation(description = "Edit company by id.")
+  @Operation(description = "Edit project by id.")
   ResponseEntity<ProjectDTO> editById(
       @Parameter() @PathVariable() UUID id, @Valid @RequestBody ProjectEditRequestDTO body);
 
@@ -99,6 +102,6 @@ public interface ProjectApi {
       })
   @ResponseErrors
   @DeleteMapping("/{id}")
-  @Operation(description = "Delete company by id.")
+  @Operation(description = "Delete project by id.")
   ResponseEntity<SimpleResponse> deleteById(@Parameter() @PathVariable() UUID id);
 }

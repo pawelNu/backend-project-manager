@@ -1,17 +1,12 @@
 package com.pawelnu.projectmanager.endpoints.project;
 
 import com.pawelnu.projectmanager.endpoints.company.employee.EmployeeEntity;
+import com.pawelnu.projectmanager.endpoints.project.dto.ProjectDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
 
 @Mapper(componentModel = "spring")
 public interface ProjectMapper {
-  @Mapping(target = "id", ignore = true)
-  ProjectEntity toEntity(ProjectCreateRequestDTO dto);
-
-  @Mapping(target = "id", ignore = true)
-  ProjectEntity toEntity(ProjectEditRequestDTO dto, @MappingTarget ProjectEntity entity);
 
   @Mapping(source = "categoryValue.category.name", target = "categoryName")
   @Mapping(source = "categoryValue.id", target = "categoryValueId")

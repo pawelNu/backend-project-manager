@@ -2,14 +2,13 @@ package com.pawelnu.projectmanager.endpoints.category.value;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pawelnu.projectmanager.endpoints.category.CategoryEntity;
-import com.pawelnu.projectmanager.endpoints.category.CategoryRepository;
+import com.pawelnu.projectmanager.endpoints.category.CategoryService;
 import com.pawelnu.projectmanager.exception.NotFoundException;
 import com.pawelnu.projectmanager.exception.model.SimpleResponse;
 import com.pawelnu.projectmanager.utils.Consts.MSG;
 import com.pawelnu.projectmanager.utils.PageableParams;
 import com.pawelnu.projectmanager.utils.Shared;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,23 +21,17 @@ import org.springframework.stereotype.Service;
 public class CategoryValueService {
 
   private final CategoryValueRepository categoryValueRepository;
-  private final CategoryRepository categoryRepository;
+  private final CategoryService categoryService;
   private final CategoryValueQueryRepository categoryValueQueryRepository;
   private final CategoryValueMapper categoryValueMapper;
   private final ObjectMapper objectMapper;
 
   public CategoryValueDTO create(CategoryValueCreateRequestDTO body) {
-
-    Optional<CategoryEntity> category =
-        categoryRepository.findByIdAndIsDeletedFalse(body.getCategoryId());
-    if (category.isPresent()) {
-      CategoryValueEntity categoryValueEntity = categoryValueMapper.toEntity(body);
-      categoryValueEntity.setCategory(category.get());
-      CategoryValueEntity savedAddress = categoryValueRepository.save(categoryValueEntity);
-      return categoryValueMapper.toDTO(savedAddress);
-    } else {
-      throw new NotFoundException(MSG.CATEGORY_NOT_FOUND_MSG + body.getCategoryId());
-    }
+    CategoryEntity category = categoryService.getCategoryEntityById(body.getCategoryId());
+    CategoryValueEntity categoryValueEntity = categoryValueMapper.toEntity(body);
+    categoryValueEntity.setCategory(category);
+    CategoryValueEntity savedAddress = categoryValueRepository.save(categoryValueEntity);
+    return categoryValueMapper.toDTO(savedAddress);
   }
 
   public CategoryValueListResponseDTO filter(String sort, String range, String filter) {
@@ -70,34 +63,21 @@ public class CategoryValueService {
   }
 
   public CategoryValueDTO editById(UUID id, CategoryValueEditRequestDTO body) {
-    Optional<CategoryValueEntity> categoryValueToEdit = categoryValueQueryRepository.findById(id);
-    if (categoryValueToEdit.isPresent()) {
-      CategoryValueEntity existingCategoryValue = categoryValueToEdit.get();
-      categoryValueMapper.toEntity(body, existingCategoryValue);
-      CategoryValueEntity updatedCompany = categoryValueRepository.save(existingCategoryValue);
-      return categoryValueMapper.toDTO(updatedCompany);
-    } else {
-      throw new NotFoundException(MSG.CATEGORY_VALUE_NOT_FOUND_MSG + id);
-    }
+    CategoryValueEntity categoryValueToEdit = getCategoryValueById(id);
+    categoryValueMapper.toEntity(body, categoryValueToEdit);
+    CategoryValueEntity updatedCompany = categoryValueRepository.save(categoryValueToEdit);
+    return categoryValueMapper.toDTO(updatedCompany);
   }
 
   public SimpleResponse deleteById(UUID id) {
-    Optional<CategoryValueEntity> categoryToDelete =
-        categoryValueRepository.findByIdAndIsDeletedFalse(id);
-    if (categoryToDelete.isPresent()) {
-      CategoryValueEntity existingCategoryValue = categoryToDelete.get();
-      existingCategoryValue.setIsDeleted(true);
-      CategoryValueEntity updatedCategoryValue =
-          categoryValueRepository.save(existingCategoryValue);
-      if (updatedCategoryValue.getIsDeleted()) {
-        return SimpleResponse.builder().message("Deleted category value with id: " + id).build();
-      } else {
-        return SimpleResponse.builder()
-            .message("Cannot delete category value with id: " + id)
-            .build();
-      }
+    CategoryValueEntity categoryToDelete = getCategoryValueById(id);
+    categoryToDelete.setIsDeleted(true);
+    CategoryValueEntity updatedCategoryValue = categoryValueRepository.save(categoryToDelete);
+    String item = "category value";
+    if (updatedCategoryValue.getIsDeleted()) {
+      return SimpleResponse.builder().message(Shared.deleteMessage(item, id)).build();
     } else {
-      throw new NotFoundException(MSG.CATEGORY_VALUE_NOT_FOUND_MSG + id);
+      return SimpleResponse.builder().message(Shared.cannotDeleteMessage(item, id)).build();
     }
   }
 

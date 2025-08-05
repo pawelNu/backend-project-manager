@@ -1,0 +1,29 @@
+meta {
+  name: editById
+  type: http
+  seq: 2
+}
+
+put {
+  url: {{baseUrl}}/api/projects/:id
+  body: json
+  auth: bearer
+}
+
+params:path {
+  id: 
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "name": "",
+    "categoryValueId": "",
+    "companyId": "",
+    "assignedEmployeeId": "",
+    "priorityValueId": ""
+  }
+}

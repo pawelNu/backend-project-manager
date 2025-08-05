@@ -1,0 +1,26 @@
+meta {
+  name: login
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/api/auth/login
+  body: json
+  auth: none
+}
+
+headers {
+  Authorization: 
+}
+
+body:json {
+  {
+    "username": "test",
+    "password": "test"
+  }
+}
+
+vars:post-response {
+  token: res.body.jwtToken
+}

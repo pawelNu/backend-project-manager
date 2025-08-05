@@ -1,0 +1,19 @@
+meta {
+  name: getById
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/api/projects/:id
+  body: none
+  auth: bearer
+}
+
+params:path {
+  id: 
+}
+
+auth:bearer {
+  token: {{token}}
+}

@@ -78,10 +78,11 @@ public class CompanyService {
     CompanyEntity companyToDelete = getCompanyEntityById(id);
     companyToDelete.setIsDeleted(true);
     CompanyEntity updatedCompany = companyRepository.save(companyToDelete);
+    String item = "company";
     if (updatedCompany.getIsDeleted()) {
-      return SimpleResponse.builder().message("Deleted company with id: " + id).build();
+      return SimpleResponse.builder().message(Shared.deleteMessage(item, id)).build();
     } else {
-      return SimpleResponse.builder().message("Cannot delete company with id: " + id).build();
+      return SimpleResponse.builder().message(Shared.cannotDeleteMessage(item, id)).build();
     }
   }
 

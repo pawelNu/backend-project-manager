@@ -45,8 +45,7 @@ public class EmployeeService {
   }
 
   public EmployeesListResponseDTO getList(String sort, String range, String filter) {
-    PageableParams params =
-        Shared.preparePageableParams(objectMapper, "lastName", sort, range, filter);
+    PageableParams params = Shared.preparePageableParams(objectMapper, sort, range, filter);
 
     Page<EmployeeEntity> page =
         employeeQueryRepository.getList(
@@ -94,18 +93,14 @@ public class EmployeeService {
   }
 
   public SimpleResponse deleteById(UUID id) {
-    Optional<EmployeeEntity> employeeToDelete = employeeRepository.findByIdAndIsDeletedFalse(id);
-    if (employeeToDelete.isPresent()) {
-      EmployeeEntity existingEmployee = employeeToDelete.get();
-      existingEmployee.setIsDeleted(true);
-      EmployeeEntity updatedEmployee = employeeRepository.save(existingEmployee);
-      if (updatedEmployee.getIsDeleted()) {
-        return SimpleResponse.builder().message("Deleted employee with id: " + id).build();
-      } else {
-        return SimpleResponse.builder().message("Cannot delete employee with id: " + id).build();
-      }
+    EmployeeEntity employeeToDelete = getEmployeeEntityById(id);
+    employeeToDelete.setIsDeleted(true);
+    EmployeeEntity updatedEmployee = employeeRepository.save(employeeToDelete);
+    String item = "employee";
+    if (updatedEmployee.getIsDeleted()) {
+      return SimpleResponse.builder().message(Shared.deleteMessage(item, id)).build();
     } else {
-      throw new NotFoundException(MSG.EMPLOYEE_NOT_FOUND + id);
+      return SimpleResponse.builder().message(Shared.cannotDeleteMessage(item, id)).build();
     }
   }
 }

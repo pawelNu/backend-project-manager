@@ -7,6 +7,10 @@ import com.pawelnu.projectmanager.endpoints.company.CompanyEntity;
 import com.pawelnu.projectmanager.endpoints.company.CompanyService;
 import com.pawelnu.projectmanager.endpoints.company.employee.EmployeeEntity;
 import com.pawelnu.projectmanager.endpoints.company.employee.EmployeeService;
+import com.pawelnu.projectmanager.endpoints.project.dto.ProjectCreateRequestDTO;
+import com.pawelnu.projectmanager.endpoints.project.dto.ProjectDTO;
+import com.pawelnu.projectmanager.endpoints.project.dto.ProjectEditRequestDTO;
+import com.pawelnu.projectmanager.endpoints.project.dto.ProjectListResponseDTO;
 import com.pawelnu.projectmanager.exception.NotFoundException;
 import com.pawelnu.projectmanager.exception.model.SimpleResponse;
 import com.pawelnu.projectmanager.utils.Consts.MSG;
@@ -35,22 +39,21 @@ public class ProjectService {
   private final ObjectMapper objectMapper;
 
   public ProjectDTO create(ProjectCreateRequestDTO body) {
-    //    CategoryValueEntity projectCategory =
-    //        categoryValueService.findCategoryByNameAndValue("project category", "production");
     CategoryValueEntity projectCategory =
         categoryValueService.getCategoryValueById(body.getCategoryValueId());
     CompanyEntity companyEntity = companyService.getCompanyEntityById(body.getCompanyId());
     EmployeeEntity employeeEntity =
         employeeService.getEmployeeEntityById(body.getAssignedEmployeeId());
-    //    CategoryValueEntity projectPriority =
-    //        categoryValueService.findCategoryByNameAndValue("project priority", "5");
     CategoryValueEntity projectPriority =
         categoryValueService.getCategoryValueById(body.getPriorityValueId());
-    ProjectEntity projectEntity = projectMapper.toEntity(body);
-    projectEntity.setCategoryValue(projectCategory);
-    projectEntity.setCompany(companyEntity);
-    projectEntity.setAssignedEmployee(employeeEntity);
-    projectEntity.setPriorityValue(projectPriority);
+    ProjectEntity projectEntity =
+        ProjectEntity.builder()
+            .name(body.getName())
+            .categoryValue(projectCategory)
+            .company(companyEntity)
+            .assignedEmployee(employeeEntity)
+            .priorityValue(projectPriority)
+            .build();
     ProjectEntity savedCompany = projectRepository.save(projectEntity);
     return projectMapper.toDTO(savedCompany);
   }
@@ -70,16 +73,16 @@ public class ProjectService {
     ProjectEntity projectToDelete = getProjectEntityById(id);
     projectToDelete.setIsDeleted(true);
     ProjectEntity projectDeleted = projectRepository.save(projectToDelete);
+    String item = "project";
     if (projectDeleted.getIsDeleted()) {
-      return SimpleResponse.builder().message("Deleted project with id: " + id).build();
+      return SimpleResponse.builder().message(Shared.deleteMessage(item, id)).build();
     } else {
-      return SimpleResponse.builder().message("Cannot delete project with id: " + id).build();
+      return SimpleResponse.builder().message(Shared.cannotDeleteMessage(item, id)).build();
     }
   }
 
   public ProjectDTO editById(UUID id, ProjectEditRequestDTO body) {
     ProjectEntity projectToEdit = getProjectEntityById(id);
-    projectMapper.toEntity(body, projectToEdit);
     CategoryValueEntity projectCategory =
         categoryValueService.getCategoryValueById(body.getCategoryValueId());
     CompanyEntity companyEntity = companyService.getCompanyEntityById(body.getCompanyId());
@@ -87,18 +90,17 @@ public class ProjectService {
         employeeService.getEmployeeEntityById(body.getAssignedEmployeeId());
     CategoryValueEntity projectPriority =
         categoryValueService.getCategoryValueById(body.getPriorityValueId());
-    ProjectEntity projectEntity = projectMapper.toEntity(body, projectToEdit);
-    projectEntity.setCategoryValue(projectCategory);
-    projectEntity.setCompany(companyEntity);
-    projectEntity.setAssignedEmployee(employeeEntity);
-    projectEntity.setPriorityValue(projectPriority);
-    ProjectEntity updatedProject = projectRepository.save(projectEntity);
+    projectToEdit.setName(body.getName());
+    projectToEdit.setCategoryValue(projectCategory);
+    projectToEdit.setCompany(companyEntity);
+    projectToEdit.setAssignedEmployee(employeeEntity);
+    projectToEdit.setPriorityValue(projectPriority);
+    ProjectEntity updatedProject = projectRepository.save(projectToEdit);
     return projectMapper.toDTO(updatedProject);
   }
 
   public ProjectListResponseDTO filter(String sort, String range, String filter) {
-    PageableParams params =
-        Shared.preparePageableParams(objectMapper, "lastName", sort, range, filter);
+    PageableParams params = Shared.preparePageableParams(objectMapper, sort, range, filter);
 
     Page<ProjectEntity> page = projectQueryRepository.getList(params);
     List<ProjectDTO> projectDTOs = page.getContent().stream().map(projectMapper::toDTO).toList();

@@ -3,6 +3,7 @@ package com.pawelnu.projectmanager.endpoints.company.employee.authority;
 import com.pawelnu.projectmanager.endpoints.authority.QAuthorityEntity;
 import com.pawelnu.projectmanager.endpoints.company.employee.QEmployeeEntity;
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.Order;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
@@ -13,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -59,21 +61,15 @@ public class EmployeeAuthorityQueryRepository {
             .offset(offset)
             .limit(limit);
 
+    Order order = Sort.Direction.fromString(sortDir) == Sort.Direction.ASC ? Order.ASC : Order.DESC;
     switch (sortField) {
       case "authorityName" -> query.orderBy(
-          sortDir.equalsIgnoreCase("DESC")
-              ? authority.nameBackend.desc()
-              : authority.nameBackend.asc());
+          order == Order.ASC ? authority.nameBackend.asc() : authority.nameBackend.desc());
       case "employeeFirstName" -> query.orderBy(
-          sortDir.equalsIgnoreCase("DESC") ? employee.firstName.desc() : employee.firstName.asc());
+          order == Order.ASC ? employee.firstName.asc() : employee.firstName.desc());
       case "employeeLastName" -> query.orderBy(
-          sortDir.equalsIgnoreCase("DESC") ? employee.lastName.desc() : employee.lastName.asc());
-      case "id" -> query.orderBy(
-          sortDir.equalsIgnoreCase("DESC")
-              ? employeeAuthority.id.desc()
-              : employeeAuthority.id.asc());
-      default -> query.orderBy(
-          sortDir.equalsIgnoreCase("DESC") ? employee.id.desc() : employee.id.asc());
+          order == Order.ASC ? employee.lastName.asc() : employee.lastName.desc());
+      default -> query.orderBy(employee.lastName.desc());
     }
 
     List<EmployeeAuthorityEntity> results = query.fetch();

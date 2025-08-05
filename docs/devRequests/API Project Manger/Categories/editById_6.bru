@@ -1,0 +1,25 @@
+meta {
+  name: editById_6
+  type: http
+  seq: 2
+}
+
+put {
+  url: {{baseUrl}}/api/categories/:id
+  body: json
+  auth: bearer
+}
+
+params:path {
+  id: 
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "name": ""
+  }
+}

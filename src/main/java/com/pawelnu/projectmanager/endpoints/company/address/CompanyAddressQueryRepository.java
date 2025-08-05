@@ -3,8 +3,6 @@ package com.pawelnu.projectmanager.endpoints.company.address;
 import com.pawelnu.projectmanager.endpoints.company.QCompanyEntity;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Order;
-import com.querydsl.core.types.OrderSpecifier;
-import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
@@ -81,17 +79,13 @@ public class CompanyAddressQueryRepository {
             .offset(offset)
             .limit(limit);
 
-    if (!sortField.isEmpty()) {
-      if (sortField.equals("companyName")) {
-        query.orderBy(sortDir.equalsIgnoreCase("DESC") ? company.name.desc() : company.name.asc());
-      } else {
-        PathBuilder<CompanyAddressEntity> entityPath =
-            new PathBuilder<>(CompanyAddressEntity.class, "companyAddressEntity");
-        query.orderBy(
-            new OrderSpecifier<>(
-                Sort.Direction.fromString(sortDir) == Sort.Direction.ASC ? Order.ASC : Order.DESC,
-                entityPath.getString(sortField)));
-      }
+    Order order = Sort.Direction.fromString(sortDir) == Sort.Direction.ASC ? Order.ASC : Order.DESC;
+    switch (sortField) {
+      case "companyName" -> query.orderBy(
+          order == Order.ASC ? company.name.asc() : company.name.desc());
+      case "city" -> query.orderBy(order == Order.ASC ? address.city.asc() : address.city.desc());
+        // TODO add others fields to sorting
+      default -> query.orderBy(address.city.asc());
     }
 
     List<CompanyAddressEntity> results = query.fetch();

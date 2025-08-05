@@ -80,7 +80,11 @@ public class WebSecurityConfig {
                     .requestMatchers("/api/auth/**")
                     .permitAll()
                     .requestMatchers(
-                        "/", "/swagger-ui/**", "/v3/api-docs/**", "/project-manager/**")
+                        "/",
+                        "/swagger-ui/**",
+                        "/v3/api-docs/**",
+                        "/project-manager.yaml",
+                        "/project-manager/**")
                     .permitAll()
                     .requestMatchers("/h2-console/**")
                     .permitAll()
@@ -97,9 +101,6 @@ public class WebSecurityConfig {
 
     http.authenticationProvider(authenticationProvider());
 
-    //    http.addFilterBefore(
-    //        authenticationJwtTokenFilter(handlerMappings),
-    // UsernamePasswordAuthenticationFilter.class);
     http.addFilterAfter(
         authenticationJwtTokenFilter(handlerMappings), ExceptionTranslationFilter.class);
     http.headers(headers -> headers.frameOptions(FrameOptionsConfig::sameOrigin));

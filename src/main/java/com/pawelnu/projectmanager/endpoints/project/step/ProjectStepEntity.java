@@ -1,6 +1,7 @@
 package com.pawelnu.projectmanager.endpoints.project.step;
 
 import com.pawelnu.projectmanager.endpoints.category.value.CategoryValueEntity;
+import com.pawelnu.projectmanager.endpoints.company.employee.EmployeeEntity;
 import com.pawelnu.projectmanager.endpoints.project.ProjectEntity;
 import com.pawelnu.projectmanager.endpoints.project.step.comment.ProjectStepCommentEntity;
 import com.pawelnu.projectmanager.endpoints.ticket.TicketEntity;
@@ -37,6 +38,10 @@ public class ProjectStepEntity extends Auditable {
   @ManyToOne
   @JoinColumn(name = "priority_id")
   private CategoryValueEntity priority;
+
+  @ManyToOne
+  @JoinColumn(name = "assigned_employee_id")
+  private EmployeeEntity assignedEmployee;
 
   private Instant deadline;
 

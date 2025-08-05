@@ -1,0 +1,19 @@
+meta {
+  name: deleteById_7
+  type: http
+  seq: 3
+}
+
+delete {
+  url: {{baseUrl}}/api/authorities/:id
+  body: none
+  auth: bearer
+}
+
+params:path {
+  id: 
+}
+
+auth:bearer {
+  token: {{token}}
+}

@@ -6,9 +6,7 @@ import com.pawelnu.projectmanager.endpoints.company.employee.authority.QEmployee
 import com.pawelnu.projectmanager.endpoints.company.employee.dto.EmployeeAuthorityRowDTO;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Order;
-import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
-import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
@@ -76,17 +74,16 @@ public class EmployeeQueryRepository {
             .offset(offset)
             .limit(limit);
 
-    if (!sortField.isEmpty()) {
-      if (sortField.equals("companyName")) {
-        query.orderBy(sortDir.equalsIgnoreCase("DESC") ? company.name.desc() : company.name.asc());
-      } else {
-        PathBuilder<EmployeeEntity> entityPath =
-            new PathBuilder<>(EmployeeEntity.class, "employeeEntity");
-        query.orderBy(
-            new OrderSpecifier<>(
-                Sort.Direction.fromString(sortDir) == Sort.Direction.ASC ? Order.ASC : Order.DESC,
-                entityPath.getString(sortField)));
-      }
+    Order order = Sort.Direction.fromString(sortDir) == Sort.Direction.ASC ? Order.ASC : Order.DESC;
+    switch (sortField) {
+      case "companyName" -> query.orderBy(
+          order == Order.ASC ? company.name.asc() : company.name.desc());
+      case "lastName" -> query.orderBy(
+          order == Order.ASC ? employee.lastName.asc() : employee.lastName.desc());
+      case "firstName" -> query.orderBy(
+          order == Order.ASC ? employee.firstName.asc() : employee.firstName.desc());
+        //      TODO add others fields
+      default -> query.orderBy(employee.lastName.asc());
     }
 
     List<EmployeeEntity> results = query.fetch();

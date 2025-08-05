@@ -1,0 +1,21 @@
+meta {
+  name: create_7
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{baseUrl}}/api/categories
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "name": ""
+  }
+}

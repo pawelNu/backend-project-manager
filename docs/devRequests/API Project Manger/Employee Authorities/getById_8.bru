@@ -1,0 +1,19 @@
+meta {
+  name: getById_8
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{baseUrl}}/api/employee-authorities/:id
+  body: none
+  auth: bearer
+}
+
+params:path {
+  id: 
+}
+
+auth:bearer {
+  token: {{token}}
+}

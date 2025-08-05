@@ -6,9 +6,7 @@ import com.pawelnu.projectmanager.endpoints.company.employee.authority.QEmployee
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.ConstantImpl;
 import com.querydsl.core.types.Order;
-import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
-import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.Collections;
@@ -21,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -59,17 +58,13 @@ public class AuthorityQueryRepository {
             .offset(offset)
             .limit(limit);
 
-    if (sortField != null && !sortField.isEmpty()) {
-      PathBuilder<AuthorityEntity> entityPath =
-          new PathBuilder<>(AuthorityEntity.class, "authorityEntity");
-
-      Order order = sortDir.equalsIgnoreCase("DESC") ? Order.DESC : Order.ASC;
-
-      if (sortField.equals("name")) {
-        query.orderBy(new OrderSpecifier<>(order, authority.nameBackend));
-      } else {
-        query.orderBy(new OrderSpecifier<>(order, entityPath.getString(sortField)));
-      }
+    Order order = Sort.Direction.fromString(sortDir) == Sort.Direction.ASC ? Order.ASC : Order.DESC;
+    if (sortField.equals("nameBackend")) {
+      query.orderBy(
+          order == Order.ASC ? authority.nameBackend.asc() : authority.nameBackend.desc());
+      //      TODO add others fields
+    } else {
+      query.orderBy(authority.nameBackend.asc());
     }
 
     List<AuthorityDTO> results = query.fetch();

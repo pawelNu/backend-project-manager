@@ -1,0 +1,15 @@
+headers {
+  Authorization: Bearer {{token}}
+}
+
+auth {
+  mode: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+vars:pre-request {
+  baseUrl: http://localhost:8080
+}

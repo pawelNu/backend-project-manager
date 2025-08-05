@@ -1,0 +1,24 @@
+meta {
+  name: create_5
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{baseUrl}}/api/companies
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "name": "",
+    "nip": "",
+    "regon": "",
+    "website": ""
+  }
+}

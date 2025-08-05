@@ -5,9 +5,7 @@ import com.pawelnu.projectmanager.endpoints.company.address.QCompanyAddressEntit
 import com.pawelnu.projectmanager.utils.Shared;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Order;
-import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
-import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
@@ -99,20 +97,17 @@ public class CompanyQueryRepository {
             .offset(offset)
             .limit(limit);
 
-    if (!sortField.isEmpty()) {
-      if (sortField.equals(company.status.getMetadata().getName())) {
-        query.orderBy(
-            sortDir.equalsIgnoreCase("DESC")
-                ? status.stringValue.desc()
-                : status.stringValue.asc());
-      } else {
-        PathBuilder<CompanyEntity> entityPath =
-            new PathBuilder<>(CompanyEntity.class, "companyEntity");
-        query.orderBy(
-            new OrderSpecifier<>(
-                Sort.Direction.fromString(sortDir) == Sort.Direction.ASC ? Order.ASC : Order.DESC,
-                entityPath.getString(sortField)));
-      }
+    Order order = Sort.Direction.fromString(sortDir) == Sort.Direction.ASC ? Order.ASC : Order.DESC;
+    switch (sortField) {
+      case "name" -> query.orderBy(order == Order.ASC ? company.name.asc() : company.name.desc());
+      case "nip" -> query.orderBy(order == Order.ASC ? company.nip.asc() : company.nip.desc());
+      case "regon" -> query.orderBy(
+          order == Order.ASC ? company.regon.asc() : company.regon.desc());
+      case "status" -> query.orderBy(
+          order == Order.ASC ? status.stringValue.asc() : status.stringValue.desc());
+      case "website" -> query.orderBy(
+          order == Order.ASC ? company.website.asc() : company.website.desc());
+      default -> query.orderBy(company.name.asc());
     }
 
     List<CompanySimpleDTO> results = query.fetch();

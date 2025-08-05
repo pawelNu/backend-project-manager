@@ -3,8 +3,14 @@ package com.pawelnu.projectmanager.utils;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pawelnu.projectmanager.utils.Consts.Request;
+import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.types.dsl.NumberExpression;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -67,23 +73,20 @@ public class Shared {
   }
 
   public static String prepareContentRange(Page page, int offset, int limit) {
+    // TODO refactor code and remove this function
     PageableResponse pageInfo = preparePageInfo(page, offset, limit);
+    return String.format("items %d-%d/%d", offset, pageInfo.getEnd(), pageInfo.getTotalElements());
+  }
+
+  public static String prepareContentRange(Long totalElements, int offset, int limit) {
+    PageableResponse pageInfo = preparePageInfo(totalElements, offset, limit);
     return String.format("items %d-%d/%d", offset, pageInfo.getEnd(), pageInfo.getTotalElements());
   }
 
   public static PageableParams preparePageableParams(
       ObjectMapper objectMapper, String sort, String range, String filter) {
-    return preparePageableParams(objectMapper, "name", sort, range, filter);
-  }
-
-  public static PageableParams preparePageableParams(
-      ObjectMapper objectMapper,
-      String defaultSortField,
-      String sort,
-      String range,
-      String filter) {
     List<String> sortList = Shared.parseJsonList(objectMapper, sort);
-    String sortField = sortList.isEmpty() ? defaultSortField : sortList.get(0);
+    String sortField = sortList.isEmpty() ? "" : sortList.get(0);
     String sortDir = sortList.size() > 1 ? sortList.get(1) : "ASC";
 
     List<Integer> rangeList = Shared.parseJsonListInt(objectMapper, range);
@@ -100,9 +103,60 @@ public class Shared {
         .build();
   }
 
+  //  TODO implement checking query params if they exist
+  /*
+  all params will be stored in map <item, keyParam>
+  in service will be check
+  checkIfParamsExists(params) {
+  get only params for item
+  loop for each param
+  throw NotFoundQueryFieldException if not found with list all available params
+  }
+  */
+  // TODO think for the same for sorting params
+
   private static PageableResponse preparePageInfo(Page page, int offset, int limit) {
     long totalElements = page.getTotalElements();
     long end = Math.min(offset + limit - 1, totalElements - 1);
     return PageableResponse.builder().totalElements(totalElements).end(end).build();
+  }
+
+  private static PageableResponse preparePageInfo(Long totalElements, int offset, int limit) {
+    long end = Math.min(offset + limit - 1, totalElements - 1);
+    return PageableResponse.builder().totalElements(totalElements).end(end).build();
+  }
+
+  public static String deleteMessage(String item, UUID id) {
+    return "Deleted %s with id: %s".formatted(item, id);
+  }
+
+  public static String cannotDeleteMessage(String item, UUID id) {
+    return "Cannot delete %s with id: %s".formatted(item, id);
+  }
+
+  public static NumberExpression<Long> totalElements() {
+    return Expressions.numberTemplate(Long.class, "COUNT(*) OVER()").as("total_elements");
+  }
+
+  public static NumberExpression<Integer> totalPages(int limit) {
+    return Expressions.numberTemplate(Integer.class, "CEIL(COUNT(*) OVER() * 1.0 / {0})", limit)
+        .as("total_pages");
+  }
+
+  public static Instant parseDate(String stringDate) {
+    LocalDate startDate = LocalDate.parse(stringDate);
+    return startDate.atStartOfDay(ZoneOffset.UTC).toInstant();
+  }
+
+  public static class Field {
+    public static final String name = "name";
+    public static final String projectName = "projectName";
+    public static final String projectStepName = "name";
+    public static final String companyName = "companyName";
+    public static final String assignedEmployee = "assignedEmployee";
+    public static final String projectPriorityValue = "projectPriorityValue";
+    public static final String projectStepPriorityValue = "projectStepPriorityValue";
+    public static final String priorityValue = "priorityValue";
+    public static final String deadline = "deadline";
   }
 }

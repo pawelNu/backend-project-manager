@@ -16,7 +16,6 @@ import com.pawelnu.projectmanager.utils.Consts.MSG;
 import com.pawelnu.projectmanager.utils.PageableParams;
 import com.pawelnu.projectmanager.utils.Shared;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -116,8 +115,7 @@ public class EmployeeAuthorityService {
   }
 
   public EmployeeAuthorityListResponseDTO getList(String sort, String range, String filter) {
-    PageableParams params =
-        Shared.preparePageableParams(objectMapper, "employee_id", sort, range, filter);
+    PageableParams params = Shared.preparePageableParams(objectMapper, sort, range, filter);
 
     Page<EmployeeAuthorityEntity> page =
         employeeAuthorityQueryRepository.filter(
@@ -136,34 +134,24 @@ public class EmployeeAuthorityService {
   }
 
   public SimpleResponse deleteById(UUID id) {
-    Optional<EmployeeAuthorityEntity> employeeToDelete =
-        employeeAuthorityRepository.findByIdAndIsDeletedFalse(id);
-    if (employeeToDelete.isPresent()) {
-      EmployeeAuthorityEntity existingEmployee = employeeToDelete.get();
-      existingEmployee.setIsDeleted(true);
-      EmployeeAuthorityEntity updatedEmployee = employeeAuthorityRepository.save(existingEmployee);
-      if (updatedEmployee.getIsDeleted()) {
-        return SimpleResponse.builder()
-            .message("Deleted employee authority with id: " + id)
-            .build();
-      } else {
-        return SimpleResponse.builder()
-            .message("Cannot delete employee authority with id: " + id)
-            .build();
-      }
+    EmployeeAuthorityEntity employeeToDelete = getEmployeeAuthorityEntityById(id);
+    employeeToDelete.setIsDeleted(true);
+    EmployeeAuthorityEntity updatedEmployee = employeeAuthorityRepository.save(employeeToDelete);
+    String item = "employee authority";
+    if (updatedEmployee.getIsDeleted()) {
+      return SimpleResponse.builder().message(Shared.deleteMessage(item, id)).build();
     } else {
-      throw new NotFoundException(MSG.EMPLOYEE_AUTHORITY_NOT_FOUND_MSG + id);
+      return SimpleResponse.builder().message(Shared.cannotDeleteMessage(item, id)).build();
     }
   }
 
   public EmployeeAuthorityDTO getById(UUID id) {
-    EmployeeAuthorityEntity employee = getEmployeeAuthorityEntityById(id);
-    return employeeAuthorityMapper.toDTO(employee);
+    return employeeAuthorityMapper.toDTO(getEmployeeAuthorityEntityById(id));
   }
 
   public EmployeeAuthorityEntity getEmployeeAuthorityEntityById(UUID id) {
     return employeeAuthorityRepository
-        .findById(id)
+        .findByIdAndIsDeletedFalse(id)
         .orElseThrow(() -> new NotFoundException(MSG.EMPLOYEE_AUTHORITY_NOT_FOUND_MSG + id));
   }
 }

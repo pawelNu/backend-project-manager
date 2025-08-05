@@ -1,0 +1,61 @@
+databaseChangeLog:
+  - changeSet:
+      id: 24
+      author: pawelNu
+      changes:
+        - loadUpdateData:
+            file: authorities.csv
+            relativeToChangelogFile: true
+            separator: ','
+            tableName: authorities
+            primaryKey: id
+  - changeSet:
+      id: 25
+      author: pawelNu
+      changes:
+        - loadUpdateData:
+            file: employee_authorities.csv
+            relativeToChangelogFile: true
+            separator: ','
+            tableName: employee_authorities
+            primaryKey: id
+  - changeSet:
+      id: 26
+      author: pawelNu
+      changes:
+        - loadUpdateData:
+            file: categories.csv
+            relativeToChangelogFile: true
+            separator: ','
+            tableName: categories
+            primaryKey: id
+  - changeSet:
+      id: 27
+      author: pawelNu
+      changes:
+        - loadUpdateData:
+            file: category_values.csv
+            relativeToChangelogFile: true
+            separator: ','
+            tableName: category_values
+            primaryKey: id
+  - changeSet:
+      id: 28
+      author: pawelNu
+      changes:
+        - loadUpdateData:
+            file: projects.csv
+            relativeToChangelogFile: true
+            separator: ','
+            tableName: projects
+            primaryKey: id
+  - changeSet:
+      id: 29
+      author: pawelNu
+      changes:
+        - loadUpdateData:
+            file: project_steps.csv
+            relativeToChangelogFile: true
+            separator: ','
+            tableName: project_steps
+            primaryKey: id
