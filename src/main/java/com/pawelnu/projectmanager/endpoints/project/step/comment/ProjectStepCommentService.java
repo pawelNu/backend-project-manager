@@ -1,21 +1,17 @@
 package com.pawelnu.projectmanager.endpoints.project.step.comment;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.pawelnu.projectmanager.endpoints.category.value.CategoryValueEntity;
 import com.pawelnu.projectmanager.endpoints.category.value.CategoryValueService;
 import com.pawelnu.projectmanager.endpoints.company.CompanyService;
 import com.pawelnu.projectmanager.endpoints.company.employee.EmployeeEntity;
 import com.pawelnu.projectmanager.endpoints.company.employee.EmployeeService;
-import com.pawelnu.projectmanager.endpoints.project.ProjectEntity;
-import com.pawelnu.projectmanager.endpoints.project.ProjectService;
 import com.pawelnu.projectmanager.endpoints.project.step.ProjectStepEntity;
+import com.pawelnu.projectmanager.endpoints.project.step.ProjectStepService;
 import com.pawelnu.projectmanager.endpoints.project.step.comment.dto.ProjectStepCommentCreateRequestDTO;
 import com.pawelnu.projectmanager.endpoints.project.step.comment.dto.ProjectStepCommentDTO;
 import com.pawelnu.projectmanager.endpoints.project.step.comment.dto.ProjectStepCommentEditRequestDTO;
 import com.pawelnu.projectmanager.endpoints.project.step.comment.dto.ProjectStepCommentListResponseDTO;
-import com.pawelnu.projectmanager.endpoints.project.step.dto.ProjectStepDTO;
-import com.pawelnu.projectmanager.endpoints.project.step.dto.ProjectStepListResponseDTO;
-import com.pawelnu.projectmanager.endpoints.project.step.dto.ProjectStepRowDTO;
+import com.pawelnu.projectmanager.endpoints.project.step.comment.dto.ProjectStepCommentRowDTO;
 import com.pawelnu.projectmanager.exception.NotFoundException;
 import com.pawelnu.projectmanager.exception.model.SimpleResponse;
 import com.pawelnu.projectmanager.utils.Consts.MSG;
@@ -39,62 +35,63 @@ public class ProjectStepCommentService {
   private final CategoryValueService categoryValueService;
   private final CompanyService companyService;
   private final EmployeeService employeeService;
-  private final ProjectService projectService;
+  private final ProjectStepService projectStepService;
   private final ProjectStepCommentMapper projectStepCommentMapper;
   private final ObjectMapper objectMapper;
 
   public ProjectStepCommentDTO create(ProjectStepCommentCreateRequestDTO body) {
-
-    ProjectEntity projectEntity = projectService.getProjectEntityById(body.getProjectId());
-    EmployeeEntity employeeEntity =
-        employeeService.getEmployeeEntityById(body.getAssignedEmployeeId());
-    CategoryValueEntity projectStepPriority =
-        categoryValueService.getCategoryValueById(body.getPriorityValueId());
-    ProjectStepCommentEntity projectStepEntity =
-        ProjectStepCommentEntity.builder().comment().step().employee(employeeEntity).build();
-    ProjectStepCommentEntity savedCompany = projectStepCommentRepository.save(projectStepEntity);
+    //    private String comment;
+    //    private UUID projectStepId;
+    //    private UUID employeeId;
+    ProjectStepEntity projectStepEntity =
+        projectStepService.getProjectStepEntityById(body.getProjectStepId());
+    EmployeeEntity employeeEntity = employeeService.getEmployeeEntityById(body.getEmployeeId());
+    ProjectStepCommentEntity projectStepCommentEntity =
+        ProjectStepCommentEntity.builder()
+            .comment(body.getComment())
+            .step(projectStepEntity)
+            .employee(employeeEntity)
+            .build();
+    ProjectStepCommentEntity savedCompany =
+        projectStepCommentRepository.save(projectStepCommentEntity);
     return projectStepCommentMapper.toDTO(savedCompany);
   }
 
   public ProjectStepCommentListResponseDTO filter(String sort, String range, String filter) {
     PageableParams params = Shared.preparePageableParams(objectMapper, sort, range, filter);
 
-    List<ProjectStepRowDTO> results = projectStepCommentQueryRepository.getList(params);
-    List<ProjectStepDTO> projectDTOs =
+    List<ProjectStepCommentRowDTO> results = projectStepCommentQueryRepository.getList(params);
+    List<ProjectStepCommentDTO> projectDTOs =
         results.stream().map(projectStepCommentMapper::toDTO).toList();
     String contentRange =
         Shared.prepareContentRange(
             results.isEmpty() ? 0 : results.getFirst().getTotalElements(),
             params.getOffset(),
             params.getLimit());
-    return ProjectStepListResponseDTO.builder()
+    return ProjectStepCommentListResponseDTO.builder()
         .data(projectDTOs)
         .contentRange(contentRange)
         .build();
   }
 
   public ProjectStepCommentDTO getById(UUID id) {
-    return projectStepCommentMapper.toDTO(getProjectStepEntityById(id));
+    return projectStepCommentMapper.toDTO(getProjectStepCommentEntityById(id));
   }
 
   public ProjectStepCommentDTO editById(UUID id, ProjectStepCommentEditRequestDTO body) {
-    ProjectStepEntity projectStepToEdit = getProjectStepEntityById(id);
-    ProjectEntity project = projectService.getProjectEntityById(body.getProjectId());
+    ProjectStepCommentEntity projectStepCommentToEdit = getProjectStepCommentEntityById(id);
+    ProjectStepEntity projectStep = projectStepService.getProjectStepEntityById(body.getProjectStepId());
     EmployeeEntity employeeEntity =
-        employeeService.getEmployeeEntityById(body.getAssignedEmployeeId());
-    CategoryValueEntity projectStepPriority =
-        categoryValueService.getCategoryValueById(body.getPriorityValueId());
-    projectStepToEdit.setName(body.getName());
-    projectStepToEdit.setProject(project);
-    projectStepToEdit.setPriority(projectStepPriority);
-    projectStepToEdit.setAssignedEmployee(employeeEntity);
-    projectStepToEdit.setDeadline(body.getDeadline());
-    ProjectStepEntity updatedProject = projectStepCommentRepository.save(projectStepToEdit);
+        employeeService.getEmployeeEntityById(body.getEmployeeId());
+    projectStepCommentToEdit.setComment(body.getComment());
+    projectStepCommentToEdit.setStep(projectStep);
+    projectStepCommentToEdit.setEmployee(employeeEntity);
+    ProjectStepCommentEntity updatedProject = projectStepCommentRepository.save(projectStepCommentToEdit);
     return projectStepCommentMapper.toDTO(updatedProject);
   }
 
   public SimpleResponse deleteById(UUID id) {
-    ProjectStepCommentEntity projectStepToDelete = getProjectStepEntityById(id);
+    ProjectStepCommentEntity projectStepToDelete = getProjectStepCommentEntityById(id);
     projectStepToDelete.setIsDeleted(true);
     ProjectStepCommentEntity projectStepDeleted =
         projectStepCommentRepository.save(projectStepToDelete);
@@ -106,7 +103,7 @@ public class ProjectStepCommentService {
     }
   }
 
-  private ProjectStepCommentEntity getProjectStepEntityById(UUID id) {
+  private ProjectStepCommentEntity getProjectStepCommentEntityById(UUID id) {
     return projectStepCommentRepository
         .findByIdAndIsDeletedFalse(id)
         .orElseThrow(() -> new NotFoundException(MSG.PROJECT_STEP_COMMENT_NOT_FOUND + id));

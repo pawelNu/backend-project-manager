@@ -107,7 +107,7 @@ public class ProjectStepService {
     }
   }
 
-  private ProjectStepEntity getProjectStepEntityById(UUID id) {
+  public ProjectStepEntity getProjectStepEntityById(UUID id) {
     return projectStepRepository
         .findByIdAndIsDeletedFalse(id)
         .orElseThrow(() -> new NotFoundException(MSG.PROJECT_STEP_NOT_FOUND + id));

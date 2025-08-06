@@ -150,8 +150,10 @@ public class Shared {
 
   public static class Field {
     public static final String name = "name";
+    public static final String comment = "comment";
     public static final String projectName = "projectName";
-    public static final String projectStepName = "name";
+    public static final String projectStepName = "projectStepName";
+    public static final String created = "created";
     public static final String companyName = "companyName";
     public static final String assignedEmployee = "assignedEmployee";
     public static final String projectPriorityValue = "projectPriorityValue";
