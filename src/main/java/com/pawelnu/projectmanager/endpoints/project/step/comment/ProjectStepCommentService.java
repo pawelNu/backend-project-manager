@@ -80,13 +80,14 @@ public class ProjectStepCommentService {
 
   public ProjectStepCommentDTO editById(UUID id, ProjectStepCommentEditRequestDTO body) {
     ProjectStepCommentEntity projectStepCommentToEdit = getProjectStepCommentEntityById(id);
-    ProjectStepEntity projectStep = projectStepService.getProjectStepEntityById(body.getProjectStepId());
-    EmployeeEntity employeeEntity =
-        employeeService.getEmployeeEntityById(body.getEmployeeId());
+    ProjectStepEntity projectStep =
+        projectStepService.getProjectStepEntityById(body.getProjectStepId());
+    EmployeeEntity employeeEntity = employeeService.getEmployeeEntityById(body.getEmployeeId());
     projectStepCommentToEdit.setComment(body.getComment());
     projectStepCommentToEdit.setStep(projectStep);
     projectStepCommentToEdit.setEmployee(employeeEntity);
-    ProjectStepCommentEntity updatedProject = projectStepCommentRepository.save(projectStepCommentToEdit);
+    ProjectStepCommentEntity updatedProject =
+        projectStepCommentRepository.save(projectStepCommentToEdit);
     return projectStepCommentMapper.toDTO(updatedProject);
   }
 

@@ -97,15 +97,14 @@ public class ProjectStepCommentQueryRepository {
       JPAQuery<ProjectStepCommentRowDTO> query, String sortField, String sortDir) {
     Order order = Sort.Direction.fromString(sortDir) == Sort.Direction.ASC ? Order.ASC : Order.DESC;
     switch (sortField) {
-      case Field.created ->
-          query.orderBy(
-              order == Order.ASC
-                  ? projectStepComment.created.asc()
-                  : projectStepComment.created.desc());
-      case Field.projectStepName ->
-          query.orderBy(order == Order.ASC ? projectStep.name.asc() : projectStep.name.desc());
-      case Field.assignedEmployee ->
-          query.orderBy(order == Order.ASC ? employee.lastName.asc() : employee.lastName.desc());
+      case Field.created -> query.orderBy(
+          order == Order.ASC
+              ? projectStepComment.created.asc()
+              : projectStepComment.created.desc());
+      case Field.projectStepName -> query.orderBy(
+          order == Order.ASC ? projectStep.name.asc() : projectStep.name.desc());
+      case Field.assignedEmployee -> query.orderBy(
+          order == Order.ASC ? employee.lastName.asc() : employee.lastName.desc());
       default -> query.orderBy(projectStepComment.created.asc());
     }
   }
