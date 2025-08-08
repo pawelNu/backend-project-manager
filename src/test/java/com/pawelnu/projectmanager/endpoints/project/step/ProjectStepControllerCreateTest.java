@@ -69,7 +69,7 @@ class ProjectStepControllerCreateTest {
   }
 
   @Test
-  void shouldReturn_201_createProject() throws Exception {
+  void shouldReturn_201_createProjectStep() throws Exception {
     Instant deadline = LocalDateTime.of(2025, 7, 29, 12, 0).toInstant(ZoneOffset.UTC);
     ProjectStepCreateRequestDTO request =
         ProjectStepCreateRequestDTO.builder()
@@ -101,7 +101,7 @@ class ProjectStepControllerCreateTest {
   }
 
   @Test
-  void shouldReturn_400_createProject() throws Exception {
+  void shouldReturn_400_createProjectStep() throws Exception {
     Instant deadline = LocalDateTime.of(2025, 7, 29, 0, 0).toInstant(ZoneOffset.UTC);
     ProjectStepCreateRequestDTO request =
         ProjectStepCreateRequestDTO.builder()
@@ -130,7 +130,7 @@ class ProjectStepControllerCreateTest {
   }
 
   @Test
-  void shouldReturn_401_createProject() throws Exception {
+  void shouldReturn_401_createProjectStep() throws Exception {
     Instant deadline = LocalDateTime.of(2025, 7, 29, 0, 0).toInstant(ZoneOffset.UTC);
     ProjectStepCreateRequestDTO request =
         ProjectStepCreateRequestDTO.builder()
@@ -153,7 +153,7 @@ class ProjectStepControllerCreateTest {
   }
 
   @Test
-  void shouldReturn_403_createProject() throws Exception {
+  void shouldReturn_403_createProjectStep() throws Exception {
     Instant deadline = LocalDateTime.of(2025, 7, 29, 0, 0).toInstant(ZoneOffset.UTC);
     ProjectStepCreateRequestDTO request =
         ProjectStepCreateRequestDTO.builder()
