@@ -105,6 +105,6 @@ public interface ProjectStepCommentApi {
       })
   @ResponseErrors
   @DeleteMapping("/{id}")
-  @Operation(description = "Delete project step by id.")
+  @Operation(description = "Delete project step comment by id.")
   ResponseEntity<SimpleResponse> deleteById(@Parameter() @PathVariable() UUID id);
 }

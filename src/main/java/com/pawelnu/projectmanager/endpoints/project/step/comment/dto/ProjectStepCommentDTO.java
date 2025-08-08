@@ -9,6 +9,8 @@ import lombok.Data;
 public class ProjectStepCommentDTO {
   private UUID id;
   private String comment;
+  private UUID projectId;
+  private String projectName;
   private UUID stepId;
   private String stepName;
   private UUID employeeId;
