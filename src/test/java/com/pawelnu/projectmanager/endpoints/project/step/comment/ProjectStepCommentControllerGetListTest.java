@@ -44,6 +44,7 @@ class ProjectStepCommentControllerGetListTest {
   @Autowired private MockMvc mockMvc;
   @Autowired private ObjectMapper objectMapper;
   private static final String BASE_URL = "/" + Path.API_PROJECT_STEP_COMMENTS;
+
   // TODO finish tests
   @Container
   static PostgreSQLContainer<?> postgres =

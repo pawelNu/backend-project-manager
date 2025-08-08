@@ -85,21 +85,24 @@ class ProjectStepCommentControllerCreateTest {
             .andReturn();
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
-    ProjectStepCommentDTO responseBody = objectMapper.readValue(contentAsString, ProjectStepCommentDTO.class);
+    ProjectStepCommentDTO responseBody =
+        objectMapper.readValue(contentAsString, ProjectStepCommentDTO.class);
     assertEquals(HttpStatus.CREATED.value(), status);
     assertNotNull(responseBody.getId());
     assertEquals(request.getComment(), responseBody.getComment());
     assertNotNull(responseBody.getCreated());
-    assertEquals(request.getProjectStepId(),responseBody.getStepId());
-    assertEquals(UUID.fromString("9e9885ce-86d7-4ce7-8936-2db459fc6530"), responseBody.getProjectId());
-    assertEquals(UUID.fromString("9e9885ce-86d7-4ce7-8936-2db459fc6530"), responseBody.getEmployeeId());
+    assertEquals(request.getProjectStepId(), responseBody.getStepId());
+    assertEquals(
+        UUID.fromString("9e9885ce-86d7-4ce7-8936-2db459fc6530"), responseBody.getProjectId());
+    assertEquals(
+        UUID.fromString("9e9885ce-86d7-4ce7-8936-2db459fc6530"), responseBody.getEmployeeId());
   }
 
   @Test
   void shouldReturn_400_createProject() throws Exception {
     ProjectStepCommentCreateRequestDTO request =
         ProjectStepCommentCreateRequestDTO.builder()
-            .comment("comment for test")
+            .comment("test")
             .projectStepId(UUID.fromString("9e9885ce-86d7-4ce7-8936-2db459fc6530"))
             .employeeId(UUID.fromString("cff1680a-e821-4218-8ec6-b0b4ab941fb0"))
             .build();
