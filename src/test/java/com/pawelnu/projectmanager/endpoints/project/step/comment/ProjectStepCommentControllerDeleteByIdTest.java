@@ -44,7 +44,6 @@ class ProjectStepCommentControllerDeleteByIdTest {
   @Autowired private ObjectMapper objectMapper;
   private static final String BASE_URL = "/" + Path.API_PROJECT_STEP_COMMENTS;
 
-  // TODO finish tests
   @Container
   static PostgreSQLContainer<?> postgres =
       new PostgreSQLContainer<>(Postgres.POSTGRES_17)
@@ -65,9 +64,9 @@ class ProjectStepCommentControllerDeleteByIdTest {
   }
 
   @Test
-  void shouldReturn_200_deleteProjectStepById_isDeletedFalse() throws Exception {
-    String projectStepId = "fb91749e-5a5f-4953-bb85-b176d98fb2fa";
-    String url = BASE_URL + "/" + projectStepId;
+  void shouldReturn_200_deleteProjectStepCommentById_isDeletedFalse() throws Exception {
+    String projectStepCommentId = "1f96b84d-98ad-429a-97a6-7be681ceffb8";
+    String url = BASE_URL + "/" + projectStepCommentId;
     MvcResult response =
         mockMvc
             .perform(delete(url).with(withJwt()).contentType(MediaType.APPLICATION_JSON))
@@ -76,13 +75,14 @@ class ProjectStepCommentControllerDeleteByIdTest {
     String contentAsString = response.getResponse().getContentAsString();
     SimpleResponse responseBody = objectMapper.readValue(contentAsString, SimpleResponse.class);
     assertEquals(HttpStatus.OK.value(), status);
-    assertEquals("Deleted project step with id: " + projectStepId, responseBody.getMessage());
+    assertEquals(
+        "Deleted project step comment with id: " + projectStepCommentId, responseBody.getMessage());
   }
 
   @Test
-  void shouldReturn_400_deleteProjectStepById_isDeletedFalse() throws Exception {
-    String projectStepId = "invalid-uuid";
-    String url = BASE_URL + "/" + projectStepId;
+  void shouldReturn_400_deleteProjectStepCommentById_isDeletedFalse() throws Exception {
+    String projectStepCommentId = "invalid-uuid";
+    String url = BASE_URL + "/" + projectStepCommentId;
     MvcResult response =
         mockMvc
             .perform(delete(url).with(withJwt()).contentType(MediaType.APPLICATION_JSON))
@@ -95,9 +95,9 @@ class ProjectStepCommentControllerDeleteByIdTest {
   }
 
   @Test
-  void shouldReturn_401_deleteProjectStepById_isDeletedFalse() throws Exception {
-    String projectStepId = "4c7a2cc5-1e03-4337-8901-93c0b46585af";
-    String url = BASE_URL + "/" + projectStepId;
+  void shouldReturn_401_deleteProjectStepCommentById_isDeletedFalse() throws Exception {
+    String projectStepCommentId = "1f96b84d-98ad-429a-97a6-7be681ceffb8";
+    String url = BASE_URL + "/" + projectStepCommentId;
     MvcResult response =
         mockMvc.perform(delete(url).contentType(MediaType.APPLICATION_JSON)).andReturn();
     int status = response.getResponse().getStatus();
@@ -108,9 +108,9 @@ class ProjectStepCommentControllerDeleteByIdTest {
   }
 
   @Test
-  void shouldReturn_403_deleteProjectStepById_isDeletedFalse() throws Exception {
-    String projectStepId = "4c7a2cc5-1e03-4337-8901-93c0b46585af";
-    String url = BASE_URL + "/" + projectStepId;
+  void shouldReturn_403_deleteProjectStepCommentById_isDeletedFalse() throws Exception {
+    String projectStepCommentId = "1f96b84d-98ad-429a-97a6-7be681ceffb8";
+    String url = BASE_URL + "/" + projectStepCommentId;
     MvcResult response =
         mockMvc
             .perform(delete(url).with(withBadJwt()).contentType(MediaType.APPLICATION_JSON))
@@ -123,9 +123,9 @@ class ProjectStepCommentControllerDeleteByIdTest {
   }
 
   @Test
-  void shouldReturn_404_deleteProjectStepById_isDeletedFalse() throws Exception {
-    String projectStepId = "4768856c-6cc0-40ad-8106-58ad8d2e9923";
-    String url = BASE_URL + "/" + projectStepId;
+  void shouldReturn_404_deleteProjectStepCommentById_isDeletedFalse() throws Exception {
+    String projectStepCommentId = "75fe7aad-51d9-4049-ae11-a65690849432";
+    String url = BASE_URL + "/" + projectStepCommentId;
     MvcResult response =
         mockMvc
             .perform(delete(url).with(withJwt()).contentType(MediaType.APPLICATION_JSON))
@@ -134,13 +134,14 @@ class ProjectStepCommentControllerDeleteByIdTest {
     String contentAsString = response.getResponse().getContentAsString();
     ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
     assertEquals(HttpStatus.NOT_FOUND.value(), status);
-    assertEquals(MSG.PROJECT_STEP_NOT_FOUND + projectStepId, responseBody.getMessage());
+    assertEquals(
+        MSG.PROJECT_STEP_COMMENT_NOT_FOUND + projectStepCommentId, responseBody.getMessage());
   }
 
   @Test
-  void shouldReturn_404_deleteProjectStepById_isDeletedTrue() throws Exception {
-    String projectStepId = "fda8d9fd-fe63-4b89-9c9a-96cd33e616ff";
-    String url = BASE_URL + "/" + projectStepId;
+  void shouldReturn_404_deleteProjectStepCommentById_isDeletedTrue() throws Exception {
+    String projectStepCommentId = "610b92c2-8a12-47c2-977f-30f19769f265";
+    String url = BASE_URL + "/" + projectStepCommentId;
     MvcResult response =
         mockMvc
             .perform(delete(url).with(withJwt()).contentType(MediaType.APPLICATION_JSON))
@@ -149,6 +150,7 @@ class ProjectStepCommentControllerDeleteByIdTest {
     String contentAsString = response.getResponse().getContentAsString();
     SimpleResponse responseBody = objectMapper.readValue(contentAsString, SimpleResponse.class);
     assertEquals(HttpStatus.NOT_FOUND.value(), status);
-    assertEquals(MSG.PROJECT_STEP_NOT_FOUND + projectStepId, responseBody.getMessage());
+    assertEquals(
+        MSG.PROJECT_STEP_COMMENT_NOT_FOUND + projectStepCommentId, responseBody.getMessage());
   }
 }
