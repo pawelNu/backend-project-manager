@@ -12,6 +12,7 @@ public class ProjectStepCommentCreateRequestDTO {
   @NotNull
   @Size(min = 5, message = "Comment has to be at least 5 characters")
   private String comment;
+
   @NotNull private UUID projectStepId;
   @NotNull private UUID employeeId;
 }
