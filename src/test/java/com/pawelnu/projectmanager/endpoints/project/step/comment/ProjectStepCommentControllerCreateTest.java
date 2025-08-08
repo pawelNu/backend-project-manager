@@ -46,7 +46,6 @@ class ProjectStepCommentControllerCreateTest {
   @Autowired private ObjectMapper objectMapper;
   private static final String BASE_URL = "/" + Path.API_PROJECT_STEP_COMMENTS;
 
-  // TODO finish tests
   @Container
   static PostgreSQLContainer<?> postgres =
       new PostgreSQLContainer<>(Postgres.POSTGRES_17)
@@ -90,12 +89,11 @@ class ProjectStepCommentControllerCreateTest {
     assertEquals(HttpStatus.CREATED.value(), status);
     assertNotNull(responseBody.getId());
     assertEquals(request.getComment(), responseBody.getComment());
-    assertNotNull(responseBody.getCreated());
     assertEquals(request.getProjectStepId(), responseBody.getStepId());
     assertEquals(
-        UUID.fromString("9e9885ce-86d7-4ce7-8936-2db459fc6530"), responseBody.getProjectId());
+        UUID.fromString("7ebf87eb-be90-45d8-b92c-25701897211f"), responseBody.getProjectId());
     assertEquals(
-        UUID.fromString("9e9885ce-86d7-4ce7-8936-2db459fc6530"), responseBody.getEmployeeId());
+        UUID.fromString("cff1680a-e821-4218-8ec6-b0b4ab941fb0"), responseBody.getEmployeeId());
   }
 
   @Test

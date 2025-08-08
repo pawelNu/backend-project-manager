@@ -52,9 +52,9 @@ public class ProjectStepCommentService {
             .step(projectStepEntity)
             .employee(employeeEntity)
             .build();
-    ProjectStepCommentEntity savedCompany =
+    ProjectStepCommentEntity savedProjectStep =
         projectStepCommentRepository.save(projectStepCommentEntity);
-    return projectStepCommentMapper.toDTO(savedCompany);
+    return projectStepCommentMapper.toDTO(savedProjectStep);
   }
 
   public ProjectStepCommentListResponseDTO filter(String sort, String range, String filter) {
@@ -85,9 +85,9 @@ public class ProjectStepCommentService {
     projectStepCommentToEdit.setComment(body.getComment());
     projectStepCommentToEdit.setStep(projectStep);
     projectStepCommentToEdit.setEmployee(employeeEntity);
-    ProjectStepCommentEntity updatedProject =
+    ProjectStepCommentEntity updatedProjectStep =
         projectStepCommentRepository.save(projectStepCommentToEdit);
-    return projectStepCommentMapper.toDTO(updatedProject);
+    return projectStepCommentMapper.toDTO(updatedProjectStep);
   }
 
   public SimpleResponse deleteById(UUID id) {
