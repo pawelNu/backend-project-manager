@@ -1,5 +1,6 @@
 package com.pawelnu.projectmanager.endpoints.project.step.comment.dto;
 
+import java.time.Instant;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,6 +10,7 @@ import lombok.Data;
 public class ProjectStepCommentRowDTO {
   private UUID id;
   private String comment;
+  private Instant created;
   private UUID projectId;
   private String projectName;
   private UUID stepId;

@@ -13,6 +13,7 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -54,8 +55,8 @@ public class ProjectStepCommentQueryRepository {
       allConditions.and(
           project.name.likeIgnoreCase("%" + params.getFilters().get(Field.projectName) + "%"));
     }
-    if (params.getFilters().containsKey(Field.assignedEmployee)) {
-      String employeeFilter = "%" + params.getFilters().get(Field.assignedEmployee) + "%";
+    if (params.getFilters().containsKey(Field.employeeName)) {
+      String employeeFilter = "%" + params.getFilters().get(Field.employeeName) + "%";
 
       BooleanExpression employeeCondition =
           employee
@@ -65,8 +66,12 @@ public class ProjectStepCommentQueryRepository {
 
       allConditions.and(employeeCondition);
     }
+    if (params.getFilters().containsKey(Field.created)) {
+      Instant startInstant = Shared.parseDate(params.getFilters().get(Field.created));
+      allConditions.and(projectStepComment.created.loe(startInstant));
+    }
 
-    allConditions.and(projectStep.isDeleted.isFalse());
+    allConditions.and(projectStepComment.isDeleted.isFalse());
 
     JPAQuery<ProjectStepCommentRowDTO> query =
         queryFactory
@@ -75,6 +80,7 @@ public class ProjectStepCommentQueryRepository {
                     ProjectStepCommentRowDTO.class,
                     projectStepComment.id,
                     projectStepComment.comment,
+                    projectStepComment.created,
                     project.id,
                     project.name,
                     projectStep.id,

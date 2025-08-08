@@ -81,7 +81,7 @@ public class ProjectStepCommentService {
   public ProjectStepCommentDTO editById(UUID id, ProjectStepCommentEditRequestDTO body) {
     ProjectStepCommentEntity projectStepCommentToEdit = getProjectStepCommentEntityById(id);
     ProjectStepEntity projectStep =
-        projectStepService.getProjectStepEntityById(body.getProjectStepId());
+        projectStepService.getProjectStepEntityById(body.getStepId());
     EmployeeEntity employeeEntity = employeeService.getEmployeeEntityById(body.getEmployeeId());
     projectStepCommentToEdit.setComment(body.getComment());
     projectStepCommentToEdit.setStep(projectStep);

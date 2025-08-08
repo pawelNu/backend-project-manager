@@ -12,7 +12,7 @@ public class ProjectStepRowDTO {
   private String name;
   private UUID projectId;
   private String projectName;
-  private UUID priorityId;
+  private UUID priorityValueId;
   private String priorityValue;
   private UUID assignedEmployeeId;
   private String employeeFirstName;

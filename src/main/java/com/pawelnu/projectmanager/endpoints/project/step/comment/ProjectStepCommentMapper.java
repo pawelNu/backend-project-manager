@@ -25,6 +25,8 @@ public interface ProjectStepCommentMapper {
   //        .build();
   //  }
 
+  @Mapping(source = "step.project.id", target = "projectId")
+  @Mapping(source = "step.project.name", target = "projectName")
   @Mapping(source = "step.id", target = "stepId")
   @Mapping(source = "step.name", target = "stepName")
   @Mapping(source = "employee.id", target = "employeeId")

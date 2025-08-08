@@ -6,6 +6,6 @@ import lombok.Data;
 @Data
 public class ProjectStepCommentEditRequestDTO {
   private String comment;
-  private UUID projectStepId;
+  private UUID stepId;
   private UUID employeeId;
 }
