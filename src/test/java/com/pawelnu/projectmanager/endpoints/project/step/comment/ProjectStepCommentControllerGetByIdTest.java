@@ -9,7 +9,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pawelnu.projectmanager.config.security.jwt.JwtUtils;
-import com.pawelnu.projectmanager.endpoints.project.step.dto.ProjectStepDTO;
+import com.pawelnu.projectmanager.endpoints.project.step.comment.dto.ProjectStepCommentDTO;
 import com.pawelnu.projectmanager.exception.NotFoundException;
 import com.pawelnu.projectmanager.exception.model.ReactAdminError;
 import com.pawelnu.projectmanager.utils.Consts.MSG;
@@ -46,7 +46,6 @@ class ProjectStepCommentControllerGetByIdTest {
   @Autowired private ObjectMapper objectMapper;
   private static final String BASE_URL = "/" + Path.API_PROJECT_STEP_COMMENTS;
 
-  // TODO finish tests
   @Container
   static PostgreSQLContainer<?> postgres =
       new PostgreSQLContainer<>(Postgres.POSTGRES_17)
@@ -67,26 +66,29 @@ class ProjectStepCommentControllerGetByIdTest {
   }
 
   @Test
-  void shouldReturn_200_getProjectStepById() throws Exception {
-    String projectStepId = "0565848e-6138-413c-a80b-e53153f30f89";
-    String url = BASE_URL + "/" + projectStepId;
+  void shouldReturn_200_getProjectStepCommentById() throws Exception {
+    String projectStepCommentId = "1aa5c1b9-2a0c-49c7-ad85-b84da2c71fe7";
+    String url = BASE_URL + "/" + projectStepCommentId;
     MvcResult response = mockMvc.perform(get(url).with(withJwt())).andReturn();
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
-    ProjectStepDTO responseBody = objectMapper.readValue(contentAsString, ProjectStepDTO.class);
+    ProjectStepCommentDTO responseBody =
+        objectMapper.readValue(contentAsString, ProjectStepCommentDTO.class);
     assertEquals(HttpStatus.OK.value(), status);
-    assertEquals(UUID.fromString(projectStepId), responseBody.getId());
-    assertEquals("step 1", responseBody.getName());
-    assertEquals("steps checker", responseBody.getProjectName());
-    assertEquals("VERY_LOW", responseBody.getPriorityValue());
-    assertEquals("Alleen Koepp", responseBody.getAssignedEmployee());
-    assertEquals(Instant.parse("2025-08-25T00:00:00Z"), responseBody.getDeadline());
+    assertEquals(UUID.fromString(projectStepCommentId), responseBody.getId());
+    assertEquals("second comment", responseBody.getComment());
+    assertEquals(Instant.parse("2025-08-06T00:00:00Z"), responseBody.getCreated());
+    assertEquals(
+        UUID.fromString("7ebf87eb-be90-45d8-b92c-25701897211f"), responseBody.getProjectId());
+    assertEquals(UUID.fromString("2b6c91be-8c18-46d0-8626-e9af7966c71a"), responseBody.getStepId());
+    assertEquals(
+        UUID.fromString("b7b06e2d-d4f7-4cab-872a-3861288b5da1"), responseBody.getEmployeeId());
   }
 
   @Test
-  void shouldReturn_400_getProjectStepById() throws Exception {
-    String projectStepId = "invalid-uuid";
-    String url = BASE_URL + "/" + projectStepId;
+  void shouldReturn_400_getProjectStepCommentById() throws Exception {
+    String projectStepCommentId = "invalid-uuid";
+    String url = BASE_URL + "/" + projectStepCommentId;
     MvcResult response = mockMvc.perform(get(url).with(withJwt())).andReturn();
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
@@ -96,9 +98,9 @@ class ProjectStepCommentControllerGetByIdTest {
   }
 
   @Test
-  void shouldReturn_401_getProjectStepById() throws Exception {
-    String projectStepId = "cf578fec-006b-4604-a5e8-5ad1b3ea2be5";
-    String url = BASE_URL + "/" + projectStepId;
+  void shouldReturn_401_getProjectStepCommentById() throws Exception {
+    String projectStepCommentId = "cf578fec-006b-4604-a5e8-5ad1b3ea2be5";
+    String url = BASE_URL + "/" + projectStepCommentId;
     MvcResult response = mockMvc.perform(get(url)).andReturn();
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
@@ -108,9 +110,9 @@ class ProjectStepCommentControllerGetByIdTest {
   }
 
   @Test
-  void shouldReturn_403_getProjectStepById() throws Exception {
-    String projectStepId = "cf578fec-006b-4604-a5e8-5ad1b3ea2be5";
-    String url = BASE_URL + "/" + projectStepId;
+  void shouldReturn_403_getProjectStepCommentById() throws Exception {
+    String projectStepCommentId = "cf578fec-006b-4604-a5e8-5ad1b3ea2be5";
+    String url = BASE_URL + "/" + projectStepCommentId;
     MvcResult response = mockMvc.perform(get(url).with(withBadJwt())).andReturn();
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
@@ -120,28 +122,30 @@ class ProjectStepCommentControllerGetByIdTest {
   }
 
   @Test
-  void shouldReturn_404_getProjectStepById() throws Exception {
-    String projectStepId = "89258385-aa00-47d3-bafe-88bc1d56e6ee";
-    String url = BASE_URL + "/" + projectStepId;
+  void shouldReturn_404_getProjectStepCommentById() throws Exception {
+    String projectStepCommentId = "89258385-aa00-47d3-bafe-88bc1d56e6ee";
+    String url = BASE_URL + "/" + projectStepCommentId;
     MvcResult response = mockMvc.perform(get(url).with(withJwt())).andReturn();
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
     NotFoundException responseBody =
         objectMapper.readValue(contentAsString, NotFoundException.class);
     assertEquals(HttpStatus.NOT_FOUND.value(), status);
-    assertEquals(MSG.PROJECT_STEP_NOT_FOUND + projectStepId, responseBody.getMessage());
+    assertEquals(
+        MSG.PROJECT_STEP_COMMENT_NOT_FOUND + projectStepCommentId, responseBody.getMessage());
   }
 
   @Test
-  void shouldReturn_404_getProjectStepById_isDeletedTrue() throws Exception {
-    String projectStepId = "9d93bd6d-e48a-4bad-b4f5-6f71d27c0342";
-    String url = BASE_URL + "/" + projectStepId;
+  void shouldReturn_404_getProjectStepCommentById_isDeletedTrue() throws Exception {
+    String projectStepCommentId = "610b92c2-8a12-47c2-977f-30f19769f265";
+    String url = BASE_URL + "/" + projectStepCommentId;
     MvcResult response = mockMvc.perform(get(url).with(withJwt())).andReturn();
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
     NotFoundException responseBody =
         objectMapper.readValue(contentAsString, NotFoundException.class);
     assertEquals(HttpStatus.NOT_FOUND.value(), status);
-    assertEquals(MSG.PROJECT_STEP_NOT_FOUND + projectStepId, responseBody.getMessage());
+    assertEquals(
+        MSG.PROJECT_STEP_COMMENT_NOT_FOUND + projectStepCommentId, responseBody.getMessage());
   }
 }
