@@ -1,6 +1,7 @@
 package com.pawelnu.projectmanager.endpoints.ticket;
 
 import com.pawelnu.projectmanager.endpoints.ticket.dto.TicketDTO;
+import com.pawelnu.projectmanager.endpoints.ticket.dto.TicketRowDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -17,7 +18,6 @@ public interface TicketMapper {
   @Mapping(source = "step.name", target = "stepName")
   TicketDTO toDTO(TicketEntity entity);
 
-  //  @Mapping(source = ".", target = "employeeName", qualifiedByName = "concatEmployeeName")
-  //  ProjectStepCommentDTO toDTO(ProjectStepCommentRowDTO row);
-
+//  @Mapping(source = ".", target = "employeeName", qualifiedByName = "concatEmployeeName")
+  TicketDTO toDTO(TicketRowDTO row); // TODO fix mapper
 }

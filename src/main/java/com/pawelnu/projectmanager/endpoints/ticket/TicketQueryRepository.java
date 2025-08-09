@@ -5,7 +5,7 @@ import com.pawelnu.projectmanager.endpoints.company.employee.QEmployeeEntity;
 import com.pawelnu.projectmanager.endpoints.project.QProjectEntity;
 import com.pawelnu.projectmanager.endpoints.project.step.ProjectStepEntity;
 import com.pawelnu.projectmanager.endpoints.project.step.QProjectStepEntity;
-import com.pawelnu.projectmanager.endpoints.project.step.dto.ProjectStepRowDTO;
+import com.pawelnu.projectmanager.endpoints.ticket.dto.TicketRowDTO;
 import com.pawelnu.projectmanager.utils.PageableParams;
 import com.pawelnu.projectmanager.utils.Shared;
 import com.pawelnu.projectmanager.utils.Shared.Field;
@@ -44,7 +44,8 @@ public class TicketQueryRepository {
     throw new NotImplementedException("not implemented!");
   }
 
-  public List<ProjectStepRowDTO> getList(PageableParams params) {
+  // TODO fix implementation
+  public List<TicketRowDTO> getList(PageableParams params) {
     BooleanBuilder allConditions = new BooleanBuilder();
     if (params.getFilters().containsKey(Field.name)) {
       allConditions.and(
@@ -77,11 +78,11 @@ public class TicketQueryRepository {
 
     allConditions.and(projectStep.isDeleted.isFalse());
 
-    JPAQuery<ProjectStepRowDTO> query =
+    JPAQuery<TicketRowDTO> query =
         queryFactory
             .select(
                 Projections.constructor(
-                    ProjectStepRowDTO.class,
+                    TicketRowDTO.class,
                     projectStep.id,
                     projectStep.name,
                     project.id,
@@ -108,17 +109,18 @@ public class TicketQueryRepository {
     return query.fetch();
   }
 
-  private void applySorting(JPAQuery<ProjectStepRowDTO> query, String sortField, String sortDir) {
+  private void applySorting(JPAQuery<TicketRowDTO> query, String sortField, String sortDir) {
     Order order = Sort.Direction.fromString(sortDir) == Sort.Direction.ASC ? Order.ASC : Order.DESC;
     switch (sortField) {
-      case "name" -> query.orderBy(
-          order == Order.ASC ? projectStep.name.asc() : projectStep.name.desc());
-      case "projectName" -> query.orderBy(
-          order == Order.ASC ? project.name.asc() : project.name.desc());
-      case "assignedEmployee" -> query.orderBy(
-          order == Order.ASC ? employee.lastName.asc() : employee.lastName.desc());
-      case "deadline" -> query.orderBy(
-          order == Order.ASC ? projectStep.deadline.asc() : projectStep.deadline.desc());
+      case "name" ->
+          query.orderBy(order == Order.ASC ? projectStep.name.asc() : projectStep.name.desc());
+      case "projectName" ->
+          query.orderBy(order == Order.ASC ? project.name.asc() : project.name.desc());
+      case "assignedEmployee" ->
+          query.orderBy(order == Order.ASC ? employee.lastName.asc() : employee.lastName.desc());
+      case "deadline" ->
+          query.orderBy(
+              order == Order.ASC ? projectStep.deadline.asc() : projectStep.deadline.desc());
       default -> query.orderBy(projectStep.deadline.desc());
     }
   }

@@ -3,8 +3,6 @@ package com.pawelnu.projectmanager.endpoints.ticket;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pawelnu.projectmanager.endpoints.category.value.CategoryValueEntity;
 import com.pawelnu.projectmanager.endpoints.category.value.CategoryValueService;
-import com.pawelnu.projectmanager.endpoints.company.CompanyEntity;
-import com.pawelnu.projectmanager.endpoints.company.employee.EmployeeEntity;
 import com.pawelnu.projectmanager.endpoints.project.ProjectEntity;
 import com.pawelnu.projectmanager.endpoints.project.ProjectService;
 import com.pawelnu.projectmanager.endpoints.project.step.ProjectStepEntity;
@@ -63,21 +61,21 @@ public class TicketService {
   }
 
   public TicketDTO getById(UUID id) {
-    ProjectEntity companyEntity = getTicketEntityById(id);
+    TicketEntity companyEntity = getTicketEntityById(id);
     return ticketMapper.toDTO(companyEntity);
   }
 
   public TicketEntity getTicketEntityById(UUID id) {
-    return ticketQueryRepository
+    return ticketRepository
         .findById(id)
-        .orElseThrow(() -> new NotFoundException(MSG.PROJECT_NOT_FOUND + id));
+        .orElseThrow(() -> new NotFoundException(MSG.TICKET_NOT_FOUND + id));
   }
 
   public SimpleResponse deleteById(UUID id) {
     TicketEntity projectToDelete = getTicketEntityById(id);
     projectToDelete.setIsDeleted(true);
     TicketEntity projectDeleted = ticketRepository.save(projectToDelete);
-    String item = "project";
+    String item = "ticket";
     if (projectDeleted.getIsDeleted()) {
       return SimpleResponse.builder().message(Shared.deleteMessage(item, id)).build();
     } else {
@@ -86,28 +84,29 @@ public class TicketService {
   }
 
   public TicketDTO editById(UUID id, TicketEditRequestDTO body) {
-    TicketEntity projectToEdit = getTicketEntityById(id);
-    CategoryValueEntity projectCategory =
-        categoryValueService.getCategoryValueById(body.getCategoryValueId());
-    CompanyEntity companyEntity = companyService.getCompanyEntityById(body.getCompanyId());
-    EmployeeEntity employeeEntity =
-        employeeService.getEmployeeEntityById(body.getAssignedEmployeeId());
-    CategoryValueEntity projectPriority =
-        categoryValueService.getCategoryValueById(body.getPriorityValueId());
-    projectToEdit.setName(body.getName());
-    projectToEdit.setCategoryValue(projectCategory);
-    projectToEdit.setCompany(companyEntity);
-    projectToEdit.setAssignedEmployee(employeeEntity);
-    projectToEdit.setPriorityValue(projectPriority);
-    ProjectEntity updatedProject = ticketRepository.save(projectToEdit);
-    return ticketMapper.toDTO(updatedProject);
+    TicketEntity ticketToEdit = getTicketEntityById(id);
+    CategoryValueEntity ticketCategory =
+        categoryValueService.getCategoryValueById(body.getTicketCategoryId());
+    CategoryValueEntity ticketPriority =
+        categoryValueService.getCategoryValueById(body.getTicketPriorityId());
+    ProjectEntity projectEntity = projectService.getProjectEntityById(body.getProjectId());
+    ProjectStepEntity stepEntity = projectStepService.getProjectStepEntityById(body.getStepId());
+    ticketToEdit.setTitle(body.getTitle());
+    ticketToEdit.setCategory(ticketCategory);
+    ticketToEdit.setDeadline(body.getDeadline());
+    ticketToEdit.setPriority(ticketPriority);
+    ticketToEdit.setAdditionalDetails(body.getAdditionalDetails());
+    ticketToEdit.setProject(projectEntity);
+    ticketToEdit.setStep(stepEntity);
+    TicketEntity updatedTicket = ticketRepository.save(ticketToEdit);
+    return ticketMapper.toDTO(updatedTicket);
   }
 
   public TicketListResponseDTO filter(String sort, String range, String filter) {
     PageableParams params = Shared.preparePageableParams(objectMapper, sort, range, filter);
 
-    List<TicketRowDTO> results = projectStepQueryRepository.getList(params);
-    List<TicketDTO> projectDTOs = results.stream().map(projectStepMapper::toDTO).toList();
+    List<TicketRowDTO> results = ticketQueryRepository.getList(params);
+    List<TicketDTO> projectDTOs = results.stream().map(ticketMapper::toDTO).toList();
     String contentRange =
         Shared.prepareContentRange(
             results.isEmpty() ? 0 : results.getFirst().getTotalElements(),

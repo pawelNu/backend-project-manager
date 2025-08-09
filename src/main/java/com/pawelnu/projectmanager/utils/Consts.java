@@ -37,5 +37,6 @@ public final class Consts {
     public static final String PROJECT_STEP_NOT_FOUND = "Project step not found with id: ";
     public static final String PROJECT_STEP_COMMENT_NOT_FOUND =
         "Project step comment not found with id: ";
+    public static final String TICKET_NOT_FOUND = "Ticket not found with id: ";
   }
 }
