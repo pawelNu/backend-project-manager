@@ -1,4 +1,4 @@
-package com.pawelnu.projectmanager.endpoints.project.step;
+package com.pawelnu.projectmanager.endpoints.project.step.comment;
 
 import static com.pawelnu.projectmanager.utils.Utils.accessDeniedError;
 import static com.pawelnu.projectmanager.utils.Utils.unauthorizedError;
@@ -9,17 +9,14 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pawelnu.projectmanager.config.security.jwt.JwtUtils;
-import com.pawelnu.projectmanager.endpoints.project.step.dto.ProjectStepCreateRequestDTO;
-import com.pawelnu.projectmanager.endpoints.project.step.dto.ProjectStepDTO;
+import com.pawelnu.projectmanager.endpoints.project.step.comment.dto.ProjectStepCommentCreateRequestDTO;
+import com.pawelnu.projectmanager.endpoints.project.step.comment.dto.ProjectStepCommentDTO;
 import com.pawelnu.projectmanager.exception.model.ReactAdminBadRequestError;
 import com.pawelnu.projectmanager.exception.model.ReactAdminError;
 import com.pawelnu.projectmanager.utils.Path;
 import com.pawelnu.projectmanager.utils.Utils;
 import com.pawelnu.projectmanager.utils.Utils.Postgres;
 import com.pawelnu.projectmanager.utils.Utils.SpringDataSource;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
@@ -43,11 +40,11 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 @Testcontainers
 @ActiveProfiles("test")
 @Slf4j
-class ProjectStepControllerCreateTest {
+class ProjectStepCommentControllerCreateTest {
   @Autowired private JwtUtils jwtUtils;
   @Autowired private MockMvc mockMvc;
   @Autowired private ObjectMapper objectMapper;
-  private static final String BASE_URL = "/" + Path.API_PROJECT_STEPS;
+  private static final String BASE_URL = "/" + Path.API_PROJECT_STEP_COMMENTS;
 
   @Container
   static PostgreSQLContainer<?> postgres =
@@ -69,15 +66,12 @@ class ProjectStepControllerCreateTest {
   }
 
   @Test
-  void shouldReturn_201_createProjectStep() throws Exception {
-    Instant deadline = LocalDateTime.of(2025, 7, 29, 12, 0).toInstant(ZoneOffset.UTC);
-    ProjectStepCreateRequestDTO request =
-        ProjectStepCreateRequestDTO.builder()
-            .name("step for test")
-            .projectId(UUID.fromString("bc6b9fee-e9d7-4692-853e-d6d2c00383b3"))
-            .priorityValueId(UUID.fromString("26da6b3c-2079-47cf-a00f-06ea28702eb5"))
-            .assignedEmployeeId(UUID.fromString("cff1680a-e821-4218-8ec6-b0b4ab941fb0"))
-            .deadline(deadline)
+  void shouldReturn_201_createProject() throws Exception {
+    ProjectStepCommentCreateRequestDTO request =
+        ProjectStepCommentCreateRequestDTO.builder()
+            .comment("comment for test")
+            .projectStepId(UUID.fromString("9e9885ce-86d7-4ce7-8936-2db459fc6530"))
+            .employeeId(UUID.fromString("cff1680a-e821-4218-8ec6-b0b4ab941fb0"))
             .build();
     String requestBody = objectMapper.writeValueAsString(request);
     MvcResult response =
@@ -90,26 +84,25 @@ class ProjectStepControllerCreateTest {
             .andReturn();
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
-    ProjectStepDTO responseBody = objectMapper.readValue(contentAsString, ProjectStepDTO.class);
+    ProjectStepCommentDTO responseBody =
+        objectMapper.readValue(contentAsString, ProjectStepCommentDTO.class);
     assertEquals(HttpStatus.CREATED.value(), status);
     assertNotNull(responseBody.getId());
-    assertEquals(request.getName(), responseBody.getName());
-    assertEquals("project for project steps tetes", responseBody.getProjectName());
-    assertEquals("MEDIUM", responseBody.getPriorityValue());
-    assertEquals("Janita Jakubowski", responseBody.getAssignedEmployee());
-    assertEquals(Instant.parse("2025-07-29T12:00:00Z"), responseBody.getDeadline());
+    assertEquals(request.getComment(), responseBody.getComment());
+    assertEquals(request.getProjectStepId(), responseBody.getStepId());
+    assertEquals(
+        UUID.fromString("7ebf87eb-be90-45d8-b92c-25701897211f"), responseBody.getProjectId());
+    assertEquals(
+        UUID.fromString("cff1680a-e821-4218-8ec6-b0b4ab941fb0"), responseBody.getEmployeeId());
   }
 
   @Test
-  void shouldReturn_400_createProjectStep() throws Exception {
-    Instant deadline = LocalDateTime.of(2025, 7, 29, 0, 0).toInstant(ZoneOffset.UTC);
-    ProjectStepCreateRequestDTO request =
-        ProjectStepCreateRequestDTO.builder()
-            .name("test")
-            .projectId(UUID.fromString("bc6b9fee-e9d7-4692-853e-d6d2c00383b3"))
-            .priorityValueId(UUID.fromString("26da6b3c-2079-47cf-a00f-06ea28702eb5"))
-            .assignedEmployeeId(UUID.fromString("cff1680a-e821-4218-8ec6-b0b4ab941fb0"))
-            .deadline(deadline)
+  void shouldReturn_400_createProject() throws Exception {
+    ProjectStepCommentCreateRequestDTO request =
+        ProjectStepCommentCreateRequestDTO.builder()
+            .comment("test")
+            .projectStepId(UUID.fromString("9e9885ce-86d7-4ce7-8936-2db459fc6530"))
+            .employeeId(UUID.fromString("cff1680a-e821-4218-8ec6-b0b4ab941fb0"))
             .build();
     String requestBody = objectMapper.writeValueAsString(request);
     MvcResult response =
@@ -126,19 +119,16 @@ class ProjectStepControllerCreateTest {
         objectMapper.readValue(contentAsString, ReactAdminBadRequestError.class);
     assertEquals(HttpStatus.BAD_REQUEST.value(), status);
     assertEquals(
-        "Project step name must be 5-255 characters", responseBody.getErrors().get("name"));
+        "Comment has to be at least 5 characters", responseBody.getErrors().get("comment"));
   }
 
   @Test
-  void shouldReturn_401_createProjectStep() throws Exception {
-    Instant deadline = LocalDateTime.of(2025, 7, 29, 0, 0).toInstant(ZoneOffset.UTC);
-    ProjectStepCreateRequestDTO request =
-        ProjectStepCreateRequestDTO.builder()
-            .name("step for test")
-            .projectId(UUID.fromString("bc6b9fee-e9d7-4692-853e-d6d2c00383b3"))
-            .priorityValueId(UUID.fromString("26da6b3c-2079-47cf-a00f-06ea28702eb5"))
-            .assignedEmployeeId(UUID.fromString("cff1680a-e821-4218-8ec6-b0b4ab941fb0"))
-            .deadline(deadline)
+  void shouldReturn_401_createProject() throws Exception {
+    ProjectStepCommentCreateRequestDTO request =
+        ProjectStepCommentCreateRequestDTO.builder()
+            .comment("comment for test")
+            .projectStepId(UUID.fromString("9e9885ce-86d7-4ce7-8936-2db459fc6530"))
+            .employeeId(UUID.fromString("cff1680a-e821-4218-8ec6-b0b4ab941fb0"))
             .build();
     String requestBody = objectMapper.writeValueAsString(request);
     MvcResult response =
@@ -153,15 +143,12 @@ class ProjectStepControllerCreateTest {
   }
 
   @Test
-  void shouldReturn_403_createProjectStep() throws Exception {
-    Instant deadline = LocalDateTime.of(2025, 7, 29, 0, 0).toInstant(ZoneOffset.UTC);
-    ProjectStepCreateRequestDTO request =
-        ProjectStepCreateRequestDTO.builder()
-            .name("step for test")
-            .projectId(UUID.fromString("bc6b9fee-e9d7-4692-853e-d6d2c00383b3"))
-            .priorityValueId(UUID.fromString("26da6b3c-2079-47cf-a00f-06ea28702eb5"))
-            .assignedEmployeeId(UUID.fromString("cff1680a-e821-4218-8ec6-b0b4ab941fb0"))
-            .deadline(deadline)
+  void shouldReturn_403_createProject() throws Exception {
+    ProjectStepCommentCreateRequestDTO request =
+        ProjectStepCommentCreateRequestDTO.builder()
+            .comment("comment for test")
+            .projectStepId(UUID.fromString("9e9885ce-86d7-4ce7-8936-2db459fc6530"))
+            .employeeId(UUID.fromString("cff1680a-e821-4218-8ec6-b0b4ab941fb0"))
             .build();
     String requestBody = objectMapper.writeValueAsString(request);
     MvcResult response =

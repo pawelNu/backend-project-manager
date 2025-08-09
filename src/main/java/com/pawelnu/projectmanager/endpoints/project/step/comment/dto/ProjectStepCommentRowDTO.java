@@ -1,4 +1,4 @@
-package com.pawelnu.projectmanager.endpoints.project.step.dto;
+package com.pawelnu.projectmanager.endpoints.project.step.comment.dto;
 
 import java.time.Instant;
 import java.util.UUID;
@@ -7,17 +7,17 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class ProjectStepRowDTO {
+public class ProjectStepCommentRowDTO {
   private UUID id;
-  private String name;
+  private String comment;
+  private Instant created;
   private UUID projectId;
   private String projectName;
-  private UUID priorityValueId;
-  private String priorityValue;
-  private UUID assignedEmployeeId;
+  private UUID stepId;
+  private String stepName;
+  private UUID employeeId;
   private String employeeFirstName;
   private String employeeLastName;
-  private Instant deadline;
   private Long totalElements;
   private Integer totalPages;
 }

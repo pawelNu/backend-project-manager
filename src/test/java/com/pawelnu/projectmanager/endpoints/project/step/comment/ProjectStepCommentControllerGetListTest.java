@@ -1,4 +1,4 @@
-package com.pawelnu.projectmanager.endpoints.project.step;
+package com.pawelnu.projectmanager.endpoints.project.step.comment;
 
 import static com.pawelnu.projectmanager.utils.Utils.unauthorizedError;
 import static com.pawelnu.projectmanager.utils.Utils.withBadJwt;
@@ -12,6 +12,7 @@ import com.pawelnu.projectmanager.config.security.jwt.JwtUtils;
 import com.pawelnu.projectmanager.endpoints.project.step.dto.ProjectStepDTO;
 import com.pawelnu.projectmanager.exception.model.ReactAdminError;
 import com.pawelnu.projectmanager.utils.Path;
+import com.pawelnu.projectmanager.utils.Shared.Field;
 import com.pawelnu.projectmanager.utils.Utils;
 import com.pawelnu.projectmanager.utils.Utils.Postgres;
 import com.pawelnu.projectmanager.utils.Utils.SpringDataSource;
@@ -39,11 +40,11 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 @Testcontainers
 @ActiveProfiles("test")
 @Slf4j
-class ProjectStepControllerGetListTest {
+class ProjectStepCommentControllerGetListTest {
   @Autowired private JwtUtils jwtUtils;
   @Autowired private MockMvc mockMvc;
   @Autowired private ObjectMapper objectMapper;
-  private static final String BASE_URL = "/" + Path.API_PROJECT_STEPS;
+  private static final String BASE_URL = "/" + Path.API_PROJECT_STEP_COMMENTS;
 
   @Container
   static PostgreSQLContainer<?> postgres =
@@ -65,7 +66,7 @@ class ProjectStepControllerGetListTest {
   }
 
   @Test
-  void shouldReturn_200_getProjectStepList() throws Exception {
+  void shouldReturn_200_getProjectStepCommentList() throws Exception {
     List<String> range = List.of("0", "1");
     String rangeString = objectMapper.writeValueAsString(range);
     MvcResult response =
@@ -79,12 +80,12 @@ class ProjectStepControllerGetListTest {
     assertEquals("items 0-1", headerContentRange.substring(0, 9));
     assertEquals(2, responseBody.size());
     assertEquals(
-        UUID.fromString("e6c8acd6-a7bb-48a6-bad7-e4154b5010f0"), responseBody.getFirst().getId());
+        UUID.fromString("bfd8a91f-bb6b-49e7-8e9a-fcb270fa7408"), responseBody.getFirst().getId());
   }
 
   @Test
-  void shouldReturn_200_getProjectStepList_withFilters() throws Exception {
-    Map<String, String> filter = Map.of("name", "3", "projectName", "steps");
+  void shouldReturn_200_getProjectStepCommentList_withFilters() throws Exception {
+    Map<String, String> filter = Map.of(Field.comment, "th", Field.projectStepName, "1");
     String filterStrig = objectMapper.writeValueAsString(filter);
     MvcResult response =
         mockMvc.perform(get(BASE_URL).with(withJwt()).param("filter", filterStrig)).andReturn();
@@ -94,16 +95,16 @@ class ProjectStepControllerGetListTest {
     List<ProjectStepDTO> responseBody =
         objectMapper.readValue(contentAsString, new TypeReference<>() {});
     assertEquals(HttpStatus.OK.value(), status);
-    assertEquals("items 0-0/1", headerContentRange);
-    assertEquals(1, responseBody.size());
+    assertEquals("items 0-2/3", headerContentRange);
+    assertEquals(3, responseBody.size());
     assertEquals(
-        UUID.fromString("39b12d4c-f58c-473a-b9cf-59bd392e1aef"), responseBody.getFirst().getId());
+        UUID.fromString("1f96b84d-98ad-429a-97a6-7be681ceffb8"), responseBody.getFirst().getId());
   }
 
   @Test
-  void shouldReturn_200_getProjectStepList_withFiltersAndSort() throws Exception {
-    List<String> sort = List.of("name", "DESC");
-    Map<String, String> filter = Map.of("priorityValue", "low");
+  void shouldReturn_200_getProjectStepCommentList_withFiltersAndSort() throws Exception {
+    List<String> sort = List.of(Field.assignedEmployee, "DESC");
+    Map<String, String> filter = Map.of(Field.comment, "th");
     String sortString = objectMapper.writeValueAsString(sort);
     String filterStrig = objectMapper.writeValueAsString(filter);
     MvcResult response =
@@ -120,16 +121,16 @@ class ProjectStepControllerGetListTest {
     List<ProjectStepDTO> responseBody =
         objectMapper.readValue(contentAsString, new TypeReference<>() {});
     assertEquals(HttpStatus.OK.value(), status);
-    assertEquals("items 0-4/5", headerContentRange);
-    assertEquals(5, responseBody.size());
+    assertEquals("items 0-2/3", headerContentRange);
+    assertEquals(3, responseBody.size());
     assertEquals(
-        UUID.fromString("e6c8acd6-a7bb-48a6-bad7-e4154b5010f0"), responseBody.getFirst().getId());
+        UUID.fromString("052b6078-6c32-4e36-9f1f-01c30c7bac90"), responseBody.getFirst().getId());
   }
 
   @Test
-  void shouldReturn_200_getProjectStepList_withRange() throws Exception {
+  void shouldReturn_200_getProjectStepCommentList_withRange() throws Exception {
     List<String> range = List.of("0", "0");
-    List<String> sort = List.of("name", "ASC");
+    List<String> sort = List.of(Field.projectStepName, "ASC");
     String rangeString = objectMapper.writeValueAsString(range);
     String sortString = objectMapper.writeValueAsString(sort);
     MvcResult response =
@@ -144,12 +145,12 @@ class ProjectStepControllerGetListTest {
     assertEquals(HttpStatus.OK.value(), status);
     assertEquals(1, responseBody.size());
     assertEquals(
-        UUID.fromString("2b6c91be-8c18-46d0-8626-e9af7966c71a"), responseBody.getFirst().getId());
+        UUID.fromString("1f96b84d-98ad-429a-97a6-7be681ceffb8"), responseBody.getFirst().getId());
   }
 
   @Test
-  void shouldReturn_200_getProjectStepList_emptyResult() throws Exception {
-    Map<String, String> filter = Map.of("name", "not exists");
+  void shouldReturn_200_getProjectStepCommentList_emptyResult() throws Exception {
+    Map<String, String> filter = Map.of("comment", "not exists");
     String filterStrig = objectMapper.writeValueAsString(filter);
     MvcResult response =
         mockMvc.perform(get(BASE_URL).with(withJwt()).param("filter", filterStrig)).andReturn();
@@ -164,7 +165,7 @@ class ProjectStepControllerGetListTest {
   }
 
   @Test
-  void shouldReturn_401_getProjectStepList() throws Exception {
+  void shouldReturn_401_getProjectStepCommentList() throws Exception {
     MvcResult response = mockMvc.perform(get(BASE_URL)).andReturn();
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
@@ -174,7 +175,7 @@ class ProjectStepControllerGetListTest {
   }
 
   @Test
-  void shouldReturn_403_getProjectStepList() throws Exception {
+  void shouldReturn_403_getProjectStepCommentList() throws Exception {
     MvcResult response = mockMvc.perform(get(BASE_URL).with(withBadJwt())).andReturn();
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
