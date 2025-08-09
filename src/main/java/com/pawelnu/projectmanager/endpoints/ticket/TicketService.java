@@ -4,10 +4,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pawelnu.projectmanager.endpoints.category.value.CategoryValueEntity;
 import com.pawelnu.projectmanager.endpoints.category.value.CategoryValueService;
 import com.pawelnu.projectmanager.endpoints.company.CompanyEntity;
-import com.pawelnu.projectmanager.endpoints.company.CompanyService;
 import com.pawelnu.projectmanager.endpoints.company.employee.EmployeeEntity;
-import com.pawelnu.projectmanager.endpoints.company.employee.EmployeeService;
 import com.pawelnu.projectmanager.endpoints.project.ProjectEntity;
+import com.pawelnu.projectmanager.endpoints.project.ProjectService;
+import com.pawelnu.projectmanager.endpoints.project.step.ProjectStepEntity;
+import com.pawelnu.projectmanager.endpoints.project.step.ProjectStepService;
 import com.pawelnu.projectmanager.endpoints.ticket.dto.TicketCreateRequestDTO;
 import com.pawelnu.projectmanager.endpoints.ticket.dto.TicketDTO;
 import com.pawelnu.projectmanager.endpoints.ticket.dto.TicketEditRequestDTO;
@@ -34,29 +35,31 @@ public class TicketService {
   private final TicketRepository ticketRepository;
   private final TicketQueryRepository ticketQueryRepository;
   private final CategoryValueService categoryValueService;
-  private final CompanyService companyService;
-  private final EmployeeService employeeService;
+  private final ProjectService projectService;
+  private final ProjectStepService projectStepService;
   private final TicketMapper ticketMapper;
   private final ObjectMapper objectMapper;
 
   public TicketDTO create(TicketCreateRequestDTO body) {
-    CategoryValueEntity projectCategory =
-        categoryValueService.getCategoryValueById(body.getCategoryValueId());
-    CompanyEntity companyEntity = companyService.getCompanyEntityById(body.getCompanyId());
-    EmployeeEntity employeeEntity =
-        employeeService.getEmployeeEntityById(body.getAssignedEmployeeId());
-    CategoryValueEntity projectPriority =
-        categoryValueService.getCategoryValueById(body.getPriorityValueId());
+    CategoryValueEntity ticketCategory =
+        categoryValueService.getCategoryValueById(body.getTicketCategoryId());
+    CategoryValueEntity ticketPriority =
+        categoryValueService.getCategoryValueById(body.getTicketPriorityId());
+    ProjectEntity projectEntity = projectService.getProjectEntityById(body.getProjectId());
+    ProjectStepEntity stepEntity = projectStepService.getProjectStepEntityById(body.getStepId());
     TicketEntity ticketEntity =
         TicketEntity.builder()
-            .name(body.getName())
-            .categoryValue(projectCategory)
-            .company(companyEntity)
-            .assignedEmployee(employeeEntity)
-            .priorityValue(projectPriority)
+            .ticketNumber("placeholder") // TODO implement generate ticket numer
+            .title(body.getTitle())
+            .category(ticketCategory)
+            .deadline(body.getDeadline())
+            .priority(ticketPriority)
+            .additionalDetails(body.getAdditionalDetails())
+            .project(projectEntity)
+            .step(stepEntity)
             .build();
-    TicketEntity savedCompany = ticketRepository.save(ticketEntity);
-    return ticketMapper.toDTO(savedCompany);
+    TicketEntity savedTicket = ticketRepository.save(ticketEntity);
+    return ticketMapper.toDTO(savedTicket);
   }
 
   public TicketDTO getById(UUID id) {

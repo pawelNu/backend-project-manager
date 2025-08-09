@@ -41,11 +41,11 @@ public interface TicketApi {
       })
   @ResponseErrors
   @PostMapping("")
-  @Operation(description = "Add new project.")
+  @Operation(description = "Add new ticket.")
   ResponseEntity<TicketDTO> create(@Valid @RequestBody TicketCreateRequestDTO body);
 
   @Operation(
-      description = "List projects with filtering, sorting and pagination (react-admin format)")
+      description = "List tickets with filtering, sorting and pagination (react-admin format)")
   @ApiResponse(
       responseCode = "200",
       description = "OK",
@@ -75,7 +75,7 @@ public interface TicketApi {
       })
   @ResponseErrors
   @GetMapping("/{id}")
-  @Operation(description = "Get project by id.")
+  @Operation(description = "Get ticket by id.")
   ResponseEntity<TicketDTO> getById(@Parameter() @PathVariable() UUID id);
 
   @ApiResponse(
@@ -88,7 +88,7 @@ public interface TicketApi {
       })
   @ResponseErrors
   @PutMapping("/{id}")
-  @Operation(description = "Edit project by id.")
+  @Operation(description = "Edit ticket by id.")
   ResponseEntity<TicketDTO> editById(
       @Parameter() @PathVariable() UUID id, @Valid @RequestBody TicketEditRequestDTO body);
 
@@ -102,6 +102,6 @@ public interface TicketApi {
       })
   @ResponseErrors
   @DeleteMapping("/{id}")
-  @Operation(description = "Delete project by id.")
+  @Operation(description = "Delete ticket by id.")
   ResponseEntity<SimpleResponse> deleteById(@Parameter() @PathVariable() UUID id);
 }
