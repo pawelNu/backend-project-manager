@@ -9,17 +9,14 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pawelnu.projectmanager.config.security.jwt.JwtUtils;
-import com.pawelnu.projectmanager.endpoints.project.step.dto.ProjectStepDTO;
-import com.pawelnu.projectmanager.endpoints.project.step.dto.ProjectStepEditRequestDTO;
+import com.pawelnu.projectmanager.endpoints.project.step.comment.dto.ProjectStepCommentDTO;
+import com.pawelnu.projectmanager.endpoints.project.step.comment.dto.ProjectStepCommentEditRequestDTO;
 import com.pawelnu.projectmanager.exception.model.ReactAdminError;
 import com.pawelnu.projectmanager.utils.Consts.MSG;
 import com.pawelnu.projectmanager.utils.Path;
 import com.pawelnu.projectmanager.utils.Utils;
 import com.pawelnu.projectmanager.utils.Utils.Postgres;
 import com.pawelnu.projectmanager.utils.Utils.SpringDataSource;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
@@ -70,17 +67,14 @@ class ProjectStepCommentControllerEditByIdTest {
   }
 
   @Test
-  void shouldReturn_200_editProjectStepById() throws Exception {
-    String projectStepId = "e6c8acd6-a7bb-48a6-bad7-e4154b5010f0";
-    String url = BASE_URL + "/" + projectStepId;
-    Instant deadline = LocalDateTime.of(2025, 7, 29, 12, 0).toInstant(ZoneOffset.UTC);
-    ProjectStepEditRequestDTO request =
-        ProjectStepEditRequestDTO.builder()
-            .name("updated step for test")
-            .projectId(UUID.fromString("bc6b9fee-e9d7-4692-853e-d6d2c00383b3"))
-            .priorityValueId(UUID.fromString("26da6b3c-2079-47cf-a00f-06ea28702eb5"))
-            .assignedEmployeeId(UUID.fromString("cff1680a-e821-4218-8ec6-b0b4ab941fb0"))
-            .deadline(deadline)
+  void shouldReturn_200_editProjectStepCommentById() throws Exception {
+    String projectStepCommentId = "052b6078-6c32-4e36-9f1f-01c30c7bac90";
+    String url = BASE_URL + "/" + projectStepCommentId;
+    ProjectStepCommentEditRequestDTO request =
+        ProjectStepCommentEditRequestDTO.builder()
+            .comment("updated comment")
+            .stepId(UUID.fromString("5e47e5c5-4a3d-4e67-b41d-a04f94c6b93a"))
+            .employeeId(UUID.fromString("a5cb9e8c-a9cb-4657-b1e4-1dec8bcdf997"))
             .build();
     String requestBody = objectMapper.writeValueAsString(request);
     MvcResult response =
@@ -93,27 +87,25 @@ class ProjectStepCommentControllerEditByIdTest {
             .andReturn();
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
-    ProjectStepDTO responseBody = objectMapper.readValue(contentAsString, ProjectStepDTO.class);
+    ProjectStepCommentDTO responseBody =
+        objectMapper.readValue(contentAsString, ProjectStepCommentDTO.class);
     assertEquals(HttpStatus.OK.value(), status);
-    assertEquals(request.getName(), responseBody.getName());
-    assertEquals("project for project steps tetes", responseBody.getProjectName());
-    assertEquals("MEDIUM", responseBody.getPriorityValue());
-    assertEquals("Janita Jakubowski", responseBody.getAssignedEmployee());
-    assertEquals(Instant.parse("2025-07-29T12:00:00Z"), responseBody.getDeadline());
+    assertEquals(request.getComment(), responseBody.getComment());
+    assertEquals(
+        UUID.fromString("7ebf87eb-be90-45d8-b92c-25701897211f"), responseBody.getProjectId());
+    assertEquals(request.getStepId(), responseBody.getStepId());
+    assertEquals(request.getEmployeeId(), responseBody.getEmployeeId());
   }
 
   @Test
-  void shouldReturn_400_editProjectStepById() throws Exception {
-    String projectStepId = "invalid-uuid";
-    String url = BASE_URL + "/" + projectStepId;
-    Instant deadline = LocalDateTime.of(2025, 7, 29, 12, 0).toInstant(ZoneOffset.UTC);
-    ProjectStepEditRequestDTO request =
-        ProjectStepEditRequestDTO.builder()
-            .name("updated step for test")
-            .projectId(UUID.fromString("bc6b9fee-e9d7-4692-853e-d6d2c00383b3"))
-            .priorityValueId(UUID.fromString("26da6b3c-2079-47cf-a00f-06ea28702eb5"))
-            .assignedEmployeeId(UUID.fromString("cff1680a-e821-4218-8ec6-b0b4ab941fb0"))
-            .deadline(deadline)
+  void shouldReturn_400_editProjectStepCommentById() throws Exception {
+    String projectStepCommentId = "invalid-uuid";
+    String url = BASE_URL + "/" + projectStepCommentId;
+    ProjectStepCommentEditRequestDTO request =
+        ProjectStepCommentEditRequestDTO.builder()
+            .comment("test")
+            .stepId(UUID.fromString("5e47e5c5-4a3d-4e67-b41d-a04f94c6b93a"))
+            .employeeId(UUID.fromString("a5cb9e8c-a9cb-4657-b1e4-1dec8bcdf997"))
             .build();
     String requestBody = objectMapper.writeValueAsString(request);
     MvcResult response =
@@ -132,17 +124,14 @@ class ProjectStepCommentControllerEditByIdTest {
   }
 
   @Test
-  void shouldReturn_401_editProjectStepById() throws Exception {
-    String projectStepId = "e6c8acd6-a7bb-48a6-bad7-e4154b5010f0";
-    String url = BASE_URL + "/" + projectStepId;
-    Instant deadline = LocalDateTime.of(2025, 7, 29, 12, 0).toInstant(ZoneOffset.UTC);
-    ProjectStepEditRequestDTO request =
-        ProjectStepEditRequestDTO.builder()
-            .name("updated step for test")
-            .projectId(UUID.fromString("bc6b9fee-e9d7-4692-853e-d6d2c00383b3"))
-            .priorityValueId(UUID.fromString("26da6b3c-2079-47cf-a00f-06ea28702eb5"))
-            .assignedEmployeeId(UUID.fromString("cff1680a-e821-4218-8ec6-b0b4ab941fb0"))
-            .deadline(deadline)
+  void shouldReturn_401_editProjectStepCommentById() throws Exception {
+    String projectStepCommentId = "e6c8acd6-a7bb-48a6-bad7-e4154b5010f0";
+    String url = BASE_URL + "/" + projectStepCommentId;
+    ProjectStepCommentEditRequestDTO request =
+        ProjectStepCommentEditRequestDTO.builder()
+            .comment("updated comment")
+            .stepId(UUID.fromString("5e47e5c5-4a3d-4e67-b41d-a04f94c6b93a"))
+            .employeeId(UUID.fromString("a5cb9e8c-a9cb-4657-b1e4-1dec8bcdf997"))
             .build();
     String requestBody = objectMapper.writeValueAsString(request);
     MvcResult response =
@@ -157,17 +146,14 @@ class ProjectStepCommentControllerEditByIdTest {
   }
 
   @Test
-  void shouldReturn_403_editProjectStepById() throws Exception {
-    String projectStepId = "e6c8acd6-a7bb-48a6-bad7-e4154b5010f0";
-    String url = BASE_URL + "/" + projectStepId;
-    Instant deadline = LocalDateTime.of(2025, 7, 29, 12, 0).toInstant(ZoneOffset.UTC);
-    ProjectStepEditRequestDTO request =
-        ProjectStepEditRequestDTO.builder()
-            .name("updated step for test")
-            .projectId(UUID.fromString("bc6b9fee-e9d7-4692-853e-d6d2c00383b3"))
-            .priorityValueId(UUID.fromString("26da6b3c-2079-47cf-a00f-06ea28702eb5"))
-            .assignedEmployeeId(UUID.fromString("cff1680a-e821-4218-8ec6-b0b4ab941fb0"))
-            .deadline(deadline)
+  void shouldReturn_403_editProjectStepCommentById() throws Exception {
+    String projectStepCommentId = "e6c8acd6-a7bb-48a6-bad7-e4154b5010f0";
+    String url = BASE_URL + "/" + projectStepCommentId;
+    ProjectStepCommentEditRequestDTO request =
+        ProjectStepCommentEditRequestDTO.builder()
+            .comment("updated comment")
+            .stepId(UUID.fromString("5e47e5c5-4a3d-4e67-b41d-a04f94c6b93a"))
+            .employeeId(UUID.fromString("a5cb9e8c-a9cb-4657-b1e4-1dec8bcdf997"))
             .build();
     String requestBody = objectMapper.writeValueAsString(request);
     MvcResult response =
@@ -186,17 +172,14 @@ class ProjectStepCommentControllerEditByIdTest {
   }
 
   @Test
-  void shouldReturn_404_editProjectStepById() throws Exception {
-    String projectStepId = "2b7f864c-6bc0-4ff9-aae5-bd2bd5a872ca";
-    String url = BASE_URL + "/" + projectStepId;
-    Instant deadline = LocalDateTime.of(2025, 7, 29, 12, 0).toInstant(ZoneOffset.UTC);
-    ProjectStepEditRequestDTO request =
-        ProjectStepEditRequestDTO.builder()
-            .name("updated step for test")
-            .projectId(UUID.fromString("bc6b9fee-e9d7-4692-853e-d6d2c00383b3"))
-            .priorityValueId(UUID.fromString("26da6b3c-2079-47cf-a00f-06ea28702eb5"))
-            .assignedEmployeeId(UUID.fromString("cff1680a-e821-4218-8ec6-b0b4ab941fb0"))
-            .deadline(deadline)
+  void shouldReturn_404_editProjectStepCommentById() throws Exception {
+    String projectStepCommentId = "2b7f864c-6bc0-4ff9-aae5-bd2bd5a872ca";
+    String url = BASE_URL + "/" + projectStepCommentId;
+    ProjectStepCommentEditRequestDTO request =
+        ProjectStepCommentEditRequestDTO.builder()
+            .comment("updated comment")
+            .stepId(UUID.fromString("5e47e5c5-4a3d-4e67-b41d-a04f94c6b93a"))
+            .employeeId(UUID.fromString("a5cb9e8c-a9cb-4657-b1e4-1dec8bcdf997"))
             .build();
     String requestBody = objectMapper.writeValueAsString(request);
     MvcResult response =
@@ -211,6 +194,7 @@ class ProjectStepCommentControllerEditByIdTest {
     String contentAsString = response.getResponse().getContentAsString();
     ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
     assertEquals(HttpStatus.NOT_FOUND.value(), status);
-    assertEquals(MSG.PROJECT_STEP_NOT_FOUND + projectStepId, responseBody.getMessage());
+    assertEquals(
+        MSG.PROJECT_STEP_COMMENT_NOT_FOUND + projectStepCommentId, responseBody.getMessage());
   }
 }
