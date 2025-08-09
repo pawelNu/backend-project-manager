@@ -10,21 +10,6 @@ import org.mapstruct.Named;
 @Mapper(componentModel = "spring")
 public interface ProjectStepCommentMapper {
 
-  //  default ProjectStepCommentDTO toDTO(ProjectStepCommentEntity entity) {
-  //    if (entity == null) {
-  //      return null;
-  //    }
-  //    return ProjectStepCommentDTO.builder()
-  //        .id(entity.getId())
-  //        .comment(entity.getComment())
-  //        .stepId(entity.getStep().getId())
-  //        .stepName(entity.getStep().getName())
-  //        .employeeId(entity.getEmployee().getId())
-  //        .employeeName(
-  //            entity.getEmployee().getFirstName() + " " + entity.getEmployee().getLastName())
-  //        .build();
-  //  }
-
   @Mapping(source = "step.project.id", target = "projectId")
   @Mapping(source = "step.project.name", target = "projectName")
   @Mapping(source = "step.id", target = "stepId")
