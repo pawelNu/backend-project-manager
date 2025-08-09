@@ -112,15 +112,14 @@ public class TicketQueryRepository {
   private void applySorting(JPAQuery<TicketRowDTO> query, String sortField, String sortDir) {
     Order order = Sort.Direction.fromString(sortDir) == Sort.Direction.ASC ? Order.ASC : Order.DESC;
     switch (sortField) {
-      case "name" ->
-          query.orderBy(order == Order.ASC ? projectStep.name.asc() : projectStep.name.desc());
-      case "projectName" ->
-          query.orderBy(order == Order.ASC ? project.name.asc() : project.name.desc());
-      case "assignedEmployee" ->
-          query.orderBy(order == Order.ASC ? employee.lastName.asc() : employee.lastName.desc());
-      case "deadline" ->
-          query.orderBy(
-              order == Order.ASC ? projectStep.deadline.asc() : projectStep.deadline.desc());
+      case "name" -> query.orderBy(
+          order == Order.ASC ? projectStep.name.asc() : projectStep.name.desc());
+      case "projectName" -> query.orderBy(
+          order == Order.ASC ? project.name.asc() : project.name.desc());
+      case "assignedEmployee" -> query.orderBy(
+          order == Order.ASC ? employee.lastName.asc() : employee.lastName.desc());
+      case "deadline" -> query.orderBy(
+          order == Order.ASC ? projectStep.deadline.asc() : projectStep.deadline.desc());
       default -> query.orderBy(projectStep.deadline.desc());
     }
   }
