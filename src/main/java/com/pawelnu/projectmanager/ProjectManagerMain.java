@@ -14,6 +14,5 @@ public class ProjectManagerMain {
   }
 }
 
-// TODO api for tickets
 // TODO api for attachments
 // TODO api for ticket_histories

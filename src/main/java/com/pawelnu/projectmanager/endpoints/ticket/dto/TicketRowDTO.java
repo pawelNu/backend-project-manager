@@ -9,15 +9,22 @@ import lombok.Data;
 @AllArgsConstructor
 public class TicketRowDTO {
   private UUID id;
-  private String name;
-  private UUID projectId;
-  private String projectName;
+  private String number;
+  private String title;
+  private Instant deadline;
+  private String additionalDetails;
+  private UUID categoryId;
+  private String categoryName;
+  private UUID categoryValueId;
+  private String categoryValue;
+  private UUID priorityId;
+  private String priorityName;
   private UUID priorityValueId;
   private String priorityValue;
-  private UUID assignedEmployeeId;
-  private String employeeFirstName;
-  private String employeeLastName;
-  private Instant deadline;
+  private UUID projectId;
+  private String projectName;
+  private UUID projectStepId;
+  private String projectStepName;
   private Long totalElements;
   private Integer totalPages;
 }

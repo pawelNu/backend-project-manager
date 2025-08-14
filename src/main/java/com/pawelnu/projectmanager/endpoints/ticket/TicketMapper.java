@@ -14,8 +14,8 @@ public interface TicketMapper {
   @Mapping(source = "priority.stringValue", target = "priorityValue")
   @Mapping(source = "project.id", target = "projectId")
   @Mapping(source = "project.name", target = "projectName")
-  @Mapping(source = "step.id", target = "stepId")
-  @Mapping(source = "step.name", target = "stepName")
+  @Mapping(source = "step.id", target = "projectStepId")
+  @Mapping(source = "step.name", target = "projectStepName")
   TicketDTO toDTO(TicketEntity entity);
 
   //  @Mapping(source = ".", target = "employeeName", qualifiedByName = "concatEmployeeName")

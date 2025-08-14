@@ -181,12 +181,12 @@ add constraint fk_project_step_comments_and_employees foreign key (employee_id) 
 --
 create table tickets (
     id uuid not null,
-    ticket_number varchar(255) not null,
+    number varchar(255) not null,
     title varchar(255) not null,
     category_id uuid,
     deadline timestamp(6) without time zone,
     priority_id uuid,
-    additional_details varchar(1000) not null,
+    additional_details varchar(1000),
     project_id uuid,
     project_step_id uuid,
     version integer not null,

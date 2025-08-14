@@ -150,6 +150,8 @@ public class Shared {
 
   public static class Field {
     public static final String name = "name";
+    public static final String title = "title";
+    public static final String number = "number";
     public static final String comment = "comment";
     public static final String projectName = "projectName";
     public static final String projectStepName = "projectStepName";
@@ -159,5 +161,7 @@ public class Shared {
     public static final String assignedEmployee = "assignedEmployee";
     public static final String priorityValue = "priorityValue";
     public static final String deadline = "deadline";
+    public static final String additionalDetails = "additionalDetails";
+    public static final String categoryValue = "categoryValue";
   }
 }

@@ -60,7 +60,7 @@ public class TicketService {
     ProjectStepEntity stepEntity = projectStepService.getProjectStepEntityById(body.getStepId());
     TicketEntity ticketEntity =
         TicketEntity.builder()
-            .ticketNumber(generateTicketNumber())
+            .number(generateTicketNumber())
             .title(body.getTitle())
             .category(ticketCategory)
             .deadline(body.getDeadline())
