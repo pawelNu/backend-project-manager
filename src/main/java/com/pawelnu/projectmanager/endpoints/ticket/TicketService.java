@@ -17,6 +17,7 @@ import com.pawelnu.projectmanager.exception.model.SimpleResponse;
 import com.pawelnu.projectmanager.utils.Consts.MSG;
 import com.pawelnu.projectmanager.utils.PageableParams;
 import com.pawelnu.projectmanager.utils.Shared;
+import java.time.Year;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -38,6 +39,18 @@ public class TicketService {
   private final TicketMapper ticketMapper;
   private final ObjectMapper objectMapper;
 
+  public String generateTicketNumber() {
+    int year = Year.now().getValue();
+    String sequenceName = "ticket_number_" + year;
+
+    if (ticketRepository.checkSequenceExists(sequenceName) == 0) {
+      ticketRepository.createSequence(sequenceName);
+    }
+
+    long nextTicketNumber = ticketRepository.getNextTicketNumber(sequenceName);
+    return year + "-" + nextTicketNumber;
+  }
+
   public TicketDTO create(TicketCreateRequestDTO body) {
     CategoryValueEntity ticketCategory =
         categoryValueService.getCategoryValueById(body.getTicketCategoryId());
@@ -47,7 +60,7 @@ public class TicketService {
     ProjectStepEntity stepEntity = projectStepService.getProjectStepEntityById(body.getStepId());
     TicketEntity ticketEntity =
         TicketEntity.builder()
-            .ticketNumber("placeholder") // TODO implement generate ticket numer
+            .ticketNumber(generateTicketNumber())
             .title(body.getTitle())
             .category(ticketCategory)
             .deadline(body.getDeadline())
