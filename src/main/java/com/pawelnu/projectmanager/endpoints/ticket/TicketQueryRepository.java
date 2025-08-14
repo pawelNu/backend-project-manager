@@ -129,26 +129,20 @@ public class TicketQueryRepository {
   private void applySorting(JPAQuery<TicketRowDTO> query, String sortField, String sortDir) {
     Order order = Sort.Direction.fromString(sortDir) == Sort.Direction.ASC ? Order.ASC : Order.DESC;
     switch (sortField) {
-      case Field.number ->
-          query.orderBy(order == Order.ASC ? ticket.number.asc() : ticket.number.desc());
-      case Field.title ->
-          query.orderBy(order == Order.ASC ? ticket.title.asc() : ticket.title.desc());
-      case Field.deadline ->
-          query.orderBy(order == Order.ASC ? ticket.deadline.asc() : ticket.deadline.desc());
-      case Field.categoryValue ->
-          query.orderBy(
-              order == Order.ASC
-                  ? categoryValue.stringValue.asc()
-                  : categoryValue.stringValue.desc());
-      case Field.priorityValue ->
-          query.orderBy(
-              order == Order.ASC
-                  ? priorityValue.stringValue.asc()
-                  : priorityValue.stringValue.desc());
-      case Field.projectName ->
-          query.orderBy(order == Order.ASC ? project.name.asc() : project.name.desc());
-      case Field.projectStepName ->
-          query.orderBy(order == Order.ASC ? projectStep.name.asc() : projectStep.name.desc());
+      case Field.number -> query.orderBy(
+          order == Order.ASC ? ticket.number.asc() : ticket.number.desc());
+      case Field.title -> query.orderBy(
+          order == Order.ASC ? ticket.title.asc() : ticket.title.desc());
+      case Field.deadline -> query.orderBy(
+          order == Order.ASC ? ticket.deadline.asc() : ticket.deadline.desc());
+      case Field.categoryValue -> query.orderBy(
+          order == Order.ASC ? categoryValue.stringValue.asc() : categoryValue.stringValue.desc());
+      case Field.priorityValue -> query.orderBy(
+          order == Order.ASC ? priorityValue.stringValue.asc() : priorityValue.stringValue.desc());
+      case Field.projectName -> query.orderBy(
+          order == Order.ASC ? project.name.asc() : project.name.desc());
+      case Field.projectStepName -> query.orderBy(
+          order == Order.ASC ? projectStep.name.asc() : projectStep.name.desc());
       default -> query.orderBy(ticket.deadline.desc());
     }
   }
