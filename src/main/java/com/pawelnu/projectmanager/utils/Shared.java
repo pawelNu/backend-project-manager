@@ -163,5 +163,6 @@ public class Shared {
     public static final String deadline = "deadline";
     public static final String additionalDetails = "additionalDetails";
     public static final String categoryValue = "categoryValue";
+    public static final String projectId = "projectId";
   }
 }

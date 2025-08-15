@@ -14,6 +14,7 @@ import com.querydsl.core.types.Order;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import jakarta.persistence.EntityManager;
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
@@ -29,6 +30,7 @@ import org.springframework.stereotype.Repository;
 @Slf4j
 public class TicketQueryRepository {
   private final JPAQueryFactory queryFactory;
+  private final EntityManager em;
   private final QTicketEntity ticket = QTicketEntity.ticketEntity;
   private final QCategoryEntity category = new QCategoryEntity("category");
   private final QCategoryEntity priority = new QCategoryEntity("priority");
@@ -36,6 +38,12 @@ public class TicketQueryRepository {
   private final QCategoryValueEntity priorityValue = new QCategoryValueEntity("priorityValue");
   private final QProjectEntity project = QProjectEntity.projectEntity;
   private final QProjectStepEntity projectStep = QProjectStepEntity.projectStepEntity;
+
+  public void createSequence(String sequenceName) {
+    if (!sequenceName.matches("^[a-zA-Z0-9_]+$")) throw new IllegalArgumentException();
+    em.createNativeQuery("CREATE SEQUENCE " + sequenceName + " START 1 MAXVALUE 99999 INCREMENT 1")
+        .executeUpdate();
+  }
 
   public Optional<ProjectStepEntity> findById(UUID id) {
     //    TODO implement Optional<ProjectStepEntity> findById(UUID id)

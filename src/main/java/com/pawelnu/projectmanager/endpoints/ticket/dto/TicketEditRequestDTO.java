@@ -14,9 +14,9 @@ public class TicketEditRequestDTO {
   @Size(min = 5, message = "Title must be at least 5 characters")
   private String title;
 
-  @NotNull private UUID ticketCategoryId;
+  @NotNull private UUID categoryValueId;
   @NotNull private Instant deadline;
-  @NotNull private UUID ticketPriorityId;
+  @NotNull private UUID priorityValueId;
   private String additionalDetails;
   @NotNull private UUID projectId;
   @NotNull private UUID stepId;

@@ -44,7 +44,7 @@ public class TicketService {
     String sequenceName = "ticket_number_" + year;
 
     if (ticketRepository.checkSequenceExists(sequenceName) == 0) {
-      ticketRepository.createSequence(sequenceName);
+      ticketQueryRepository.createSequence(sequenceName);
     }
 
     long nextTicketNumber = ticketRepository.getNextTicketNumber(sequenceName);
@@ -53,9 +53,9 @@ public class TicketService {
 
   public TicketDTO create(TicketCreateRequestDTO body) {
     CategoryValueEntity ticketCategory =
-        categoryValueService.getCategoryValueById(body.getTicketCategoryId());
+        categoryValueService.getCategoryValueById(body.getCategoryValueId());
     CategoryValueEntity ticketPriority =
-        categoryValueService.getCategoryValueById(body.getTicketPriorityId());
+        categoryValueService.getCategoryValueById(body.getPriorityValueId());
     ProjectEntity projectEntity = projectService.getProjectEntityById(body.getProjectId());
     ProjectStepEntity stepEntity = projectStepService.getProjectStepEntityById(body.getStepId());
     TicketEntity ticketEntity =
@@ -99,9 +99,9 @@ public class TicketService {
   public TicketDTO editById(UUID id, TicketEditRequestDTO body) {
     TicketEntity ticketToEdit = getTicketEntityById(id);
     CategoryValueEntity ticketCategory =
-        categoryValueService.getCategoryValueById(body.getTicketCategoryId());
+        categoryValueService.getCategoryValueById(body.getCategoryValueId());
     CategoryValueEntity ticketPriority =
-        categoryValueService.getCategoryValueById(body.getTicketPriorityId());
+        categoryValueService.getCategoryValueById(body.getPriorityValueId());
     ProjectEntity projectEntity = projectService.getProjectEntityById(body.getProjectId());
     ProjectStepEntity stepEntity = projectStepService.getProjectStepEntityById(body.getStepId());
     ticketToEdit.setTitle(body.getTitle());
