@@ -18,6 +18,5 @@ public interface TicketMapper {
   @Mapping(source = "step.name", target = "projectStepName")
   TicketDTO toDTO(TicketEntity entity);
 
-  //  @Mapping(source = ".", target = "employeeName", qualifiedByName = "concatEmployeeName")
   TicketDTO toDTO(TicketRowDTO row); // TODO fix mapper
 }
