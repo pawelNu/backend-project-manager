@@ -95,7 +95,8 @@ public class TicketQueryRepository {
   private BooleanBuilder prepareConditions(PageableParams params) {
     BooleanBuilder allConditions = new BooleanBuilder();
     if (params.getFilters().containsKey(Field.number)) {
-      allConditions.and(ticket.number.eq(params.getFilters().get(Field.number)));
+      allConditions.and(
+          ticket.number.likeIgnoreCase("%" + params.getFilters().get(Field.number) + "%"));
     }
     if (params.getFilters().containsKey(Field.title)) {
       allConditions.and(

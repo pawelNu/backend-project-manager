@@ -57,7 +57,8 @@ public class TicketService {
     CategoryValueEntity ticketPriority =
         categoryValueService.getCategoryValueById(body.getPriorityValueId());
     ProjectEntity projectEntity = projectService.getProjectEntityById(body.getProjectId());
-    ProjectStepEntity stepEntity = projectStepService.getProjectStepEntityById(body.getStepId());
+    ProjectStepEntity stepEntity =
+        projectStepService.getProjectStepEntityById(body.getProjectStepId());
     TicketEntity ticketEntity =
         TicketEntity.builder()
             .number(generateTicketNumber())
@@ -103,7 +104,8 @@ public class TicketService {
     CategoryValueEntity ticketPriority =
         categoryValueService.getCategoryValueById(body.getPriorityValueId());
     ProjectEntity projectEntity = projectService.getProjectEntityById(body.getProjectId());
-    ProjectStepEntity stepEntity = projectStepService.getProjectStepEntityById(body.getStepId());
+    ProjectStepEntity stepEntity =
+        projectStepService.getProjectStepEntityById(body.getProjectStepId());
     ticketToEdit.setTitle(body.getTitle());
     ticketToEdit.setCategory(ticketCategory);
     ticketToEdit.setDeadline(body.getDeadline());
