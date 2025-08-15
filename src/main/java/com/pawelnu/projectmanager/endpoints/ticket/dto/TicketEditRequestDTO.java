@@ -19,5 +19,5 @@ public class TicketEditRequestDTO {
   @NotNull private UUID priorityValueId;
   private String additionalDetails;
   @NotNull private UUID projectId;
-  @NotNull private UUID stepId;
+  @NotNull private UUID projectStepId;
 }
