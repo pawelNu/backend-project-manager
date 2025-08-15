@@ -9,8 +9,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pawelnu.projectmanager.config.security.jwt.JwtUtils;
-import com.pawelnu.projectmanager.endpoints.project.step.comment.dto.ProjectStepCommentCreateRequestDTO;
-import com.pawelnu.projectmanager.endpoints.project.step.comment.dto.ProjectStepCommentDTO;
+import com.pawelnu.projectmanager.endpoints.ticket.dto.TicketCreateRequestDTO;
+import com.pawelnu.projectmanager.endpoints.ticket.dto.TicketDTO;
 import com.pawelnu.projectmanager.exception.model.ReactAdminBadRequestError;
 import com.pawelnu.projectmanager.exception.model.ReactAdminError;
 import com.pawelnu.projectmanager.utils.Path;
@@ -67,9 +67,9 @@ class TicketControllerCreateTest {
 
   // TODO adjust tests
   @Test
-  void shouldReturn_201_createProject() throws Exception {
-    ProjectStepCommentCreateRequestDTO request =
-        ProjectStepCommentCreateRequestDTO.builder()
+  void shouldReturn_201_createTicket() throws Exception {
+    TicketCreateRequestDTO request =
+        TicketCreateRequestDTO.builder()
             .comment("comment for test")
             .projectStepId(UUID.fromString("9e9885ce-86d7-4ce7-8936-2db459fc6530"))
             .employeeId(UUID.fromString("cff1680a-e821-4218-8ec6-b0b4ab941fb0"))
@@ -85,8 +85,7 @@ class TicketControllerCreateTest {
             .andReturn();
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
-    ProjectStepCommentDTO responseBody =
-        objectMapper.readValue(contentAsString, ProjectStepCommentDTO.class);
+    TicketDTO responseBody = objectMapper.readValue(contentAsString, TicketDTO.class);
     assertEquals(HttpStatus.CREATED.value(), status);
     assertNotNull(responseBody.getId());
     assertEquals(request.getComment(), responseBody.getComment());
@@ -98,9 +97,9 @@ class TicketControllerCreateTest {
   }
 
   @Test
-  void shouldReturn_400_createProject() throws Exception {
-    ProjectStepCommentCreateRequestDTO request =
-        ProjectStepCommentCreateRequestDTO.builder()
+  void shouldReturn_400_createTicket() throws Exception {
+    TicketCreateRequestDTO request =
+        TicketCreateRequestDTO.builder()
             .comment("test")
             .projectStepId(UUID.fromString("9e9885ce-86d7-4ce7-8936-2db459fc6530"))
             .employeeId(UUID.fromString("cff1680a-e821-4218-8ec6-b0b4ab941fb0"))
@@ -124,9 +123,9 @@ class TicketControllerCreateTest {
   }
 
   @Test
-  void shouldReturn_401_createProject() throws Exception {
-    ProjectStepCommentCreateRequestDTO request =
-        ProjectStepCommentCreateRequestDTO.builder()
+  void shouldReturn_401_createTicket() throws Exception {
+    TicketCreateRequestDTO request =
+        TicketCreateRequestDTO.builder()
             .comment("comment for test")
             .projectStepId(UUID.fromString("9e9885ce-86d7-4ce7-8936-2db459fc6530"))
             .employeeId(UUID.fromString("cff1680a-e821-4218-8ec6-b0b4ab941fb0"))
@@ -144,9 +143,9 @@ class TicketControllerCreateTest {
   }
 
   @Test
-  void shouldReturn_403_createProject() throws Exception {
-    ProjectStepCommentCreateRequestDTO request =
-        ProjectStepCommentCreateRequestDTO.builder()
+  void shouldReturn_403_createTicket() throws Exception {
+    TicketCreateRequestDTO request =
+        TicketCreateRequestDTO.builder()
             .comment("comment for test")
             .projectStepId(UUID.fromString("9e9885ce-86d7-4ce7-8936-2db459fc6530"))
             .employeeId(UUID.fromString("cff1680a-e821-4218-8ec6-b0b4ab941fb0"))

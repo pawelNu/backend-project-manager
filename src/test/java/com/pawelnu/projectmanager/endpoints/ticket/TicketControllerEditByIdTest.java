@@ -10,7 +10,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pawelnu.projectmanager.config.security.jwt.JwtUtils;
 import com.pawelnu.projectmanager.endpoints.project.step.comment.dto.ProjectStepCommentDTO;
-import com.pawelnu.projectmanager.endpoints.project.step.comment.dto.ProjectStepCommentEditRequestDTO;
+import com.pawelnu.projectmanager.endpoints.ticket.dto.TicketEditRequestDTO;
 import com.pawelnu.projectmanager.exception.model.ReactAdminError;
 import com.pawelnu.projectmanager.utils.Consts.MSG;
 import com.pawelnu.projectmanager.utils.Path;
@@ -67,11 +67,11 @@ class TicketControllerEditByIdTest {
 
   // TODO adjust tests
   @Test
-  void shouldReturn_200_editProjectStepCommentById() throws Exception {
-    String projectStepCommentId = "052b6078-6c32-4e36-9f1f-01c30c7bac90";
-    String url = BASE_URL + "/" + projectStepCommentId;
-    ProjectStepCommentEditRequestDTO request =
-        ProjectStepCommentEditRequestDTO.builder()
+  void shouldReturn_200_editTicketById() throws Exception {
+    String ticketId = "052b6078-6c32-4e36-9f1f-01c30c7bac90";
+    String url = BASE_URL + "/" + ticketId;
+    TicketEditRequestDTO request =
+        TicketEditRequestDTO.builder()
             .comment("updated comment")
             .stepId(UUID.fromString("5e47e5c5-4a3d-4e67-b41d-a04f94c6b93a"))
             .employeeId(UUID.fromString("a5cb9e8c-a9cb-4657-b1e4-1dec8bcdf997"))
@@ -98,11 +98,11 @@ class TicketControllerEditByIdTest {
   }
 
   @Test
-  void shouldReturn_400_editProjectStepCommentById() throws Exception {
-    String projectStepCommentId = "invalid-uuid";
-    String url = BASE_URL + "/" + projectStepCommentId;
-    ProjectStepCommentEditRequestDTO request =
-        ProjectStepCommentEditRequestDTO.builder()
+  void shouldReturn_400_editTicketById() throws Exception {
+    String ticketId = "invalid-uuid";
+    String url = BASE_URL + "/" + ticketId;
+    TicketEditRequestDTO request =
+        TicketEditRequestDTO.builder()
             .comment("test")
             .stepId(UUID.fromString("5e47e5c5-4a3d-4e67-b41d-a04f94c6b93a"))
             .employeeId(UUID.fromString("a5cb9e8c-a9cb-4657-b1e4-1dec8bcdf997"))
@@ -124,11 +124,11 @@ class TicketControllerEditByIdTest {
   }
 
   @Test
-  void shouldReturn_401_editProjectStepCommentById() throws Exception {
-    String projectStepCommentId = "e6c8acd6-a7bb-48a6-bad7-e4154b5010f0";
-    String url = BASE_URL + "/" + projectStepCommentId;
-    ProjectStepCommentEditRequestDTO request =
-        ProjectStepCommentEditRequestDTO.builder()
+  void shouldReturn_401_editTicketById() throws Exception {
+    String ticketId = "e6c8acd6-a7bb-48a6-bad7-e4154b5010f0";
+    String url = BASE_URL + "/" + ticketId;
+    TicketEditRequestDTO request =
+        TicketEditRequestDTO.builder()
             .comment("updated comment")
             .stepId(UUID.fromString("5e47e5c5-4a3d-4e67-b41d-a04f94c6b93a"))
             .employeeId(UUID.fromString("a5cb9e8c-a9cb-4657-b1e4-1dec8bcdf997"))
@@ -146,11 +146,11 @@ class TicketControllerEditByIdTest {
   }
 
   @Test
-  void shouldReturn_403_editProjectStepCommentById() throws Exception {
-    String projectStepCommentId = "e6c8acd6-a7bb-48a6-bad7-e4154b5010f0";
-    String url = BASE_URL + "/" + projectStepCommentId;
-    ProjectStepCommentEditRequestDTO request =
-        ProjectStepCommentEditRequestDTO.builder()
+  void shouldReturn_403_editTicketById() throws Exception {
+    String ticketId = "e6c8acd6-a7bb-48a6-bad7-e4154b5010f0";
+    String url = BASE_URL + "/" + ticketId;
+    TicketEditRequestDTO request =
+        TicketEditRequestDTO.builder()
             .comment("updated comment")
             .stepId(UUID.fromString("5e47e5c5-4a3d-4e67-b41d-a04f94c6b93a"))
             .employeeId(UUID.fromString("a5cb9e8c-a9cb-4657-b1e4-1dec8bcdf997"))
@@ -172,11 +172,11 @@ class TicketControllerEditByIdTest {
   }
 
   @Test
-  void shouldReturn_404_editProjectStepCommentById() throws Exception {
-    String projectStepCommentId = "2b7f864c-6bc0-4ff9-aae5-bd2bd5a872ca";
-    String url = BASE_URL + "/" + projectStepCommentId;
-    ProjectStepCommentEditRequestDTO request =
-        ProjectStepCommentEditRequestDTO.builder()
+  void shouldReturn_404_editTicketById() throws Exception {
+    String ticketId = "2b7f864c-6bc0-4ff9-aae5-bd2bd5a872ca";
+    String url = BASE_URL + "/" + ticketId;
+    TicketEditRequestDTO request =
+        TicketEditRequestDTO.builder()
             .comment("updated comment")
             .stepId(UUID.fromString("5e47e5c5-4a3d-4e67-b41d-a04f94c6b93a"))
             .employeeId(UUID.fromString("a5cb9e8c-a9cb-4657-b1e4-1dec8bcdf997"))
@@ -194,7 +194,6 @@ class TicketControllerEditByIdTest {
     String contentAsString = response.getResponse().getContentAsString();
     ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
     assertEquals(HttpStatus.NOT_FOUND.value(), status);
-    assertEquals(
-        MSG.PROJECT_STEP_COMMENT_NOT_FOUND + projectStepCommentId, responseBody.getMessage());
+    assertEquals(MSG.TICKET_NOT_FOUND + ticketId, responseBody.getMessage());
   }
 }

@@ -9,7 +9,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pawelnu.projectmanager.config.security.jwt.JwtUtils;
-import com.pawelnu.projectmanager.endpoints.project.step.dto.ProjectStepDTO;
+import com.pawelnu.projectmanager.endpoints.ticket.dto.TicketDTO;
 import com.pawelnu.projectmanager.exception.model.ReactAdminError;
 import com.pawelnu.projectmanager.utils.Path;
 import com.pawelnu.projectmanager.utils.Shared.Field;
@@ -67,7 +67,7 @@ class TicketControllerGetListTest {
 
   // TODO adjust tests
   @Test
-  void shouldReturn_200_getProjectStepCommentList() throws Exception {
+  void shouldReturn_200_getTicketList() throws Exception {
     List<String> range = List.of("0", "1");
     String rangeString = objectMapper.writeValueAsString(range);
     MvcResult response =
@@ -75,7 +75,7 @@ class TicketControllerGetListTest {
     int status = response.getResponse().getStatus();
     String headerContentRange = response.getResponse().getHeader("Content-Range");
     String contentAsString = response.getResponse().getContentAsString();
-    List<ProjectStepDTO> responseBody =
+    List<TicketDTO> responseBody =
         objectMapper.readValue(contentAsString, new TypeReference<>() {});
     assertEquals(HttpStatus.OK.value(), status);
     assertEquals("items 0-1", headerContentRange.substring(0, 9));
@@ -85,7 +85,7 @@ class TicketControllerGetListTest {
   }
 
   @Test
-  void shouldReturn_200_getProjectStepCommentList_withFilters() throws Exception {
+  void shouldReturn_200_getTicketList_withFilters() throws Exception {
     Map<String, String> filter = Map.of(Field.comment, "th", Field.projectStepName, "1");
     String filterStrig = objectMapper.writeValueAsString(filter);
     MvcResult response =
@@ -93,7 +93,7 @@ class TicketControllerGetListTest {
     int status = response.getResponse().getStatus();
     String headerContentRange = response.getResponse().getHeader("Content-Range");
     String contentAsString = response.getResponse().getContentAsString();
-    List<ProjectStepDTO> responseBody =
+    List<TicketDTO> responseBody =
         objectMapper.readValue(contentAsString, new TypeReference<>() {});
     assertEquals(HttpStatus.OK.value(), status);
     assertEquals("items 0-2/3", headerContentRange);
@@ -103,7 +103,7 @@ class TicketControllerGetListTest {
   }
 
   @Test
-  void shouldReturn_200_getProjectStepCommentList_withFiltersAndSort() throws Exception {
+  void shouldReturn_200_getTicketList_withFiltersAndSort() throws Exception {
     List<String> sort = List.of(Field.assignedEmployee, "DESC");
     Map<String, String> filter = Map.of(Field.comment, "th");
     String sortString = objectMapper.writeValueAsString(sort);
@@ -119,7 +119,7 @@ class TicketControllerGetListTest {
     int status = response.getResponse().getStatus();
     String headerContentRange = response.getResponse().getHeader("Content-Range");
     String contentAsString = response.getResponse().getContentAsString();
-    List<ProjectStepDTO> responseBody =
+    List<TicketDTO> responseBody =
         objectMapper.readValue(contentAsString, new TypeReference<>() {});
     assertEquals(HttpStatus.OK.value(), status);
     assertEquals("items 0-2/3", headerContentRange);
@@ -129,7 +129,7 @@ class TicketControllerGetListTest {
   }
 
   @Test
-  void shouldReturn_200_getProjectStepCommentList_withRange() throws Exception {
+  void shouldReturn_200_getTicketList_withRange() throws Exception {
     List<String> range = List.of("0", "0");
     List<String> sort = List.of(Field.projectStepName, "ASC");
     String rangeString = objectMapper.writeValueAsString(range);
@@ -141,7 +141,7 @@ class TicketControllerGetListTest {
             .andReturn();
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
-    List<ProjectStepDTO> responseBody =
+    List<TicketDTO> responseBody =
         objectMapper.readValue(contentAsString, new TypeReference<>() {});
     assertEquals(HttpStatus.OK.value(), status);
     assertEquals(1, responseBody.size());
@@ -150,7 +150,7 @@ class TicketControllerGetListTest {
   }
 
   @Test
-  void shouldReturn_200_getProjectStepCommentList_emptyResult() throws Exception {
+  void shouldReturn_200_getTicketList_emptyResult() throws Exception {
     Map<String, String> filter = Map.of("comment", "not exists");
     String filterStrig = objectMapper.writeValueAsString(filter);
     MvcResult response =
@@ -158,7 +158,7 @@ class TicketControllerGetListTest {
     int status = response.getResponse().getStatus();
     String headerContentRange = response.getResponse().getHeader("Content-Range");
     String contentAsString = response.getResponse().getContentAsString();
-    List<ProjectStepDTO> responseBody =
+    List<TicketDTO> responseBody =
         objectMapper.readValue(contentAsString, new TypeReference<>() {});
     assertEquals(HttpStatus.OK.value(), status);
     assertEquals("items 0--1/0", headerContentRange);
@@ -166,7 +166,7 @@ class TicketControllerGetListTest {
   }
 
   @Test
-  void shouldReturn_401_getProjectStepCommentList() throws Exception {
+  void shouldReturn_401_getTicketList() throws Exception {
     MvcResult response = mockMvc.perform(get(BASE_URL)).andReturn();
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
@@ -176,7 +176,7 @@ class TicketControllerGetListTest {
   }
 
   @Test
-  void shouldReturn_403_getProjectStepCommentList() throws Exception {
+  void shouldReturn_403_getTicketList() throws Exception {
     MvcResult response = mockMvc.perform(get(BASE_URL).with(withBadJwt())).andReturn();
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();

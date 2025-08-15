@@ -65,9 +65,9 @@ class TicketControllerDeleteByIdTest {
 
   // TODO adjust tests
   @Test
-  void shouldReturn_200_deleteProjectStepCommentById_isDeletedFalse() throws Exception {
-    String projectStepCommentId = "1f96b84d-98ad-429a-97a6-7be681ceffb8";
-    String url = BASE_URL + "/" + projectStepCommentId;
+  void shouldReturn_200_deleteTicketById_isDeletedFalse() throws Exception {
+    String ticketId = "1f96b84d-98ad-429a-97a6-7be681ceffb8";
+    String url = BASE_URL + "/" + ticketId;
     MvcResult response =
         mockMvc
             .perform(delete(url).with(withJwt()).contentType(MediaType.APPLICATION_JSON))
@@ -76,14 +76,13 @@ class TicketControllerDeleteByIdTest {
     String contentAsString = response.getResponse().getContentAsString();
     SimpleResponse responseBody = objectMapper.readValue(contentAsString, SimpleResponse.class);
     assertEquals(HttpStatus.OK.value(), status);
-    assertEquals(
-        "Deleted project step comment with id: " + projectStepCommentId, responseBody.getMessage());
+    assertEquals("Deleted ticket comment with id: " + ticketId, responseBody.getMessage());
   }
 
   @Test
-  void shouldReturn_400_deleteProjectStepCommentById_isDeletedFalse() throws Exception {
-    String projectStepCommentId = "invalid-uuid";
-    String url = BASE_URL + "/" + projectStepCommentId;
+  void shouldReturn_400_deleteTicketById_isDeletedFalse() throws Exception {
+    String ticketId = "invalid-uuid";
+    String url = BASE_URL + "/" + ticketId;
     MvcResult response =
         mockMvc
             .perform(delete(url).with(withJwt()).contentType(MediaType.APPLICATION_JSON))
@@ -96,9 +95,9 @@ class TicketControllerDeleteByIdTest {
   }
 
   @Test
-  void shouldReturn_401_deleteProjectStepCommentById_isDeletedFalse() throws Exception {
-    String projectStepCommentId = "1f96b84d-98ad-429a-97a6-7be681ceffb8";
-    String url = BASE_URL + "/" + projectStepCommentId;
+  void shouldReturn_401_deleteTicketById_isDeletedFalse() throws Exception {
+    String ticketId = "1f96b84d-98ad-429a-97a6-7be681ceffb8";
+    String url = BASE_URL + "/" + ticketId;
     MvcResult response =
         mockMvc.perform(delete(url).contentType(MediaType.APPLICATION_JSON)).andReturn();
     int status = response.getResponse().getStatus();
@@ -109,9 +108,9 @@ class TicketControllerDeleteByIdTest {
   }
 
   @Test
-  void shouldReturn_403_deleteProjectStepCommentById_isDeletedFalse() throws Exception {
-    String projectStepCommentId = "1f96b84d-98ad-429a-97a6-7be681ceffb8";
-    String url = BASE_URL + "/" + projectStepCommentId;
+  void shouldReturn_403_deleteTicketById_isDeletedFalse() throws Exception {
+    String ticketId = "1f96b84d-98ad-429a-97a6-7be681ceffb8";
+    String url = BASE_URL + "/" + ticketId;
     MvcResult response =
         mockMvc
             .perform(delete(url).with(withBadJwt()).contentType(MediaType.APPLICATION_JSON))
@@ -124,9 +123,9 @@ class TicketControllerDeleteByIdTest {
   }
 
   @Test
-  void shouldReturn_404_deleteProjectStepCommentById_isDeletedFalse() throws Exception {
-    String projectStepCommentId = "75fe7aad-51d9-4049-ae11-a65690849432";
-    String url = BASE_URL + "/" + projectStepCommentId;
+  void shouldReturn_404_deleteTicketById_isDeletedFalse() throws Exception {
+    String ticketId = "75fe7aad-51d9-4049-ae11-a65690849432";
+    String url = BASE_URL + "/" + ticketId;
     MvcResult response =
         mockMvc
             .perform(delete(url).with(withJwt()).contentType(MediaType.APPLICATION_JSON))
@@ -135,14 +134,13 @@ class TicketControllerDeleteByIdTest {
     String contentAsString = response.getResponse().getContentAsString();
     ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
     assertEquals(HttpStatus.NOT_FOUND.value(), status);
-    assertEquals(
-        MSG.PROJECT_STEP_COMMENT_NOT_FOUND + projectStepCommentId, responseBody.getMessage());
+    assertEquals(MSG.TICKET_NOT_FOUND + ticketId, responseBody.getMessage());
   }
 
   @Test
-  void shouldReturn_404_deleteProjectStepCommentById_isDeletedTrue() throws Exception {
-    String projectStepCommentId = "610b92c2-8a12-47c2-977f-30f19769f265";
-    String url = BASE_URL + "/" + projectStepCommentId;
+  void shouldReturn_404_deleteTicketById_isDeletedTrue() throws Exception {
+    String ticketId = "610b92c2-8a12-47c2-977f-30f19769f265";
+    String url = BASE_URL + "/" + ticketId;
     MvcResult response =
         mockMvc
             .perform(delete(url).with(withJwt()).contentType(MediaType.APPLICATION_JSON))
@@ -151,7 +149,6 @@ class TicketControllerDeleteByIdTest {
     String contentAsString = response.getResponse().getContentAsString();
     SimpleResponse responseBody = objectMapper.readValue(contentAsString, SimpleResponse.class);
     assertEquals(HttpStatus.NOT_FOUND.value(), status);
-    assertEquals(
-        MSG.PROJECT_STEP_COMMENT_NOT_FOUND + projectStepCommentId, responseBody.getMessage());
+    assertEquals(MSG.TICKET_NOT_FOUND + ticketId, responseBody.getMessage());
   }
 }

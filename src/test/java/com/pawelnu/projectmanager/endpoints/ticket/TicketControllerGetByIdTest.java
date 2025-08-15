@@ -9,7 +9,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pawelnu.projectmanager.config.security.jwt.JwtUtils;
-import com.pawelnu.projectmanager.endpoints.project.step.comment.dto.ProjectStepCommentDTO;
+import com.pawelnu.projectmanager.endpoints.ticket.dto.TicketDTO;
 import com.pawelnu.projectmanager.exception.NotFoundException;
 import com.pawelnu.projectmanager.exception.model.ReactAdminError;
 import com.pawelnu.projectmanager.utils.Consts.MSG;
@@ -67,16 +67,15 @@ class TicketControllerGetByIdTest {
 
   // TODO adjust tests
   @Test
-  void shouldReturn_200_getProjectStepCommentById() throws Exception {
-    String projectStepCommentId = "1aa5c1b9-2a0c-49c7-ad85-b84da2c71fe7";
-    String url = BASE_URL + "/" + projectStepCommentId;
+  void shouldReturn_200_getTicketById() throws Exception {
+    String ticketId = "1aa5c1b9-2a0c-49c7-ad85-b84da2c71fe7";
+    String url = BASE_URL + "/" + ticketId;
     MvcResult response = mockMvc.perform(get(url).with(withJwt())).andReturn();
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
-    ProjectStepCommentDTO responseBody =
-        objectMapper.readValue(contentAsString, ProjectStepCommentDTO.class);
+    TicketDTO responseBody = objectMapper.readValue(contentAsString, TicketDTO.class);
     assertEquals(HttpStatus.OK.value(), status);
-    assertEquals(UUID.fromString(projectStepCommentId), responseBody.getId());
+    assertEquals(UUID.fromString(ticketId), responseBody.getId());
     assertEquals("second comment", responseBody.getComment());
     assertEquals(Instant.parse("2025-08-06T00:00:00Z"), responseBody.getCreated());
     assertEquals(
@@ -87,9 +86,9 @@ class TicketControllerGetByIdTest {
   }
 
   @Test
-  void shouldReturn_400_getProjectStepCommentById() throws Exception {
-    String projectStepCommentId = "invalid-uuid";
-    String url = BASE_URL + "/" + projectStepCommentId;
+  void shouldReturn_400_getTicketById() throws Exception {
+    String ticketId = "invalid-uuid";
+    String url = BASE_URL + "/" + ticketId;
     MvcResult response = mockMvc.perform(get(url).with(withJwt())).andReturn();
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
@@ -99,9 +98,9 @@ class TicketControllerGetByIdTest {
   }
 
   @Test
-  void shouldReturn_401_getProjectStepCommentById() throws Exception {
-    String projectStepCommentId = "cf578fec-006b-4604-a5e8-5ad1b3ea2be5";
-    String url = BASE_URL + "/" + projectStepCommentId;
+  void shouldReturn_401_getTicketById() throws Exception {
+    String ticketId = "cf578fec-006b-4604-a5e8-5ad1b3ea2be5";
+    String url = BASE_URL + "/" + ticketId;
     MvcResult response = mockMvc.perform(get(url)).andReturn();
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
@@ -111,9 +110,9 @@ class TicketControllerGetByIdTest {
   }
 
   @Test
-  void shouldReturn_403_getProjectStepCommentById() throws Exception {
-    String projectStepCommentId = "cf578fec-006b-4604-a5e8-5ad1b3ea2be5";
-    String url = BASE_URL + "/" + projectStepCommentId;
+  void shouldReturn_403_getTicketById() throws Exception {
+    String ticketId = "cf578fec-006b-4604-a5e8-5ad1b3ea2be5";
+    String url = BASE_URL + "/" + ticketId;
     MvcResult response = mockMvc.perform(get(url).with(withBadJwt())).andReturn();
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
@@ -123,30 +122,28 @@ class TicketControllerGetByIdTest {
   }
 
   @Test
-  void shouldReturn_404_getProjectStepCommentById() throws Exception {
-    String projectStepCommentId = "89258385-aa00-47d3-bafe-88bc1d56e6ee";
-    String url = BASE_URL + "/" + projectStepCommentId;
+  void shouldReturn_404_getTicketById() throws Exception {
+    String ticketId = "89258385-aa00-47d3-bafe-88bc1d56e6ee";
+    String url = BASE_URL + "/" + ticketId;
     MvcResult response = mockMvc.perform(get(url).with(withJwt())).andReturn();
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
     NotFoundException responseBody =
         objectMapper.readValue(contentAsString, NotFoundException.class);
     assertEquals(HttpStatus.NOT_FOUND.value(), status);
-    assertEquals(
-        MSG.PROJECT_STEP_COMMENT_NOT_FOUND + projectStepCommentId, responseBody.getMessage());
+    assertEquals(MSG.TICKET_NOT_FOUND + ticketId, responseBody.getMessage());
   }
 
   @Test
-  void shouldReturn_404_getProjectStepCommentById_isDeletedTrue() throws Exception {
-    String projectStepCommentId = "610b92c2-8a12-47c2-977f-30f19769f265";
-    String url = BASE_URL + "/" + projectStepCommentId;
+  void shouldReturn_404_getTicketById_isDeletedTrue() throws Exception {
+    String ticketId = "610b92c2-8a12-47c2-977f-30f19769f265";
+    String url = BASE_URL + "/" + ticketId;
     MvcResult response = mockMvc.perform(get(url).with(withJwt())).andReturn();
     int status = response.getResponse().getStatus();
     String contentAsString = response.getResponse().getContentAsString();
     NotFoundException responseBody =
         objectMapper.readValue(contentAsString, NotFoundException.class);
     assertEquals(HttpStatus.NOT_FOUND.value(), status);
-    assertEquals(
-        MSG.PROJECT_STEP_COMMENT_NOT_FOUND + projectStepCommentId, responseBody.getMessage());
+    assertEquals(MSG.TICKET_NOT_FOUND + ticketId, responseBody.getMessage());
   }
 }
