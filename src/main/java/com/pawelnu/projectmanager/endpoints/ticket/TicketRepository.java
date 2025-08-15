@@ -16,5 +16,4 @@ public interface TicketRepository extends JpaRepository<TicketEntity, UUID> {
 
   @Query(value = "SELECT nextval(:sequenceName)", nativeQuery = true)
   long getNextTicketNumber(@Param("sequenceName") String sequenceName);
-  
 }

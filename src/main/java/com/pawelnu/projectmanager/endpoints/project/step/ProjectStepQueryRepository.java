@@ -45,8 +45,7 @@ public class ProjectStepQueryRepository {
   public List<ProjectStepRowDTO> getList(PageableParams params) {
     BooleanBuilder allConditions = new BooleanBuilder();
     if (params.getFilters().containsKey(Field.projectId)) {
-      allConditions.and(
-          project.id.eq(UUID.fromString(params.getFilters().get(Field.projectId))));
+      allConditions.and(project.id.eq(UUID.fromString(params.getFilters().get(Field.projectId))));
     }
     if (params.getFilters().containsKey(Field.name)) {
       allConditions.and(
