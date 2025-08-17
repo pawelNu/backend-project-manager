@@ -72,9 +72,9 @@ class TicketControllerEditByIdTest {
     String url = BASE_URL + "/" + ticketId;
     TicketEditRequestDTO request =
         TicketEditRequestDTO.builder()
-//            .comment("updated comment")
-//            .stepId(UUID.fromString("5e47e5c5-4a3d-4e67-b41d-a04f94c6b93a"))
-//            .employeeId(UUID.fromString("a5cb9e8c-a9cb-4657-b1e4-1dec8bcdf997"))
+            //            .comment("updated comment")
+            //            .stepId(UUID.fromString("5e47e5c5-4a3d-4e67-b41d-a04f94c6b93a"))
+            //            .employeeId(UUID.fromString("a5cb9e8c-a9cb-4657-b1e4-1dec8bcdf997"))
             .build();
     String requestBody = objectMapper.writeValueAsString(request);
     MvcResult response =
@@ -90,11 +90,11 @@ class TicketControllerEditByIdTest {
     ProjectStepCommentDTO responseBody =
         objectMapper.readValue(contentAsString, ProjectStepCommentDTO.class);
     assertEquals(HttpStatus.OK.value(), status);
-//    assertEquals(request.getComment(), responseBody.getComment());
+    //    assertEquals(request.getComment(), responseBody.getComment());
     assertEquals(
         UUID.fromString("7ebf87eb-be90-45d8-b92c-25701897211f"), responseBody.getProjectId());
-//    assertEquals(request.getStepId(), responseBody.getStepId());
-//    assertEquals(request.getEmployeeId(), responseBody.getEmployeeId());
+    //    assertEquals(request.getStepId(), responseBody.getStepId());
+    //    assertEquals(request.getEmployeeId(), responseBody.getEmployeeId());
   }
 
   @Test
@@ -103,9 +103,9 @@ class TicketControllerEditByIdTest {
     String url = BASE_URL + "/" + ticketId;
     TicketEditRequestDTO request =
         TicketEditRequestDTO.builder()
-//            .comment("test")
-//            .stepId(UUID.fromString("5e47e5c5-4a3d-4e67-b41d-a04f94c6b93a"))
-//            .employeeId(UUID.fromString("a5cb9e8c-a9cb-4657-b1e4-1dec8bcdf997"))
+            //            .comment("test")
+            //            .stepId(UUID.fromString("5e47e5c5-4a3d-4e67-b41d-a04f94c6b93a"))
+            //            .employeeId(UUID.fromString("a5cb9e8c-a9cb-4657-b1e4-1dec8bcdf997"))
             .build();
     String requestBody = objectMapper.writeValueAsString(request);
     MvcResult response =
@@ -129,9 +129,9 @@ class TicketControllerEditByIdTest {
     String url = BASE_URL + "/" + ticketId;
     TicketEditRequestDTO request =
         TicketEditRequestDTO.builder()
-//            .comment("updated comment")
-//            .stepId(UUID.fromString("5e47e5c5-4a3d-4e67-b41d-a04f94c6b93a"))
-//            .employeeId(UUID.fromString("a5cb9e8c-a9cb-4657-b1e4-1dec8bcdf997"))
+            //            .comment("updated comment")
+            //            .stepId(UUID.fromString("5e47e5c5-4a3d-4e67-b41d-a04f94c6b93a"))
+            //            .employeeId(UUID.fromString("a5cb9e8c-a9cb-4657-b1e4-1dec8bcdf997"))
             .build();
     String requestBody = objectMapper.writeValueAsString(request);
     MvcResult response =
@@ -151,9 +151,9 @@ class TicketControllerEditByIdTest {
     String url = BASE_URL + "/" + ticketId;
     TicketEditRequestDTO request =
         TicketEditRequestDTO.builder()
-//            .comment("updated comment")
-//            .stepId(UUID.fromString("5e47e5c5-4a3d-4e67-b41d-a04f94c6b93a"))
-//            .employeeId(UUID.fromString("a5cb9e8c-a9cb-4657-b1e4-1dec8bcdf997"))
+            //            .comment("updated comment")
+            //            .stepId(UUID.fromString("5e47e5c5-4a3d-4e67-b41d-a04f94c6b93a"))
+            //            .employeeId(UUID.fromString("a5cb9e8c-a9cb-4657-b1e4-1dec8bcdf997"))
             .build();
     String requestBody = objectMapper.writeValueAsString(request);
     MvcResult response =
@@ -177,9 +177,9 @@ class TicketControllerEditByIdTest {
     String url = BASE_URL + "/" + ticketId;
     TicketEditRequestDTO request =
         TicketEditRequestDTO.builder()
-//            .comment("updated comment")
-//            .stepId(UUID.fromString("5e47e5c5-4a3d-4e67-b41d-a04f94c6b93a"))
-//            .employeeId(UUID.fromString("a5cb9e8c-a9cb-4657-b1e4-1dec8bcdf997"))
+            //            .comment("updated comment")
+            //            .stepId(UUID.fromString("5e47e5c5-4a3d-4e67-b41d-a04f94c6b93a"))
+            //            .employeeId(UUID.fromString("a5cb9e8c-a9cb-4657-b1e4-1dec8bcdf997"))
             .build();
     String requestBody = objectMapper.writeValueAsString(request);
     MvcResult response =

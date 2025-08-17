@@ -75,13 +75,15 @@ class TicketControllerGetByIdTest {
     TicketDTO responseBody = objectMapper.readValue(contentAsString, TicketDTO.class);
     assertEquals(HttpStatus.OK.value(), status);
     assertEquals(UUID.fromString(ticketId), responseBody.getId());
-//    assertEquals("second comment", responseBody.getComment());
-//    assertEquals(Instant.parse("2025-08-06T00:00:00Z"), responseBody.getCreated());
+    //    assertEquals("second comment", responseBody.getComment());
+    //    assertEquals(Instant.parse("2025-08-06T00:00:00Z"), responseBody.getCreated());
     assertEquals(
         UUID.fromString("7ebf87eb-be90-45d8-b92c-25701897211f"), responseBody.getProjectId());
-//    assertEquals(UUID.fromString("2b6c91be-8c18-46d0-8626-e9af7966c71a"), responseBody.getStepId());
-//    assertEquals(
-//        UUID.fromString("b7b06e2d-d4f7-4cab-872a-3861288b5da1"), responseBody.getEmployeeId());
+    //    assertEquals(UUID.fromString("2b6c91be-8c18-46d0-8626-e9af7966c71a"),
+    // responseBody.getStepId());
+    //    assertEquals(
+    //        UUID.fromString("b7b06e2d-d4f7-4cab-872a-3861288b5da1"),
+    // responseBody.getEmployeeId());
   }
 
   @Test
