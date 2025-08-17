@@ -265,7 +265,7 @@ class ProjectControllerTest {
         objectMapper.readValue(contentAsString, new TypeReference<>() {});
     assertEquals(HttpStatus.OK.value(), status);
     assertEquals(1, responseBody.size());
-    assertEquals("deploy api", responseBody.getFirst().getName());
+    assertEquals("building and launching space rocket", responseBody.getFirst().getName());
   }
 
   @Test

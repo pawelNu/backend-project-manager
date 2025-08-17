@@ -1,6 +1,12 @@
 import os
 import re
 
+def parse_version_from_path(path):
+  match = re.search(r'(\d+)\.(\d+)\.(\d+)', path)
+  if match:
+    return tuple(map(int, match.groups()))
+  return (0, 0, 0)
+
 def replace_all_ids_with_fresh_sequence(root_dir):
   current_id = 1
   yaml_file_paths = []
@@ -10,7 +16,9 @@ def replace_all_ids_with_fresh_sequence(root_dir):
       if filename.endswith(".yaml"):
         yaml_file_paths.append(os.path.join(dirpath, filename))
 
-  for filepath in sorted(yaml_file_paths):
+  yaml_file_paths.sort(key=parse_version_from_path)
+
+  for filepath in yaml_file_paths:
     with open(filepath, "r", encoding="utf-8") as file:
       lines = file.readlines()
 

@@ -18,6 +18,7 @@ public final class Path {
   private static final String PROJECTS = "/projects";
   private static final String PROJECT_STEP = "/project-steps";
   private static final String PROJECT_STEP_COMMENTS = "/project-step-comments";
+  private static final String TICKETS = "/tickets";
 
   public static final String API_AUTH = API_PREFIX + AUTH;
   public static final String API_AUTHORITIES = API_PREFIX + AUTHORITIES;
@@ -30,4 +31,5 @@ public final class Path {
   public static final String API_PROJECTS = API_PREFIX + PROJECTS;
   public static final String API_PROJECT_STEPS = API_PREFIX + PROJECT_STEP;
   public static final String API_PROJECT_STEP_COMMENTS = API_PREFIX + PROJECT_STEP_COMMENTS;
+  public static final String API_TICKETS = API_PREFIX + TICKETS;
 }

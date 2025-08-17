@@ -27,8 +27,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class TicketEntity extends Auditable {
-  @Id @GeneratedValue UUID id;
-  private String ticketNumber;
+  @Id @GeneratedValue private UUID id;
+  private String number;
   private String title;
 
   @ManyToOne

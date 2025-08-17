@@ -4,18 +4,17 @@
 --
 --
 create table categories (
-    id uuid not null,
+    id uuid primary key,
     name varchar(255) not null,
     version integer not null,
     created timestamp(6) without time zone not null,
     last_modified timestamp(6) without time zone not null,
-    is_deleted boolean not null,
-    primary key (id)
+    is_deleted boolean not null
 );
 --
 --
 create table category_values (
-    id uuid not null,
+    id uuid primary key,
     category_id uuid not null,
     numeric_value numeric(10, 2),
     string_value varchar(255),
@@ -23,15 +22,14 @@ create table category_values (
     version integer not null,
     created timestamp(6) without time zone not null,
     last_modified timestamp(6) without time zone not null,
-    is_deleted boolean not null,
-    primary key (id)
+    is_deleted boolean not null
 );
 alter table if exists category_values
 add constraint fk_category_values_and_categories foreign key (category_id) references categories;
 --
 --
 create table companies (
-    id uuid not null,
+    id uuid primary key,
     name varchar(255) not null,
     nip varchar(10) not null,
     regon varchar(9) not null,
@@ -40,15 +38,14 @@ create table companies (
     version integer not null,
     created timestamp(6) without time zone not null,
     last_modified timestamp(6) without time zone not null,
-    is_deleted boolean not null,
-    primary key (id)
+    is_deleted boolean not null
 );
 alter table if exists companies
 add constraint fk_companies_and_category_values foreign key (status_id) references category_values;
 --
 --
 create table company_addresses (
-    id uuid not null,
+    id uuid primary key,
     street varchar(255) not null,
     street_number varchar(255) not null,
     city varchar(255) not null,
@@ -61,15 +58,14 @@ create table company_addresses (
     version integer not null,
     created timestamp(6) without time zone not null,
     last_modified timestamp(6) without time zone not null,
-    is_deleted boolean not null,
-    primary key (id)
+    is_deleted boolean not null
 );
 alter table if exists company_addresses
 add constraint fk_company_addresses_and_companies foreign key (company_id) references companies;
 --
 --
 create table employees (
-    id uuid not null,
+    id uuid primary key,
     first_name varchar(255) not null,
     last_name varchar(255) not null,
     username varchar(255) not null,
@@ -77,12 +73,11 @@ create table employees (
     email varchar(255) not null,
     phone_number varchar(255) not null,
     role_id uuid,
-    company_id uuid not null,
+    company_id uuid,
     version integer not null,
     created timestamp(6) without time zone not null,
     last_modified timestamp(6) without time zone not null,
-    is_deleted boolean not null,
-    primary key (id)
+    is_deleted boolean not null
 );
 alter table if exists employees
 add constraint fk_employees_and_category_values foreign key (role_id) references category_values;
@@ -91,26 +86,24 @@ add constraint fk_employees_and_companies foreign key (company_id) references co
 --
 --
 create table authorities (
-    id uuid not null,
+    id uuid primary key,
     name_backend varchar(255) not null,
     name_frontend varchar(255),
     version integer not null,
     created timestamp(6) without time zone not null,
     last_modified timestamp(6) without time zone not null,
-    is_deleted boolean not null,
-    primary key (id)
+    is_deleted boolean not null
 );
 --
 --
 create table employee_authorities (
-    id uuid not null,
+    id uuid primary key,
     authority_id uuid,
     employee_id uuid,
     version integer not null,
     created timestamp(6) without time zone not null,
     last_modified timestamp(6) without time zone not null,
-    is_deleted boolean not null,
-    primary key (id)
+    is_deleted boolean not null
 );
 alter table if exists employee_authorities
 add constraint fk_employee_authorities_and_authorities foreign key (authority_id) references authorities;
@@ -119,7 +112,7 @@ add constraint fk_employee_authorities_and_employees foreign key (employee_id) r
 --
 --
 create table projects (
-    id uuid not null,
+    id uuid primary key,
     name varchar(255) not null,
     category_id uuid,
     company_id uuid,
@@ -128,8 +121,7 @@ create table projects (
     version integer not null,
     created timestamp(6) without time zone not null,
     last_modified timestamp(6) without time zone not null,
-    is_deleted boolean not null,
-    primary key (id)
+    is_deleted boolean not null
 );
 alter table if exists projects
 add constraint fk_projects_and_category_values_category foreign key (category_id) references category_values;
@@ -142,7 +134,7 @@ add constraint fk_projects_and_category_values_priority foreign key (priority_id
 --
 --
 create table project_steps (
-    id uuid not null,
+    id uuid primary key,
     name varchar(255) not null,
     project_id uuid,
     priority_id uuid,
@@ -151,8 +143,7 @@ create table project_steps (
     version integer not null,
     created timestamp(6) without time zone not null,
     last_modified timestamp(6) without time zone not null,
-    is_deleted boolean not null,
-    primary key (id)
+    is_deleted boolean not null
 );
 alter table if exists project_steps
 add constraint fk_project_steps_and_projects foreign key (project_id) references projects;
@@ -163,15 +154,14 @@ add constraint fk_project_steps_and_employees foreign key (assigned_employee_id)
 --
 --
 create table project_step_comments (
-    id uuid not null,
+    id uuid primary key,
     comment varchar(255) not null,
     project_step_id uuid,
     employee_id uuid,
     version integer not null,
     created timestamp(6) without time zone not null,
     last_modified timestamp(6) without time zone not null,
-    is_deleted boolean not null,
-    primary key (id)
+    is_deleted boolean not null
 );
 alter table if exists project_step_comments
 add constraint fk_project_step_comments_and_project_steps foreign key (project_step_id) references project_steps;
@@ -180,20 +170,19 @@ add constraint fk_project_step_comments_and_employees foreign key (employee_id) 
 --
 --
 create table tickets (
-    id uuid not null,
-    ticket_number varchar(255) not null,
+    id uuid primary key,
+    number varchar(255) not null unique,
     title varchar(255) not null,
     category_id uuid,
     deadline timestamp(6) without time zone,
     priority_id uuid,
-    additional_details varchar(1000) not null,
+    additional_details varchar(1000),
     project_id uuid,
     project_step_id uuid,
     version integer not null,
     created timestamp(6) without time zone not null,
     last_modified timestamp(6) without time zone not null,
-    is_deleted boolean not null,
-    primary key (id)
+    is_deleted boolean not null
 );
 alter table if exists tickets
 add constraint fk_tickets_and_category_values_category foreign key (category_id) references category_values;
@@ -206,7 +195,7 @@ add constraint fk_tickets_and_project_steps foreign key (project_step_id) refere
 --
 --
 create table attachments (
-    id uuid not null,
+    id uuid primary key,
     name varchar(255) not null,
     path_to_file text not null,
     project_id uuid,
@@ -214,8 +203,7 @@ create table attachments (
     version integer not null,
     created timestamp(6) without time zone not null,
     last_modified timestamp(6) without time zone not null,
-    is_deleted boolean not null,
-    primary key (id)
+    is_deleted boolean not null
 );
 alter table if exists attachments
 add constraint fk_attachments_and_projects foreign key (project_id) references projects;
@@ -224,7 +212,7 @@ add constraint fk_attachments_and_tickets foreign key (ticket_id) references tic
 --
 --
 create table ticket_histories (
-    id uuid not null,
+    id uuid primary key,
     ticket_id uuid,
     from_status_id uuid,
     to_status_id uuid,
@@ -234,8 +222,7 @@ create table ticket_histories (
     version integer not null,
     created timestamp(6) without time zone not null,
     last_modified timestamp(6) without time zone not null,
-    is_deleted boolean not null,
-    primary key (id)
+    is_deleted boolean not null
 );
 alter table if exists ticket_histories
 add constraint fk_ticket_histories_and_tickets foreign key (ticket_id) references tickets;
