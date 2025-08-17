@@ -144,7 +144,7 @@ class ProjectStepControllerGetListTest {
     assertEquals(HttpStatus.OK.value(), status);
     assertEquals(1, responseBody.size());
     assertEquals(
-        UUID.fromString("2b6c91be-8c18-46d0-8626-e9af7966c71a"), responseBody.getFirst().getId());
+        UUID.fromString("ed0e90b8-1bd4-4c63-8bc0-99c126d58514"), responseBody.getFirst().getId());
   }
 
   @Test
