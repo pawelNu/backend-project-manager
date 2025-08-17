@@ -3,7 +3,6 @@ package com.pawelnu.projectmanager.endpoints.ticket;
 import com.pawelnu.projectmanager.endpoints.category.QCategoryEntity;
 import com.pawelnu.projectmanager.endpoints.category.value.QCategoryValueEntity;
 import com.pawelnu.projectmanager.endpoints.project.QProjectEntity;
-import com.pawelnu.projectmanager.endpoints.project.step.ProjectStepEntity;
 import com.pawelnu.projectmanager.endpoints.project.step.QProjectStepEntity;
 import com.pawelnu.projectmanager.endpoints.ticket.dto.TicketRowDTO;
 import com.pawelnu.projectmanager.utils.PageableParams;
@@ -17,11 +16,8 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import java.time.Instant;
 import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.NotImplementedException;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 
@@ -43,11 +39,6 @@ public class TicketQueryRepository {
     if (!sequenceName.matches("^[a-zA-Z0-9_]+$")) throw new IllegalArgumentException();
     em.createNativeQuery("CREATE SEQUENCE " + sequenceName + " START 1 MAXVALUE 99999 INCREMENT 1")
         .executeUpdate();
-  }
-
-  public Optional<ProjectStepEntity> findById(UUID id) {
-    //    TODO implement Optional<ProjectStepEntity> findById(UUID id)
-    throw new NotImplementedException("not implemented!");
   }
 
   public List<TicketRowDTO> getList(PageableParams params) {

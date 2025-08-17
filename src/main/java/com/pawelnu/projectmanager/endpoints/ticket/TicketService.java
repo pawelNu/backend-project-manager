@@ -81,7 +81,7 @@ public class TicketService {
 
   public TicketEntity getTicketEntityById(UUID id) {
     return ticketRepository
-        .findById(id)
+        .findByIdAndIsDeletedFalse(id)
         .orElseThrow(() -> new NotFoundException(MSG.TICKET_NOT_FOUND + id));
   }
 

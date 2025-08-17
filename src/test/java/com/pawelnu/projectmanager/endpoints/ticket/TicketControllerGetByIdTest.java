@@ -17,6 +17,7 @@ import com.pawelnu.projectmanager.utils.Path;
 import com.pawelnu.projectmanager.utils.Utils;
 import com.pawelnu.projectmanager.utils.Utils.Postgres;
 import com.pawelnu.projectmanager.utils.Utils.SpringDataSource;
+import java.time.Instant;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
@@ -64,10 +65,9 @@ class TicketControllerGetByIdTest {
     Utils.generateToken(jwtUtils);
   }
 
-  // TODO adjust tests
   @Test
   void shouldReturn_200_getTicketById() throws Exception {
-    String ticketId = "1aa5c1b9-2a0c-49c7-ad85-b84da2c71fe7";
+    String ticketId = "828acb15-8c4a-4593-9ce6-0a62920de2a7";
     String url = BASE_URL + "/" + ticketId;
     MvcResult response = mockMvc.perform(get(url).with(withJwt())).andReturn();
     int status = response.getResponse().getStatus();
@@ -75,15 +75,15 @@ class TicketControllerGetByIdTest {
     TicketDTO responseBody = objectMapper.readValue(contentAsString, TicketDTO.class);
     assertEquals(HttpStatus.OK.value(), status);
     assertEquals(UUID.fromString(ticketId), responseBody.getId());
-    //    assertEquals("second comment", responseBody.getComment());
-    //    assertEquals(Instant.parse("2025-08-06T00:00:00Z"), responseBody.getCreated());
-    assertEquals(
-        UUID.fromString("7ebf87eb-be90-45d8-b92c-25701897211f"), responseBody.getProjectId());
-    //    assertEquals(UUID.fromString("2b6c91be-8c18-46d0-8626-e9af7966c71a"),
-    // responseBody.getStepId());
-    //    assertEquals(
-    //        UUID.fromString("b7b06e2d-d4f7-4cab-872a-3861288b5da1"),
-    // responseBody.getEmployeeId());
+    assertEquals("2025-T-27", responseBody.getNumber());
+    assertEquals("Final report and documentation archiving", responseBody.getTitle());
+    assertEquals(Instant.parse("2025-09-22T00:00:00Z"), responseBody.getDeadline());
+    assertEquals("ticket category", responseBody.getCategoryName());
+    assertEquals("ANALYZE", responseBody.getCategoryValue());
+    assertEquals("ticket priority", responseBody.getPriorityName());
+    assertEquals("HIGH", responseBody.getPriorityValue());
+    assertEquals("building and launching space rocket", responseBody.getProjectName());
+    assertEquals("Project Closure", responseBody.getProjectStepName());
   }
 
   @Test
@@ -100,7 +100,7 @@ class TicketControllerGetByIdTest {
 
   @Test
   void shouldReturn_401_getTicketById() throws Exception {
-    String ticketId = "cf578fec-006b-4604-a5e8-5ad1b3ea2be5";
+    String ticketId = "828acb15-8c4a-4593-9ce6-0a62920de2a7";
     String url = BASE_URL + "/" + ticketId;
     MvcResult response = mockMvc.perform(get(url)).andReturn();
     int status = response.getResponse().getStatus();
@@ -112,7 +112,7 @@ class TicketControllerGetByIdTest {
 
   @Test
   void shouldReturn_403_getTicketById() throws Exception {
-    String ticketId = "cf578fec-006b-4604-a5e8-5ad1b3ea2be5";
+    String ticketId = "828acb15-8c4a-4593-9ce6-0a62920de2a7";
     String url = BASE_URL + "/" + ticketId;
     MvcResult response = mockMvc.perform(get(url).with(withBadJwt())).andReturn();
     int status = response.getResponse().getStatus();
@@ -124,7 +124,7 @@ class TicketControllerGetByIdTest {
 
   @Test
   void shouldReturn_404_getTicketById() throws Exception {
-    String ticketId = "89258385-aa00-47d3-bafe-88bc1d56e6ee";
+    String ticketId = "7856096b-5d4d-4538-935b-bd159af88c8f";
     String url = BASE_URL + "/" + ticketId;
     MvcResult response = mockMvc.perform(get(url).with(withJwt())).andReturn();
     int status = response.getResponse().getStatus();
@@ -137,7 +137,7 @@ class TicketControllerGetByIdTest {
 
   @Test
   void shouldReturn_404_getTicketById_isDeletedTrue() throws Exception {
-    String ticketId = "610b92c2-8a12-47c2-977f-30f19769f265";
+    String ticketId = "52c58580-775a-460e-93bf-10b77f4f0881";
     String url = BASE_URL + "/" + ticketId;
     MvcResult response = mockMvc.perform(get(url).with(withJwt())).andReturn();
     int status = response.getResponse().getStatus();
