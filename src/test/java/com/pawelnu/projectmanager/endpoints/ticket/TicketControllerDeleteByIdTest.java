@@ -63,10 +63,9 @@ class TicketControllerDeleteByIdTest {
     Utils.generateToken(jwtUtils);
   }
 
-  // TODO adjust tests
   @Test
   void shouldReturn_200_deleteTicketById_isDeletedFalse() throws Exception {
-    String ticketId = "1f96b84d-98ad-429a-97a6-7be681ceffb8";
+    String ticketId = "13531048-a6c6-492a-a84f-8ec3c955e93d";
     String url = BASE_URL + "/" + ticketId;
     MvcResult response =
         mockMvc
@@ -76,7 +75,7 @@ class TicketControllerDeleteByIdTest {
     String contentAsString = response.getResponse().getContentAsString();
     SimpleResponse responseBody = objectMapper.readValue(contentAsString, SimpleResponse.class);
     assertEquals(HttpStatus.OK.value(), status);
-    assertEquals("Deleted ticket comment with id: " + ticketId, responseBody.getMessage());
+    assertEquals("Deleted ticket with id: " + ticketId, responseBody.getMessage());
   }
 
   @Test
@@ -96,7 +95,7 @@ class TicketControllerDeleteByIdTest {
 
   @Test
   void shouldReturn_401_deleteTicketById_isDeletedFalse() throws Exception {
-    String ticketId = "1f96b84d-98ad-429a-97a6-7be681ceffb8";
+    String ticketId = "13531048-a6c6-492a-a84f-8ec3c955e93d";
     String url = BASE_URL + "/" + ticketId;
     MvcResult response =
         mockMvc.perform(delete(url).contentType(MediaType.APPLICATION_JSON)).andReturn();
@@ -109,7 +108,7 @@ class TicketControllerDeleteByIdTest {
 
   @Test
   void shouldReturn_403_deleteTicketById_isDeletedFalse() throws Exception {
-    String ticketId = "1f96b84d-98ad-429a-97a6-7be681ceffb8";
+    String ticketId = "13531048-a6c6-492a-a84f-8ec3c955e93d";
     String url = BASE_URL + "/" + ticketId;
     MvcResult response =
         mockMvc
@@ -124,7 +123,7 @@ class TicketControllerDeleteByIdTest {
 
   @Test
   void shouldReturn_404_deleteTicketById_isDeletedFalse() throws Exception {
-    String ticketId = "75fe7aad-51d9-4049-ae11-a65690849432";
+    String ticketId = "81b9f13a-d598-4a24-bdef-833e02e30efd";
     String url = BASE_URL + "/" + ticketId;
     MvcResult response =
         mockMvc
