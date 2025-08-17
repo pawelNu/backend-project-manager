@@ -17,6 +17,9 @@ import com.pawelnu.projectmanager.utils.Path;
 import com.pawelnu.projectmanager.utils.Utils;
 import com.pawelnu.projectmanager.utils.Utils.Postgres;
 import com.pawelnu.projectmanager.utils.Utils.SpringDataSource;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
@@ -44,7 +47,7 @@ class TicketControllerCreateTest {
   @Autowired private JwtUtils jwtUtils;
   @Autowired private MockMvc mockMvc;
   @Autowired private ObjectMapper objectMapper;
-  private static final String BASE_URL = "/" + Path.API_PROJECT_STEP_COMMENTS;
+  private static final String BASE_URL = "/" + Path.API_TICKETS;
 
   @Container
   static PostgreSQLContainer<?> postgres =
@@ -65,14 +68,18 @@ class TicketControllerCreateTest {
     Utils.generateToken(jwtUtils);
   }
 
-  // TODO adjust tests
   @Test
   void shouldReturn_201_createTicket() throws Exception {
+    Instant deadline = LocalDateTime.of(2025, 8, 30, 0, 0).toInstant(ZoneOffset.UTC);
     TicketCreateRequestDTO request =
         TicketCreateRequestDTO.builder()
-            .comment("comment for test")
-            .projectStepId(UUID.fromString("9e9885ce-86d7-4ce7-8936-2db459fc6530"))
-            .employeeId(UUID.fromString("cff1680a-e821-4218-8ec6-b0b4ab941fb0"))
+            .title("test ticket for testing")
+            .categoryValueId(UUID.fromString("9210ed20-3f01-4c0a-947a-67f93caf557e"))
+            .deadline(deadline)
+            .priorityValueId(UUID.fromString("31259c88-a717-454c-bdd0-1dfa19245b77"))
+            .additionalDetails("additional details for testing")
+            .projectId(UUID.fromString("6e723e03-4a67-475c-b614-d3993947e596"))
+            .projectStepId(UUID.fromString("736cc0e9-b71f-4913-8974-ec6f0e942ae3"))
             .build();
     String requestBody = objectMapper.writeValueAsString(request);
     MvcResult response =
@@ -88,21 +95,27 @@ class TicketControllerCreateTest {
     TicketDTO responseBody = objectMapper.readValue(contentAsString, TicketDTO.class);
     assertEquals(HttpStatus.CREATED.value(), status);
     assertNotNull(responseBody.getId());
-    assertEquals(request.getComment(), responseBody.getComment());
-    assertEquals(request.getProjectStepId(), responseBody.getStepId());
-    assertEquals(
-        UUID.fromString("7ebf87eb-be90-45d8-b92c-25701897211f"), responseBody.getProjectId());
-    assertEquals(
-        UUID.fromString("cff1680a-e821-4218-8ec6-b0b4ab941fb0"), responseBody.getEmployeeId());
+    assertEquals(request.getTitle(), responseBody.getTitle());
+    assertEquals(request.getDeadline(), responseBody.getDeadline());
+    assertEquals(request.getAdditionalDetails(), responseBody.getAdditionalDetails());
+    assertEquals(request.getCategoryValueId(), responseBody.getCategoryValueId());
+    assertEquals(request.getPriorityValueId(), responseBody.getPriorityValueId());
+    assertEquals(request.getProjectId(), responseBody.getProjectId());
+    assertEquals(request.getProjectStepId(), responseBody.getProjectStepId());
   }
 
   @Test
   void shouldReturn_400_createTicket() throws Exception {
+    Instant deadline = LocalDateTime.of(2025, 8, 30, 0, 0).toInstant(ZoneOffset.UTC);
     TicketCreateRequestDTO request =
         TicketCreateRequestDTO.builder()
-            .comment("test")
-            .projectStepId(UUID.fromString("9e9885ce-86d7-4ce7-8936-2db459fc6530"))
-            .employeeId(UUID.fromString("cff1680a-e821-4218-8ec6-b0b4ab941fb0"))
+            .title("test")
+            .categoryValueId(UUID.fromString("9210ed20-3f01-4c0a-947a-67f93caf557e"))
+            .deadline(deadline)
+            .priorityValueId(UUID.fromString("31259c88-a717-454c-bdd0-1dfa19245b77"))
+            .additionalDetails("additional details for testing")
+            .projectId(UUID.fromString("6e723e03-4a67-475c-b614-d3993947e596"))
+            .projectStepId(UUID.fromString("736cc0e9-b71f-4913-8974-ec6f0e942ae3"))
             .build();
     String requestBody = objectMapper.writeValueAsString(request);
     MvcResult response =
@@ -118,17 +131,21 @@ class TicketControllerCreateTest {
     ReactAdminBadRequestError responseBody =
         objectMapper.readValue(contentAsString, ReactAdminBadRequestError.class);
     assertEquals(HttpStatus.BAD_REQUEST.value(), status);
-    assertEquals(
-        "Comment has to be at least 5 characters", responseBody.getErrors().get("comment"));
+    assertEquals("Title must be at least 5 characters", responseBody.getErrors().get("title"));
   }
 
   @Test
   void shouldReturn_401_createTicket() throws Exception {
+    Instant deadline = LocalDateTime.of(2025, 8, 30, 0, 0).toInstant(ZoneOffset.UTC);
     TicketCreateRequestDTO request =
         TicketCreateRequestDTO.builder()
-            .comment("comment for test")
-            .projectStepId(UUID.fromString("9e9885ce-86d7-4ce7-8936-2db459fc6530"))
-            .employeeId(UUID.fromString("cff1680a-e821-4218-8ec6-b0b4ab941fb0"))
+            .title("test ticket for testing")
+            .categoryValueId(UUID.fromString("9210ed20-3f01-4c0a-947a-67f93caf557e"))
+            .deadline(deadline)
+            .priorityValueId(UUID.fromString("31259c88-a717-454c-bdd0-1dfa19245b77"))
+            .additionalDetails("additional details for testing")
+            .projectId(UUID.fromString("6e723e03-4a67-475c-b614-d3993947e596"))
+            .projectStepId(UUID.fromString("736cc0e9-b71f-4913-8974-ec6f0e942ae3"))
             .build();
     String requestBody = objectMapper.writeValueAsString(request);
     MvcResult response =
@@ -144,11 +161,16 @@ class TicketControllerCreateTest {
 
   @Test
   void shouldReturn_403_createTicket() throws Exception {
+    Instant deadline = LocalDateTime.of(2025, 8, 30, 0, 0).toInstant(ZoneOffset.UTC);
     TicketCreateRequestDTO request =
         TicketCreateRequestDTO.builder()
-            .comment("comment for test")
-            .projectStepId(UUID.fromString("9e9885ce-86d7-4ce7-8936-2db459fc6530"))
-            .employeeId(UUID.fromString("cff1680a-e821-4218-8ec6-b0b4ab941fb0"))
+            .title("test ticket for testing")
+            .categoryValueId(UUID.fromString("9210ed20-3f01-4c0a-947a-67f93caf557e"))
+            .deadline(deadline)
+            .priorityValueId(UUID.fromString("31259c88-a717-454c-bdd0-1dfa19245b77"))
+            .additionalDetails("additional details for testing")
+            .projectId(UUID.fromString("6e723e03-4a67-475c-b614-d3993947e596"))
+            .projectStepId(UUID.fromString("736cc0e9-b71f-4913-8974-ec6f0e942ae3"))
             .build();
     String requestBody = objectMapper.writeValueAsString(request);
     MvcResult response =

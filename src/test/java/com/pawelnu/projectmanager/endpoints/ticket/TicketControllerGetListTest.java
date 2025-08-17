@@ -44,7 +44,7 @@ class TicketControllerGetListTest {
   @Autowired private JwtUtils jwtUtils;
   @Autowired private MockMvc mockMvc;
   @Autowired private ObjectMapper objectMapper;
-  private static final String BASE_URL = "/" + Path.API_PROJECT_STEP_COMMENTS;
+  private static final String BASE_URL = "/" + Path.API_TICKETS;
 
   @Container
   static PostgreSQLContainer<?> postgres =
