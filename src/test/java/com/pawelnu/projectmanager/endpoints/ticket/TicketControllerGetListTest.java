@@ -65,7 +65,6 @@ class TicketControllerGetListTest {
     Utils.generateToken(jwtUtils);
   }
 
-  // TODO adjust tests
   @Test
   void shouldReturn_200_getTicketList() throws Exception {
     List<String> range = List.of("0", "1");
@@ -81,12 +80,12 @@ class TicketControllerGetListTest {
     assertEquals("items 0-1", headerContentRange.substring(0, 9));
     assertEquals(2, responseBody.size());
     assertEquals(
-        UUID.fromString("bfd8a91f-bb6b-49e7-8e9a-fcb270fa7408"), responseBody.getFirst().getId());
+        UUID.fromString("828acb15-8c4a-4593-9ce6-0a62920de2a7"), responseBody.getFirst().getId());
   }
 
   @Test
   void shouldReturn_200_getTicketList_withFilters() throws Exception {
-    Map<String, String> filter = Map.of(Field.comment, "th", Field.projectStepName, "1");
+    Map<String, String> filter = Map.of(Field.number, "9", Field.title, "and");
     String filterStrig = objectMapper.writeValueAsString(filter);
     MvcResult response =
         mockMvc.perform(get(BASE_URL).with(withJwt()).param("filter", filterStrig)).andReturn();
@@ -96,16 +95,16 @@ class TicketControllerGetListTest {
     List<TicketDTO> responseBody =
         objectMapper.readValue(contentAsString, new TypeReference<>() {});
     assertEquals(HttpStatus.OK.value(), status);
-    assertEquals("items 0-2/3", headerContentRange);
-    assertEquals(3, responseBody.size());
+    assertEquals("items 0-1/2", headerContentRange);
+    assertEquals(2, responseBody.size());
     assertEquals(
-        UUID.fromString("1f96b84d-98ad-429a-97a6-7be681ceffb8"), responseBody.getFirst().getId());
+        UUID.fromString("6fe31f7d-840f-4767-829e-475f402d16e3"), responseBody.getFirst().getId());
   }
 
   @Test
   void shouldReturn_200_getTicketList_withFiltersAndSort() throws Exception {
-    List<String> sort = List.of(Field.assignedEmployee, "DESC");
-    Map<String, String> filter = Map.of(Field.comment, "th");
+    List<String> sort = List.of(Field.deadline, "DESC");
+    Map<String, String> filter = Map.of(Field.title, "and");
     String sortString = objectMapper.writeValueAsString(sort);
     String filterStrig = objectMapper.writeValueAsString(filter);
     MvcResult response =
@@ -122,16 +121,16 @@ class TicketControllerGetListTest {
     List<TicketDTO> responseBody =
         objectMapper.readValue(contentAsString, new TypeReference<>() {});
     assertEquals(HttpStatus.OK.value(), status);
-    assertEquals("items 0-2/3", headerContentRange);
-    assertEquals(3, responseBody.size());
+    assertEquals("items 0-3/4", headerContentRange);
+    assertEquals(4, responseBody.size());
     assertEquals(
-        UUID.fromString("052b6078-6c32-4e36-9f1f-01c30c7bac90"), responseBody.getFirst().getId());
+        UUID.fromString("828acb15-8c4a-4593-9ce6-0a62920de2a7"), responseBody.getFirst().getId());
   }
 
   @Test
   void shouldReturn_200_getTicketList_withRange() throws Exception {
     List<String> range = List.of("0", "0");
-    List<String> sort = List.of(Field.projectStepName, "ASC");
+    List<String> sort = List.of(Field.number, "ASC");
     String rangeString = objectMapper.writeValueAsString(range);
     String sortString = objectMapper.writeValueAsString(sort);
     MvcResult response =
@@ -146,12 +145,12 @@ class TicketControllerGetListTest {
     assertEquals(HttpStatus.OK.value(), status);
     assertEquals(1, responseBody.size());
     assertEquals(
-        UUID.fromString("1f96b84d-98ad-429a-97a6-7be681ceffb8"), responseBody.getFirst().getId());
+        UUID.fromString("5235bd17-661d-4ccb-9b37-effa2aadc462"), responseBody.getFirst().getId());
   }
 
   @Test
   void shouldReturn_200_getTicketList_emptyResult() throws Exception {
-    Map<String, String> filter = Map.of("comment", "not exists");
+    Map<String, String> filter = Map.of(Field.number, "not exists");
     String filterStrig = objectMapper.writeValueAsString(filter);
     MvcResult response =
         mockMvc.perform(get(BASE_URL).with(withJwt()).param("filter", filterStrig)).andReturn();
