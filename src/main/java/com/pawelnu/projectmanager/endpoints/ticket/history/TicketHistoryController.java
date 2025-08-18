@@ -1,8 +1,8 @@
 package com.pawelnu.projectmanager.endpoints.ticket.history;
 
-import com.pawelnu.projectmanager.endpoints.ticket.history.dto.TicketCreateRequestDTO;
-import com.pawelnu.projectmanager.endpoints.ticket.history.dto.TicketDTO;
-import com.pawelnu.projectmanager.endpoints.ticket.history.dto.TicketEditRequestDTO;
+import com.pawelnu.projectmanager.endpoints.ticket.history.dto.TicketHistoryCreateRequestDTO;
+import com.pawelnu.projectmanager.endpoints.ticket.history.dto.TicketHistoryDTO;
+import com.pawelnu.projectmanager.endpoints.ticket.history.dto.TicketHistoryEditRequestDTO;
 import com.pawelnu.projectmanager.endpoints.ticket.history.dto.TicketListResponseDTO;
 import com.pawelnu.projectmanager.exception.model.SimpleResponse;
 import java.util.List;
@@ -19,12 +19,12 @@ public class TicketHistoryController implements TicketHistoryApi {
   private final TicketHistoryService ticketHistoryService;
 
   @Override
-  public ResponseEntity<TicketDTO> create(TicketCreateRequestDTO body) {
+  public ResponseEntity<TicketHistoryDTO> create(TicketHistoryCreateRequestDTO body) {
     return ResponseEntity.status(HttpStatus.CREATED).body(ticketHistoryService.create(body));
   }
 
   @Override
-  public ResponseEntity<List<TicketDTO>> getList(String sort, String range, String filter) {
+  public ResponseEntity<List<TicketHistoryDTO>> getList(String sort, String range, String filter) {
     TicketListResponseDTO result = ticketHistoryService.filter(sort, range, filter);
     return ResponseEntity.ok()
         .header("Content-Range", result.getContentRange())
@@ -32,12 +32,12 @@ public class TicketHistoryController implements TicketHistoryApi {
   }
 
   @Override
-  public ResponseEntity<TicketDTO> getById(UUID id) {
+  public ResponseEntity<TicketHistoryDTO> getById(UUID id) {
     return ResponseEntity.ok(ticketHistoryService.getById(id));
   }
 
   @Override
-  public ResponseEntity<TicketDTO> editById(UUID id, TicketEditRequestDTO body) {
+  public ResponseEntity<TicketHistoryDTO> editById(UUID id, TicketHistoryEditRequestDTO body) {
     return ResponseEntity.ok(ticketHistoryService.editById(id, body));
   }
 

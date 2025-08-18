@@ -5,7 +5,7 @@ import java.util.UUID;
 import lombok.Data;
 
 @Data
-public class TicketDTO {
+public class TicketHistoryDTO {
   private UUID id;
   private String number;
   private String title;

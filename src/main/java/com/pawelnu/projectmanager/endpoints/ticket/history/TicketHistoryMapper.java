@@ -1,7 +1,7 @@
 package com.pawelnu.projectmanager.endpoints.ticket.history;
 
 import com.pawelnu.projectmanager.endpoints.ticket.TicketEntity;
-import com.pawelnu.projectmanager.endpoints.ticket.history.dto.TicketDTO;
+import com.pawelnu.projectmanager.endpoints.ticket.history.dto.TicketHistoryDTO;
 import com.pawelnu.projectmanager.endpoints.ticket.history.dto.TicketRowDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -21,7 +21,7 @@ public interface TicketHistoryMapper {
   @Mapping(source = "project.name", target = "projectName")
   @Mapping(source = "step.id", target = "projectStepId")
   @Mapping(source = "step.name", target = "projectStepName")
-  TicketDTO toDTO(TicketEntity entity);
+  TicketHistoryDTO toDTO(TicketEntity entity);
 
-  TicketDTO toDTO(TicketRowDTO row);
+  TicketHistoryDTO toDTO(TicketRowDTO row);
 }

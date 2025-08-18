@@ -1,8 +1,8 @@
 package com.pawelnu.projectmanager.endpoints.ticket.history;
 
-import com.pawelnu.projectmanager.endpoints.ticket.history.dto.TicketCreateRequestDTO;
-import com.pawelnu.projectmanager.endpoints.ticket.history.dto.TicketDTO;
-import com.pawelnu.projectmanager.endpoints.ticket.history.dto.TicketEditRequestDTO;
+import com.pawelnu.projectmanager.endpoints.ticket.history.dto.TicketHistoryCreateRequestDTO;
+import com.pawelnu.projectmanager.endpoints.ticket.history.dto.TicketHistoryDTO;
+import com.pawelnu.projectmanager.endpoints.ticket.history.dto.TicketHistoryEditRequestDTO;
 import com.pawelnu.projectmanager.exception.model.SimpleResponse;
 import com.pawelnu.projectmanager.utils.Path;
 import com.pawelnu.projectmanager.utils.ResponseErrors;
@@ -37,25 +37,26 @@ public interface TicketHistoryApi {
       content = {
         @Content(
             mediaType = MediaType.APPLICATION_JSON_VALUE,
-            schema = @Schema(implementation = TicketDTO.class))
+            schema = @Schema(implementation = TicketHistoryDTO.class))
       })
   @ResponseErrors
   @PostMapping("")
-  @Operation(description = "Add new ticket.")
-  ResponseEntity<TicketDTO> create(@Valid @RequestBody TicketCreateRequestDTO body);
+  @Operation(description = "Add new ticket history.")
+  ResponseEntity<TicketHistoryDTO> create(@Valid @RequestBody TicketHistoryCreateRequestDTO body);
 
   @Operation(
-      description = "List tickets with filtering, sorting and pagination (react-admin format)")
+      description =
+          "List ticket histories with filtering, sorting and pagination (react-admin format)")
   @ApiResponse(
       responseCode = "200",
       description = "OK",
       content =
           @Content(
               mediaType = MediaType.APPLICATION_JSON_VALUE,
-              array = @ArraySchema(schema = @Schema(implementation = TicketDTO.class))))
+              array = @ArraySchema(schema = @Schema(implementation = TicketHistoryDTO.class))))
   @ResponseErrors
   @GetMapping("")
-  ResponseEntity<List<TicketDTO>> getList(
+  ResponseEntity<List<TicketHistoryDTO>> getList(
       @Parameter(description = "Sort as JSON string, e.g. [\"title\",\"ASC\"]")
           @RequestParam(required = false)
           String sort,
@@ -71,12 +72,12 @@ public interface TicketHistoryApi {
       content = {
         @Content(
             mediaType = MediaType.APPLICATION_JSON_VALUE,
-            schema = @Schema(implementation = TicketDTO.class))
+            schema = @Schema(implementation = TicketHistoryDTO.class))
       })
   @ResponseErrors
   @GetMapping("/{id}")
-  @Operation(description = "Get ticket by id.")
-  ResponseEntity<TicketDTO> getById(@Parameter() @PathVariable() UUID id);
+  @Operation(description = "Get ticket history by id.")
+  ResponseEntity<TicketHistoryDTO> getById(@Parameter() @PathVariable() UUID id);
 
   @ApiResponse(
       responseCode = "200",
@@ -84,13 +85,13 @@ public interface TicketHistoryApi {
       content = {
         @Content(
             mediaType = MediaType.APPLICATION_JSON_VALUE,
-            schema = @Schema(implementation = TicketDTO.class))
+            schema = @Schema(implementation = TicketHistoryDTO.class))
       })
   @ResponseErrors
   @PutMapping("/{id}")
-  @Operation(description = "Edit ticket by id.")
-  ResponseEntity<TicketDTO> editById(
-      @Parameter() @PathVariable() UUID id, @Valid @RequestBody TicketEditRequestDTO body);
+  @Operation(description = "Edit ticket history by id.")
+  ResponseEntity<TicketHistoryDTO> editById(
+      @Parameter() @PathVariable() UUID id, @Valid @RequestBody TicketHistoryEditRequestDTO body);
 
   @ApiResponse(
       responseCode = "200",
@@ -102,6 +103,6 @@ public interface TicketHistoryApi {
       })
   @ResponseErrors
   @DeleteMapping("/{id}")
-  @Operation(description = "Delete ticket by id.")
+  @Operation(description = "Delete ticket history by id.")
   ResponseEntity<SimpleResponse> deleteById(@Parameter() @PathVariable() UUID id);
 }

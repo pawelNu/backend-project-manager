@@ -4,9 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pawelnu.projectmanager.endpoints.category.value.CategoryValueService;
 import com.pawelnu.projectmanager.endpoints.project.ProjectService;
 import com.pawelnu.projectmanager.endpoints.project.step.ProjectStepService;
-import com.pawelnu.projectmanager.endpoints.ticket.history.dto.TicketCreateRequestDTO;
-import com.pawelnu.projectmanager.endpoints.ticket.history.dto.TicketDTO;
-import com.pawelnu.projectmanager.endpoints.ticket.history.dto.TicketEditRequestDTO;
+import com.pawelnu.projectmanager.endpoints.ticket.history.dto.TicketHistoryCreateRequestDTO;
+import com.pawelnu.projectmanager.endpoints.ticket.history.dto.TicketHistoryDTO;
+import com.pawelnu.projectmanager.endpoints.ticket.history.dto.TicketHistoryEditRequestDTO;
 import com.pawelnu.projectmanager.endpoints.ticket.history.dto.TicketListResponseDTO;
 import com.pawelnu.projectmanager.endpoints.ticket.history.dto.TicketRowDTO;
 import com.pawelnu.projectmanager.exception.model.SimpleResponse;
@@ -34,7 +34,7 @@ public class TicketHistoryService {
   private final TicketHistoryMapper ticketHistoryMapper;
   private final ObjectMapper objectMapper;
 
-  public TicketDTO create(TicketCreateRequestDTO body) {
+  public TicketHistoryDTO create(TicketHistoryCreateRequestDTO body) {
     //    CategoryValueEntity ticketCategory =
     //        categoryValueService.getCategoryValueById(body.getCategoryValueId());
     //    CategoryValueEntity ticketPriority =
@@ -58,7 +58,7 @@ public class TicketHistoryService {
     throw new NotImplementedException("not implemented");
   }
 
-  public TicketDTO getById(UUID id) {
+  public TicketHistoryDTO getById(UUID id) {
     //    TicketEntity companyEntity = getTicketEntityById(id);
     //    return ticketHistoryMapper.toDTO(companyEntity);
     throw new NotImplementedException("not implemented");
@@ -84,7 +84,7 @@ public class TicketHistoryService {
     throw new NotImplementedException("not implemented");
   }
 
-  public TicketDTO editById(UUID id, TicketEditRequestDTO body) {
+  public TicketHistoryDTO editById(UUID id, TicketHistoryEditRequestDTO body) {
     //    TicketEntity ticketToEdit = getTicketEntityById(id);
     //    CategoryValueEntity ticketCategory =
     //        categoryValueService.getCategoryValueById(body.getCategoryValueId());
@@ -109,7 +109,7 @@ public class TicketHistoryService {
     PageableParams params = Shared.preparePageableParams(objectMapper, sort, range, filter);
 
     List<TicketRowDTO> results = ticketHistoryQueryRepository.getList(params);
-    List<TicketDTO> projectDTOs = results.stream().map(ticketHistoryMapper::toDTO).toList();
+    List<TicketHistoryDTO> projectDTOs = results.stream().map(ticketHistoryMapper::toDTO).toList();
     String contentRange =
         Shared.prepareContentRange(
             results.isEmpty() ? 0 : results.getFirst().getTotalElements(),

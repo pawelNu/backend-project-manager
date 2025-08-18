@@ -7,6 +7,6 @@ import lombok.Data;
 @Data
 @Builder
 public class TicketListResponseDTO {
-  private List<TicketDTO> data;
+  private List<TicketHistoryDTO> data;
   private String contentRange;
 }
