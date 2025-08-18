@@ -74,16 +74,15 @@ public class TicketHistoryService {
   }
 
   public SimpleResponse deleteById(UUID id) {
-    //    TicketHistoryEntity projectToDelete = getTicketEntityById(id);
-    //    projectToDelete.setIsDeleted(true);
-    //    TicketHistoryEntity projectDeleted = ticketHistoryRepository.save(projectToDelete);
-    //    String item = "ticket history";
-    //    if (projectDeleted.getIsDeleted()) {
-    //      return SimpleResponse.builder().message(Shared.deleteMessage(item, id)).build();
-    //    } else {
-    //      return SimpleResponse.builder().message(Shared.cannotDeleteMessage(item, id)).build();
-    //    }
-    throw new NotImplementedException("not implemented");
+    TicketHistoryEntity historyToDelete = getTicketEntityById(id);
+    historyToDelete.setIsDeleted(true);
+    TicketHistoryEntity historyDeleted = ticketHistoryRepository.save(historyToDelete);
+    String item = "ticket history";
+    if (historyDeleted.getIsDeleted()) {
+      return SimpleResponse.builder().message(Shared.deleteMessage(item, id)).build();
+    } else {
+      return SimpleResponse.builder().message(Shared.cannotDeleteMessage(item, id)).build();
+    }
   }
 
   public TicketHistoryDTO editById(UUID id, TicketHistoryEditRequestDTO body) {
