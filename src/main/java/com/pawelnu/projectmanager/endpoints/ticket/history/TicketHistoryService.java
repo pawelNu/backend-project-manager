@@ -1,9 +1,14 @@
 package com.pawelnu.projectmanager.endpoints.ticket.history;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.pawelnu.projectmanager.endpoints.category.value.CategoryValueEntity;
 import com.pawelnu.projectmanager.endpoints.category.value.CategoryValueService;
+import com.pawelnu.projectmanager.endpoints.company.employee.EmployeeEntity;
+import com.pawelnu.projectmanager.endpoints.company.employee.EmployeeService;
 import com.pawelnu.projectmanager.endpoints.project.ProjectService;
 import com.pawelnu.projectmanager.endpoints.project.step.ProjectStepService;
+import com.pawelnu.projectmanager.endpoints.ticket.TicketEntity;
+import com.pawelnu.projectmanager.endpoints.ticket.TicketService;
 import com.pawelnu.projectmanager.endpoints.ticket.history.dto.TicketHistoryCreateRequestDTO;
 import com.pawelnu.projectmanager.endpoints.ticket.history.dto.TicketHistoryDTO;
 import com.pawelnu.projectmanager.endpoints.ticket.history.dto.TicketHistoryEditRequestDTO;
@@ -28,34 +33,32 @@ public class TicketHistoryService {
 
   private final TicketHistoryRepository ticketHistoryRepository;
   private final TicketHistoryQueryRepository ticketHistoryQueryRepository;
+  private final TicketService ticketService;
   private final CategoryValueService categoryValueService;
+  private final EmployeeService employeeService;
   private final ProjectService projectService;
   private final ProjectStepService projectStepService;
   private final TicketHistoryMapper ticketHistoryMapper;
   private final ObjectMapper objectMapper;
 
   public TicketHistoryDTO create(TicketHistoryCreateRequestDTO body) {
-    //    CategoryValueEntity ticketCategory =
-    //        categoryValueService.getCategoryValueById(body.getCategoryValueId());
-    //    CategoryValueEntity ticketPriority =
-    //        categoryValueService.getCategoryValueById(body.getPriorityValueId());
-    //    ProjectEntity projectEntity = projectService.getProjectEntityById(body.getProjectId());
-    //    ProjectStepEntity stepEntity =
-    //        projectStepService.getProjectStepEntityById(body.getProjectStepId());
-    //    TicketEntity ticketEntity =
-    //        TicketEntity.builder()
-    //            .number(generateTicketNumber())
-    //            .title(body.getTitle())
-    //            .category(ticketCategory)
-    //            .deadline(body.getDeadline())
-    //            .priority(ticketPriority)
-    //            .additionalDetails(body.getAdditionalDetails())
-    //            .project(projectEntity)
-    //            .step(stepEntity)
-    //            .build();
-    //    TicketEntity savedTicket = ticketHistoryRepository.save(ticketEntity);
-    //    return ticketHistoryMapper.toDTO(savedTicket);
-    throw new NotImplementedException("not implemented");
+    TicketEntity ticket = ticketService.getTicketEntityById(body.getTicketId());
+    CategoryValueEntity fromStatus =
+        categoryValueService.getCategoryValueById(body.getFromStatusId());
+    CategoryValueEntity toStatus = categoryValueService.getCategoryValueById(body.getToStatusId());
+    EmployeeEntity fromEmployee = employeeService.getEmployeeEntityById(body.getFromEmployeeId());
+    EmployeeEntity toEmployee = employeeService.getEmployeeEntityById(body.getToEmployeeId());
+    TicketHistoryEntity ticketHistoryEntity =
+        TicketHistoryEntity.builder()
+            .ticket(ticket)
+            .fromStatus(fromStatus)
+            .toStatus(toStatus)
+            .fromEmployee(fromEmployee)
+            .toEmployee(toEmployee)
+            .comment(body.getComment())
+            .build();
+    TicketHistoryEntity savedHistory = ticketHistoryRepository.save(ticketHistoryEntity);
+    return ticketHistoryMapper.toDTO(savedHistory);
   }
 
   public TicketHistoryDTO getById(UUID id) {
