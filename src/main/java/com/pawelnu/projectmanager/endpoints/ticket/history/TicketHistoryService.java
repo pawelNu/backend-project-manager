@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.NotImplementedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -64,17 +63,17 @@ public class TicketHistoryService {
   }
 
   public TicketHistoryDTO getById(UUID id) {
-    return ticketHistoryMapper.toDTO(getTicketEntityById(id));
+    return ticketHistoryMapper.toDTO(getTicketHistoryEntityById(id));
   }
 
-  public TicketHistoryEntity getTicketEntityById(UUID id) {
+  public TicketHistoryEntity getTicketHistoryEntityById(UUID id) {
     return ticketHistoryRepository
         .findByIdAndIsDeletedFalse(id)
         .orElseThrow(() -> new NotFoundException(MSG.TICKET_HISTORY_NOT_FOUND + id));
   }
 
   public SimpleResponse deleteById(UUID id) {
-    TicketHistoryEntity historyToDelete = getTicketEntityById(id);
+    TicketHistoryEntity historyToDelete = getTicketHistoryEntityById(id);
     historyToDelete.setIsDeleted(true);
     TicketHistoryEntity historyDeleted = ticketHistoryRepository.save(historyToDelete);
     String item = "ticket history";
@@ -86,24 +85,21 @@ public class TicketHistoryService {
   }
 
   public TicketHistoryDTO editById(UUID id, TicketHistoryEditRequestDTO body) {
-    //    TicketEntity ticketToEdit = getTicketEntityById(id);
-    //    CategoryValueEntity ticketCategory =
-    //        categoryValueService.getCategoryValueById(body.getCategoryValueId());
-    //    CategoryValueEntity ticketPriority =
-    //        categoryValueService.getCategoryValueById(body.getPriorityValueId());
-    //    ProjectEntity projectEntity = projectService.getProjectEntityById(body.getProjectId());
-    //    ProjectStepEntity stepEntity =
-    //        projectStepService.getProjectStepEntityById(body.getProjectStepId());
-    //    ticketToEdit.setTitle(body.getTitle());
-    //    ticketToEdit.setCategory(ticketCategory);
-    //    ticketToEdit.setDeadline(body.getDeadline());
-    //    ticketToEdit.setPriority(ticketPriority);
-    //    ticketToEdit.setAdditionalDetails(body.getAdditionalDetails());
-    //    ticketToEdit.setProject(projectEntity);
-    //    ticketToEdit.setStep(stepEntity);
-    //    TicketEntity updatedTicket = ticketHistoryRepository.save(ticketToEdit);
-    //    return ticketHistoryMapper.toDTO(updatedTicket);
-    throw new NotImplementedException("not implemented");
+    TicketHistoryEntity historyToEdit = getTicketHistoryEntityById(id);
+    TicketEntity ticket = ticketService.getTicketEntityById(body.getTicketId());
+    CategoryValueEntity fromStatus =
+        categoryValueService.getCategoryValueById(body.getFromStatusId());
+    CategoryValueEntity toStatus = categoryValueService.getCategoryValueById(body.getToStatusId());
+    EmployeeEntity fromEmployee = employeeService.getEmployeeEntityById(body.getFromEmployeeId());
+    EmployeeEntity toEmployee = employeeService.getEmployeeEntityById(body.getToEmployeeId());
+    historyToEdit.setTicket(ticket);
+    historyToEdit.setFromStatus(fromStatus);
+    historyToEdit.setToStatus(toStatus);
+    historyToEdit.setFromEmployee(fromEmployee);
+    historyToEdit.setToEmployee(toEmployee);
+    historyToEdit.setComment(body.getComment());
+    TicketHistoryEntity updatedTicket = ticketHistoryRepository.save(historyToEdit);
+    return ticketHistoryMapper.toDTO(updatedTicket);
   }
 
   public TicketListResponseDTO filter(String sort, String range, String filter) {
