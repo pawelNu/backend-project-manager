@@ -1,8 +1,8 @@
 package com.pawelnu.projectmanager.endpoints.ticket.history;
 
 import com.pawelnu.projectmanager.endpoints.ticket.TicketEntity;
-import com.pawelnu.projectmanager.endpoints.ticket.dto.TicketDTO;
-import com.pawelnu.projectmanager.endpoints.ticket.dto.TicketRowDTO;
+import com.pawelnu.projectmanager.endpoints.ticket.history.dto.TicketDTO;
+import com.pawelnu.projectmanager.endpoints.ticket.history.dto.TicketRowDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

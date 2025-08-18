@@ -5,7 +5,7 @@ import com.pawelnu.projectmanager.endpoints.category.value.QCategoryValueEntity;
 import com.pawelnu.projectmanager.endpoints.project.QProjectEntity;
 import com.pawelnu.projectmanager.endpoints.project.step.QProjectStepEntity;
 import com.pawelnu.projectmanager.endpoints.ticket.QTicketEntity;
-import com.pawelnu.projectmanager.endpoints.ticket.dto.TicketRowDTO;
+import com.pawelnu.projectmanager.endpoints.ticket.history.dto.TicketRowDTO;
 import com.pawelnu.projectmanager.utils.PageableParams;
 import com.pawelnu.projectmanager.utils.Shared;
 import com.pawelnu.projectmanager.utils.Shared.Field;

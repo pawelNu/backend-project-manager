@@ -1,8 +1,9 @@
 package com.pawelnu.projectmanager.endpoints.ticket.history;
 
-import com.pawelnu.projectmanager.endpoints.ticket.dto.TicketCreateRequestDTO;
-import com.pawelnu.projectmanager.endpoints.ticket.dto.TicketDTO;
-import com.pawelnu.projectmanager.endpoints.ticket.dto.TicketEditRequestDTO;
+
+import com.pawelnu.projectmanager.endpoints.ticket.history.dto.TicketCreateRequestDTO;
+import com.pawelnu.projectmanager.endpoints.ticket.history.dto.TicketDTO;
+import com.pawelnu.projectmanager.endpoints.ticket.history.dto.TicketEditRequestDTO;
 import com.pawelnu.projectmanager.exception.model.SimpleResponse;
 import com.pawelnu.projectmanager.utils.Path;
 import com.pawelnu.projectmanager.utils.ResponseErrors;
