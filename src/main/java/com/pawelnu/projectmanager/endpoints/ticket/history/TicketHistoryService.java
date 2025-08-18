@@ -64,9 +64,7 @@ public class TicketHistoryService {
   }
 
   public TicketHistoryDTO getById(UUID id) {
-    //    TicketEntity companyEntity = getTicketEntityById(id);
-    //    return ticketHistoryMapper.toDTO(companyEntity);
-    throw new NotImplementedException("not implemented");
+    return ticketHistoryMapper.toDTO(getTicketEntityById(id));
   }
 
   public TicketHistoryEntity getTicketEntityById(UUID id) {
