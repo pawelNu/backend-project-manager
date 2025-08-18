@@ -1,11 +1,9 @@
 package com.pawelnu.projectmanager.endpoints.ticket.history;
 
-import com.pawelnu.projectmanager.endpoints.category.QCategoryEntity;
 import com.pawelnu.projectmanager.endpoints.category.value.QCategoryValueEntity;
-import com.pawelnu.projectmanager.endpoints.project.QProjectEntity;
-import com.pawelnu.projectmanager.endpoints.project.step.QProjectStepEntity;
+import com.pawelnu.projectmanager.endpoints.company.employee.QEmployeeEntity;
 import com.pawelnu.projectmanager.endpoints.ticket.QTicketEntity;
-import com.pawelnu.projectmanager.endpoints.ticket.history.dto.TicketRowDTO;
+import com.pawelnu.projectmanager.endpoints.ticket.history.dto.TicketHistoryRowDTO;
 import com.pawelnu.projectmanager.utils.PageableParams;
 import com.pawelnu.projectmanager.utils.Shared;
 import com.pawelnu.projectmanager.utils.Shared.Field;
@@ -28,53 +26,45 @@ import org.springframework.stereotype.Repository;
 public class TicketHistoryQueryRepository {
   private final JPAQueryFactory queryFactory;
   private final EntityManager em;
+  private final QTicketHistoryEntity history = QTicketHistoryEntity.ticketHistoryEntity;
   private final QTicketEntity ticket = QTicketEntity.ticketEntity;
-  private final QCategoryEntity category = new QCategoryEntity("category");
-  private final QCategoryEntity priority = new QCategoryEntity("priority");
-  private final QCategoryValueEntity categoryValue = new QCategoryValueEntity("categoryValue");
-  private final QCategoryValueEntity priorityValue = new QCategoryValueEntity("priorityValue");
-  private final QProjectEntity project = QProjectEntity.projectEntity;
-  private final QProjectStepEntity projectStep = QProjectStepEntity.projectStepEntity;
+  private final QCategoryValueEntity fromStatus = new QCategoryValueEntity("fromStatus");
+  private final QCategoryValueEntity toStatus = new QCategoryValueEntity("toStatus");
+  private final QEmployeeEntity fromEmployee = new QEmployeeEntity("fromEmployee");
+  private final QEmployeeEntity toEmployee = new QEmployeeEntity("toEmployee");
 
-  public void createSequence(String sequenceName) {
-    if (!sequenceName.matches("^[a-zA-Z0-9_]+$")) throw new IllegalArgumentException();
-    em.createNativeQuery("CREATE SEQUENCE " + sequenceName + " START 1 MAXVALUE 99999 INCREMENT 1")
-        .executeUpdate();
-  }
-
-  public List<TicketRowDTO> getList(PageableParams params) {
+  public List<TicketHistoryRowDTO> getList(PageableParams params) {
     BooleanBuilder allConditions = prepareConditions(params);
-    JPAQuery<TicketRowDTO> query =
+    JPAQuery<TicketHistoryRowDTO> query =
         queryFactory
             .select(
                 Projections.constructor(
-                    TicketRowDTO.class,
+                    TicketHistoryRowDTO.class,
+                    history.id,
                     ticket.id,
                     ticket.number,
                     ticket.title,
-                    ticket.deadline,
-                    ticket.additionalDetails,
-                    category.id,
-                    category.name,
-                    categoryValue.id,
-                    categoryValue.stringValue,
-                    priority.id,
-                    priority.name,
-                    priorityValue.id,
-                    priorityValue.stringValue,
-                    project.id,
-                    project.name,
-                    projectStep.id,
-                    projectStep.name,
+                    fromStatus.id,
+                    fromStatus.stringValue,
+                    toStatus.id,
+                    toStatus.stringValue,
+                    fromEmployee.id,
+                    fromEmployee.firstName,
+                    fromEmployee.lastName,
+                    toEmployee.id,
+                    toEmployee.firstName,
+                    toEmployee.lastName,
+                    history.comment,
+                    history.created,
                     Shared.totalElements(),
                     Shared.totalPages(params.getLimit())))
-            .from(ticket)
-            .leftJoin(ticket.category, categoryValue)
-            .leftJoin(categoryValue.category, category)
-            .leftJoin(ticket.priority, priorityValue)
-            .leftJoin(priorityValue.category, priority)
-            .leftJoin(ticket.project, project)
-            .leftJoin(ticket.step, projectStep)
+            .from(history)
+            .leftJoin(history.ticket, ticket)
+            .leftJoin(history.fromStatus, fromStatus)
+            .leftJoin(history.toStatus, toStatus)
+            .leftJoin(history.fromEmployee, fromEmployee)
+            .leftJoin(history.fromEmployee, fromEmployee)
+            .leftJoin(history.toEmployee, toEmployee)
             .where(allConditions)
             .offset(params.getOffset())
             .limit(params.getLimit());
@@ -86,65 +76,36 @@ public class TicketHistoryQueryRepository {
 
   private BooleanBuilder prepareConditions(PageableParams params) {
     BooleanBuilder allConditions = new BooleanBuilder();
-    if (params.getFilters().containsKey(Field.number)) {
+    if (params.getFilters().containsKey(Field.comment)) {
       allConditions.and(
-          ticket.number.likeIgnoreCase("%" + params.getFilters().get(Field.number) + "%"));
+          history.comment.likeIgnoreCase("%" + params.getFilters().get(Field.comment) + "%"));
     }
-    if (params.getFilters().containsKey(Field.title)) {
+    if (params.getFilters().containsKey(Field.created)) {
+      Instant startInstant = Shared.parseDate(params.getFilters().get(Field.created));
+      allConditions.and(history.created.loe(startInstant));
+    }
+    if (params.getFilters().containsKey(Field.ticketNumber)) {
+      allConditions.and(ticket.number.eq(params.getFilters().get(Field.ticketNumber)));
+    }
+    if (params.getFilters().containsKey(Field.ticketTitle)) {
       allConditions.and(
-          ticket.title.likeIgnoreCase("%" + params.getFilters().get(Field.title) + "%"));
+          ticket.title.likeIgnoreCase("%" + params.getFilters().get(Field.ticketTitle) + "%"));
     }
-    if (params.getFilters().containsKey(Field.deadline)) {
-      Instant startInstant = Shared.parseDate(params.getFilters().get(Field.deadline));
-      allConditions.and(ticket.deadline.loe(startInstant));
-    }
-    if (params.getFilters().containsKey(Field.additionalDetails)) {
-      allConditions.and(
-          ticket.additionalDetails.likeIgnoreCase(
-              "%" + params.getFilters().get(Field.additionalDetails) + "%"));
-    }
-    if (params.getFilters().containsKey(Field.categoryValue)) {
-      allConditions.and(
-          ticket.category.stringValue.likeIgnoreCase(
-              "%" + params.getFilters().get(Field.categoryValue) + "%"));
-    }
-    if (params.getFilters().containsKey(Field.priorityValue)) {
-      allConditions.and(
-          ticket.priority.stringValue.likeIgnoreCase(
-              "%" + params.getFilters().get(Field.priorityValue) + "%"));
-    }
-    if (params.getFilters().containsKey(Field.projectName)) {
-      allConditions.and(
-          ticket.project.name.likeIgnoreCase(
-              "%" + params.getFilters().get(Field.projectName) + "%"));
-    }
-    if (params.getFilters().containsKey(Field.projectStepName)) {
-      allConditions.and(
-          ticket.step.name.likeIgnoreCase(
-              "%" + params.getFilters().get(Field.projectStepName) + "%"));
-    }
-    allConditions.and(projectStep.isDeleted.isFalse());
+
+    allConditions.and(history.isDeleted.isFalse());
     return allConditions;
   }
 
-  private void applySorting(JPAQuery<TicketRowDTO> query, String sortField, String sortDir) {
+  private void applySorting(JPAQuery<TicketHistoryRowDTO> query, String sortField, String sortDir) {
     Order order = Sort.Direction.fromString(sortDir) == Sort.Direction.ASC ? Order.ASC : Order.DESC;
     switch (sortField) {
-      case Field.number -> query.orderBy(
+      case Field.ticketNumber -> query.orderBy(
           order == Order.ASC ? ticket.number.asc() : ticket.number.desc());
-      case Field.title -> query.orderBy(
+      case Field.ticketTitle -> query.orderBy(
           order == Order.ASC ? ticket.title.asc() : ticket.title.desc());
-      case Field.deadline -> query.orderBy(
-          order == Order.ASC ? ticket.deadline.asc() : ticket.deadline.desc());
-      case Field.categoryValue -> query.orderBy(
-          order == Order.ASC ? categoryValue.stringValue.asc() : categoryValue.stringValue.desc());
-      case Field.priorityValue -> query.orderBy(
-          order == Order.ASC ? priorityValue.stringValue.asc() : priorityValue.stringValue.desc());
-      case Field.projectName -> query.orderBy(
-          order == Order.ASC ? project.name.asc() : project.name.desc());
-      case Field.projectStepName -> query.orderBy(
-          order == Order.ASC ? projectStep.name.asc() : projectStep.name.desc());
-      default -> query.orderBy(ticket.deadline.desc());
+      case Field.created -> query.orderBy(
+          order == Order.ASC ? history.created.asc() : history.created.desc());
+      default -> query.orderBy(history.created.asc());
     }
   }
 }

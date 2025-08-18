@@ -2,9 +2,10 @@ package com.pawelnu.projectmanager.endpoints.ticket.history;
 
 import com.pawelnu.projectmanager.endpoints.company.employee.EmployeeEntity;
 import com.pawelnu.projectmanager.endpoints.ticket.history.dto.TicketHistoryDTO;
-import com.pawelnu.projectmanager.endpoints.ticket.history.dto.TicketRowDTO;
+import com.pawelnu.projectmanager.endpoints.ticket.history.dto.TicketHistoryRowDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.Named;
 
 @Mapper(componentModel = "spring")
 public interface TicketHistoryMapper {
@@ -22,12 +23,30 @@ public interface TicketHistoryMapper {
   @Mapping(source = "toEmployee", target = "toEmployeeName")
   TicketHistoryDTO toDTO(TicketHistoryEntity entity);
 
-  TicketHistoryDTO toDTO(TicketRowDTO row);
+  @Mapping(source = ".", target = "fromEmployeeName", qualifiedByName = "concatFromEmployeeName")
+  @Mapping(source = ".", target = "toEmployeeName", qualifiedByName = "concatToEmployeeName")
+  TicketHistoryDTO toDTO(TicketHistoryRowDTO row);
 
   default String employeeToString(EmployeeEntity entity) {
     if (entity == null) {
       return null;
     }
     return entity.getFirstName() + " " + entity.getLastName();
+  }
+
+  @Named("concatFromEmployeeName")
+  default String concatFromEmployeeName(TicketHistoryRowDTO row) {
+    if (row == null) {
+      return null;
+    }
+    return row.getFromEmployeeFirstName() + " " + row.getFromEmployeeLastName();
+  }
+
+  @Named("concatToEmployeeName")
+  default String concatToEmployeeName(TicketHistoryRowDTO row) {
+    if (row == null) {
+      return null;
+    }
+    return row.getToEmployeeFirstName() + " " + row.getToEmployeeLastName();
   }
 }

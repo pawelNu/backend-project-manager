@@ -25,7 +25,7 @@ public class TicketHistoryController implements TicketHistoryApi {
 
   @Override
   public ResponseEntity<List<TicketHistoryDTO>> getList(String sort, String range, String filter) {
-    TicketListResponseDTO result = ticketHistoryService.filter(sort, range, filter);
+    TicketListResponseDTO result = ticketHistoryService.getList(sort, range, filter);
     return ResponseEntity.ok()
         .header("Content-Range", result.getContentRange())
         .body(result.getData());

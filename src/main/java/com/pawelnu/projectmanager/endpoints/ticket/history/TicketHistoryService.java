@@ -12,8 +12,8 @@ import com.pawelnu.projectmanager.endpoints.ticket.TicketService;
 import com.pawelnu.projectmanager.endpoints.ticket.history.dto.TicketHistoryCreateRequestDTO;
 import com.pawelnu.projectmanager.endpoints.ticket.history.dto.TicketHistoryDTO;
 import com.pawelnu.projectmanager.endpoints.ticket.history.dto.TicketHistoryEditRequestDTO;
+import com.pawelnu.projectmanager.endpoints.ticket.history.dto.TicketHistoryRowDTO;
 import com.pawelnu.projectmanager.endpoints.ticket.history.dto.TicketListResponseDTO;
-import com.pawelnu.projectmanager.endpoints.ticket.history.dto.TicketRowDTO;
 import com.pawelnu.projectmanager.exception.NotFoundException;
 import com.pawelnu.projectmanager.exception.model.SimpleResponse;
 import com.pawelnu.projectmanager.utils.Consts.MSG;
@@ -102,10 +102,10 @@ public class TicketHistoryService {
     return ticketHistoryMapper.toDTO(updatedTicket);
   }
 
-  public TicketListResponseDTO filter(String sort, String range, String filter) {
+  public TicketListResponseDTO getList(String sort, String range, String filter) {
     PageableParams params = Shared.preparePageableParams(objectMapper, sort, range, filter);
 
-    List<TicketRowDTO> results = ticketHistoryQueryRepository.getList(params);
+    List<TicketHistoryRowDTO> results = ticketHistoryQueryRepository.getList(params);
     List<TicketHistoryDTO> projectDTOs = results.stream().map(ticketHistoryMapper::toDTO).toList();
     String contentRange =
         Shared.prepareContentRange(
