@@ -1,6 +1,5 @@
 package com.pawelnu.projectmanager.endpoints.ticket.history;
 
-
 import com.pawelnu.projectmanager.endpoints.ticket.history.dto.TicketCreateRequestDTO;
 import com.pawelnu.projectmanager.endpoints.ticket.history.dto.TicketDTO;
 import com.pawelnu.projectmanager.endpoints.ticket.history.dto.TicketEditRequestDTO;
