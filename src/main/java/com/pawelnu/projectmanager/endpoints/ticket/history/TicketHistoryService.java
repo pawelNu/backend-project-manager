@@ -14,7 +14,9 @@ import com.pawelnu.projectmanager.endpoints.ticket.history.dto.TicketHistoryDTO;
 import com.pawelnu.projectmanager.endpoints.ticket.history.dto.TicketHistoryEditRequestDTO;
 import com.pawelnu.projectmanager.endpoints.ticket.history.dto.TicketListResponseDTO;
 import com.pawelnu.projectmanager.endpoints.ticket.history.dto.TicketRowDTO;
+import com.pawelnu.projectmanager.exception.NotFoundException;
 import com.pawelnu.projectmanager.exception.model.SimpleResponse;
+import com.pawelnu.projectmanager.utils.Consts.MSG;
 import com.pawelnu.projectmanager.utils.PageableParams;
 import com.pawelnu.projectmanager.utils.Shared;
 import java.util.List;
@@ -68,10 +70,9 @@ public class TicketHistoryService {
   }
 
   public TicketHistoryEntity getTicketEntityById(UUID id) {
-    //    return ticketHistoryRepository
-    //        .findByIdAndIsDeletedFalse(id)
-    //        .orElseThrow(() -> new NotFoundException(MSG.TICKET_NOT_FOUND + id));
-    throw new NotImplementedException("not implemented");
+        return ticketHistoryRepository
+            .findByIdAndIsDeletedFalse(id)
+            .orElseThrow(() -> new NotFoundException(MSG.TICKET_HISTORY_NOT_FOUND + id));
   }
 
   public SimpleResponse deleteById(UUID id) {
