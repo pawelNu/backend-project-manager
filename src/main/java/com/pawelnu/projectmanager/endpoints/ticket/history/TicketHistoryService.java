@@ -70,9 +70,9 @@ public class TicketHistoryService {
   }
 
   public TicketHistoryEntity getTicketEntityById(UUID id) {
-        return ticketHistoryRepository
-            .findByIdAndIsDeletedFalse(id)
-            .orElseThrow(() -> new NotFoundException(MSG.TICKET_HISTORY_NOT_FOUND + id));
+    return ticketHistoryRepository
+        .findByIdAndIsDeletedFalse(id)
+        .orElseThrow(() -> new NotFoundException(MSG.TICKET_HISTORY_NOT_FOUND + id));
   }
 
   public SimpleResponse deleteById(UUID id) {
