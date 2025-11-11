@@ -98,10 +98,10 @@ public class TicketHistoryQueryRepository {
   private void applySorting(JPAQuery<TicketHistoryRowDTO> query, String sortField, String sortDir) {
     Order order = Sort.Direction.fromString(sortDir) == Sort.Direction.ASC ? Order.ASC : Order.DESC;
     switch (sortField) {
-      case Field.ticketNumber -> query.orderBy(
-          order == Order.ASC ? ticket.number.asc() : ticket.number.desc());
-      case Field.ticketTitle -> query.orderBy(
-          order == Order.ASC ? ticket.title.asc() : ticket.title.desc());
+//      case Field.ticketNumber -> query.orderBy(
+//          order == Order.ASC ? ticket.number.asc() : ticket.number.desc());
+//      case Field.ticketTitle -> query.orderBy(
+//          order == Order.ASC ? ticket.title.asc() : ticket.title.desc());
       case Field.created -> query.orderBy(
           order == Order.ASC ? history.created.asc() : history.created.desc());
       default -> query.orderBy(history.created.asc());
