@@ -40,7 +40,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 @Testcontainers
 @ActiveProfiles("test")
 @Slf4j
-class TicketControllerDeleteByIdTest {
+class TicketHistoryControllerDeleteByIdTest {
   @Autowired private JwtUtils jwtUtils;
   @Autowired private MockMvc mockMvc;
   @Autowired private ObjectMapper objectMapper;
