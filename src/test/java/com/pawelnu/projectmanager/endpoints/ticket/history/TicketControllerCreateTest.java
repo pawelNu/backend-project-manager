@@ -106,7 +106,6 @@ class TicketControllerCreateTest {
             .fromStatusId(UUID.fromString("66496069-bdac-451d-8509-7d0282c1f438"))
             .toStatusId(UUID.fromString("6f819e40-3d4a-4e27-9017-5a20e9dbb29a"))
             .fromEmployeeId(UUID.fromString("ca4b41a4-4416-4465-acdc-3bf340d2031c"))
-//            .toEmployeeId(UUID.fromString("b7b06e2d-d4f7-4cab-872a-3861288b5da1"))
             .toEmployeeId(null)
             .comment("2. Verification / Qualification test")
             .build();
