@@ -89,10 +89,8 @@ class TicketHistoryControllerGetListTest {
     Map<String, String> filter = Map.of(Field.ticketNumber, "2025-T-30", Field.comment, "to filt");
     String filterStrig = objectMapper.writeValueAsString(filter);
     MvcResult response =
-        mockMvc.perform(get(BASE_URL).with(withJwt())
-            .param("sort", sort)
-            .param("filter", filterStrig)
-            )
+        mockMvc
+            .perform(get(BASE_URL).with(withJwt()).param("sort", sort).param("filter", filterStrig))
             .andReturn();
     int status = response.getResponse().getStatus();
     String headerContentRange = response.getResponse().getHeader("Content-Range");
