@@ -63,7 +63,6 @@ public class TicketHistoryQueryRepository {
             .leftJoin(history.fromStatus, fromStatus)
             .leftJoin(history.toStatus, toStatus)
             .leftJoin(history.fromEmployee, fromEmployee)
-            .leftJoin(history.fromEmployee, fromEmployee)
             .leftJoin(history.toEmployee, toEmployee)
             .where(allConditions)
             .offset(params.getOffset())
