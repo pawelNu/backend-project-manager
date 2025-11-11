@@ -67,7 +67,7 @@ class TicketHistoryControllerDeleteByIdTest {
 
   @Test
   void shouldReturn_200_deleteTicketHistoryById_isDeletedFalse() throws Exception {
-    String ticketHistoryId = "671f8d4a-5330-4d67-9853-7d57ec1ea17f";
+    String ticketHistoryId = "92bf6ad9-bba7-48a8-8db0-3cd3dac75c70";
     String url = BASE_URL + "/" + ticketHistoryId;
     MvcResult response =
         mockMvc
@@ -99,7 +99,7 @@ class TicketHistoryControllerDeleteByIdTest {
 
   @Test
   void shouldReturn_401_deleteTicketHistoryById_isDeletedFalse() throws Exception {
-    String ticketHistoryId = "671f8d4a-5330-4d67-9853-7d57ec1ea17f";
+    String ticketHistoryId = "92bf6ad9-bba7-48a8-8db0-3cd3dac75c70";
     String url = BASE_URL + "/" + ticketHistoryId;
     MvcResult response =
         mockMvc.perform(delete(url).contentType(MediaType.APPLICATION_JSON)).andReturn();
@@ -112,7 +112,7 @@ class TicketHistoryControllerDeleteByIdTest {
 
   @Test
   void shouldReturn_403_deleteTicketHistoryById_isDeletedFalse() throws Exception {
-    String ticketHistoryId = "671f8d4a-5330-4d67-9853-7d57ec1ea17f";
+    String ticketHistoryId = "92bf6ad9-bba7-48a8-8db0-3cd3dac75c70";
     String url = BASE_URL + "/" + ticketHistoryId;
     MvcResult response =
         mockMvc
@@ -142,7 +142,7 @@ class TicketHistoryControllerDeleteByIdTest {
 
   @Test
   void shouldReturn_404_deleteTicketHistoryById_isDeletedTrue() throws Exception {
-    String ticketHistoryId = "9f5df1fd-2344-41bf-9af4-37b0c2331641";
+    String ticketHistoryId = "ea20a2e9-7ef4-4376-8c89-6a3a3899a45c";
     String url = BASE_URL + "/" + ticketHistoryId;
     MvcResult response =
         mockMvc
