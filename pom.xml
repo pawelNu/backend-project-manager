@@ -6,12 +6,12 @@
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>3.4.4</version>
+    <version>3.5.11</version>
     <relativePath/> <!-- lookup parent from repository -->
   </parent>
   <groupId>com.pawelnu</groupId>
   <artifactId>BackendProjectManager</artifactId>
-  <version>BackendProjectManager-0.11.0</version>
+  <version>0.11.0</version>
   <name>BackendProjectManager</name>
   <description>Project Manager - backend</description>
 
