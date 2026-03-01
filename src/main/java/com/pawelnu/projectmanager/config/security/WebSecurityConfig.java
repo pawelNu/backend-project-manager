@@ -112,8 +112,7 @@ public class WebSecurityConfig {
                                 + "style-src 'self' 'unsafe-inline'; "
                                 + "img-src 'self' data:; "
                                 + "connect-src 'self'; "
-                                //                                + "connect-src 'self'
-                                // https://admin.mojaapp.pl;"
+                                // + "connect-src 'self' https://admin.mojaapp.pl;"
                                 + "frame-ancestors 'none';")));
 
     return http.build();
