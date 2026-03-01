@@ -100,7 +100,21 @@ public class WebSecurityConfig {
 
     http.addFilterAfter(
         authenticationJwtTokenFilter(handlerMappings), ExceptionTranslationFilter.class);
-    http.headers(headers -> headers.frameOptions(FrameOptionsConfig::sameOrigin));
+    http.headers(
+        headers ->
+            headers
+                .frameOptions(FrameOptionsConfig::sameOrigin)
+                .contentSecurityPolicy(
+                    csp ->
+                        csp.policyDirectives(
+                            "default-src 'self'; "
+                                + "script-src 'self'; "
+                                + "style-src 'self' 'unsafe-inline'; "
+                                + "img-src 'self' data:; "
+                                + "connect-src 'self'; "
+                                //                                + "connect-src 'self'
+                                // https://admin.mojaapp.pl;"
+                                + "frame-ancestors 'none';")));
 
     return http.build();
   }
