@@ -1,37 +1,74 @@
-package com.pawelnu.projectmanager.endpoints.ticket;
+package com.pawelnu.projectmanager.endpoints.ticket.history;
 
 import static com.pawelnu.projectmanager.utils.Utils.invalidUUIDError;
 import static com.pawelnu.projectmanager.utils.Utils.unauthorizedError;
 import static com.pawelnu.projectmanager.utils.Utils.withBadJwt;
 import static com.pawelnu.projectmanager.utils.Utils.withJwt;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.pawelnu.projectmanager.config.BaseIntegrationTest;
+import com.pawelnu.projectmanager.config.security.jwt.JwtUtils;
 import com.pawelnu.projectmanager.exception.model.ReactAdminError;
 import com.pawelnu.projectmanager.exception.model.SimpleResponse;
 import com.pawelnu.projectmanager.utils.Consts.MSG;
 import com.pawelnu.projectmanager.utils.Path;
+import com.pawelnu.projectmanager.utils.Shared;
 import com.pawelnu.projectmanager.utils.Utils;
+import com.pawelnu.projectmanager.utils.Utils.Postgres;
+import com.pawelnu.projectmanager.utils.Utils.SpringDataSource;
+import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@AutoConfigureMockMvc
+@Testcontainers
+@ActiveProfiles("test")
 @Slf4j
-class TicketControllerDeleteByIdTest extends BaseIntegrationTest {
+class TicketHistoryControllerDeleteByIdTest {
+  @Autowired private JwtUtils jwtUtils;
   @Autowired private MockMvc mockMvc;
   @Autowired private ObjectMapper objectMapper;
-  private static final String BASE_URL = "/" + Path.API_TICKETS;
+  private static final String BASE_URL = "/" + Path.API_TICKET_HISTORIES;
+
+  @Container
+  static PostgreSQLContainer<?> postgres =
+      new PostgreSQLContainer<>(Postgres.POSTGRES_17)
+          .withDatabaseName(Postgres.DB_NAME)
+          .withUsername(Postgres.USER)
+          .withPassword(Postgres.PASSWORD);
+
+  @DynamicPropertySource
+  static void postgresProperties(DynamicPropertyRegistry registry) {
+    registry.add(SpringDataSource.URL, postgres::getJdbcUrl);
+    registry.add(SpringDataSource.USERNAME, postgres::getUsername);
+    registry.add(SpringDataSource.PASSWORD, postgres::getPassword);
+  }
+
+  @BeforeEach
+  void beforeEach() {
+    Utils.generateToken(jwtUtils);
+  }
 
   @Test
-  void shouldReturn_200_deleteTicketById_isDeletedFalse() throws Exception {
-    String ticketId = "13531048-a6c6-492a-a84f-8ec3c955e93d";
-    String url = BASE_URL + "/" + ticketId;
+  void shouldReturn_200_deleteTicketHistoryById_isDeletedFalse() throws Exception {
+    String ticketHistoryId = "92bf6ad9-bba7-48a8-8db0-3cd3dac75c70";
+    String url = BASE_URL + "/" + ticketHistoryId;
     MvcResult response =
         mockMvc
             .perform(delete(url).with(withJwt()).contentType(MediaType.APPLICATION_JSON))
@@ -40,13 +77,15 @@ class TicketControllerDeleteByIdTest extends BaseIntegrationTest {
     String contentAsString = response.getResponse().getContentAsString();
     SimpleResponse responseBody = objectMapper.readValue(contentAsString, SimpleResponse.class);
     assertEquals(HttpStatus.OK.value(), status);
-    assertEquals("Deleted ticket with id: " + ticketId, responseBody.getMessage());
+    assertEquals(
+        Shared.deleteMessage("ticket history", UUID.fromString(ticketHistoryId)),
+        responseBody.getMessage());
   }
 
   @Test
-  void shouldReturn_400_deleteTicketById_isDeletedFalse() throws Exception {
-    String ticketId = "invalid-uuid";
-    String url = BASE_URL + "/" + ticketId;
+  void shouldReturn_400_deleteTicketHistoryById_isDeletedFalse() throws Exception {
+    String ticketHistoryId = "invalid-uuid";
+    String url = BASE_URL + "/" + ticketHistoryId;
     MvcResult response =
         mockMvc
             .perform(delete(url).with(withJwt()).contentType(MediaType.APPLICATION_JSON))
@@ -59,9 +98,9 @@ class TicketControllerDeleteByIdTest extends BaseIntegrationTest {
   }
 
   @Test
-  void shouldReturn_401_deleteTicketById_isDeletedFalse() throws Exception {
-    String ticketId = "13531048-a6c6-492a-a84f-8ec3c955e93d";
-    String url = BASE_URL + "/" + ticketId;
+  void shouldReturn_401_deleteTicketHistoryById_isDeletedFalse() throws Exception {
+    String ticketHistoryId = "92bf6ad9-bba7-48a8-8db0-3cd3dac75c70";
+    String url = BASE_URL + "/" + ticketHistoryId;
     MvcResult response =
         mockMvc.perform(delete(url).contentType(MediaType.APPLICATION_JSON)).andReturn();
     int status = response.getResponse().getStatus();
@@ -72,9 +111,9 @@ class TicketControllerDeleteByIdTest extends BaseIntegrationTest {
   }
 
   @Test
-  void shouldReturn_403_deleteTicketById_isDeletedFalse() throws Exception {
-    String ticketId = "13531048-a6c6-492a-a84f-8ec3c955e93d";
-    String url = BASE_URL + "/" + ticketId;
+  void shouldReturn_403_deleteTicketHistoryById_isDeletedFalse() throws Exception {
+    String ticketHistoryId = "92bf6ad9-bba7-48a8-8db0-3cd3dac75c70";
+    String url = BASE_URL + "/" + ticketHistoryId;
     MvcResult response =
         mockMvc
             .perform(delete(url).with(withBadJwt()).contentType(MediaType.APPLICATION_JSON))
@@ -87,9 +126,9 @@ class TicketControllerDeleteByIdTest extends BaseIntegrationTest {
   }
 
   @Test
-  void shouldReturn_404_deleteTicketById_isDeletedFalse() throws Exception {
-    String ticketId = "81b9f13a-d598-4a24-bdef-833e02e30efd";
-    String url = BASE_URL + "/" + ticketId;
+  void shouldReturn_404_deleteTicketHistoryById_isDeletedFalse() throws Exception {
+    String ticketHistoryId = "91c7a5f8-dc0f-46c6-b92b-ec70b3a9b918";
+    String url = BASE_URL + "/" + ticketHistoryId;
     MvcResult response =
         mockMvc
             .perform(delete(url).with(withJwt()).contentType(MediaType.APPLICATION_JSON))
@@ -98,13 +137,13 @@ class TicketControllerDeleteByIdTest extends BaseIntegrationTest {
     String contentAsString = response.getResponse().getContentAsString();
     ReactAdminError responseBody = objectMapper.readValue(contentAsString, ReactAdminError.class);
     assertEquals(HttpStatus.NOT_FOUND.value(), status);
-    assertEquals(MSG.TICKET_NOT_FOUND + ticketId, responseBody.getMessage());
+    assertEquals(MSG.TICKET_HISTORY_NOT_FOUND + ticketHistoryId, responseBody.getMessage());
   }
 
   @Test
-  void shouldReturn_404_deleteTicketById_isDeletedTrue() throws Exception {
-    String ticketId = "610b92c2-8a12-47c2-977f-30f19769f265";
-    String url = BASE_URL + "/" + ticketId;
+  void shouldReturn_404_deleteTicketHistoryById_isDeletedTrue() throws Exception {
+    String ticketHistoryId = "ea20a2e9-7ef4-4376-8c89-6a3a3899a45c";
+    String url = BASE_URL + "/" + ticketHistoryId;
     MvcResult response =
         mockMvc
             .perform(delete(url).with(withJwt()).contentType(MediaType.APPLICATION_JSON))
@@ -113,6 +152,6 @@ class TicketControllerDeleteByIdTest extends BaseIntegrationTest {
     String contentAsString = response.getResponse().getContentAsString();
     SimpleResponse responseBody = objectMapper.readValue(contentAsString, SimpleResponse.class);
     assertEquals(HttpStatus.NOT_FOUND.value(), status);
-    assertEquals(MSG.TICKET_NOT_FOUND + ticketId, responseBody.getMessage());
+    assertEquals(MSG.TICKET_HISTORY_NOT_FOUND + ticketHistoryId, responseBody.getMessage());
   }
 }

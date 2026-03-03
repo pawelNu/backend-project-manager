@@ -57,8 +57,7 @@ public class GlobalExceptionHandler {
     for (FieldError fieldError : fieldErrors) {
       if (errors.containsKey(fieldError.getField())) {
         String key = fieldError.getField();
-        Object value = errors.get(key);
-        errors.put(key, value.toString() + ", " + fieldError.getDefaultMessage());
+        errors.computeIfPresent(key, (k, value) -> value + ", " + fieldError.getDefaultMessage());
       } else {
         errors.put(fieldError.getField(), fieldError.getDefaultMessage());
       }

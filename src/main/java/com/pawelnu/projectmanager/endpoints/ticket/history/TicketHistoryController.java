@@ -1,0 +1,48 @@
+package com.pawelnu.projectmanager.endpoints.ticket.history;
+
+import com.pawelnu.projectmanager.endpoints.ticket.history.dto.TicketHistoryCreateRequestDTO;
+import com.pawelnu.projectmanager.endpoints.ticket.history.dto.TicketHistoryDTO;
+import com.pawelnu.projectmanager.endpoints.ticket.history.dto.TicketHistoryEditRequestDTO;
+import com.pawelnu.projectmanager.endpoints.ticket.history.dto.TicketListResponseDTO;
+import com.pawelnu.projectmanager.exception.model.SimpleResponse;
+import java.util.List;
+import java.util.UUID;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequiredArgsConstructor
+public class TicketHistoryController implements TicketHistoryApi {
+
+  private final TicketHistoryService ticketHistoryService;
+
+  @Override
+  public ResponseEntity<TicketHistoryDTO> create(TicketHistoryCreateRequestDTO body) {
+    return ResponseEntity.status(HttpStatus.CREATED).body(ticketHistoryService.create(body));
+  }
+
+  @Override
+  public ResponseEntity<List<TicketHistoryDTO>> getList(String sort, String range, String filter) {
+    TicketListResponseDTO result = ticketHistoryService.getList(sort, range, filter);
+    return ResponseEntity.ok()
+        .header("Content-Range", result.getContentRange())
+        .body(result.getData());
+  }
+
+  @Override
+  public ResponseEntity<TicketHistoryDTO> getById(UUID id) {
+    return ResponseEntity.ok(ticketHistoryService.getById(id));
+  }
+
+  @Override
+  public ResponseEntity<TicketHistoryDTO> editById(UUID id, TicketHistoryEditRequestDTO body) {
+    return ResponseEntity.ok(ticketHistoryService.editById(id, body));
+  }
+
+  @Override
+  public ResponseEntity<SimpleResponse> deleteById(UUID id) {
+    return ResponseEntity.ok(ticketHistoryService.deleteById(id));
+  }
+}

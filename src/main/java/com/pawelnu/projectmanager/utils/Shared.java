@@ -151,7 +151,9 @@ public class Shared {
   public static class Field {
     public static final String name = "name";
     public static final String title = "title";
+    public static final String ticketTitle = "ticketTitle";
     public static final String number = "number";
+    public static final String ticketNumber = "ticketNumber";
     public static final String comment = "comment";
     public static final String projectName = "projectName";
     public static final String projectStepName = "projectStepName";

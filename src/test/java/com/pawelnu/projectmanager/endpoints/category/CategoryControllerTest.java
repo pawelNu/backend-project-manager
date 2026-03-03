@@ -186,7 +186,7 @@ class CategoryControllerTest {
 
   @Test
   void shouldReturn_200_getCategoryList_withFiltersAndSort() throws Exception {
-    List<String> sort = List.of("name", "DESC");
+    List<String> sort = List.of("name", "ASC");
     Map<String, String> filter = Map.of("name", "status");
     String sortString = objectMapper.writeValueAsString(sort);
     String filterStrig = objectMapper.writeValueAsString(filter);
@@ -204,9 +204,9 @@ class CategoryControllerTest {
     List<CategoryDTO> responseBody =
         objectMapper.readValue(contentAsString, new TypeReference<>() {});
     assertEquals(HttpStatus.OK.value(), status);
-    assertEquals("items 0-1/2", headerContentRange);
-    assertEquals(2, responseBody.size());
-    assertEquals("company status 1", responseBody.getFirst().getName());
+    assertEquals("items 0-2/3", headerContentRange);
+    assertEquals(3, responseBody.size());
+    assertEquals("company status", responseBody.getFirst().getName());
   }
 
   @Test

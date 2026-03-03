@@ -39,7 +39,7 @@ public class TicketService {
   private final TicketMapper ticketMapper;
   private final ObjectMapper objectMapper;
 
-  public String generateTicketNumber() {
+  private String generateTicketNumber() {
     int year = Year.now().getValue();
     String sequenceName = "ticket_number_" + year;
 

@@ -1,0 +1,9 @@
+id,category_id,numeric_value,string_value,date_value,version,created,last_modified,is_deleted
+66496069-bdac-451d-8509-7d0282c1f438,0f52574e-e520-4526-b729-ef9dafd6c0f3,1,"Registration",,0,2025-08-18 00:00:00.000,2025-08-18 00:00:00.000,FALSE
+6f819e40-3d4a-4e27-9017-5a20e9dbb29a,0f52574e-e520-4526-b729-ef9dafd6c0f3,2,"Verification / Qualification",,0,2025-08-18 00:00:00.000,2025-08-18 00:00:00.000,FALSE
+d66b1417-4e27-4845-8dde-1bbf5fdae4e1,0f52574e-e520-4526-b729-ef9dafd6c0f3,3,"Assignment of Responsibility",,0,2025-08-18 00:00:00.000,2025-08-18 00:00:00.000,FALSE
+a7c3e7e3-aeef-491d-ab5d-2c59f2b8e0c0,0f52574e-e520-4526-b729-ef9dafd6c0f3,4,"Analysis",,0,2025-08-18 00:00:00.000,2025-08-18 00:00:00.000,FALSE
+9e6e59b0-d323-4137-ba66-5bede65c5d16,0f52574e-e520-4526-b729-ef9dafd6c0f3,5,"Execution / Action",,0,2025-08-18 00:00:00.000,2025-08-18 00:00:00.000,FALSE
+82ad91dc-add8-4b96-9051-f21213151714,0f52574e-e520-4526-b729-ef9dafd6c0f3,6,"Testing / Validation",,0,2025-08-18 00:00:00.000,2025-08-18 00:00:00.000,FALSE
+336bb2af-ddbc-4fdd-bc06-58a69c430e76,0f52574e-e520-4526-b729-ef9dafd6c0f3,7,"Closure",,0,2025-08-18 00:00:00.000,2025-08-18 00:00:00.000,FALSE
+17be5484-178d-41d8-bba2-8b4bc251e9f8,0f52574e-e520-4526-b729-ef9dafd6c0f3,8,"Evaluation / Lessons Learned",,0,2025-08-18 00:00:00.000,2025-08-18 00:00:00.000,FALSE
