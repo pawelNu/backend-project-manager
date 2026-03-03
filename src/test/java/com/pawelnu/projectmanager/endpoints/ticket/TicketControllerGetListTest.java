@@ -3,67 +3,33 @@ package com.pawelnu.projectmanager.endpoints.ticket;
 import static com.pawelnu.projectmanager.utils.Utils.unauthorizedError;
 import static com.pawelnu.projectmanager.utils.Utils.withBadJwt;
 import static com.pawelnu.projectmanager.utils.Utils.withJwt;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.pawelnu.projectmanager.config.security.jwt.JwtUtils;
+import com.pawelnu.projectmanager.config.BaseIntegrationTest;
 import com.pawelnu.projectmanager.endpoints.ticket.dto.TicketDTO;
 import com.pawelnu.projectmanager.exception.model.ReactAdminError;
 import com.pawelnu.projectmanager.utils.Path;
 import com.pawelnu.projectmanager.utils.Shared.Field;
 import com.pawelnu.projectmanager.utils.Utils;
-import com.pawelnu.projectmanager.utils.Utils.Postgres;
-import com.pawelnu.projectmanager.utils.Utils.SpringDataSource;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@AutoConfigureMockMvc
-@Testcontainers
-@ActiveProfiles("test")
 @Slf4j
-class TicketControllerGetListTest {
-  @Autowired private JwtUtils jwtUtils;
+class TicketControllerGetListTest extends BaseIntegrationTest {
+
   @Autowired private MockMvc mockMvc;
   @Autowired private ObjectMapper objectMapper;
   private static final String BASE_URL = "/" + Path.API_TICKETS;
-
-  @Container
-  static PostgreSQLContainer<?> postgres =
-      new PostgreSQLContainer<>(Postgres.POSTGRES_17)
-          .withDatabaseName(Postgres.DB_NAME)
-          .withUsername(Postgres.USER)
-          .withPassword(Postgres.PASSWORD);
-
-  @DynamicPropertySource
-  static void postgresProperties(DynamicPropertyRegistry registry) {
-    registry.add(SpringDataSource.URL, postgres::getJdbcUrl);
-    registry.add(SpringDataSource.USERNAME, postgres::getUsername);
-    registry.add(SpringDataSource.PASSWORD, postgres::getPassword);
-  }
-
-  @BeforeEach
-  void beforeEach() {
-    Utils.generateToken(jwtUtils);
-  }
 
   @Test
   void shouldReturn_200_getTicketList() throws Exception {
